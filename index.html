@@ -106,7 +106,10 @@
   .memrow:last-of-type{border-bottom:0}
   .memrow .dt{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--grey);min-width:62px}
   .memrow .fav{flex:1;font-size:12.5px}
-  .memrow .fav .pc{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--grey)}
+  .memrow .fav .pc{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--grey);display:block;margin-top:2px}
+  .memrow .tm{font-weight:600}
+  .memrow .tm.f{color:var(--teal);font-weight:700}
+  .memrow .sc{font-family:'IBM Plex Mono',monospace;font-weight:600;padding:0 3px}
   .memrow .res{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;min-width:38px;text-align:center}
   .memrow .hit{font-size:11px;min-width:20px;text-align:right}
   .memrow .hit.y{color:var(--teal)} .memrow .hit.n{color:var(--red)}
@@ -287,7 +290,12 @@ async function hafizaGetir(lig){
   return HAFIZA[lig];
 }
 
+function sirala(liste){
+  if(!liste) return liste;
+  return [...liste].sort((x,y)=> y.o - x.o || String(x.k).localeCompare(String(y.k)));
+}
 function fiyatSatiri(ad,tag,liste,p){
+  liste=sirala(liste);
   const top=(liste&&liste[0])||null;
   const pct=p!=null?` · market ${Math.round(p*100)}%`:'';
   return `<div class="orow">
@@ -296,6 +304,7 @@ function fiyatSatiri(ad,tag,liste,p){
     <span class="book">${top?esc(top.k):''}</span></div>`;
 }
 function digerleri(etiket,liste){
+  liste=sirala(liste);
   if(!liste||liste.length<2)return'';
   return liste.slice(1,5).map(x=>
     `<div class="minirow"><span>${esc(etiket)} · ${esc(x.k)}</span><span class="o">${x.o.toFixed(2)}</span></div>`).join('');
@@ -357,12 +366,13 @@ async function showDetail(i){
     mem+=`<div class="card"><div class="head"><span class="t">Market memory</span><span class="k">last meetings</span></div>`;
     if(kartlar&&kartlar.length){
       kartlar.slice(0,5).forEach(k=>{
+        const fH=k.fav===k.h, fA=k.fav===k.a;
         mem+=`<div class="memrow"><span class="dt">${esc(String(k.t).slice(0,7))}</span>
-          <span class="fav">Market: ${esc(k.fav)} <span class="pc">(${k.ima}% implied)</span></span>
-          <span class="res">${esc(k.skor)}</span>
+          <span class="fav"><span class="tm${fH?' f':''}">${esc(k.h)}</span><b class="sc">${esc(k.skor)}</b><span class="tm${fA?' f':''}">${esc(k.a)}</span>
+          <span class="pc">market: ${esc(k.fav)} ${k.ima}% implied</span></span>
           <span class="hit ${k.tuttu?'y':'n'}">${k.tuttu?'✓':'✗'}</span></div>`;
       });
-      mem+=`<div class="foot">What the market said, and what happened — no commentary. ${kartlar.length<5?'':'5 matches is a small sample; a lean, not a law. '}${kal}</div>`;
+      mem+=`<div class="foot">What the market said, and what happened. <b style='color:var(--teal)'>Coloured team</b> = market favourite; ✓ it won, ✗ it didn't. ${kartlar.length<5?'':'5 matches is a small sample; a lean, not a law. '}${kal}</div>`;
     }else{
       mem+=`<div class="memempty">These two haven't met in our archive yet.<br>The record starts the day they do.</div>`;
       if(kal)mem+=`<div class="foot">${kal}</div>`;
