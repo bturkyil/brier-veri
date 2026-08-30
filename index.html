@@ -17,7 +17,7 @@
   body{margin:0;background:var(--paper);color:var(--ink);
        font-family:'Archivo',sans-serif;-webkit-font-smoothing:antialiased}
   .mono{font-family:'IBM Plex Mono',monospace;font-variant-numeric:tabular-nums}
-  button{font-family:inherit;cursor:pointer}
+  button{font-family:inherit;cursor:pointer;color:inherit;-webkit-appearance:none;appearance:none}
   :focus-visible{outline:2px solid var(--teal);outline-offset:2px}
   .wrap{max-width:640px;margin:0 auto;min-height:100vh}
 
@@ -46,6 +46,7 @@
   .mrow{width:100%;text-align:left;background:#fff;border:0;border-bottom:1px solid var(--rule);
         padding:13px 20px;display:flex;align-items:center;gap:14px;transition:background .12s}
   .mrow:hover{background:var(--teal-soft)}
+  .mrow{color:var(--ink)}
   .mrow .time{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;min-width:46px}
   .mrow .mid{flex:1;min-width:0}
   .mrow .comp{font-size:10px;color:var(--grey);text-transform:uppercase;letter-spacing:.7px;font-weight:600}
@@ -127,6 +128,7 @@
 
   <div id="view-list">
     <div class="chips" id="chips"></div>
+    <div class="chips" id="chips2" style="display:none;padding-top:0"></div>
     <div class="list-head">
       <span class="t">Today</span>
       <span class="d mono" id="today"></span>
@@ -173,9 +175,10 @@ const LIG_ESLE = {
   americanfootball_nfl:'nfl', americanfootball_ncaaf:'ncaaf',
   basketball_nba:'nba', basketball_wnba:'wnba', basketball_ncaab:'ncaab',
   baseball_mlb:'mlb', icehockey_nhl:'nhl', aussierules_afl:'afl',
+  basketball_euroleague:'euroleague', americanfootball_cfl:'cfl',
 };
 
-let LIVE=null, INDEX=null, HAFIZA={}, grup='ALL';
+let LIVE=null, INDEX=null, HAFIZA={}, grup='ALL', ligSec=null;
 
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 function anahtar(a,b){const x=[String(a).trim().toLowerCase(),String(b).trim().toLowerCase()].sort();return x[0]+'|'+x[1];}
@@ -206,21 +209,41 @@ async function boot(){
 
 function gruplar(){
   const s=new Set();
-  Object.values(LIVE.ligler||{}).forEach(l=>s.add(l.grup||'Other'));
+  Object.values(LIVE.ligler||{}).forEach(l=>{
+    if((l.maclar||[]).length) s.add(l.grup||'Other');
+  });
   return ['ALL',...[...s].sort()];
+}
+function ligleri(){
+  if(grup==='ALL') return [];
+  const s=new Map();
+  Object.entries(LIVE.ligler||{}).forEach(([ad,l])=>{
+    if((l.grup||'Other')===grup&&(l.maclar||[]).length) s.set(ad,l.maclar.length);
+  });
+  return [...s.keys()].sort();
 }
 
 function renderChips(){
-  document.getElementById('chips').innerHTML=gruplar().map(g=>
+  let html=gruplar().map(g=>
     `<button class="chip${g===grup?' on':''}" onclick="setGrup('${esc(g)}')">${g==='ALL'?'All sports':esc(g)}</button>`
   ).join('');
+  document.getElementById('chips').innerHTML=html;
+  const ligler=ligleri();
+  const alt=document.getElementById('chips2');
+  if(ligler.length>1){
+    alt.innerHTML=`<button class="chip${ligSec===null?' on':''}" onclick="setLig(null)">All leagues</button>`+
+      ligler.map(l=>`<button class="chip${l===ligSec?' on':''}" onclick="setLig('${esc(l)}')">${esc(l)}</button>`).join('');
+    alt.style.display='flex';
+  }else{alt.innerHTML='';alt.style.display='none';}
 }
-function setGrup(g){grup=g;renderList();}
+function setGrup(g){grup=g;ligSec=null;renderList();}
+function setLig(l){ligSec=l;renderList();}
 
 function oyunlar(){
   const out=[];
   Object.entries(LIVE.ligler||{}).forEach(([ad,ld])=>{
     if(grup!=='ALL'&&(ld.grup||'Other')!==grup)return;
+    if(ligSec!==null&&ad!==ligSec)return;
     (ld.maclar||[]).forEach(m=>out.push({...m,ligAd:ad,key:ld.key,sonuc3:!!ld.sonuc3}));
   });
   out.sort((a,b)=>String(a.t).localeCompare(String(b.t)));
@@ -326,7 +349,10 @@ async function showDetail(i){
   // --- market memory ---
   let mem='';
   const kal=H&&H.kalibrasyon?`In this league the market favourite averaged ${H.kalibrasyon.favori_ima_ort}% implied and won ${H.kalibrasyon.favori_tutma}% of the time (${H.mac.toLocaleString()} matches). Reliable prices — not a profit promise.`:'';
-  if(H&&H.h2h){
+  if(H&&!H.kalibrasyon){
+    mem=`<div class="card"><div class="head"><span class="t">Market memory</span><span class="k">prices only</span></div>
+      <div class="memempty">We track prices in this league, but not results yet — so no memory cards.<br>We'd rather show nothing than something we can't stand behind.</div></div>`;
+  }else if(H&&H.h2h){
     const kartlar=H.h2h[anahtar(m.h,m.a)];
     mem+=`<div class="card"><div class="head"><span class="t">Market memory</span><span class="k">last meetings</span></div>`;
     if(kartlar&&kartlar.length){
