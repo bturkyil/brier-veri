@@ -109,6 +109,7 @@
   .memrow .fav .pc{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--grey);display:block;margin-top:2px}
   .memrow .tm{font-weight:600}
   .memrow .tm.f{color:var(--teal);font-weight:700}
+  .memrow .imapct{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--teal);font-weight:600}
   .memrow .sc{font-family:'IBM Plex Mono',monospace;font-weight:600;padding:0 3px}
   .memrow .res{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;min-width:38px;text-align:center}
   .memrow .hit{font-size:11px;min-width:20px;text-align:right}
@@ -367,12 +368,12 @@ async function showDetail(i){
     if(kartlar&&kartlar.length){
       kartlar.slice(0,5).forEach(k=>{
         const fH=k.fav===k.h, fA=k.fav===k.a;
+        const et=` <span class="imapct">${k.ima}%</span>`;
         mem+=`<div class="memrow"><span class="dt">${esc(String(k.t).slice(0,7))}</span>
-          <span class="fav"><span class="tm${fH?' f':''}">${esc(k.h)}</span><b class="sc">${esc(k.skor)}</b><span class="tm${fA?' f':''}">${esc(k.a)}</span>
-          <span class="pc">market: ${esc(k.fav)} ${k.ima}% implied</span></span>
+          <span class="fav"><span class="tm${fH?' f':''}">${esc(k.h)}${fH?et:''}</span><b class="sc">${esc(k.skor)}</b><span class="tm${fA?' f':''}">${esc(k.a)}${fA?et:''}</span>${(!fH&&!fA)?`<span class=\"pc\">market: ${esc(k.fav)} ${k.ima}%</span>`:''}</span>
           <span class="hit ${k.tuttu?'y':'n'}">${k.tuttu?'✓':'✗'}</span></div>`;
       });
-      mem+=`<div class="foot">What the market said, and what happened. <b style='color:var(--teal)'>Coloured team</b> = market favourite; ✓ it won, ✗ it didn't. ${kartlar.length<5?'':'5 matches is a small sample; a lean, not a law. '}${kal}</div>`;
+      mem+=`<div class="foot">What the market said, and what happened. <b style='color:var(--teal)'>Coloured team</b> = market favourite, its closing implied % beside it; ✓ it won, ✗ it didn't. ${kartlar.length<5?'':'5 matches is a small sample; a lean, not a law. '}${kal}</div>`;
     }else{
       mem+=`<div class="memempty">These two haven't met in our archive yet.<br>The record starts the day they do.</div>`;
       if(kal)mem+=`<div class="foot">${kal}</div>`;
