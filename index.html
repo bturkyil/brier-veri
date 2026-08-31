@@ -52,6 +52,11 @@
   .mrow .comp{font-size:10px;color:var(--grey);text-transform:uppercase;letter-spacing:.7px;font-weight:600}
   .mrow .teams{font-size:15px;font-weight:700;margin-top:2px;display:block}
   .mrow .arr{color:var(--rule-dark);font-size:16px}
+  .manifesto{background:var(--teal-soft);border:1px solid var(--rule);margin:10px 16px 2px;
+    padding:12px 36px 12px 14px;font-size:12px;line-height:1.55;position:relative;border-radius:2px}
+  .manifesto b{font-weight:800}
+  .manifesto .mx{position:absolute;top:4px;right:6px;border:0;background:none;font-size:18px;
+    color:var(--grey);padding:4px 8px}
   .morehint,.empty{padding:18px 20px;font-size:12px;color:var(--grey);text-align:center;line-height:1.5}
 
   .back{background:none;border:0;color:var(--teal);font-size:12px;font-weight:700;
@@ -133,6 +138,11 @@
   <div id="view-list">
     <div class="chips" id="chips"></div>
     <div class="chips" id="chips2" style="display:none;padding-top:0"></div>
+    <div id="manifesto" class="manifesto hidden">
+      <button class="mx" onclick="kapatManifesto()" aria-label="close">×</button>
+      <b>Brier doesn't pick winners.</b> It strips the bookmaker's margin out of every price,
+      shows the market's true probabilities — and keeps the record of how often the market got it right.
+    </div>
     <div class="list-head">
       <span class="t">Today</span>
       <span class="d mono" id="today"></span>
@@ -180,10 +190,21 @@ const LIG_ESLE = {
   basketball_nba:'nba', basketball_wnba:'wnba', basketball_ncaab:'ncaab',
   baseball_mlb:'mlb', icehockey_nhl:'nhl', aussierules_afl:'afl',
   basketball_euroleague:'euroleague', americanfootball_cfl:'cfl',
+  soccer_finland_veikkausliiga:'veikkausliiga', soccer_poland_ekstraklasa:'ekstraklasa',
+  soccer_league_of_ireland:'ireland', soccer_korea_kleague1:'kleague1',
+  soccer_sweden_superettan:'superettan', soccer_germany_liga3:'liga3',
 };
 
 let LIVE=null, INDEX=null, HAFIZA={}, grup='ALL', ligSec=null;
 
+function kapatManifesto(){
+  document.getElementById('manifesto').classList.add('hidden');
+  try{localStorage.setItem('brier_m1','1')}catch(e){}
+}
+function manifestoAc(){
+  try{ if(localStorage.getItem('brier_m1')) return; }catch(e){}
+  document.getElementById('manifesto').classList.remove('hidden');
+}
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 function anahtar(a,b){const x=[String(a).trim().toLowerCase(),String(b).trim().toLowerCase()].sort();return x[0]+'|'+x[1];}
 function saat(t){const d=new Date(t);return d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}
@@ -209,6 +230,7 @@ async function boot(){
     if(r.ok) INDEX=await r.json();
   }catch(e){ INDEX=null; }
   renderList();
+  manifestoAc();
 }
 
 function gruplar(){
@@ -298,7 +320,7 @@ function sirala(liste){
 function fiyatSatiri(ad,tag,liste,p){
   liste=sirala(liste);
   const top=(liste&&liste[0])||null;
-  const pct=p!=null?` · market ${Math.round(p*100)}%`:'';
+  const pct=p!=null?` · market ${Math.round(p*100)}% · fair ${(1/p).toFixed(2)}`:'';
   return `<div class="orow">
     <span class="sel">${esc(ad)}<span class="tag">${esc(tag)}${pct}</span></span>
     <span class="odd">${top?top.o.toFixed(2):'—'}</span>
@@ -329,8 +351,8 @@ async function showDetail(i){
   html+=fiyatSatiri(m.a,'away',best.a,(m.p||{}).a);
   const diger=digerleri(m.h.split(' ')[0],best.h)+(m.sonuc3?digerleri('Draw',best.d):'')+digerleri(m.a.split(' ')[0],best.a);
   if(diger)html+=`<details class="more"><summary>Other books</summary>${diger}</details>`;
-  if(m.tot_cizgi!=null)html+=`<div class="foot">Total line: ${m.tot_cizgi}. Best price per selection, whichever book holds it — no book is best at everything. "Market %" is the de-vigged consensus; it sums to 100.</div>`;
-  else html+=`<div class="foot">Best price per selection, whichever book holds it — no book is best at everything. "Market %" is the de-vigged consensus; it sums to 100.</div>`;
+  if(m.tot_cizgi!=null)html+=`<div class="foot">Total line: ${m.tot_cizgi}. Best price per selection, whichever book holds it — no book is best at everything. "Market %" is the de-vigged consensus (sums to 100); "fair" is that consensus as a price — the gap between fair and the best price is the take.</div>`;
+  else html+=`<div class="foot">Best price per selection, whichever book holds it — no book is best at everything. "Market %" is the de-vigged consensus (sums to 100); "fair" is that consensus as a price — the gap between fair and the best price is the take.</div>`;
   html+=`</div>`;
 
   // placeholders; filled after memory fetch
