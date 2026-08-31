@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brier — the record, not the tip</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F2F5F4; --ink:#16211F; --rule:#D7DEDC; --rule-dark:#B9C4C1;
+    --teal:#0E7C6B; --teal-soft:#E3EFEC; --gold:#9A751F; --grey:#5C6B68;
+    --red:#A6432E; --red-soft:#F4E6E2;
+  }
+  *{box-sizing:border-box}
+  @media (prefers-reduced-motion: reduce){ *{transition:none!important} }
+  body{margin:0;background:var(--paper);color:var(--ink);
+       font-family:'Archivo',sans-serif;-webkit-font-smoothing:antialiased}
+  .mono{font-family:'IBM Plex Mono',monospace;font-variant-numeric:tabular-nums}
+  button{font-family:inherit;cursor:pointer;color:inherit;-webkit-appearance:none;appearance:none}
+  :focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+  .wrap{max-width:640px;margin:0 auto;min-height:100vh}
+
+  header{background:var(--ink);color:#fff;padding:16px 20px;
+         display:flex;align-items:baseline;justify-content:space-between}
+  header h1{margin:0;font-size:17px;font-weight:800;letter-spacing:.4px}
+  header .sub{font-size:10px;color:#9fb4b0;font-family:'IBM Plex Mono',monospace;letter-spacing:.5px}
+  .feedline{background:#fff;border-bottom:1px solid var(--rule);padding:6px 20px;
+            font-size:10px;color:var(--grey);font-family:'IBM Plex Mono',monospace}
+  .feedline.err{background:var(--red-soft);color:var(--red)}
+
+  /* chips */
+  .chips{display:flex;gap:8px;overflow-x:auto;padding:12px 20px 4px;scrollbar-width:none}
+  .chips::-webkit-scrollbar{display:none}
+  .chip{border:1px solid var(--rule-dark);background:#fff;border-radius:2px;
+        padding:6px 12px;font-size:11px;font-weight:700;color:var(--grey);white-space:nowrap}
+  .chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+  .list-head{padding:12px 20px 4px;display:flex;justify-content:space-between;align-items:baseline}
+  .list-head .t{font-size:13px;font-weight:800;letter-spacing:.5px;text-transform:uppercase}
+  .list-head .d{font-size:11px;color:var(--grey);font-family:'IBM Plex Mono',monospace}
+  .list-note{padding:0 20px 10px;font-size:11px;color:var(--grey);line-height:1.5}
+
+  .hour{padding:7px 20px;font-size:10px;color:var(--grey);
+        font-family:'IBM Plex Mono',monospace;letter-spacing:1px;border-bottom:1px solid var(--rule)}
+  .mrow{width:100%;text-align:left;background:#fff;border:0;border-bottom:1px solid var(--rule);
+        padding:13px 20px;display:flex;align-items:center;gap:14px;transition:background .12s}
+  .mrow:hover{background:var(--teal-soft)}
+  .mrow{color:var(--ink)}
+  .mrow .time{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;min-width:46px}
+  .mrow .mid{flex:1;min-width:0}
+  .mrow .comp{font-size:10px;color:var(--grey);text-transform:uppercase;letter-spacing:.7px;font-weight:600}
+  .mrow .teams{font-size:15px;font-weight:700;margin-top:2px;display:block}
+  .mrow .arr{color:var(--rule-dark);font-size:16px}
+  .morehint,.empty{padding:18px 20px;font-size:12px;color:var(--grey);text-align:center;line-height:1.5}
+
+  .back{background:none;border:0;color:var(--teal);font-size:12px;font-weight:700;
+        padding:14px 20px 0;letter-spacing:.3px}
+  .dhead{padding:10px 20px 16px;border-bottom:1px solid var(--rule)}
+  .dhead .comp{font-size:10px;color:var(--grey);text-transform:uppercase;letter-spacing:.8px;font-weight:600}
+  .dhead .teams{font-size:21px;font-weight:800;margin-top:4px;line-height:1.25}
+  .dhead .when{font-size:12px;color:var(--grey);margin-top:4px;font-family:'IBM Plex Mono',monospace}
+
+  .card{background:#fff;border:1px solid var(--rule);border-radius:2px;margin:14px 16px;overflow:hidden}
+  .card .head{padding:11px 16px;border-bottom:1px solid var(--rule);
+              display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+  .card .head .t{font-size:13px;font-weight:800}
+  .card .head .k{font-size:9px;color:var(--grey);text-transform:uppercase;letter-spacing:.8px;
+                 font-family:'IBM Plex Mono',monospace;text-align:right}
+  .card .foot{padding:9px 16px;border-top:1px solid var(--rule);
+              font-size:10.5px;color:var(--grey);line-height:1.5;background:#FBFCFC}
+
+  .orow{display:flex;align-items:center;padding:12px 16px;border-bottom:1px solid var(--rule)}
+  .orow:last-of-type{border-bottom:0}
+  .orow .sel{flex:1;font-size:14px;font-weight:600}
+  .orow .sel .tag{font-size:9px;color:var(--grey);font-weight:600;letter-spacing:.5px;
+                  text-transform:uppercase;display:block;margin-top:1px}
+  .orow .odd{font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:600}
+  .orow .book{font-size:9px;font-family:'IBM Plex Mono',monospace;letter-spacing:.5px;
+              min-width:72px;text-align:right;margin-left:12px;color:#9AA8A5;text-transform:lowercase}
+  details.more{border-top:1px solid var(--rule)}
+  details.more summary{padding:10px 16px;font-size:11px;color:var(--teal);font-weight:700;
+                       cursor:pointer;list-style:none;letter-spacing:.3px}
+  details.more summary::-webkit-details-marker{display:none}
+  details.more summary::before{content:"▸ "}
+  details.more[open] summary::before{content:"▾ "}
+  .minirow{display:flex;justify-content:space-between;padding:6px 16px;font-size:11px;
+           font-family:'IBM Plex Mono',monospace;color:var(--grey)}
+  .minirow .o{color:var(--ink);font-weight:600}
+
+  .xrow{display:flex;align-items:center;gap:10px;padding:8px 16px}
+  .xrow:first-of-type{padding-top:13px}
+  .xrow:last-of-type{padding-bottom:13px}
+  .xrow .bk{font-family:'IBM Plex Mono',monospace;font-size:11px;min-width:88px;text-transform:lowercase;
+            overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .xrow .bar{flex:1;height:8px;background:var(--teal-soft);border-radius:1px;overflow:hidden}
+  .xrow .bar i{display:block;height:100%;background:var(--teal)}
+  .xrow.widest .bar i{background:var(--red)}
+  .xrow.widest .bar{background:var(--red-soft)}
+  .xrow .pct{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;min-width:44px;text-align:right}
+  .xrow.leanest .pct{color:var(--teal)}
+  .xrow.widest .pct{color:var(--red)}
+  .xread{padding:11px 16px;border-top:1px solid var(--rule);font-size:12.5px;line-height:1.55}
+
+  .memrow{display:flex;align-items:center;padding:10px 16px;border-bottom:1px solid var(--rule);gap:10px}
+  .memrow:last-of-type{border-bottom:0}
+  .memrow .dt{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--grey);min-width:62px}
+  .memrow .fav{flex:1;font-size:12.5px}
+  .memrow .fav .pc{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--grey);display:block;margin-top:2px}
+  .memrow .tm{font-weight:600}
+  .memrow .tm.f{color:var(--teal);font-weight:700}
+  .memrow .imapct{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--teal);font-weight:600}
+  .memrow .sc{font-family:'IBM Plex Mono',monospace;font-weight:600;padding:0 3px}
+  .memrow .res{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;min-width:38px;text-align:center}
+  .memrow .hit{font-size:11px;min-width:20px;text-align:right}
+  .memrow .hit.y{color:var(--teal)} .memrow .hit.n{color:var(--red)}
+  .memempty{padding:20px 16px;font-size:12px;color:var(--grey);text-align:center;line-height:1.6}
+
+  footer{padding:26px 20px 34px;text-align:center}
+  footer .creed{font-size:12px;font-weight:700;letter-spacing:.4px}
+  footer .by{margin-top:6px;font-size:10px;color:var(--grey);font-family:'IBM Plex Mono',monospace}
+  .hidden{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>BRIER</h1>
+    <span class="sub">the record, not the tip</span>
+  </header>
+  <div id="feedline" class="feedline">connecting to live feed…</div>
+
+  <div id="view-list">
+    <div class="chips" id="chips"></div>
+    <div class="chips" id="chips2" style="display:none;padding-top:0"></div>
+    <div class="list-head">
+      <span class="t">Today</span>
+      <span class="d mono" id="today"></span>
+    </div>
+    <p class="list-note">Sorted by kickoff time — not by odds, probability, or commission. Ever.</p>
+    <div id="listBody"><div class="empty">Loading today's games…</div></div>
+    <footer>
+      <div class="creed">No picks. No tips. Just the record.</div>
+      <div class="by">brier · by BT</div>
+    </footer>
+  </div>
+
+  <div id="view-detail" class="hidden">
+    <button class="back" onclick="showList()">‹ Today</button>
+    <div id="detailBody"></div>
+    <footer>
+      <div class="creed">No picks. No tips. Just the record.</div>
+      <div class="by">brier · by BT</div>
+    </footer>
+  </div>
+</div>
+
+<script>
+const HOST   = 'https://worker-production-a1ba.up.railway.app';
+const MEMORY = 'https://bturkyil.github.io/brier-veri/';
+
+// live sport key -> memory file league name
+const LIG_ESLE = {
+  soccer_epl:'epl', soccer_spain_la_liga:'laliga', soccer_italy_serie_a:'seriea',
+  soccer_germany_bundesliga:'bundesliga', soccer_germany_bundesliga2:'bundes2',
+  soccer_france_ligue_one:'ligue1', soccer_france_ligue_two:'ligue2',
+  soccer_turkey_super_league:'turkiye', soccer_portugal_primeira_liga:'portekiz',
+  soccer_netherlands_eredivisie:'eredivisie', soccer_belgium_first_div:'belcika',
+  soccer_spl:'iskocya', soccer_greece_super_league:'yunanistan',
+  soccer_austria_bundesliga:'avusturya', soccer_switzerland_superleague:'isvicre',
+  soccer_denmark_superliga:'danimarka', soccer_sweden_allsvenskan:'isvec',
+  soccer_norway_eliteserien:'norvec', soccer_japan_j_league:'japonya',
+  soccer_brazil_campeonato:'brezilya', soccer_argentina_primera_division:'arjantin',
+  soccer_mexico_ligamx:'meksika', soccer_usa_mls:'mls', soccer_australia_aleague:'aleague',
+  soccer_efl_champ:'champ', soccer_england_league1:'efl1', soccer_england_league2:'efl2',
+  soccer_spain_segunda_division:'segunda', soccer_italy_serie_b:'serieb',
+  soccer_uefa_champs_league:'ucl', soccer_uefa_europa_league:'uel',
+  soccer_conmebol_copa_libertadores:'libertadores', soccer_conmebol_copa_sudamericana:'sudamericana',
+  americanfootball_nfl:'nfl', americanfootball_ncaaf:'ncaaf',
+  basketball_nba:'nba', basketball_wnba:'wnba', basketball_ncaab:'ncaab',
+  baseball_mlb:'mlb', icehockey_nhl:'nhl', aussierules_afl:'afl',
+  basketball_euroleague:'euroleague', americanfootball_cfl:'cfl',
+  soccer_finland_veikkausliiga:'veikkausliiga', soccer_poland_ekstraklasa:'ekstraklasa',
+  soccer_league_of_ireland:'ireland', soccer_korea_kleague1:'kleague1',
+  soccer_sweden_superettan:'superettan', soccer_germany_liga3:'liga3',
+};
+
+let LIVE=null, INDEX=null, HAFIZA={}, grup='ALL', ligSec=null;
+
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function anahtar(a,b){const x=[String(a).trim().toLowerCase(),String(b).trim().toLowerCase()].sort();return x[0]+'|'+x[1];}
+function saat(t){const d=new Date(t);return d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}
+function gun(t){const d=new Date(t);const bugun=new Date();
+  return d.toDateString()===bugun.toDateString()?'':d.toLocaleDateString([],{weekday:'short'})+' · ';}
+
+async function boot(){
+  const fl=document.getElementById('feedline');
+  document.getElementById('today').textContent=new Date().toLocaleDateString([],{day:'numeric',month:'long'});
+  try{
+    const r=await fetch(HOST+'/bugun.json',{cache:'no-store'});
+    if(!r.ok) throw 0;
+    LIVE=await r.json();
+    fl.textContent='live · snapshot '+(LIVE.cekim||'').replace('T',' ')+' UTC · updates every 10 min';
+  }catch(e){
+    fl.textContent='live feed unreachable — check your connection and reload';
+    fl.classList.add('err');
+    document.getElementById('listBody').innerHTML='<div class="empty">No live data right now.</div>';
+    return;
+  }
+  try{
+    const r=await fetch(MEMORY+'brier_hafiza_INDEX.json',{cache:'no-store'});
+    if(r.ok) INDEX=await r.json();
+  }catch(e){ INDEX=null; }
+  renderList();
+}
+
+function gruplar(){
+  const s=new Set();
+  Object.values(LIVE.ligler||{}).forEach(l=>{
+    if((l.maclar||[]).length) s.add(l.grup||'Other');
+  });
+  return ['ALL',...[...s].sort()];
+}
+function ligleri(){
+  if(grup==='ALL') return [];
+  const s=new Map();
+  Object.entries(LIVE.ligler||{}).forEach(([ad,l])=>{
+    if((l.grup||'Other')===grup&&(l.maclar||[]).length) s.set(ad,l.maclar.length);
+  });
+  return [...s.keys()].sort();
+}
+
+function renderChips(){
+  let html=gruplar().map(g=>
+    `<button class="chip${g===grup?' on':''}" onclick="setGrup('${esc(g)}')">${g==='ALL'?'All sports':esc(g)}</button>`
+  ).join('');
+  document.getElementById('chips').innerHTML=html;
+  const ligler=ligleri();
+  const alt=document.getElementById('chips2');
+  if(ligler.length>1){
+    alt.innerHTML=`<button class="chip${ligSec===null?' on':''}" onclick="setLig(null)">All leagues</button>`+
+      ligler.map(l=>`<button class="chip${l===ligSec?' on':''}" onclick="setLig('${esc(l)}')">${esc(l)}</button>`).join('');
+    alt.style.display='flex';
+  }else{alt.innerHTML='';alt.style.display='none';}
+}
+function setGrup(g){grup=g;ligSec=null;renderList();}
+function setLig(l){ligSec=l;renderList();}
+
+function oyunlar(){
+  const out=[];
+  Object.entries(LIVE.ligler||{}).forEach(([ad,ld])=>{
+    if(grup!=='ALL'&&(ld.grup||'Other')!==grup)return;
+    if(ligSec!==null&&ad!==ligSec)return;
+    (ld.maclar||[]).forEach(m=>out.push({...m,ligAd:ad,key:ld.key,sonuc3:!!ld.sonuc3}));
+  });
+  out.sort((a,b)=>String(a.t).localeCompare(String(b.t)));
+  return out;
+}
+
+function renderList(){
+  renderChips();
+  const g=oyunlar();
+  const box=document.getElementById('listBody');
+  if(!g.length){box.innerHTML='<div class="empty">No upcoming games in this view right now.<br>Try another sport.</div>';return;}
+  const LIMIT=60, shown=g.slice(0,LIMIT);
+  let html='',lastHour='';
+  shown.forEach((m,i)=>{
+    const h=gun(m.t)+saat(m.t).slice(0,2)+':00';
+    if(h!==lastHour){html+=`<div class="hour">${esc(h)}</div>`;lastHour=h;}
+    html+=`<button class="mrow" onclick="showDetail(${i})">
+      <span class="time">${saat(m.t)}</span>
+      <span class="mid"><span class="comp">${esc(m.ligAd)}</span>
+      <span class="teams">${esc(m.h)} — ${esc(m.a)}</span></span>
+      <span class="arr">›</span></button>`;
+  });
+  if(g.length>LIMIT)html+=`<div class="morehint">Showing ${LIMIT} of ${g.length} games — narrow by sport above to see the rest.</div>`;
+  box.innerHTML=html;
+  window._shown=shown;
+}
+
+function showList(){
+  document.getElementById('view-detail').classList.add('hidden');
+  document.getElementById('view-list').classList.remove('hidden');
+  window.scrollTo(0,0);
+}
+
+async function hafizaGetir(lig){
+  if(!lig)return null;
+  if(HAFIZA[lig]!==undefined)return HAFIZA[lig];
+  try{
+    const r=await fetch(MEMORY+'brier_hafiza_'+lig+'.json',{cache:'force-cache'});
+    HAFIZA[lig]=r.ok?await r.json():null;
+  }catch(e){HAFIZA[lig]=null;}
+  return HAFIZA[lig];
+}
+
+function sirala(liste){
+  if(!liste) return liste;
+  return [...liste].sort((x,y)=> y.o - x.o || String(x.k).localeCompare(String(y.k)));
+}
+function fiyatSatiri(ad,tag,liste,p){
+  liste=sirala(liste);
+  const top=(liste&&liste[0])||null;
+  const pct=p!=null?` · market ${Math.round(p*100)}%`:'';
+  return `<div class="orow">
+    <span class="sel">${esc(ad)}<span class="tag">${esc(tag)}${pct}</span></span>
+    <span class="odd">${top?top.o.toFixed(2):'—'}</span>
+    <span class="book">${top?esc(top.k):''}</span></div>`;
+}
+function digerleri(etiket,liste){
+  liste=sirala(liste);
+  if(!liste||liste.length<2)return'';
+  return liste.slice(1,5).map(x=>
+    `<div class="minirow"><span>${esc(etiket)} · ${esc(x.k)}</span><span class="o">${x.o.toFixed(2)}</span></div>`).join('');
+}
+
+async function showDetail(i){
+  const m=window._shown[i];
+  document.getElementById('view-list').classList.add('hidden');
+  document.getElementById('view-detail').classList.remove('hidden');
+  window.scrollTo(0,0);
+  const lig=LIG_ESLE[m.key]||null;
+  const best=m.best||{};
+  let html=`<div class="dhead"><div class="comp">${esc(m.ligAd)}</div>
+    <div class="teams">${esc(m.h)} — ${esc(m.a)}</div>
+    <div class="when">${gun(m.t)}${saat(m.t)} · ${m.kitap||'?'} books tracked</div></div>`;
+
+  // --- best prices ---
+  html+=`<div class="card"><div class="head"><span class="t">Best prices</span><span class="k">${m.sonuc3?'match result':'moneyline'}</span></div>`;
+  html+=fiyatSatiri(m.h,'home',best.h,(m.p||{}).h);
+  if(m.sonuc3)html+=fiyatSatiri('Draw','',best.d,(m.p||{}).d);
+  html+=fiyatSatiri(m.a,'away',best.a,(m.p||{}).a);
+  const diger=digerleri(m.h.split(' ')[0],best.h)+(m.sonuc3?digerleri('Draw',best.d):'')+digerleri(m.a.split(' ')[0],best.a);
+  if(diger)html+=`<details class="more"><summary>Other books</summary>${diger}</details>`;
+  if(m.tot_cizgi!=null)html+=`<div class="foot">Total line: ${m.tot_cizgi}. Best price per selection, whichever book holds it — no book is best at everything. "Market %" is the de-vigged consensus; it sums to 100.</div>`;
+  else html+=`<div class="foot">Best price per selection, whichever book holds it — no book is best at everything. "Market %" is the de-vigged consensus; it sums to 100.</div>`;
+  html+=`</div>`;
+
+  // placeholders; filled after memory fetch
+  html+=`<div id="xraySlot"></div><div id="memSlot"><div class="card"><div class="memempty">Opening the archive…</div></div></div>`;
+  document.getElementById('detailBody').innerHTML=html;
+
+  const H=await hafizaGetir(lig);
+
+  // --- league x-ray ---
+  let x='';
+  if(H&&H.rontgen&&H.rontgen.length){
+    const maxM=H.rontgen[H.rontgen.length-1].medyan_marj;
+    x+=`<div class="card"><div class="head"><span class="t">League X-ray</span><span class="k">median take · ${esc(m.ligAd)}</span></div>`;
+    H.rontgen.forEach((r,idx)=>{
+      const cls=idx===0?'leanest':(idx===H.rontgen.length-1?'widest':'');
+      const w=Math.max(8,Math.round(100*r.medyan_marj/Math.max(maxM,0.1)));
+      x+=`<div class="xrow ${cls}"><span class="bk">${esc(r.kitap)}</span>
+        <div class="bar"><i style="width:${w}%"></i></div>
+        <span class="pct">${r.medyan_marj.toFixed(1)}%</span></div>`;
+    });
+    const adil=H.rontgen[0], genis=H.rontgen[H.rontgen.length-1];
+    x+=`<div class="xread">Historically the leanest price in this league is <b>${esc(adil.kitap)}</b> (median take ${adil.medyan_marj.toFixed(1)}%); the widest is <b>${esc(genis.kitap)}</b> (${genis.medyan_marj.toFixed(1)}%). This is a record of what books charge — not a signal to bet.</div></div>`;
+  }
+  document.getElementById('xraySlot').innerHTML=x;
+
+  // --- market memory ---
+  let mem='';
+  const kal=H&&H.kalibrasyon?`In this league the market favourite averaged ${H.kalibrasyon.favori_ima_ort}% implied and won ${H.kalibrasyon.favori_tutma}% of the time (${H.mac.toLocaleString()} matches). Reliable prices — not a profit promise.`:'';
+  if(H&&!H.kalibrasyon){
+    mem=`<div class="card"><div class="head"><span class="t">Market memory</span><span class="k">prices only</span></div>
+      <div class="memempty">We track prices in this league, but not results yet — so no memory cards.<br>We'd rather show nothing than something we can't stand behind.</div></div>`;
+  }else if(H&&H.h2h){
+    const kartlar=H.h2h[anahtar(m.h,m.a)];
+    mem+=`<div class="card"><div class="head"><span class="t">Market memory</span><span class="k">last meetings</span></div>`;
+    if(kartlar&&kartlar.length){
+      kartlar.slice(0,5).forEach(k=>{
+        const fH=k.fav===k.h, fA=k.fav===k.a;
+        const et=` <span class="imapct">${k.ima}%</span>`;
+        mem+=`<div class="memrow"><span class="dt">${esc(String(k.t).slice(0,7))}</span>
+          <span class="fav"><span class="tm${fH?' f':''}">${esc(k.h)}${fH?et:''}</span><b class="sc">${esc(k.skor)}</b><span class="tm${fA?' f':''}">${esc(k.a)}${fA?et:''}</span>${(!fH&&!fA)?`<span class=\"pc\">market: ${esc(k.fav)} ${k.ima}%</span>`:''}</span>
+          <span class="hit ${k.tuttu?'y':'n'}">${k.tuttu?'✓':'✗'}</span></div>`;
+      });
+      mem+=`<div class="foot">What the market said, and what happened. <b style='color:var(--teal)'>Coloured team</b> = market favourite, its closing implied % beside it; ✓ it won, ✗ it didn't. ${kartlar.length<5?'':'5 matches is a small sample; a lean, not a law. '}${kal}</div>`;
+    }else{
+      mem+=`<div class="memempty">These two haven't met in our archive yet.<br>The record starts the day they do.</div>`;
+      if(kal)mem+=`<div class="foot">${kal}</div>`;
+    }
+    mem+=`</div>`;
+  }else{
+    mem=`<div class="card"><div class="memempty">No archive for this league yet — live prices only.<br>We only show memory where we truly have it.</div></div>`;
+  }
+  document.getElementById('memSlot').innerHTML=mem;
+}
+
+boot();
+</script>
+</body>
+</html>
