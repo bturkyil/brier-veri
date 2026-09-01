@@ -228,6 +228,13 @@ function vurgula(t){
   // sayilari ve % kaliplarini teal yap (b ile)
   return t.replace(/(\d[\d,]*%?)/g,'<b>$1</b>');
 }
+function metinDuzelt(t){
+  // insight havuzunda kalmis ham lig kodlarini okunur ada cevir
+  const d={'aleague':'the A-League','ncaab':'NCAA basketball','ncaaf':'NCAA football',
+    'wnba':'the WNBA','cfl':'the CFL','euroleague':'the EuroLeague'};
+  Object.keys(d).forEach(k=>{ t=t.replace(new RegExp('\\b'+k+'\\b','g'),d[k]); });
+  return t;
+}
 async function recordOfTheDay(){
   const el=document.getElementById('rotd');
   // havuzu getir (bir kez)
@@ -256,7 +263,7 @@ async function recordOfTheDay(){
   if(!kartlar.length){el.classList.add('hidden');return;}
   const secili=kartlar[gunTohum()%kartlar.length];
   el.innerHTML=`<div class="lbl">The record of the day</div>`+
-    `<div class="txt">${vurgula(secili)}</div>`+
+    `<div class="txt">${vurgula(metinDuzelt(secili))}</div>`+
     `<div class="sig">Not a tip. The record.</div>`;
   el.classList.remove('hidden');
 }
@@ -391,24 +398,31 @@ function digerleri(etiket,liste){
 
 async function showDetail(i){
   const m=window._shown[i];
+  if(!m){return;}
   document.getElementById('view-list').classList.add('hidden');
   document.getElementById('view-detail').classList.remove('hidden');
   window.scrollTo(0,0);
   const lig=LIG_ESLE[m.key]||null;
   const best=m.best||{};
+  const evAd=(m.h||'Home'), depAd=(m.a||'Away');
+  const ilkKelime=(s)=>String(s||'').split(' ')[0]||'';
   let html=`<div class="dhead"><div class="comp">${esc(m.ligAd)}</div>
-    <div class="teams">${esc(m.h)} — ${esc(m.a)}</div>
+    <div class="teams">${esc(evAd)} — ${esc(depAd)}</div>
     <div class="when">${gun(m.t)}${saat(m.t)} · ${m.kitap||'?'} books tracked</div></div>`;
 
   // --- best prices ---
   html+=`<div class="card"><div class="head"><span class="t">Best prices</span><span class="k">${m.sonuc3?'match result':'moneyline'}</span></div>`;
-  html+=fiyatSatiri(m.h,'home',best.h,(m.p||{}).h);
+  html+=fiyatSatiri(evAd,'home',best.h,(m.p||{}).h);
   if(m.sonuc3)html+=fiyatSatiri('Draw','',best.d,(m.p||{}).d);
-  html+=fiyatSatiri(m.a,'away',best.a,(m.p||{}).a);
-  const diger=digerleri(m.h.split(' ')[0],best.h)+(m.sonuc3?digerleri('Draw',best.d):'')+digerleri(m.a.split(' ')[0],best.a);
+  html+=fiyatSatiri(depAd,'away',best.a,(m.p||{}).a);
+  const diger=digerleri(ilkKelime(evAd),best.h)+(m.sonuc3?digerleri('Draw',best.d):'')+digerleri(ilkKelime(depAd),best.a);
   if(diger)html+=`<details class="more"><summary>Other books</summary>${diger}</details>`;
   if(m.tot_cizgi!=null)html+=`<div class="foot">Total line: ${m.tot_cizgi}. Best price per selection, whichever book holds it — no book is best at everything. "Market %" is the de-vigged consensus (sums to 100); "fair" is that consensus as a price — the gap between fair and the best price is the take.</div>`;
   else html+=`<div class="foot">Best price per selection, whichever book holds it — no book is best at everything. "Market %" is the de-vigged consensus (sums to 100); "fair" is that consensus as a price — the gap between fair and the best price is the take.</div>`;
+  if(!best.h&&!best.a&&!best.d){
+    html=html.replace(/<div class="card"><div class="head"><span class="t">Best prices<\/span>[\s\S]*?<\/div>$/,'');
+    html+=`<div class="card"><div class="memempty">Live prices for this game aren't in the feed yet.<br>Check back closer to kickoff.</div></div>`;
+  }
   html+=`</div>`;
 
   // placeholders; filled after memory fetch
