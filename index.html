@@ -313,20 +313,20 @@ function ligleri(){
 }
 
 function renderChips(){
-  let html=gruplar().map(g=>
-    `<button class="chip${g===grup?' on':''}" onclick="setGrup('${esc(g)}')">${g==='ALL'?'All sports':esc(g)}</button>`
+  const gs=gruplar(); window._gruplar=gs;
+  document.getElementById('chips').innerHTML=gs.map((g,ix)=>
+    `<button class="chip${g===grup?' on':''}" onclick="setGrupIx(${ix})">${g==='ALL'?'All sports':esc(g)}</button>`
   ).join('');
-  document.getElementById('chips').innerHTML=html;
-  const ligler=ligleri();
+  const ligler=ligleri(); window._ligler=ligler;
   const alt=document.getElementById('chips2');
   if(ligler.length>1){
-    alt.innerHTML=`<button class="chip${ligSec===null?' on':''}" onclick="setLig(null)">All leagues</button>`+
-      ligler.map(l=>`<button class="chip${l===ligSec?' on':''}" onclick="setLig('${esc(l)}')">${esc(l)}</button>`).join('');
+    alt.innerHTML=`<button class="chip${ligSec===null?' on':''}" onclick="setLigIx(-1)">All leagues</button>`+
+      ligler.map((l,ix)=>`<button class="chip${l===ligSec?' on':''}" onclick="setLigIx(${ix})">${esc(l)}</button>`).join('');
     alt.style.display='flex';
   }else{alt.innerHTML='';alt.style.display='none';}
 }
-function setGrup(g){grup=g;ligSec=null;renderList();}
-function setLig(l){ligSec=l;renderList();}
+function setGrupIx(ix){grup=window._gruplar[ix]||'ALL';ligSec=null;renderList();}
+function setLigIx(ix){ligSec=ix<0?null:(window._ligler[ix]||null);renderList();}
 
 function oyunlar(){
   const out=[];
@@ -378,7 +378,11 @@ async function hafizaGetir(lig){
 
 function sirala(liste){
   if(!liste) return liste;
-  return [...liste].sort((x,y)=> y.o - x.o || String(x.k).localeCompare(String(y.k)));
+  // esitlikte: gun-rotasyonlu alfabe - her kitap tepede gununu alir, kimse satin alamaz
+  const kay=gunTohum()%26;
+  const dondur=(s)=>{const c=String(s).toLowerCase();
+    return String.fromCharCode(((c.charCodeAt(0)-97+26-kay)%26)+97)+c.slice(1);};
+  return [...liste].sort((x,y)=> y.o - x.o || dondur(x.k).localeCompare(dondur(y.k)));
 }
 function fiyatSatiri(ad,tag,liste,p){
   liste=sirala(liste);
