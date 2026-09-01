@@ -158,7 +158,7 @@
       shows the market's true probabilities — and keeps the record of how often the market got it right.
     </div>
     <div class="list-head">
-      <span class="t">Today</span>
+      <span class="t" id="gunBaslik">Today</span>
       <span class="d mono" id="today"></span>
     </div>
     <p class="list-note">Sorted by kickoff time — not by odds, probability, or commission. Ever.</p>
@@ -314,11 +314,11 @@ function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','
 function anahtar(a,b){const x=[String(a).trim().toLowerCase(),String(b).trim().toLowerCase()].sort();return x[0]+'|'+x[1];}
 function saat(t){const d=new Date(t);return d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}
 function gun(t){const d=new Date(t);const bugun=new Date();
-  return d.toDateString()===bugun.toDateString()?'':d.toLocaleDateString([],{weekday:'short'})+' · ';}
+  return d.toDateString()===bugun.toDateString()?'':d.toLocaleDateString('en-GB',{weekday:'short'})+' · ';}
 
 async function boot(){
   const fl=document.getElementById('feedline');
-  document.getElementById('today').textContent=new Date().toLocaleDateString([],{day:'numeric',month:'long'});
+  document.getElementById('today').textContent=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long'});
   try{
     const r=await fetch(HOST+'/bugun.json',{cache:'no-store'});
     if(!r.ok) throw 0;
@@ -344,7 +344,11 @@ function tarihKey(t){
 }
 function gunListesi(){
   const s=new Set();
-  Object.values((LIVE&&LIVE.ligler)||{}).forEach(ld=>(ld.maclar||[]).forEach(m=>s.add(tarihKey(m.t))));
+  Object.entries((LIVE&&LIVE.ligler)||{}).forEach(([ad,ld])=>{
+    if(grup!=='ALL'&&(ld.grup||'Other')!==grup)return;
+    if(ligSec!==null&&ad!==ligSec)return;
+    (ld.maclar||[]).forEach(m=>s.add(tarihKey(m.t)));
+  });
   return [...s].sort().slice(0,4);
 }
 function gunEtiket(k){
@@ -357,9 +361,14 @@ function gunEtiket(k){
 function renderGunler(){
   const el=document.getElementById('gunler');
   const gs=gunListesi(); window._gunler=gs;
-  if(gunSec===null&&gs.length)gunSec=gs[0];
+  if(!gs.length){gunSec=null;}
+  else if(gunSec===null||!gs.includes(gunSec)){gunSec=gs[0];}
   el.innerHTML=gs.map((k,ix)=>
     `<button class="chip${k===gunSec?' on':''}" onclick="setGunIx(${ix})">${gunEtiket(k)}</button>`).join('');
+  const bas=document.getElementById('gunBaslik');
+  if(bas)bas.textContent=gunSec?gunEtiket(gunSec).toUpperCase():'TODAY';
+  const td=document.getElementById('today');
+  if(td)td.textContent=gunSec?new Date(gunSec+'T12:00').toLocaleDateString('en-GB',{day:'numeric',month:'long'}):'';
 }
 function setGunIx(ix){gunSec=(window._gunler||[])[ix]||null;renderList();}
 function gruplar(){
