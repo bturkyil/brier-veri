@@ -53,6 +53,9 @@
   .mrow .comp{font-size:10px;color:var(--grey);text-transform:uppercase;letter-spacing:.7px;font-weight:600}
   .mrow .teams{font-size:15px;font-weight:700;margin-top:2px;display:block}
   .mrow .arr{color:var(--rule-dark);font-size:16px}
+  .mrow .odds{display:block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;
+    color:var(--grey);margin-top:3px;letter-spacing:.3px}
+  .mrow .odds b{color:var(--ink);font-weight:600}
   .ligkarne{padding:10px 20px;font-size:11.5px;color:var(--grey);line-height:1.55;
     border-bottom:1px solid var(--rule);background:#FBFCFC}
   .ligkarne b{color:var(--ink)}
@@ -145,6 +148,7 @@
   <div id="feedline" class="feedline">connecting to live feed…</div>
 
   <div id="view-list">
+    <div class="chips" id="gunler" style="padding-bottom:0"></div>
     <div class="chips" id="chips"></div>
     <div class="chips" id="chips2" style="display:none;padding-top:0"></div>
     <div id="rotd" class="rotd hidden"></div>
@@ -205,7 +209,7 @@ const LIG_ESLE = {
   soccer_sweden_superettan:'superettan', soccer_germany_liga3:'liga3',
 };
 
-let LIVE=null, INDEX=null, HAFIZA={}, grup='ALL', ligSec=null;
+let LIVE=null, INDEX=null, HAFIZA={}, grup='ALL', ligSec=null, gunSec=null;
 
 function kapatManifesto(){
   document.getElementById('manifesto').classList.add('hidden');
@@ -335,6 +339,29 @@ async function boot(){
   recordOfTheDay();
 }
 
+function tarihKey(t){
+  return new Date(t).toLocaleDateString('en-CA'); // YYYY-MM-DD, yerel
+}
+function gunListesi(){
+  const s=new Set();
+  Object.values((LIVE&&LIVE.ligler)||{}).forEach(ld=>(ld.maclar||[]).forEach(m=>s.add(tarihKey(m.t))));
+  return [...s].sort().slice(0,4);
+}
+function gunEtiket(k){
+  const bugun=tarihKey(new Date());
+  const yarin=tarihKey(new Date(Date.now()+864e5));
+  if(k===bugun)return 'Today';
+  if(k===yarin)return 'Tomorrow';
+  return new Date(k+'T12:00').toLocaleDateString('en-GB',{weekday:'short',day:'numeric'});
+}
+function renderGunler(){
+  const el=document.getElementById('gunler');
+  const gs=gunListesi(); window._gunler=gs;
+  if(gunSec===null&&gs.length)gunSec=gs[0];
+  el.innerHTML=gs.map((k,ix)=>
+    `<button class="chip${k===gunSec?' on':''}" onclick="setGunIx(${ix})">${gunEtiket(k)}</button>`).join('');
+}
+function setGunIx(ix){gunSec=(window._gunler||[])[ix]||null;renderList();}
 function gruplar(){
   const s=new Set();
   Object.values(LIVE.ligler||{}).forEach(l=>{
@@ -380,13 +407,14 @@ function oyunlar(){
   Object.entries(LIVE.ligler||{}).forEach(([ad,ld])=>{
     if(grup!=='ALL'&&(ld.grup||'Other')!==grup)return;
     if(ligSec!==null&&ad!==ligSec)return;
-    (ld.maclar||[]).forEach(m=>out.push({...m,ligAd:ad,key:ld.key,sonuc3:!!ld.sonuc3}));
+    (ld.maclar||[]).forEach(m=>{if(gunSec&&tarihKey(m.t)!==gunSec)return;out.push({...m,ligAd:ad,key:ld.key,sonuc3:!!ld.sonuc3});});
   });
   out.sort((a,b)=>String(a.t).localeCompare(String(b.t)));
   return out;
 }
 
 function renderList(){
+  renderGunler();
   renderChips();
   const g=oyunlar();
   const box=document.getElementById('listBody');
@@ -396,10 +424,19 @@ function renderList(){
   shown.forEach((m,i)=>{
     const h=gun(m.t)+saat(m.t).slice(0,2)+':00';
     if(h!==lastHour){html+=`<div class="hour">${esc(h)}</div>`;lastHour=h;}
+    const tepe=(l)=>l&&l.length?Math.max(...l.map(x=>x.o)).toFixed(2):null;
+    const b=m.best||{};
+    const oh=tepe(b.h), od=m.sonuc3?tepe(b.d):null, oa=tepe(b.a);
+    let oranSat='';
+    if(oh&&oa){
+      oranSat=m.sonuc3&&od
+        ?`<span class="odds"><b>${oh}</b> · ${od} · <b>${oa}</b></span>`
+        :`<span class="odds"><b>${oh}</b> · <b>${oa}</b></span>`;
+    }
     html+=`<button class="mrow" onclick="showDetail(${i})">
       <span class="time">${saat(m.t)}</span>
       <span class="mid"><span class="comp">${esc(m.ligAd)}</span>
-      <span class="teams">${esc(m.h)} — ${esc(m.a)}</span></span>
+      <span class="teams">${esc(m.h)} — ${esc(m.a)}</span>${oranSat}</span>
       <span class="arr">›</span></button>`;
   });
   if(g.length>LIMIT)html+=`<div class="morehint">Showing ${LIMIT} of ${g.length} games — narrow by sport above to see the rest.</div>`;
