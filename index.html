@@ -223,28 +223,40 @@ function ligAdiDuzgun(l){
     seriea:'Serie A',ligue2:'Ligue 2',segunda:'Segunda División',serieb:'Serie B'};
   return m[l]||l;
 }
+let INSIGHT=null;
+function vurgula(t){
+  // sayilari ve % kaliplarini teal yap (b ile)
+  return t.replace(/(\d[\d,]*%?)/g,'<b>$1</b>');
+}
 async function recordOfTheDay(){
   const el=document.getElementById('rotd');
-  if(!INDEX||!INDEX.ligler||!INDEX.ligler.length) return;
-  // yeterli ornekli, kalibrasyonu olan ligler
-  const uygun=INDEX.ligler.filter(l=>l.kalibrasyon&&l.mac>=300);
-  if(!uygun.length) return;
-  const tohum=gunTohum();
-  // gun bazli deterministik secim: kalibrasyon karti
-  const lig=uygun[tohum%uygun.length];
-  const k=lig.kalibrasyon;
-  let txt='';
-  // iki tur arasinda gune gore gecis
-  if(tohum%2===0){
-    txt=`Across <b>${lig.mac.toLocaleString()}</b> ${ligAdiDuzgun(lig.lig)} matches, the market's `+
-        `<b>${k.favori_ima_ort}%</b> favourite won <b>${k.favori_tutma}%</b> of the time.`;
-  }else{
-    const fark=(k.favori_tutma-k.favori_ima_ort).toFixed(1);
-    const yon=fark>=0?'slightly more often':'slightly less often';
-    txt=`In ${ligAdiDuzgun(lig.lig)}, the market favourite won <b>${fark>=0?'more':'less'}</b> `+
-        `than its price implied — <b>${k.favori_tutma}%</b> actual vs <b>${k.favori_ima_ort}%</b> priced, across ${lig.mac.toLocaleString()} matches.`;
+  // havuzu getir (bir kez)
+  if(INSIGHT===null){
+    try{const r=await fetch(MEMORY+'brier_insight_havuz.json',{cache:'no-store'});
+        INSIGHT=r.ok?await r.json():{};}catch(e){INSIGHT={};}
   }
-  el.innerHTML=`<div class="lbl">The record of the day</div><div class="txt">${txt}</div>`+
+  const oc=(INSIGHT&&INSIGHT.one_cikan)||[];
+  if(!oc.length){ // havuz yoksa sessiz gec
+    el.classList.add('hidden'); return;
+  }
+  // "6 ligde kusursuz" mansetini uret: near-perfect sharpness'lari birlestir
+  const kusursuz=oc.filter(h=>h.tur==='sharpness'&&/near-perfectly/.test(h.metin))
+                   .map(h=>{const m=h.metin.match(/In (the )?([^,]+?),/);return m?m[2]:null;})
+                   .filter(Boolean);
+  // gosterim havuzu: upset, calibration, book, la liga sharpness + kusursuz manset
+  const kartlar=[];
+  oc.forEach(h=>{
+    if(h.tur==='upset'||h.tur==='calibration'||h.tur==='book') kartlar.push(h.metin);
+    else if(h.tur==='sharpness'&&!/near-perfectly/.test(h.metin)) kartlar.push(h.metin);
+  });
+  if(kusursuz.length>=4){
+    const ilk=kusursuz.slice(0,6);
+    kartlar.push(`Across 30,000 matches, the market's price matched reality within a point in ${ilk.slice(0,-1).join(', ')} and ${ilk.slice(-1)}. The market is remarkably good at its job.`);
+  }
+  if(!kartlar.length){el.classList.add('hidden');return;}
+  const secili=kartlar[gunTohum()%kartlar.length];
+  el.innerHTML=`<div class="lbl">The record of the day</div>`+
+    `<div class="txt">${vurgula(secili)}</div>`+
     `<div class="sig">Not a tip. The record.</div>`;
   el.classList.remove('hidden');
 }
