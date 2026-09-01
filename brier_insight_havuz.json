@@ -1,0 +1,246 @@
+{
+ "havuz": [
+  {
+   "tur": "calibration",
+   "lig": "ncaab",
+   "n": 4584,
+   "onem": 8.650084179362894,
+   "one_cikan": true,
+   "metin": "In NCAA basketball, heavy favourites (70%+) won 86% of the time — 9 points more often than the same favourites elsewhere, over 4,584 matches."
+  },
+  {
+   "tur": "draw",
+   "lig": "aleague",
+   "n": 867,
+   "onem": 0.7785467128027683,
+   "one_cikan": false,
+   "metin": "In aleague, 24% of matches ended in a draw, over 867 matches."
+  },
+  {
+   "tur": "draw",
+   "lig": "bundesliga",
+   "n": 1527,
+   "onem": 0.7694826457105428,
+   "one_cikan": false,
+   "metin": "In the Bundesliga, 24% of matches ended in a draw, over 1,527 matches."
+  },
+  {
+   "tur": "draw",
+   "lig": "epl",
+   "n": 750,
+   "onem": 1.2666666666666657,
+   "one_cikan": false,
+   "metin": "In the Premier League, 24% of matches ended in a draw, over 750 matches."
+  },
+  {
+   "tur": "draw",
+   "lig": "laliga",
+   "n": 1924,
+   "onem": 1.4553014553014556,
+   "one_cikan": false,
+   "metin": "In La Liga, 26% of matches ended in a draw, over 1,924 matches."
+  },
+  {
+   "tur": "draw",
+   "lig": "seriea",
+   "n": 1902,
+   "onem": 2.392218717139855,
+   "one_cikan": false,
+   "metin": "In Serie A, 27% of matches ended in a draw, over 1,902 matches."
+  },
+  {
+   "tur": "sharpness",
+   "lig": "aleague",
+   "n": 867,
+   "onem": 0.20300621528590312,
+   "one_cikan": true,
+   "metin": "In aleague, the market's favourites won 48% versus 48% implied — near-perfectly calibrated, over 867 matches."
+  },
+  {
+   "tur": "sharpness",
+   "lig": "bundesliga",
+   "n": 1527,
+   "onem": 0.38241859625820496,
+   "one_cikan": true,
+   "metin": "In the Bundesliga, the market's favourites won 54% versus 54% implied — near-perfectly calibrated, over 1,527 matches."
+  },
+  {
+   "tur": "sharpness",
+   "lig": "epl",
+   "n": 750,
+   "onem": 1.5707581178511845,
+   "one_cikan": false,
+   "metin": "In the Premier League, the market's favourites won 56% versus 55% implied — favourites ran 2 points hot, over 750 matches."
+  },
+  {
+   "tur": "sharpness",
+   "lig": "euroleague",
+   "n": 1494,
+   "onem": 0.6012706478528145,
+   "one_cikan": true,
+   "metin": "In the EuroLeague, the market's favourites won 67% versus 67% implied — near-perfectly calibrated, over 1,494 matches."
+  },
+  {
+   "tur": "sharpness",
+   "lig": "laliga",
+   "n": 1924,
+   "onem": 3.2374616275413786,
+   "one_cikan": true,
+   "metin": "In La Liga, the market's favourites won 55% versus 52% implied — favourites ran 3 points hot, over 1,924 matches."
+  },
+  {
+   "tur": "sharpness",
+   "lig": "mlb",
+   "n": 4322,
+   "onem": 0.04788422701340522,
+   "one_cikan": true,
+   "metin": "In MLB, the market's favourites won 58% versus 58% implied — near-perfectly calibrated, over 4,322 matches."
+  },
+  {
+   "tur": "sharpness",
+   "lig": "nba",
+   "n": 2537,
+   "onem": 0.9797918208608678,
+   "one_cikan": true,
+   "metin": "In the NBA, the market's favourites won 67% versus 68% implied — near-perfectly calibrated, over 2,537 matches."
+  },
+  {
+   "tur": "sharpness",
+   "lig": "ncaab",
+   "n": 8959,
+   "onem": 1.7806342222305176,
+   "one_cikan": false,
+   "metin": "In NCAA basketball, the market's favourites won 74% versus 72% implied — favourites ran 2 points hot, over 8,959 matches."
+  },
+  {
+   "tur": "sharpness",
+   "lig": "nfl",
+   "n": 1394,
+   "onem": 0.08316280391431974,
+   "one_cikan": true,
+   "metin": "In the NFL, the market's favourites won 66% versus 67% implied — near-perfectly calibrated, over 1,394 matches."
+  },
+  {
+   "tur": "sharpness",
+   "lig": "nhl",
+   "n": 3581,
+   "onem": 0.9015570797767438,
+   "one_cikan": true,
+   "metin": "In the NHL, the market's favourites won 61% versus 60% implied — near-perfectly calibrated, over 3,581 matches."
+  },
+  {
+   "tur": "sharpness",
+   "lig": "seriea",
+   "n": 1902,
+   "onem": 1.7066009851509918,
+   "one_cikan": false,
+   "metin": "In Serie A, the market's favourites won 54% versus 52% implied — favourites ran 2 points hot, over 1,902 matches."
+  },
+  {
+   "tur": "book",
+   "lig": null,
+   "n": 9280,
+   "onem": 7.37255005853087,
+   "one_cikan": true,
+   "metin": "Across every league we track, betfair keeps the leanest margin (median 0.7%); parionssport_fr the widest (8.1%). Same games, 7.4 points apart."
+  },
+  {
+   "tur": "upset",
+   "lig": "ncaab",
+   "n": 1,
+   "onem": 97,
+   "one_cikan": true,
+   "metin": "The market's biggest miss on record: a 97% favourite lost — Northwestern Wildcats 73-75 Chicago St Cougars (NCAA basketball)."
+  }
+ ],
+ "one_cikan": [
+  {
+   "tur": "calibration",
+   "lig": "ncaab",
+   "n": 4584,
+   "onem": 8.650084179362894,
+   "one_cikan": true,
+   "metin": "In NCAA basketball, heavy favourites (70%+) won 86% of the time — 9 points more often than the same favourites elsewhere, over 4,584 matches."
+  },
+  {
+   "tur": "sharpness",
+   "lig": "aleague",
+   "n": 867,
+   "onem": 0.20300621528590312,
+   "one_cikan": true,
+   "metin": "In aleague, the market's favourites won 48% versus 48% implied — near-perfectly calibrated, over 867 matches."
+  },
+  {
+   "tur": "sharpness",
+   "lig": "bundesliga",
+   "n": 1527,
+   "onem": 0.38241859625820496,
+   "one_cikan": true,
+   "metin": "In the Bundesliga, the market's favourites won 54% versus 54% implied — near-perfectly calibrated, over 1,527 matches."
+  },
+  {
+   "tur": "sharpness",
+   "lig": "euroleague",
+   "n": 1494,
+   "onem": 0.6012706478528145,
+   "one_cikan": true,
+   "metin": "In the EuroLeague, the market's favourites won 67% versus 67% implied — near-perfectly calibrated, over 1,494 matches."
+  },
+  {
+   "tur": "sharpness",
+   "lig": "laliga",
+   "n": 1924,
+   "onem": 3.2374616275413786,
+   "one_cikan": true,
+   "metin": "In La Liga, the market's favourites won 55% versus 52% implied — favourites ran 3 points hot, over 1,924 matches."
+  },
+  {
+   "tur": "sharpness",
+   "lig": "mlb",
+   "n": 4322,
+   "onem": 0.04788422701340522,
+   "one_cikan": true,
+   "metin": "In MLB, the market's favourites won 58% versus 58% implied — near-perfectly calibrated, over 4,322 matches."
+  },
+  {
+   "tur": "sharpness",
+   "lig": "nba",
+   "n": 2537,
+   "onem": 0.9797918208608678,
+   "one_cikan": true,
+   "metin": "In the NBA, the market's favourites won 67% versus 68% implied — near-perfectly calibrated, over 2,537 matches."
+  },
+  {
+   "tur": "sharpness",
+   "lig": "nfl",
+   "n": 1394,
+   "onem": 0.08316280391431974,
+   "one_cikan": true,
+   "metin": "In the NFL, the market's favourites won 66% versus 67% implied — near-perfectly calibrated, over 1,394 matches."
+  },
+  {
+   "tur": "sharpness",
+   "lig": "nhl",
+   "n": 3581,
+   "onem": 0.9015570797767438,
+   "one_cikan": true,
+   "metin": "In the NHL, the market's favourites won 61% versus 60% implied — near-perfectly calibrated, over 3,581 matches."
+  },
+  {
+   "tur": "book",
+   "lig": null,
+   "n": 9280,
+   "onem": 7.37255005853087,
+   "one_cikan": true,
+   "metin": "Across every league we track, betfair keeps the leanest margin (median 0.7%); parionssport_fr the widest (8.1%). Same games, 7.4 points apart."
+  },
+  {
+   "tur": "upset",
+   "lig": "ncaab",
+   "n": 1,
+   "onem": 97,
+   "one_cikan": true,
+   "metin": "The market's biggest miss on record: a 97% favourite lost — Northwestern Wildcats 73-75 Chicago St Cougars (NCAA basketball)."
+  }
+ ]
+}
