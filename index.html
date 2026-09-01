@@ -35,6 +35,7 @@
   .chip{border:1px solid var(--rule-dark);background:#fff;border-radius:2px;
         padding:6px 12px;font-size:11px;font-weight:700;color:var(--grey);white-space:nowrap}
   .chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .chip .n{margin-left:5px;opacity:.5;font-weight:600;font-size:10px}
 
   .list-head{padding:12px 20px 4px;display:flex;justify-content:space-between;align-items:baseline}
   .list-head .t{font-size:13px;font-weight:800;letter-spacing:.5px;text-transform:uppercase}
@@ -352,14 +353,17 @@ function ligleri(){
 
 function renderChips(){
   const gs=gruplar(); window._gruplar=gs;
+  const say=(g)=>{let t=0;Object.values((LIVE&&LIVE.ligler)||{}).forEach(ld=>{
+    if(g==='ALL'||(ld.grup||'Other')===g)t+=(ld.maclar||[]).length});return t;};
   document.getElementById('chips').innerHTML=gs.map((g,ix)=>
-    `<button class="chip${g===grup?' on':''}" onclick="setGrupIx(${ix})">${g==='ALL'?'All sports':esc(g)}</button>`
+    `<button class="chip${g===grup?' on':''}" onclick="setGrupIx(${ix})">${g==='ALL'?'All sports':esc(g)}<span class="n">${say(g)}</span></button>`
   ).join('');
   const ligler=ligleri(); window._ligler=ligler;
   const alt=document.getElementById('chips2');
   if(ligler.length>1){
+    const ls=(ad)=>((LIVE.ligler[ad]||{}).maclar||[]).length;
     alt.innerHTML=`<button class="chip${ligSec===null?' on':''}" onclick="setLigIx(-1)">All leagues</button>`+
-      ligler.map((l,ix)=>`<button class="chip${l===ligSec?' on':''}" onclick="setLigIx(${ix})">${esc(l)}</button>`).join('');
+      ligler.map((l,ix)=>`<button class="chip${l===ligSec?' on':''}" onclick="setLigIx(${ix})">${esc(l)}<span class="n">${ls(l)}</span></button>`).join('');
     alt.style.display='flex'; alt.style.flexWrap='wrap'; alt.style.overflowX='visible';
   }else{alt.innerHTML='';alt.style.display='none';}
 }
