@@ -52,6 +52,9 @@
   .mrow .comp{font-size:10px;color:var(--grey);text-transform:uppercase;letter-spacing:.7px;font-weight:600}
   .mrow .teams{font-size:15px;font-weight:700;margin-top:2px;display:block}
   .mrow .arr{color:var(--rule-dark);font-size:16px}
+  .ligkarne{padding:10px 20px;font-size:11.5px;color:var(--grey);line-height:1.55;
+    border-bottom:1px solid var(--rule);background:#FBFCFC}
+  .ligkarne b{color:var(--ink)}
   .rotd{background:var(--ink);color:#fff;margin:12px 16px 2px;padding:14px 16px;border-radius:2px}
   .rotd .lbl{font-size:9px;letter-spacing:1.5px;color:#8fa8a3;font-family:'IBM Plex Mono',monospace;text-transform:uppercase}
   .rotd .txt{font-size:14.5px;line-height:1.5;margin-top:6px;font-weight:600}
@@ -224,6 +227,17 @@ function ligAdiDuzgun(l){
   return m[l]||l;
 }
 let INSIGHT=null;
+async function insightGetir(){
+  if(INSIGHT===null){
+    try{const r=await fetch(MEMORY+'brier_insight_havuz.json',{cache:'no-store'});
+        INSIGHT=r.ok?await r.json():{};}catch(e){INSIGHT={};}
+  }
+  return INSIGHT;
+}
+function ligKodu(ad){
+  const ld=(LIVE&&LIVE.ligler&&LIVE.ligler[ad])||null;
+  return ld?(LIG_ESLE[ld.key]||null):null;
+}
 function vurgula(t){
   // sayilari ve % kaliplarini teal yap (b ile)
   return t.replace(/(\d[\d,]*%?)/g,'<b>$1</b>');
@@ -237,14 +251,38 @@ function metinDuzelt(t){
 }
 async function recordOfTheDay(){
   const el=document.getElementById('rotd');
-  // havuzu getir (bir kez)
-  if(INSIGHT===null){
-    try{const r=await fetch(MEMORY+'brier_insight_havuz.json',{cache:'no-store'});
-        INSIGHT=r.ok?await r.json():{};}catch(e){INSIGHT={};}
-  }
-  const oc=(INSIGHT&&INSIGHT.one_cikan)||[];
-  if(!oc.length){ // havuz yoksa sessiz gec
+  const I=await insightGetir();
+  const oc=(I&&I.one_cikan)||[];
+  const hav=(I&&I.havuz)||[];
+  if(!oc.length&&!hav.length){ el.classList.add('hidden'); return; }
+  let etiket='The record of the day';
+  // LIG secili: o ligin en guclu kaydi
+  if(ligSec!==null){
+    const kod=ligKodu(ligSec);
+    const oncelik={calibration:3,home:2,sharpness:2,draw:1};
+    const ait=hav.filter(h=>h.lig===kod)
+      .sort((a,b)=>(oncelik[b.tur]||0)-(oncelik[a.tur]||0)||(b.onem||0)-(a.onem||0));
+    if(ait.length){
+      etiket='The record · '+ligSec;
+      el.innerHTML=`<div class="lbl">${esc(etiket)}</div>`+
+        `<div class="txt">${vurgula(metinDuzelt(ait[0].metin))}</div>`+
+        `<div class="sig">Not a tip. The record.</div>`;
+      el.classList.remove('hidden'); return;
+    }
     el.classList.add('hidden'); return;
+  }
+  // SPOR secili: sadece o sporun liglerinden kayitlar
+  if(grup!=='ALL'){
+    const kods=new Set(Object.values((LIVE&&LIVE.ligler)||{})
+      .filter(ld=>(ld.grup||'Other')===grup)
+      .map(ld=>LIG_ESLE[ld.key]).filter(Boolean));
+    const ait=oc.filter(h=>h.lig&&kods.has(h.lig));
+    if(!ait.length){ el.classList.add('hidden'); return; }
+    const secili=ait[gunTohum()%ait.length].metin;
+    el.innerHTML=`<div class="lbl">The record of the day</div>`+
+      `<div class="txt">${vurgula(metinDuzelt(secili))}</div>`+
+      `<div class="sig">Not a tip. The record.</div>`;
+    el.classList.remove('hidden'); return;
   }
   // "6 ligde kusursuz" mansetini uret: near-perfect sharpness'lari birlestir
   const kusursuz=oc.filter(h=>h.tur==='sharpness'&&/near-perfectly/.test(h.metin))
@@ -322,11 +360,11 @@ function renderChips(){
   if(ligler.length>1){
     alt.innerHTML=`<button class="chip${ligSec===null?' on':''}" onclick="setLigIx(-1)">All leagues</button>`+
       ligler.map((l,ix)=>`<button class="chip${l===ligSec?' on':''}" onclick="setLigIx(${ix})">${esc(l)}</button>`).join('');
-    alt.style.display='flex';
+    alt.style.display='flex'; alt.style.flexWrap='wrap'; alt.style.overflowX='visible';
   }else{alt.innerHTML='';alt.style.display='none';}
 }
-function setGrupIx(ix){grup=window._gruplar[ix]||'ALL';ligSec=null;renderList();}
-function setLigIx(ix){ligSec=ix<0?null:(window._ligler[ix]||null);renderList();}
+function setGrupIx(ix){grup=window._gruplar[ix]||'ALL';ligSec=null;renderList();recordOfTheDay();}
+function setLigIx(ix){ligSec=ix<0?null:(window._ligler[ix]||null);renderList();recordOfTheDay();}
 
 function oyunlar(){
   const out=[];
@@ -412,7 +450,8 @@ async function showDetail(i){
   const ilkKelime=(s)=>String(s||'').split(' ')[0]||'';
   let html=`<div class="dhead"><div class="comp">${esc(m.ligAd)}</div>
     <div class="teams">${esc(evAd)} — ${esc(depAd)}</div>
-    <div class="when">${gun(m.t)}${saat(m.t)} · ${m.kitap||'?'} books tracked</div></div>`;
+    <div class="when">${gun(m.t)}${saat(m.t)} · ${m.kitap||'?'} books tracked</div></div>
+    <div id="karneSlot"></div>`;
 
   // --- best prices ---
   html+=`<div class="card"><div class="head"><span class="t">Best prices</span><span class="k">${m.sonuc3?'match result':'moneyline'}</span></div>`;
@@ -479,6 +518,21 @@ async function showDetail(i){
     mem=`<div class="card"><div class="memempty">No archive for this league yet — live prices only.<br>We only show memory where we truly have it.</div></div>`;
   }
   document.getElementById('memSlot').innerHTML=mem;
+
+  // --- lig karnesi (tepede tek satir) ---
+  try{
+    const I=await insightGetir();
+    const hv=(I&&I.havuz)||[];
+    const sh=hv.find(h=>h.lig===lig&&h.tur==='sharpness');
+    const dr=hv.find(h=>h.lig===lig&&h.tur==='draw');
+    let karne=sh?sh.metin:'';
+    if(karne&&dr){
+      const mm=dr.metin.match(/(\d+)% of matches ended in a draw/);
+      if(mm) karne+=` Draws: ${mm[1]}%.`;
+    }
+    const slot=document.getElementById('karneSlot');
+    if(slot&&karne) slot.innerHTML=`<div class="ligkarne">${vurgula(metinDuzelt(esc(karne)))}</div>`;
+  }catch(e){}
 }
 
 boot();
