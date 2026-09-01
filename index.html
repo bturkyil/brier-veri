@@ -360,10 +360,15 @@ function renderChips(){
   ).join('');
   const ligler=ligleri(); window._ligler=ligler;
   const alt=document.getElementById('chips2');
-  if(ligler.length>1){
-    const ls=(ad)=>((LIVE.ligler[ad]||{}).maclar||[]).length;
-    alt.innerHTML=`<button class="chip${ligSec===null?' on':''}" onclick="setLigIx(-1)">All leagues</button>`+
-      ligler.map((l,ix)=>`<button class="chip${l===ligSec?' on':''}" onclick="setLigIx(${ix})">${esc(l)}<span class="n">${ls(l)}</span></button>`).join('');
+  const ls=(ad)=>(((LIVE&&LIVE.ligler&&LIVE.ligler[ad])||{}).maclar||[]).length;
+  if(ligSec!==null){
+    // secim yapildi: izgara katlanir - sadece geri-don + secili lig
+    alt.innerHTML=`<button class="chip" onclick="setLigIx(-1)">‹ All leagues</button>`+
+      `<button class="chip on" onclick="setLigIx(-1)">${esc(ligSec)}<span class="n">${ls(ligSec)}</span></button>`;
+    alt.style.display='flex'; alt.style.flexWrap='wrap'; alt.style.overflowX='visible';
+  }else if(ligler.length>1){
+    alt.innerHTML=`<button class="chip on" onclick="setLigIx(-1)">All leagues</button>`+
+      ligler.map((l,ix)=>`<button class="chip" onclick="setLigIx(${ix})">${esc(l)}<span class="n">${ls(l)}</span></button>`).join('');
     alt.style.display='flex'; alt.style.flexWrap='wrap'; alt.style.overflowX='visible';
   }else{alt.innerHTML='';alt.style.display='none';}
 }
