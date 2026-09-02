@@ -178,7 +178,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A3</div>
+      <div class="by">brier · by BT · build A3t</div>
     </footer>
   </div>
 
@@ -187,7 +187,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A3</div>
+      <div class="by">brier · by BT · build A3t</div>
     </footer>
   </div>
 </div>
@@ -221,6 +221,7 @@ const LIG_ESLE = {
   soccer_league_of_ireland:'ireland', soccer_korea_kleague1:'kleague1',
   soccer_sweden_superettan:'superettan', soccer_germany_liga3:'liga3',
 };
+function ligBul(k){return LIG_ESLE[k]||(String(k).indexOf('tennis_')===0?'tenis':null);}
 
 let LIVE=null, INDEX=null, HAFIZA={}, grup='ALL', ligSec=null, gunSec=null;
 
@@ -254,7 +255,7 @@ async function insightGetir(){
 }
 function ligKodu(ad){
   const ld=(LIVE&&LIVE.ligler&&LIVE.ligler[ad])||null;
-  return ld?(LIG_ESLE[ld.key]||null):null;
+  return ld?ligBul(ld.key):null;
 }
 function vurgula(t){
   // sayilari ve % kaliplarini teal yap (b ile)
@@ -293,7 +294,7 @@ async function recordOfTheDay(){
   if(grup!=='ALL'){
     const kods=new Set(Object.values((LIVE&&LIVE.ligler)||{})
       .filter(ld=>(ld.grup||'Other')===grup)
-      .map(ld=>LIG_ESLE[ld.key]).filter(Boolean));
+      .map(ld=>ligBul(ld.key)).filter(Boolean));
     const ait=oc.filter(h=>h.lig&&kods.has(h.lig));
     if(!ait.length){ el.classList.add('hidden'); return; }
     const secili=ait[gunTohum()%ait.length].metin;
@@ -511,7 +512,7 @@ async function showDetail(i){
   document.getElementById('view-list').classList.add('hidden');
   document.getElementById('view-detail').classList.remove('hidden');
   window.scrollTo(0,0);
-  const lig=LIG_ESLE[m.key]||null;
+  const lig=ligBul(m.key);
   const best=m.best||{};
   const evAd=(m.h||'Home'), depAd=(m.a||'Away');
   const ilkKelime=(s)=>String(s||'').split(' ')[0]||'';
