@@ -29,6 +29,13 @@
             font-size:10px;color:var(--grey);font-family:'IBM Plex Mono',monospace}
   .feedline.err{background:var(--red-soft);color:var(--red)}
 
+  .selrow{display:flex;gap:8px;padding:12px 20px 4px}
+  .selwrap{position:relative;flex:0 1 auto}
+  .selwrap::after{content:'▾';position:absolute;right:10px;top:50%;transform:translateY(-50%);
+    pointer-events:none;color:var(--grey);font-size:11px}
+  select.sel{appearance:none;-webkit-appearance:none;border:1px solid var(--rule-dark);
+    background:#fff;border-radius:2px;padding:9px 28px 9px 12px;font-size:12px;font-weight:700;
+    color:var(--ink);font-family:'Archivo',sans-serif;max-width:52vw}
   /* chips */
   .chips{display:flex;gap:8px;overflow-x:auto;padding:12px 20px 4px;scrollbar-width:none}
   .chips::-webkit-scrollbar{display:none}
@@ -153,9 +160,10 @@
   <div id="feedline" class="feedline">connecting to live feed…</div>
 
   <div id="view-list">
-    <div class="chips" id="gunler" style="padding-bottom:0"></div>
-    <div class="chips" id="chips"></div>
-    <div class="chips" id="chips2" style="display:none;padding-top:0"></div>
+    <div class="selrow">
+      <span class="selwrap"><select class="sel" id="gunSel" onchange="gunSecim(this.value)"></select></span>
+      <span class="selwrap"><select class="sel" id="sporSel" onchange="sporSecim(this.value)"></select></span>
+    </div>
     <div id="rotd" class="rotd hidden"></div>
     <div id="manifesto" class="manifesto hidden">
       <button class="mx" onclick="kapatManifesto()" aria-label="close">×</button>
@@ -170,7 +178,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A2</div>
+      <div class="by">brier · by BT · build A3</div>
     </footer>
   </div>
 
@@ -179,7 +187,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A2</div>
+      <div class="by">brier · by BT · build A3</div>
     </footer>
   </div>
 </div>
@@ -363,19 +371,25 @@ function gunEtiket(k){
   if(k===yarin)return 'Tomorrow';
   return new Date(k+'T12:00').toLocaleDateString('en-GB',{weekday:'short',day:'numeric'});
 }
-function renderGunler(){
-  const el=document.getElementById('gunler');
+function renderSecimler(){
   const gs=gunListesi(); window._gunler=gs;
   if(!gs.length){gunSec=null;}
   else if(gunSec===null||!gs.includes(gunSec)){gunSec=gs[0];}
-  el.innerHTML=gs.map((k,ix)=>
-    `<button class="chip${k===gunSec?' on':''}" onclick="setGunIx(${ix})">${gunEtiket(k)}</button>`).join('');
+  const gsel=document.getElementById('gunSel');
+  if(gsel)gsel.innerHTML=gs.map(k=>`<option value="${k}"${k===gunSec?' selected':''}>${gunEtiket(k)}</option>`).join('');
+  const say=(g)=>{let t=0;Object.values((LIVE&&LIVE.ligler)||{}).forEach(ld=>{
+    if(g==='ALL'||(ld.grup||'Other')===g)t+=(ld.maclar||[]).length});return t;};
+  const sp=gruplar();
+  const ssel=document.getElementById('sporSel');
+  if(ssel)ssel.innerHTML=sp.map(g=>
+    `<option value="${esc(g)}"${g===grup?' selected':''}>${g==='ALL'?'All sports':esc(g)} · ${say(g)}</option>`).join('');
   const bas=document.getElementById('gunBaslik');
   if(bas)bas.textContent=gunSec?gunEtiket(gunSec).toUpperCase():'TODAY';
   const td=document.getElementById('today');
   if(td)td.textContent=gunSec?new Date(gunSec+'T12:00').toLocaleDateString('en-GB',{day:'numeric',month:'long'}):'';
 }
-function setGunIx(ix){gunSec=(window._gunler||[])[ix]||null;renderList();}
+function gunSecim(v){gunSec=v;renderList();}
+function sporSecim(v){grup=v;gunSec=null;renderList();recordOfTheDay();}
 function gruplar(){
   const s=new Set();
   Object.values(LIVE.ligler||{}).forEach(l=>{
@@ -392,18 +406,7 @@ function ligleri(){
   return [...s.keys()].sort();
 }
 
-function renderChips(){
-  const gs=gruplar(); window._gruplar=gs;
-  const say=(g)=>{let t=0;Object.values((LIVE&&LIVE.ligler)||{}).forEach(ld=>{
-    if(g==='ALL'||(ld.grup||'Other')===g)t+=(ld.maclar||[]).length});return t;};
-  document.getElementById('chips').innerHTML=gs.map((g,ix)=>
-    `<button class="chip${g===grup?' on':''}" onclick="setGrupIx(${ix})">${g==='ALL'?'All sports':esc(g)}<span class="n">${say(g)}</span></button>`
-  ).join('');
-  const alt=document.getElementById('chips2');
-  if(alt){alt.innerHTML='';alt.style.display='none';}
-}
-function setGrupIx(ix){grup=window._gruplar[ix]||'ALL';ligSec=null;renderList();recordOfTheDay();}
-function setLigIx(ix){ligSec=ix<0?null:(window._ligler[ix]||null);renderList();recordOfTheDay();}
+
 
 function oyunlar(){
   const out=[];
@@ -417,8 +420,7 @@ function oyunlar(){
 }
 
 function renderList(){
-  renderGunler();
-  renderChips();
+  renderSecimler();
   const g=oyunlar();
   const box=document.getElementById('listBody');
   if(!g.length){box.innerHTML='<div class="empty">No games for this day.<br>Try another day or sport.</div>';return;}
