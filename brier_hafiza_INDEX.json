@@ -41,6 +41,20 @@
    "dosya": "brier_hafiza_avusturya.json"
   },
   {
+   "lig": "b",
+   "mac": 1370,
+   "cift": 0,
+   "kalibrasyon": null,
+   "dosya": "brier_hafiza_b.json"
+  },
+  {
+   "lig": "basketball_ncaab",
+   "mac": 636,
+   "cift": 0,
+   "kalibrasyon": null,
+   "dosya": "brier_hafiza_basketball_ncaab.json"
+  },
+  {
    "lig": "belcika",
    "mac": 544,
    "cift": 132,
@@ -79,6 +93,23 @@
     "favori_tutma": 53.9
    },
    "dosya": "brier_hafiza_bundesliga.json"
+  },
+  {
+   "lig": "campeonato",
+   "mac": 835,
+   "cift": 0,
+   "kalibrasyon": null,
+   "dosya": "brier_hafiza_campeonato.json"
+  },
+  {
+   "lig": "cfl",
+   "mac": 69,
+   "cift": 31,
+   "kalibrasyon": {
+    "favori_ima_ort": 62.9,
+    "favori_tutma": 69.6
+   },
+   "dosya": "brier_hafiza_cfl.json"
   },
   {
    "lig": "champ",
@@ -121,6 +152,13 @@
    "dosya": "brier_hafiza_efl2.json"
   },
   {
+   "lig": "ekstraklasa",
+   "mac": 1009,
+   "cift": 0,
+   "kalibrasyon": null,
+   "dosya": "brier_hafiza_ekstraklasa.json"
+  },
+  {
    "lig": "epl",
    "mac": 769,
    "cift": 262,
@@ -131,6 +169,13 @@
    "dosya": "brier_hafiza_epl.json"
   },
   {
+   "lig": "epl_tam",
+   "mac": 770,
+   "cift": 0,
+   "kalibrasyon": null,
+   "dosya": "brier_hafiza_epl_tam.json"
+  },
+  {
    "lig": "eredivisie",
    "mac": 611,
    "cift": 201,
@@ -139,6 +184,30 @@
     "favori_tutma": 57.0
    },
    "dosya": "brier_hafiza_eredivisie.json"
+  },
+  {
+   "lig": "euroleague",
+   "mac": 1494,
+   "cift": 283,
+   "kalibrasyon": {
+    "favori_ima_ort": 66.5,
+    "favori_tutma": 67.1
+   },
+   "dosya": "brier_hafiza_euroleague.json"
+  },
+  {
+   "lig": "ipl",
+   "mac": 313,
+   "cift": 0,
+   "kalibrasyon": null,
+   "dosya": "brier_hafiza_ipl.json"
+  },
+  {
+   "lig": "ireland",
+   "mac": 813,
+   "cift": 0,
+   "kalibrasyon": null,
+   "dosya": "brier_hafiza_ireland.json"
   },
   {
    "lig": "iskocya",
@@ -181,6 +250,13 @@
    "dosya": "brier_hafiza_japonya.json"
   },
   {
+   "lig": "kleague1",
+   "mac": 1079,
+   "cift": 0,
+   "kalibrasyon": null,
+   "dosya": "brier_hafiza_kleague1.json"
+  },
+  {
    "lig": "laliga",
    "mac": 1924,
    "cift": 348,
@@ -191,6 +267,13 @@
    "dosya": "brier_hafiza_laliga.json"
   },
   {
+   "lig": "league",
+   "mac": 2066,
+   "cift": 0,
+   "kalibrasyon": null,
+   "dosya": "brier_hafiza_league.json"
+  },
+  {
    "lig": "libertadores",
    "mac": 296,
    "cift": 145,
@@ -199,6 +282,13 @@
     "favori_tutma": 58.1
    },
    "dosya": "brier_hafiza_libertadores.json"
+  },
+  {
+   "lig": "liga3",
+   "mac": 1139,
+   "cift": 0,
+   "kalibrasyon": null,
+   "dosya": "brier_hafiza_liga3.json"
   },
   {
    "lig": "ligue1",
@@ -291,6 +381,13 @@
    "dosya": "brier_hafiza_nfl.json"
   },
   {
+   "lig": "nfl_tam",
+   "mac": 858,
+   "cift": 0,
+   "kalibrasyon": null,
+   "dosya": "brier_hafiza_nfl_tam.json"
+  },
+  {
    "lig": "nhl",
    "mac": 3581,
    "cift": 530,
@@ -309,6 +406,20 @@
     "favori_tutma": 56.1
    },
    "dosya": "brier_hafiza_norvec.json"
+  },
+  {
+   "lig": "nrl",
+   "mac": 1038,
+   "cift": 0,
+   "kalibrasyon": null,
+   "dosya": "brier_hafiza_nrl.json"
+  },
+  {
+   "lig": "one",
+   "mac": 1753,
+   "cift": 0,
+   "kalibrasyon": null,
+   "dosya": "brier_hafiza_one.json"
   },
   {
    "lig": "portekiz",
@@ -351,6 +462,27 @@
    "dosya": "brier_hafiza_serieb.json"
   },
   {
+   "lig": "soccer_efl_champ",
+   "mac": 51,
+   "cift": 0,
+   "kalibrasyon": null,
+   "dosya": "brier_hafiza_soccer_efl_champ.json"
+  },
+  {
+   "lig": "soccer_france_ligue_one",
+   "mac": 51,
+   "cift": 0,
+   "kalibrasyon": null,
+   "dosya": "brier_hafiza_soccer_france_ligue_one.json"
+  },
+  {
+   "lig": "soccer_turkey_super_league",
+   "mac": 54,
+   "cift": 0,
+   "kalibrasyon": null,
+   "dosya": "brier_hafiza_soccer_turkey_super_league.json"
+  },
+  {
    "lig": "sudamericana",
    "mac": 117,
    "cift": 59,
@@ -359,6 +491,27 @@
     "favori_tutma": 49.6
    },
    "dosya": "brier_hafiza_sudamericana.json"
+  },
+  {
+   "lig": "superettan",
+   "mac": 1196,
+   "cift": 0,
+   "kalibrasyon": null,
+   "dosya": "brier_hafiza_superettan.json"
+  },
+  {
+   "lig": "superleague",
+   "mac": 1013,
+   "cift": 0,
+   "kalibrasyon": null,
+   "dosya": "brier_hafiza_superleague.json"
+  },
+  {
+   "lig": "tenis",
+   "mac": 5050,
+   "cift": 0,
+   "kalibrasyon": null,
+   "dosya": "brier_hafiza_tenis.json"
   },
   {
    "lig": "turkiye",
@@ -391,6 +544,13 @@
    "dosya": "brier_hafiza_uel.json"
   },
   {
+   "lig": "veikkausliiga",
+   "mac": 848,
+   "cift": 0,
+   "kalibrasyon": null,
+   "dosya": "brier_hafiza_veikkausliiga.json"
+  },
+  {
    "lig": "wnba",
    "mac": 574,
    "cift": 78,
@@ -411,5 +571,5 @@
    "dosya": "brier_hafiza_yunanistan.json"
   }
  ],
- "uretim": "2026-08-30 09:50"
+ "uretim": "2026-09-02 15:41"
 }
