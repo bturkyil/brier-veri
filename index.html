@@ -170,7 +170,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A1</div>
+      <div class="by">brier · by BT · build A2</div>
     </footer>
   </div>
 
@@ -179,7 +179,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A1</div>
+      <div class="by">brier · by BT · build A2</div>
     </footer>
   </div>
 </div>
@@ -354,7 +354,7 @@ function gunListesi(){
     if(ligSec!==null&&ad!==ligSec)return;
     (ld.maclar||[]).forEach(m=>s.add(tarihKey(m.t)));
   });
-  return [...s].sort().slice(0,4);
+  return [...s].sort();
 }
 function gunEtiket(k){
   const bugun=tarihKey(new Date());
