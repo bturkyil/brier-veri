@@ -178,7 +178,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A3t</div>
+      <div class="by">brier · by BT · build A3u</div>
     </footer>
   </div>
 
@@ -187,7 +187,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A3t</div>
+      <div class="by">brier · by BT · build A3u</div>
     </footer>
   </div>
 </div>
@@ -476,7 +476,7 @@ async function hafizaGetir(lig){
   if(!lig)return null;
   if(HAFIZA[lig]!==undefined)return HAFIZA[lig];
   try{
-    const r=await fetch(MEMORY+'brier_hafiza_'+lig+'.json',{cache:'force-cache'});
+    const r=await fetch(MEMORY+'brier_hafiza_'+lig+'.json?v=a3u',{cache:'no-store'});
     HAFIZA[lig]=r.ok?await r.json():null;
   }catch(e){HAFIZA[lig]=null;}
   return HAFIZA[lig];
