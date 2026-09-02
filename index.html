@@ -53,6 +53,11 @@
   .mrow .comp{font-size:10px;color:var(--grey);text-transform:uppercase;letter-spacing:.7px;font-weight:600}
   .mrow .teams{font-size:15px;font-weight:700;margin-top:2px;display:block}
   .mrow .arr{color:var(--rule-dark);font-size:16px}
+  .ligsec{width:100%;display:flex;justify-content:space-between;align-items:center;
+    padding:13px 20px;background:#fff;border:0;border-bottom:1px solid var(--rule);
+    font-weight:800;font-size:13px;letter-spacing:.2px;color:var(--ink)}
+  .ligsec .cnt{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--grey);font-weight:600}
+  .ligsec .cev{margin-left:6px;color:var(--rule-dark)}
   .mrow .odds{display:block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;
     color:var(--grey);margin-top:3px;letter-spacing:.3px}
   .mrow .odds b{color:var(--ink);font-weight:600}
@@ -161,7 +166,7 @@
       <span class="t" id="gunBaslik">Today</span>
       <span class="d mono" id="today"></span>
     </div>
-    <p class="list-note">Sorted by kickoff time — not by odds, probability, or commission. Ever.</p>
+    <p class="list-note">Leagues A–Z, games by kickoff time — never ordered by odds, probability, or commission.</p>
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
@@ -394,19 +399,8 @@ function renderChips(){
   document.getElementById('chips').innerHTML=gs.map((g,ix)=>
     `<button class="chip${g===grup?' on':''}" onclick="setGrupIx(${ix})">${g==='ALL'?'All sports':esc(g)}<span class="n">${say(g)}</span></button>`
   ).join('');
-  const ligler=ligleri(); window._ligler=ligler;
   const alt=document.getElementById('chips2');
-  const ls=(ad)=>(((LIVE&&LIVE.ligler&&LIVE.ligler[ad])||{}).maclar||[]).length;
-  if(ligSec!==null){
-    // secim yapildi: izgara katlanir - sadece geri-don + secili lig
-    alt.innerHTML=`<button class="chip" onclick="setLigIx(-1)">‹ All leagues</button>`+
-      `<button class="chip on" onclick="setLigIx(-1)">${esc(ligSec)}<span class="n">${ls(ligSec)}</span></button>`;
-    alt.style.display='flex'; alt.style.flexWrap='wrap'; alt.style.overflowX='visible';
-  }else if(ligler.length>1){
-    alt.innerHTML=`<button class="chip on" onclick="setLigIx(-1)">All leagues</button>`+
-      ligler.map((l,ix)=>`<button class="chip" onclick="setLigIx(${ix})">${esc(l)}<span class="n">${ls(l)}</span></button>`).join('');
-    alt.style.display='flex'; alt.style.flexWrap='wrap'; alt.style.overflowX='visible';
-  }else{alt.innerHTML='';alt.style.display='none';}
+  if(alt){alt.innerHTML='';alt.style.display='none';}
 }
 function setGrupIx(ix){grup=window._gruplar[ix]||'ALL';ligSec=null;renderList();recordOfTheDay();}
 function setLigIx(ix){ligSec=ix<0?null:(window._ligler[ix]||null);renderList();recordOfTheDay();}
@@ -427,12 +421,22 @@ function renderList(){
   renderChips();
   const g=oyunlar();
   const box=document.getElementById('listBody');
-  if(!g.length){box.innerHTML='<div class="empty">No upcoming games in this view right now.<br>Try another sport.</div>';return;}
-  const LIMIT=60, shown=g.slice(0,LIMIT);
-  let html='',lastHour='';
-  shown.forEach((m,i)=>{
-    const h=gun(m.t)+saat(m.t).slice(0,2)+':00';
-    if(h!==lastHour){html+=`<div class="hour">${esc(h)}</div>`;lastHour=h;}
+  if(!g.length){box.innerHTML='<div class="empty">No games for this day.<br>Try another day or sport.</div>';return;}
+  window._acik=window._acik||new Set();
+  const gruplu=new Map();
+  g.forEach(m=>{if(!gruplu.has(m.ligAd))gruplu.set(m.ligAd,[]);gruplu.get(m.ligAd).push(m);});
+  const adlar=[...gruplu.keys()].sort((a,b)=>a.localeCompare(b));
+  if(adlar.length===1)window._acik.add(adlar[0]);
+  window._secAd=adlar;
+  let html='';const shown=[];
+  adlar.forEach((ad,ai)=>{
+    const ms=gruplu.get(ad);
+    const acikMi=window._acik.has(ad);
+    html+=`<button class="ligsec" onclick="toggleLig(${ai})"><span>${esc(ad)}</span>`+
+      `<span class="cnt">${ms.length}<span class="cev">${acikMi?'▾':'▸'}</span></span></button>`;
+    if(!acikMi)return;
+    ms.forEach(m=>{
+    const i=shown.length; shown.push(m);
     const tepe=(l)=>l&&l.length?Math.max(...l.map(x=>x.o)).toFixed(2):null;
     const b=m.best||{};
     const oh=tepe(b.h), od=m.sonuc3?tepe(b.d):null, oa=tepe(b.a);
@@ -447,10 +451,16 @@ function renderList(){
       <span class="mid"><span class="comp">${esc(m.ligAd)}</span>
       <span class="teams">${esc(m.h)} — ${esc(m.a)}</span>${oranSat}</span>
       <span class="arr">›</span></button>`;
+    });
   });
-  if(g.length>LIMIT)html+=`<div class="morehint">Showing ${LIMIT} of ${g.length} games — narrow by sport above to see the rest.</div>`;
   box.innerHTML=html;
   window._shown=shown;
+}
+function toggleLig(ix){
+  const ad=(window._secAd||[])[ix]; if(ad===undefined)return;
+  window._acik=window._acik||new Set();
+  if(window._acik.has(ad))window._acik.delete(ad); else window._acik.add(ad);
+  renderList();
 }
 
 function showList(){
