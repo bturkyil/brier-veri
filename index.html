@@ -75,7 +75,7 @@
     letter-spacing:.4px;color:var(--grey);background:none;border:1px solid var(--rule-dark);
     border-radius:14px;cursor:pointer}
   .lens.on{color:var(--teal);border-color:var(--teal)}
-  .splitTag{font-family:'IBM Plex Mono',monospace;font-size:8.5px;font-weight:600;color:var(--gold);
+  .splitTag{font-family:'IBM Plex Mono',monospace;font-size:9.5px;font-weight:600;color:var(--gold);
     border:1px solid var(--gold);border-radius:8px;padding:1px 5px;margin-left:6px;
     letter-spacing:.4px;vertical-align:1px;white-space:nowrap}
   .ham{background:none;border:0;color:#fff;font-size:19px;padding:0 12px 0 0;cursor:pointer;line-height:1}
@@ -205,7 +205,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A6</div>
+      <div class="by">brier · by BT · build A7</div>
     </footer>
   </div>
 
@@ -214,7 +214,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A6</div>
+      <div class="by">brier · by BT · build A7</div>
     </footer>
   </div>
 </div>
@@ -502,7 +502,7 @@ function macSatiri(m,i){
       :`<span class="odds"><b>${oh}</b> · <b>${oa}</b></span>`;
   }
   let ayT='';
-  try{if(ayrismaHesap(m,m.sonuc3))ayT='<span class="splitTag">split</span>';}catch(e){}
+  try{if(ayrismaHesap(m,m.sonuc3))ayT='<span class="splitTag">\u25C7 split</span>';}catch(e){}
   return `<button class="mrow" onclick="showDetail(${i})">
       <span class="time">${saat(m.t)}</span>
       <span class="mid"><span class="comp">${esc(m.ligAd)}</span>
@@ -537,7 +537,11 @@ function renderList(){
     html+=`<button class="ligsec" onclick="toggleLig(${ai})"><span>${esc(ad)}</span>`+
       `<span class="cnt">${ms.length}<span class="cev">${acikMi?'▾':'▸'}</span></span></button>`;
     if(!acikMi)return;
-    ms.forEach(m=>{const i=shown.length;shown.push(m);html+=macSatiri(m,i);});
+    let gunK=null;
+    ms.forEach(m=>{
+      const tk=tarihKey(m.t);
+      if(tk!==gunK){gunK=tk;html+=`<div class="gunbas">${esc(gunEtiket(tk))}</div>`;}
+      const i=shown.length;shown.push(m);html+=macSatiri(m,i);});
   });
   box.innerHTML=html;
   window._shown=shown;
