@@ -71,6 +71,10 @@
   .ligkarne{padding:10px 20px;font-size:11.5px;color:var(--grey);line-height:1.55;
     border-bottom:1px solid var(--rule);background:#FBFCFC}
   .ligkarne b{color:var(--ink)}
+  .lens{display:inline-block;margin:10px 20px 0;padding:5px 12px;font-size:11px;font-weight:600;
+    letter-spacing:.4px;color:var(--grey);background:none;border:1px solid var(--rule-dark);
+    border-radius:14px;cursor:pointer}
+  .lens.on{color:var(--teal);border-color:var(--teal)}
   .rotd{background:var(--ink);color:#fff;margin:12px 16px 2px;padding:14px 16px;border-radius:2px}
   .rotd .lbl{font-size:9px;letter-spacing:1.5px;color:#8fa8a3;font-family:'IBM Plex Mono',monospace;text-transform:uppercase}
   .rotd .txt{font-size:14.5px;line-height:1.5;margin-top:6px;font-weight:600}
@@ -164,6 +168,7 @@
       <span class="selwrap"><select class="sel" id="gunSel" onchange="gunSecim(this.value)"></select></span>
       <span class="selwrap"><select class="sel" id="sporSel" onchange="sporSecim(this.value)"></select></span>
     </div>
+    <button id="mercek" class="lens" onclick="mercekTgl()">70%+ favourites</button>
     <div id="rotd" class="rotd hidden"></div>
     <div id="manifesto" class="manifesto hidden">
       <button class="mx" onclick="kapatManifesto()" aria-label="close">×</button>
@@ -178,7 +183,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A3u</div>
+      <div class="by">brier · by BT · build A5</div>
     </footer>
   </div>
 
@@ -187,7 +192,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A3u</div>
+      <div class="by">brier · by BT · build A5</div>
     </footer>
   </div>
 </div>
@@ -223,7 +228,7 @@ const LIG_ESLE = {
 };
 function ligBul(k){return LIG_ESLE[k]||(String(k).indexOf('tennis_')===0?'tenis':null);}
 
-let LIVE=null, INDEX=null, HAFIZA={}, grup='ALL', ligSec=null, gunSec=null;
+let LIVE=null, INDEX=null, HAFIZA={}, grup='ALL', ligSec=null, gunSec=null, mercek=false;
 
 function kapatManifesto(){
   document.getElementById('manifesto').classList.add('hidden');
@@ -391,6 +396,7 @@ function renderSecimler(){
 }
 function gunSecim(v){gunSec=v;renderList();}
 function sporSecim(v){grup=v;gunSec=null;renderList();recordOfTheDay();}
+function mercekTgl(){mercek=!mercek;const b=document.getElementById('mercek');if(b)b.classList.toggle('on',mercek);renderList();}
 function gruplar(){
   const s=new Set();
   Object.values(LIVE.ligler||{}).forEach(l=>{
@@ -414,7 +420,9 @@ function oyunlar(){
   Object.entries(LIVE.ligler||{}).forEach(([ad,ld])=>{
     if(grup!=='ALL'&&(ld.grup||'Other')!==grup)return;
     if(ligSec!==null&&ad!==ligSec)return;
-    (ld.maclar||[]).forEach(m=>{if(gunSec&&tarihKey(m.t)!==gunSec)return;out.push({...m,ligAd:ad,key:ld.key,sonuc3:!!ld.sonuc3});});
+    (ld.maclar||[]).forEach(m=>{if(gunSec&&tarihKey(m.t)!==gunSec)return;
+      if(mercek){const p=m.p||{};if(Math.max(p.h||0,p.a||0)<0.70)return;}
+      out.push({...m,ligAd:ad,key:ld.key,sonuc3:!!ld.sonuc3});});
   });
   out.sort((a,b)=>String(a.t).localeCompare(String(b.t)));
   return out;
@@ -424,7 +432,7 @@ function renderList(){
   renderSecimler();
   const g=oyunlar();
   const box=document.getElementById('listBody');
-  if(!g.length){box.innerHTML='<div class="empty">No games for this day.<br>Try another day or sport.</div>';return;}
+  if(!g.length){box.innerHTML=mercek?'<div class="empty">No 70%+ favourites here.<br>The lens keeps only games where the consensus favourite clears 70%.</div>':'<div class="empty">No games for this day.<br>Try another day or sport.</div>';return;}
   window._acik=window._acik||new Set();
   const gruplu=new Map();
   g.forEach(m=>{if(!gruplu.has(m.ligAd))gruplu.set(m.ligAd,[]);gruplu.get(m.ligAd).push(m);});
@@ -535,6 +543,29 @@ async function showDetail(i){
     html+=`<div class="card"><div class="memempty">Live prices for this game aren't in the feed yet.<br>Check back closer to kickoff.</div></div>`;
   }
   html+=`</div>`;
+
+  // --- ayrisma satiri (ciplak) ---
+  try{
+    const p=m.p||{};
+    if(p.h!=null&&p.a!=null&&(best.h||best.a)){
+      const favEv=p.h>=p.a, favP=favEv?p.h:p.a, favAd=favEv?evAd:depAd;
+      const kt={};
+      (best.h||[]).forEach(x=>{(kt[x.k]=kt[x.k]||{}).h=x.o;});
+      (best.a||[]).forEach(x=>{(kt[x.k]=kt[x.k]||{}).a=x.o;});
+      if(m.sonuc3)(best.d||[]).forEach(x=>{(kt[x.k]=kt[x.k]||{}).d=x.o;});
+      let enB=null,enF=0,n=0;
+      Object.entries(kt).forEach(([k,o])=>{
+        if(!o.h||!o.a||(m.sonuc3&&!o.d))return;
+        const ih=1/o.h, ia=1/o.a, idr=m.sonuc3?1/o.d:0, top=ih+ia+idr;
+        const pb=(favEv?ih:ia)/top; n++;
+        const fark=pb-favP;
+        if(Math.abs(fark)>Math.abs(enF)){enF=fark;enB=k;}
+      });
+      if(enB&&n>=4&&Math.abs(enF)>=0.03){
+        html+=`<div class="ligkarne">Widest split: <b>${esc(enB)}</b> prices ${esc(favAd)} at <b>${Math.round((favP+enF)*100)}%</b> — the consensus of ${n} books says <b>${Math.round(favP*100)}%</b>. A record of disagreement, not a signal.</div>`;
+      }
+    }
+  }catch(e){}
 
   // placeholders; filled after memory fetch
   html+=`<div id="xraySlot"></div><div id="memSlot"><div class="card"><div class="memempty">Opening the archive…</div></div></div>`;
