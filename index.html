@@ -191,6 +191,7 @@
       <span class="selwrap"><select class="sel" id="sporSel" onchange="sporSecim(this.value)"></select></span>
     </div>
     <button id="mercek" class="lens" onclick="mercekTgl()">70%+ favourites</button>
+    <button id="splens" class="lens" onclick="splitTgl()">◇ splits</button>
     <div id="rotd" class="rotd hidden"></div>
     <div id="manifesto" class="manifesto hidden">
       <button class="mx" onclick="kapatManifesto()" aria-label="close">×</button>
@@ -205,7 +206,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A7</div>
+      <div class="by">brier · by BT · build A8</div>
     </footer>
   </div>
 
@@ -214,7 +215,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A7</div>
+      <div class="by">brier · by BT · build A8</div>
     </footer>
   </div>
 </div>
@@ -250,7 +251,7 @@ const LIG_ESLE = {
 };
 function ligBul(k){return LIG_ESLE[k]||(String(k).indexOf('tennis_')===0?'tenis':null);}
 
-let LIVE=null, INDEX=null, HAFIZA={}, grup='ALL', ligSec=null, gunSec=null, mercek=false, tumGun=false, cekGrup=null;
+let LIVE=null, INDEX=null, HAFIZA={}, grup='ALL', ligSec=null, gunSec=null, mercek=false, splens=false, tumGun=false, cekGrup=null;
 
 function kapatManifesto(){
   document.getElementById('manifesto').classList.add('hidden');
@@ -460,6 +461,7 @@ function renderSecimler(){
 function gunSecim(v){gunSec=v;renderList();}
 function sporSecim(v){grup=v;gunSec=null;renderList();recordOfTheDay();}
 function mercekTgl(){mercek=!mercek;const b=document.getElementById('mercek');if(b)b.classList.toggle('on',mercek);renderList();}
+function splitTgl(){splens=!splens;const b=document.getElementById('splens');if(b)b.classList.toggle('on',splens);renderList();}
 function gruplar(){
   const s=new Set();
   Object.values(LIVE.ligler||{}).forEach(l=>{
@@ -485,6 +487,7 @@ function oyunlar(){
     if(ligSec!==null&&ad!==ligSec)return;
     (ld.maclar||[]).forEach(m=>{if(gunSec&&tarihKey(m.t)!==gunSec)return;
       if(mercek){const p=m.p||{};if(Math.max(p.h||0,p.a||0)<0.70)return;}
+      if(splens){try{if(!ayrismaHesap(m,!!ld.sonuc3))return;}catch(e){return;}}
       out.push({...m,ligAd:ad,key:ld.key,sonuc3:!!ld.sonuc3});});
   });
   out.sort((a,b)=>String(a.t).localeCompare(String(b.t)));
@@ -513,7 +516,7 @@ function renderList(){
   renderSecimler();
   const g=oyunlar();
   const box=document.getElementById('listBody');
-  if(!g.length){box.innerHTML=mercek?'<div class="empty">No 70%+ favourites here.<br>The lens keeps only games where the consensus favourite clears 70%.</div>':'<div class="empty">No games for this day.<br>Try another day or sport.</div>';return;}
+  if(!g.length){box.innerHTML=splens?'<div class="empty">No splits right now.<br>Books are in agreement across the board \u2014 that silence is also a record.</div>':mercek?'<div class="empty">No 70%+ favourites here.<br>The lens keeps only games where the consensus favourite clears 70%.</div>':'<div class="empty">No games for this day.<br>Try another day or sport.</div>';return;}
   if(tumGun&&ligSec!==null){
     let html=`<button class="ligsec" onclick="ligKapat()"><span>‹ All games</span><span class="cnt">${esc(ligSec)}</span></button>`;
     const shown=[];let gunK=null;
