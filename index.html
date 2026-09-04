@@ -206,7 +206,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A8</div>
+      <div class="by">brier · by BT · build A9</div>
     </footer>
   </div>
 
@@ -215,7 +215,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A8</div>
+      <div class="by">brier · by BT · build A9</div>
     </footer>
   </div>
 </div>
@@ -443,8 +443,9 @@ function gunEtiket(k){
 }
 function renderSecimler(){
   const gs=gunListesi(); window._gunler=gs;
+  const akis=tumGun||mercek||splens;
   if(!gs.length){gunSec=null;}
-  else if(gunSec===null||!gs.includes(gunSec)){gunSec=gs[0];}
+  else if(!akis&&(gunSec===null||!gs.includes(gunSec))){gunSec=gs[0];}
   const gsel=document.getElementById('gunSel');
   if(gsel)gsel.innerHTML=gs.map(k=>`<option value="${k}"${k===gunSec?' selected':''}>${gunEtiket(k)}</option>`).join('');
   const say=(g)=>{let t=0;Object.values((LIVE&&LIVE.ligler)||{}).forEach(ld=>{
@@ -458,7 +459,16 @@ function renderSecimler(){
   const td=document.getElementById('today');
   if(td)td.textContent=gunSec?new Date(gunSec+'T12:00').toLocaleDateString('en-GB',{day:'numeric',month:'long'}):'';
 }
-function gunSecim(v){gunSec=v;renderList();}
+function gunSecim(v){
+  gunSec=v;
+  if(tumGun||mercek||splens){
+    const el=document.getElementById('g-'+v);
+    if(el){el.scrollIntoView({behavior:'smooth',block:'start'});
+      const bas=document.getElementById('gunBaslik');if(bas)bas.textContent=gunEtiket(v).toUpperCase();
+      return;}
+  }
+  renderList();
+}
 function sporSecim(v){grup=v;gunSec=null;renderList();recordOfTheDay();}
 function mercekTgl(){mercek=!mercek;const b=document.getElementById('mercek');if(b)b.classList.toggle('on',mercek);renderList();}
 function splitTgl(){splens=!splens;const b=document.getElementById('splens');if(b)b.classList.toggle('on',splens);renderList();}
@@ -481,11 +491,12 @@ function ligleri(){
 
 
 function oyunlar(){
+  const akis=tumGun||mercek||splens;
   const out=[];
   Object.entries(LIVE.ligler||{}).forEach(([ad,ld])=>{
     if(grup!=='ALL'&&(ld.grup||'Other')!==grup)return;
     if(ligSec!==null&&ad!==ligSec)return;
-    (ld.maclar||[]).forEach(m=>{if(gunSec&&tarihKey(m.t)!==gunSec)return;
+    (ld.maclar||[]).forEach(m=>{if(!akis&&gunSec&&tarihKey(m.t)!==gunSec)return;
       if(mercek){const p=m.p||{};if(Math.max(p.h||0,p.a||0)<0.70)return;}
       if(splens){try{if(!ayrismaHesap(m,!!ld.sonuc3))return;}catch(e){return;}}
       out.push({...m,ligAd:ad,key:ld.key,sonuc3:!!ld.sonuc3});});
@@ -517,15 +528,23 @@ function renderList(){
   const g=oyunlar();
   const box=document.getElementById('listBody');
   if(!g.length){box.innerHTML=splens?'<div class="empty">No splits right now.<br>Books are in agreement across the board \u2014 that silence is also a record.</div>':mercek?'<div class="empty">No 70%+ favourites here.<br>The lens keeps only games where the consensus favourite clears 70%.</div>':'<div class="empty">No games for this day.<br>Try another day or sport.</div>';return;}
-  if(tumGun&&ligSec!==null){
-    let html=`<button class="ligsec" onclick="ligKapat()"><span>‹ All games</span><span class="cnt">${esc(ligSec)}</span></button>`;
+  if(tumGun||mercek||splens){
+    let html=(tumGun&&ligSec!==null)?`<button class="ligsec" onclick="ligKapat()"><span>‹ All games</span><span class="cnt">${esc(ligSec)}</span></button>`:'';
     const shown=[];let gunK=null;
     g.forEach(m=>{
       const tk=tarihKey(m.t);
-      if(tk!==gunK){gunK=tk;html+=`<div class="gunbas">${esc(gunEtiket(tk))}</div>`;}
+      if(tk!==gunK){gunK=tk;html+=`<div class="gunbas" id="g-${tk}">${esc(gunEtiket(tk))}</div>`;}
       const i=shown.length;shown.push(m);html+=macSatiri(m,i);
     });
-    box.innerHTML=html;window._shown=shown;return;
+    box.innerHTML=html;window._shown=shown;
+    // gun sekmesi akisin ilk gunune kurulur
+    if(g.length){
+      gunSec=tarihKey(g[0].t);
+      const gsel=document.getElementById('gunSel');if(gsel)gsel.value=gunSec;
+      const bas=document.getElementById('gunBaslik');if(bas)bas.textContent=gunEtiket(gunSec).toUpperCase();
+      const td=document.getElementById('today');if(td)td.textContent=new Date(gunSec+'T12:00').toLocaleDateString('en-GB',{day:'numeric',month:'long'});
+    }
+    return;
   }
   window._acik=window._acik||new Set();
   const gruplu=new Map();
