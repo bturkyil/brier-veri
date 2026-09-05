@@ -32,11 +32,11 @@
   },
   {
    "lig": "avusturya",
-   "mac": 208,
-   "cift": 44,
+   "mac": 394,
+   "cift": 74,
    "kalibrasyon": {
-    "favori_ima_ort": 51.3,
-    "favori_tutma": 48.1
+    "favori_ima_ort": 50.3,
+    "favori_tutma": 48.5
    },
    "dosya": "brier_hafiza_avusturya.json"
   },
@@ -56,31 +56,31 @@
   },
   {
    "lig": "belcika",
-   "mac": 544,
-   "cift": 132,
+   "mac": 625,
+   "cift": 147,
    "kalibrasyon": {
     "favori_ima_ort": 50.9,
-    "favori_tutma": 52.0
+    "favori_tutma": 52.8
    },
    "dosya": "brier_hafiza_belcika.json"
   },
   {
    "lig": "brezilya",
-   "mac": 612,
-   "cift": 201,
+   "mac": 760,
+   "cift": 258,
    "kalibrasyon": {
-    "favori_ima_ort": 49.5,
-    "favori_tutma": 53.9
+    "favori_ima_ort": 49.2,
+    "favori_tutma": 53.0
    },
    "dosya": "brier_hafiza_brezilya.json"
   },
   {
    "lig": "bundes2",
-   "mac": 398,
-   "cift": 198,
+   "mac": 614,
+   "cift": 227,
    "kalibrasyon": {
-    "favori_ima_ort": 47.1,
-    "favori_tutma": 46.0
+    "favori_ima_ort": 47.6,
+    "favori_tutma": 47.5
    },
    "dosya": "brier_hafiza_bundes2.json"
   },
@@ -123,11 +123,11 @@
   },
   {
    "lig": "danimarka",
-   "mac": 264,
-   "cift": 62,
+   "mac": 386,
+   "cift": 85,
    "kalibrasyon": {
-    "favori_ima_ort": 50.1,
-    "favori_tutma": 49.2
+    "favori_ima_ort": 50.2,
+    "favori_tutma": 49.9
    },
    "dosya": "brier_hafiza_danimarka.json"
   },
@@ -211,11 +211,11 @@
   },
   {
    "lig": "iskocya",
-   "mac": 277,
-   "cift": 74,
+   "mac": 460,
+   "cift": 77,
    "kalibrasyon": {
-    "favori_ima_ort": 54.7,
-    "favori_tutma": 55.2
+    "favori_ima_ort": 54.0,
+    "favori_tutma": 54.5
    },
    "dosya": "brier_hafiza_iskocya.json"
   },
@@ -231,20 +231,20 @@
   },
   {
    "lig": "isvicre",
-   "mac": 380,
-   "cift": 65,
+   "mac": 462,
+   "cift": 77,
    "kalibrasyon": {
-    "favori_ima_ort": 49.1,
-    "favori_tutma": 50.8
+    "favori_ima_ort": 48.3,
+    "favori_tutma": 49.0
    },
    "dosya": "brier_hafiza_isvicre.json"
   },
   {
    "lig": "japonya",
-   "mac": 610,
-   "cift": 201,
+   "mac": 761,
+   "cift": 242,
    "kalibrasyon": {
-    "favori_ima_ort": 44.3,
+    "favori_ima_ort": 44.9,
     "favori_tutma": 44.3
    },
    "dosya": "brier_hafiza_japonya.json"
@@ -302,11 +302,11 @@
   },
   {
    "lig": "ligue2",
-   "mac": 597,
-   "cift": 266,
+   "mac": 693,
+   "cift": 297,
    "kalibrasyon": {
-    "favori_ima_ort": 46.6,
-    "favori_tutma": 47.9
+    "favori_ima_ort": 46.0,
+    "favori_tutma": 47.3
    },
    "dosya": "brier_hafiza_ligue2.json"
   },
@@ -332,11 +332,11 @@
   },
   {
    "lig": "mls",
-   "mac": 912,
-   "cift": 343,
+   "mac": 1065,
+   "cift": 391,
    "kalibrasyon": {
-    "favori_ima_ort": 49.9,
-    "favori_tutma": 47.6
+    "favori_ima_ort": 49.7,
+    "favori_tutma": 47.9
    },
    "dosya": "brier_hafiza_mls.json"
   },
@@ -399,11 +399,11 @@
   },
   {
    "lig": "norvec",
-   "mac": 419,
-   "cift": 132,
+   "mac": 483,
+   "cift": 148,
    "kalibrasyon": {
-    "favori_ima_ort": 53.5,
-    "favori_tutma": 56.1
+    "favori_ima_ort": 52.9,
+    "favori_tutma": 55.2
    },
    "dosya": "brier_hafiza_norvec.json"
   },
@@ -565,11 +565,11 @@
   },
   {
    "lig": "yunanistan",
-   "mac": 388,
-   "cift": 101,
+   "mac": 461,
+   "cift": 115,
    "kalibrasyon": {
-    "favori_ima_ort": 54.3,
-    "favori_tutma": 53.6
+    "favori_ima_ort": 54.8,
+    "favori_tutma": 55.0
    },
    "dosya": "brier_hafiza_yunanistan.json"
   }
