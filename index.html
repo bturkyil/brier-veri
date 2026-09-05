@@ -167,6 +167,15 @@
   footer{padding:26px 20px 34px;text-align:center}
   footer .creed{font-size:12px;font-weight:700;letter-spacing:.4px}
   footer .by{margin-top:6px;font-size:10px;color:var(--grey);font-family:'IBM Plex Mono',monospace}
+  .ledrow{width:100%;text-align:left;background:#fff;border:0;border-bottom:1px solid var(--rule);
+    padding:13px 20px;display:flex;align-items:baseline;gap:10px;cursor:pointer;font-family:inherit;color:var(--ink)}
+  .ledrow .lad{flex:1;font-size:14px;font-weight:700}
+  .ledrow .lyil{font-size:10px;color:var(--grey);font-family:'IBM Plex Mono',monospace;display:block;margin-top:2px;font-weight:400}
+  .ledrow .lkar{font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600;white-space:nowrap}
+  .leddet{background:#fff;border-bottom:1px solid var(--rule);padding:4px 20px 12px}
+  .leddet table{width:100%;border-collapse:collapse;font-family:'IBM Plex Mono',monospace;font-size:10.5px}
+  .leddet th{text-align:left;color:var(--grey);font-weight:600;padding:5px 6px 3px 0;letter-spacing:.4px}
+  .leddet td{padding:3px 6px 3px 0;border-top:1px solid var(--rule)}
   .hidden{display:none}
 </style>
 </head>
@@ -206,8 +215,17 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A10</div>
+      <div class="by">brier · by BT · build A11</div>
     </footer>
+  </div>
+
+  <div id="view-ledger" class="hidden">
+    <button class="back" onclick="showList()">‹ Back</button>
+    <div class="dhead"><div class="dlig">SEASON RECORDS</div>
+      <div class="dteams">The Ledger</div></div>
+    <div class="ligkarne">Flat $100 on the consensus favourite, settled at the best closing price.
+      What each season actually paid — not a plan for the next one.</div>
+    <div id="ledgerBody"></div>
   </div>
 
   <div id="view-detail" class="hidden">
@@ -215,7 +233,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A10</div>
+      <div class="by">brier · by BT · build A11</div>
     </footer>
   </div>
 </div>
@@ -380,7 +398,7 @@ function cekmeceCiz(){
   Object.entries((LIVE&&LIVE.ligler)||{}).forEach(([ad,ld])=>{
     const g=ld.grup||'Other';(gr[g]=gr[g]||[]).push([ad,(ld.maclar||[]).length]);});
   const gAd=Object.keys(gr).sort();window._cekG=gAd;window._cekL=[];
-  let h='';
+  let h='<button class="cek-grup" onclick="showLedger()">The Ledger<span style="float:right;color:var(--grey)">›</span></button>';
   gAd.forEach((g,gi)=>{
     const acik=cekGrup===g;
     h+=`<button class="cek-grup" onclick="cekGrupSec(${gi})">${esc(g)}<span style="float:right;color:var(--grey)">${acik?'▾':'▸'}</span></button>`;
@@ -576,11 +594,82 @@ function toggleLig(ix){
 }
 
 function showList(){
+  document.getElementById('view-ledger').classList.add('hidden');
   document.getElementById('view-detail').classList.add('hidden');
   document.getElementById('view-list').classList.remove('hidden');
   window.scrollTo(0,0);
 }
 
+const LEDGER_AD={afl:'AFL',aleague:'A-League',arjantin:'Primera División (ARG)',
+  avusturya:'Austrian Bundesliga',belcika:'Belgium First Div',brezilya:'Brazil Série A',
+  bundes2:'2. Bundesliga',bundesliga:'Bundesliga',cfl:'CFL',champ:'EFL Championship',
+  danimarka:'Danish Superliga',efl1:'EFL League One',efl2:'EFL League Two',epl:'Premier League',
+  eredivisie:'Eredivisie',euroleague:'EuroLeague',iskocya:'Scottish Premiership',isvec:'Allsvenskan',
+  isvicre:'Swiss Super League',japonya:'J1 League',laliga:'La Liga',libertadores:'Copa Libertadores',
+  ligue1:'Ligue 1',ligue2:'Ligue 2',meksika:'Liga MX',mlb:'MLB',mls:'MLS',nba:'NBA',
+  ncaab:'NCAA Basketball',ncaaf:'NCAA Football',nfl:'NFL',nhl:'NHL',norvec:'Eliteserien',
+  portekiz:'Primeira Liga',segunda:'La Liga 2',seriea:'Serie A',serieb:'Serie B',
+  sudamericana:'Copa Sudamericana',turkiye:'Süper Lig',ucl:'Champions League',
+  uel:'Europa League',wnba:'WNBA',yunanistan:'Greek Super League'};
+let STRATEJI=null;
+function fmtPara(k){const m=Math.abs(k).toLocaleString('en-US');return (k<0?'−$':'+$')+m;}
+async function showLedger(){
+  menuKapat();
+  document.getElementById('view-list').classList.add('hidden');
+  document.getElementById('view-detail').classList.add('hidden');
+  document.getElementById('view-ledger').classList.remove('hidden');
+  window.scrollTo(0,0);
+  const kutu=document.getElementById('ledgerBody');
+  if(!STRATEJI){
+    kutu.innerHTML='<div class="empty">Opening the ledger…</div>';
+    try{
+      const r=await fetch(MEMORY+'brier_strateji.json?v=a11',{cache:'no-store'});
+      STRATEJI=await r.json();
+    }catch(e){
+      kutu.innerHTML='<div class="empty">The ledger is unreachable right now.<br>The record is still there — try again shortly.</div>';
+      return;
+    }
+  }
+  renderLedger();
+}
+function renderLedger(){
+  const kutu=document.getElementById('ledgerBody');
+  window._ledAcik=window._ledAcik||new Set();
+  const ligler=Object.entries(STRATEJI||{}).map(([slug,yillar])=>{
+    const ys=Object.keys(yillar).sort();
+    const son=ys[ys.length-1];
+    const topBahis=ys.reduce((a,y)=>a+(yillar[y].s3?yillar[y].s3.bahis:0),0);
+    return {slug,yillar,ys,son,topBahis};
+  }).sort((a,b)=>b.topBahis-a.topBahis);
+  let h='';
+  ligler.forEach(L=>{
+    const s3=L.yillar[L.son].s3;
+    const kapsam=L.ys.length>1?`${L.ys[0]}–${L.ys[L.ys.length-1]}`:`${L.son} · single season`;
+    const acik=window._ledAcik.has(L.slug);
+    h+=`<button class="ledrow" onclick="ledTgl('${L.slug}')">
+      <span class="lad">${esc(LEDGER_AD[L.slug]||L.slug.toUpperCase())}
+        <span class="lyil">${kapsam} · ${L.son}: every favourite · ${s3.bahis} bets</span></span>
+      <span class="lkar">${fmtPara(s3.kar)}</span></button>`;
+    if(acik){
+      h+='<div class="leddet"><table><tr><th>year</th><th>strategy</th><th>bets</th><th>hit</th><th>net</th></tr>';
+      L.ys.slice().reverse().forEach(y=>{
+        const S=L.yillar[y];
+        [['s1','biggest fav of the week'],['s2','top two favs of the week'],['s3','every favourite']].forEach(([k,ad])=>{
+          if(!S[k])return;
+          h+=`<tr><td>${y}</td><td>${ad}</td><td>${S[k].bahis}</td><td>%${S[k].tutma}</td><td>${fmtPara(S[k].kar)}</td></tr>`;
+        });
+      });
+      h+='</table></div>';
+    }
+  });
+  h+='<div class="ligkarne">Ranked by sample size. Single-season rows carry less weight — one year is a data point, not a pattern.</div>';
+  kutu.innerHTML=h;
+}
+function ledTgl(slug){
+  window._ledAcik=window._ledAcik||new Set();
+  window._ledAcik.has(slug)?window._ledAcik.delete(slug):window._ledAcik.add(slug);
+  renderLedger();
+}
 async function hafizaGetir(lig){
   if(!lig)return null;
   if(HAFIZA[lig]!==undefined)return HAFIZA[lig];
