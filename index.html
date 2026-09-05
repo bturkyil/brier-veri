@@ -178,6 +178,9 @@
   .leddet table{width:100%;border-collapse:collapse;font-family:'IBM Plex Mono',monospace;font-size:10.5px}
   .leddet th{text-align:left;color:var(--grey);font-weight:600;padding:5px 6px 3px 0;letter-spacing:.4px}
   .leddet td{padding:3px 6px 3px 0;border-top:1px solid var(--rule)}
+  .leddet tr.yilbasi td{border-top:2px solid var(--rule-dark);padding-top:6px}
+  .ledok{color:var(--rule-dark);font-size:12px;padding-left:6px}
+  .ledipucu{padding:10px 20px 4px;font-size:10.5px;color:var(--grey);font-family:'IBM Plex Mono',monospace;letter-spacing:.4px}
   .hidden{display:none}
 </style>
 </head>
@@ -217,7 +220,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A12</div>
+      <div class="by">brier · by BT · build A14</div>
     </footer>
   </div>
 
@@ -235,7 +238,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A12</div>
+      <div class="by">brier · by BT · build A14</div>
     </footer>
   </div>
 </div>
@@ -658,21 +661,22 @@ function renderLedger(){
       <span class="lyld${yld.has(L.slug)?' on':''}" onclick="ligYildiz(event,'${L.slug}')">${yld.has(L.slug)?'\u2605':'\u2606'}</span>
       <span class="lad">${esc(LEDGER_AD[L.slug]||L.slug.toUpperCase())}
         <span class="lyil">${kapsam} \u00b7 ${L.son}: every favourite \u00b7 ${s3.bahis.toLocaleString('en-US')} bets</span></span>
-      <span class="lkar">${fmtPara(s3.kar)}</span></button>`;
+      <span class="lkar">${fmtPara(s3.kar)}</span><span class="ledok">${acik?"\u25be":"\u25b8"}</span></button>`;
     if(acik){
       h+='<div class="leddet"><table><tr><th>year</th><th>strategy</th><th>bets</th><th>hit</th><th>net</th></tr>';
       L.ys.slice().reverse().forEach(y=>{
-        const S=L.yillar[y];
+        const S=L.yillar[y];let ilk=true;
         [['s1','biggest fav of the week'],['s2','top two favs of the week'],['s3','every favourite']].forEach(([k,ad])=>{
           if(!S[k])return;
-          h+=`<tr><td>${y}</td><td>${ad}</td><td>${S[k].bahis.toLocaleString('en-US')}</td><td>%${S[k].tutma}</td><td>${fmtPara(S[k].kar)}</td></tr>`;
+          h+=`<tr${ilk?' class="yilbasi"':''}><td>${ilk?('<b>'+y+'</b>'):''}</td><td>${ad}</td><td>${S[k].bahis.toLocaleString('en-US')}</td><td>%${S[k].tutma}</td><td>${fmtPara(S[k].kar)}</td></tr>`;
+          ilk=false;
         });
       });
       h+='</table></div>';
     }
     return h;
   };
-  let h='';
+  let h='<div class="ledipucu">TAP A LEAGUE FOR THE FULL YEAR-BY-YEAR RECORD</div>';
   if(benim.length){
     h+='<div class="gunbas">MY LEAGUES \u00b7 tap \u2606 to change</div>';
     benim.forEach(L=>{h+=satir(L);});
@@ -779,7 +783,7 @@ async function showDetail(i){
         <span class="pct">${r.medyan_marj.toFixed(1)}%</span></div>`;
     });
     const adil=H.rontgen[0], genis=H.rontgen[H.rontgen.length-1];
-    x+=`<div class="xread">Historically the leanest price in this league is <b>${esc(adil.kitap)}</b> (median take ${adil.medyan_marj.toFixed(1)}%); the widest is <b>${esc(genis.kitap)}</b> (${genis.medyan_marj.toFixed(1)}%). This is a record of what books charge — not a signal to bet.</div></div>`;
+    x+=`<div class="xread">Historically the leanest price in this league is <b>${esc(adil.kitap)}</b> (median take ${adil.medyan_marj.toFixed(1)}%); the widest is <b>${esc(genis.kitap)}</b> (${genis.medyan_marj.toFixed(1)}%). The take is the book's cut of every pot — the lower it runs, the more of the pot goes back to bettors. A record of what books charge — not a signal to bet.</div></div>`;
   }
   document.getElementById('xraySlot').innerHTML=x;
 
