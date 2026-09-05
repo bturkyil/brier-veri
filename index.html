@@ -171,6 +171,8 @@
     padding:13px 20px;display:flex;align-items:baseline;gap:10px;cursor:pointer;font-family:inherit;color:var(--ink)}
   .ledrow .lad{flex:1;font-size:14px;font-weight:700}
   .ledrow .lyil{font-size:10px;color:var(--grey);font-family:'IBM Plex Mono',monospace;display:block;margin-top:2px;font-weight:400}
+  .lyld{font-size:16px;color:var(--rule-dark);padding-right:4px;line-height:1}
+  .lyld.on{color:var(--gold)}
   .ledrow .lkar{font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600;white-space:nowrap}
   .leddet{background:#fff;border-bottom:1px solid var(--rule);padding:4px 20px 12px}
   .leddet table{width:100%;border-collapse:collapse;font-family:'IBM Plex Mono',monospace;font-size:10.5px}
@@ -215,7 +217,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A11</div>
+      <div class="by">brier · by BT · build A12</div>
     </footer>
   </div>
 
@@ -233,7 +235,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A11</div>
+      <div class="by">brier · by BT · build A12</div>
     </footer>
   </div>
 </div>
@@ -612,6 +614,11 @@ const LEDGER_AD={afl:'AFL',aleague:'A-League',arjantin:'Primera División (ARG)'
   sudamericana:'Copa Sudamericana',turkiye:'Süper Lig',ucl:'Champions League',
   uel:'Europa League',wnba:'WNBA',yunanistan:'Greek Super League'};
 let STRATEJI=null;
+function yildizlar(){try{return new Set(JSON.parse(localStorage.getItem('brier_yildiz')||'[]'))}catch(e){return new Set()}}
+function ligYildiz(ev,slug){ev.stopPropagation();
+  const s=yildizlar();s.has(slug)?s.delete(slug):s.add(slug);
+  try{localStorage.setItem('brier_yildiz',JSON.stringify([...s]))}catch(e){}
+  renderLedger();}
 function fmtPara(k){const m=Math.abs(k).toLocaleString('en-US');return (k<0?'−$':'+$')+m;}
 async function showLedger(){
   menuKapat();
@@ -635,20 +642,22 @@ async function showLedger(){
 function renderLedger(){
   const kutu=document.getElementById('ledgerBody');
   window._ledAcik=window._ledAcik||new Set();
+  const yld=yildizlar();
   const ligler=Object.entries(STRATEJI||{}).map(([slug,yillar])=>{
     const ys=Object.keys(yillar).sort();
     const son=ys[ys.length-1];
     const topBahis=ys.reduce((a,y)=>a+(yillar[y].s3?yillar[y].s3.bahis:0),0);
     return {slug,yillar,ys,son,topBahis};
   }).sort((a,b)=>b.topBahis-a.topBahis);
-  let h='';
-  ligler.forEach(L=>{
+  const benim=ligler.filter(L=>yld.has(L.slug)), digerleri=ligler.filter(L=>!yld.has(L.slug));
+  const satir=(L)=>{
     const s3=L.yillar[L.son].s3;
-    const kapsam=L.ys.length>1?`${L.ys[0]}–${L.ys[L.ys.length-1]}`:`${L.son} · single season`;
+    const kapsam=L.ys.length>1?`${L.ys[0]}\u2013${L.ys[L.ys.length-1]}`:`${L.son} \u00b7 single season`;
     const acik=window._ledAcik.has(L.slug);
-    h+=`<button class="ledrow" onclick="ledTgl('${L.slug}')">
+    let h=`<button class="ledrow" onclick="ledTgl('${L.slug}')">
+      <span class="lyld${yld.has(L.slug)?' on':''}" onclick="ligYildiz(event,'${L.slug}')">${yld.has(L.slug)?'\u2605':'\u2606'}</span>
       <span class="lad">${esc(LEDGER_AD[L.slug]||L.slug.toUpperCase())}
-        <span class="lyil">${kapsam} · ${L.son}: every favourite · ${s3.bahis} bets</span></span>
+        <span class="lyil">${kapsam} \u00b7 ${L.son}: every favourite \u00b7 ${s3.bahis.toLocaleString('en-US')} bets</span></span>
       <span class="lkar">${fmtPara(s3.kar)}</span></button>`;
     if(acik){
       h+='<div class="leddet"><table><tr><th>year</th><th>strategy</th><th>bets</th><th>hit</th><th>net</th></tr>';
@@ -656,13 +665,21 @@ function renderLedger(){
         const S=L.yillar[y];
         [['s1','biggest fav of the week'],['s2','top two favs of the week'],['s3','every favourite']].forEach(([k,ad])=>{
           if(!S[k])return;
-          h+=`<tr><td>${y}</td><td>${ad}</td><td>${S[k].bahis}</td><td>%${S[k].tutma}</td><td>${fmtPara(S[k].kar)}</td></tr>`;
+          h+=`<tr><td>${y}</td><td>${ad}</td><td>${S[k].bahis.toLocaleString('en-US')}</td><td>%${S[k].tutma}</td><td>${fmtPara(S[k].kar)}</td></tr>`;
         });
       });
       h+='</table></div>';
     }
-  });
-  h+='<div class="ligkarne">Ranked by sample size. Single-season rows carry less weight — one year is a data point, not a pattern.</div>';
+    return h;
+  };
+  let h='';
+  if(benim.length){
+    h+='<div class="gunbas">MY LEAGUES \u00b7 tap \u2606 to change</div>';
+    benim.forEach(L=>{h+=satir(L);});
+    h+='<div class="gunbas">ALL LEAGUES</div>';
+  }
+  digerleri.forEach(L=>{h+=satir(L);});
+  h+='<div class="ligkarne">Ranked by sample size. Tap \u2606 to pin a league to the top \u2014 saved on this device only. Single-season rows carry less weight \u2014 one year is a data point, not a pattern.</div>';
   kutu.innerHTML=h;
 }
 function ledTgl(slug){
