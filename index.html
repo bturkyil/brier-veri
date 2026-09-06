@@ -220,7 +220,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A16</div>
+      <div class="by">brier · by BT · build A17</div>
     </footer>
   </div>
 
@@ -238,7 +238,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A16</div>
+      <div class="by">brier · by BT · build A17</div>
     </footer>
   </div>
 </div>
@@ -616,7 +616,8 @@ const LEDGER_AD={afl:'AFL',aleague:'A-League',arjantin:'Primera División (ARG)'
   portekiz:'Primeira Liga',segunda:'La Liga 2',seriea:'Serie A',serieb:'Serie B',
   sudamericana:'Copa Sudamericana',turkiye:'Süper Lig',ucl:'Champions League',
   uel:'Europa League',wnba:'WNBA',yunanistan:'Greek Super League'};
-let STRATEJI=null;
+let STRATEJI=null, GOLK=null;
+(async()=>{try{const r=await fetch(MEMORY+'brier_golkarne.json?v=a17',{cache:'no-store'});if(r.ok)GOLK=await r.json();}catch(e){}})();
 function yildizlar(){try{return new Set(JSON.parse(localStorage.getItem('brier_yildiz')||'[]'))}catch(e){return new Set()}}
 function ligYildiz(ev,slug){ev.stopPropagation();
   const s=yildizlar();s.has(slug)?s.delete(slug):s.add(slug);
@@ -761,7 +762,21 @@ async function showDetail(i){
     html+=`<div class="card"><div class="head"><span class="t">Totals</span><span class="k">over/under ${tc.cizgi}</span></div>`;
     html+=fiyatSatiri('Over '+tc.cizgi,'',tc.over,(tc.p||{}).o);
     html+=fiyatSatiri('Under '+tc.cizgi,'',tc.under,(tc.p||{}).u);
-    html+=`<div class="foot">Only the ${tc.kitap} books quoting the consensus line (${tc.cizgi}) are shown — books on other lines are left out, never mixed in. Same reading as above: market %, fair, best price.</div></div>`;
+    let gk='';
+    try{
+      const G=GOLK&&GOLK[ligBul(m.key)];
+      if(G){
+        if(G.bantlar&&G.bantlar[String(tc.cizgi)]!=null){
+          gk=` This league, last ${G.mac.toLocaleString('en-US')} games: ${G.ort} goals/game — ${G.bantlar[String(tc.cizgi)]}% finished over ${tc.cizgi}.`;
+        }else if(G.bantlar){
+          const ilk=Object.keys(G.bantlar)[1]||Object.keys(G.bantlar)[0];
+          gk=` This league, last ${G.mac.toLocaleString('en-US')} games: ${G.ort} goals/game — ${G.bantlar[ilk]}% finished over ${ilk}.`;
+        }else{
+          gk=` This league, last ${G.mac.toLocaleString('en-US')} games: ${G.ort} points/game on average.`;
+        }
+      }
+    }catch(e){}
+    html+=`<div class="foot">Only the ${tc.kitap} books quoting the consensus line (${tc.cizgi}) are shown — books on other lines are left out, never mixed in.${gk}</div></div>`;
   }
 
   // --- spread karti ---
