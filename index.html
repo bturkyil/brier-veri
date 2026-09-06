@@ -220,7 +220,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A15</div>
+      <div class="by">brier · by BT · build A16</div>
     </footer>
   </div>
 
@@ -238,7 +238,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A15</div>
+      <div class="by">brier · by BT · build A16</div>
     </footer>
   </div>
 </div>
@@ -762,6 +762,15 @@ async function showDetail(i){
     html+=fiyatSatiri('Over '+tc.cizgi,'',tc.over,(tc.p||{}).o);
     html+=fiyatSatiri('Under '+tc.cizgi,'',tc.under,(tc.p||{}).u);
     html+=`<div class="foot">Only the ${tc.kitap} books quoting the consensus line (${tc.cizgi}) are shown — books on other lines are left out, never mixed in. Same reading as above: market %, fair, best price.</div></div>`;
+  }
+
+  // --- spread karti ---
+  if(m.spr&&m.spr.ev&&m.spr.dep){
+    const sp=m.spr, c=sp.cizgi, art=(x)=>(x>0?'+':'')+x;
+    html+=`<div class="card"><div class="head"><span class="t">Spread</span><span class="k">${esc(ilkKelime(evAd))} ${art(c)}</span></div>`;
+    html+=fiyatSatiri(evAd+' '+art(c),'home',sp.ev,(sp.p||{}).h);
+    html+=fiyatSatiri(depAd+' '+art(-c),'away',sp.dep,(sp.p||{}).a);
+    html+=`<div class="foot">Only the ${sp.kitap} books quoting the consensus line (${art(c)}) are shown — books on other lines are left out, never mixed in. Same reading: market %, fair, best price.</div></div>`;
   }
 
   // --- ayrisma satiri (ciplak) ---
