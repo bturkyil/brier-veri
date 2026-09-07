@@ -208,6 +208,22 @@
   .secozet .buyuk{font-family:'IBM Plex Mono',monospace;font-size:30px;font-weight:600;color:var(--ink)}
   .secozet .kucuk{font-size:12px;color:var(--grey);margin-top:6px;line-height:1.5}
   .secozet .kucuk b{color:var(--ink)}
+  .ayna{background:var(--ink);color:#fff;margin:14px 20px 0;padding:14px 16px}
+  .ayna .ab{font-size:10px;letter-spacing:.7px;color:#9AA8A5;font-weight:600}
+  .ayna .as{font-size:14px;line-height:1.55;margin-top:6px}
+  .ayna .as b{color:#fff}
+  .ayna .an{font-size:11px;color:#9AA8A5;margin-top:8px}
+  .secrow.gecmis{opacity:.85}
+  .secrow .sdurum{font-family:'IBM Plex Mono',monospace;font-size:11px;margin-top:3px}
+  .secrow .sdurum b{font-weight:600}
+  .secrow .kaz{color:var(--teal)} .secrow .kayip{color:var(--red)} .secrow .bekle{color:var(--grey)}
+  .uzak{display:block;font-size:9px;font-family:'IBM Plex Mono',monospace;color:var(--gold);margin-top:2px;white-space:nowrap}
+  .bolge{display:flex;gap:6px;padding:8px 16px 12px;border-top:1px solid var(--rule)}
+  .bolge button{flex:1;padding:7px 0;font-size:11px;font-weight:600;letter-spacing:.4px;border:1px solid var(--rule-dark);
+    background:#fff;color:var(--grey);border-radius:2px;cursor:pointer;font-family:inherit}
+  .bolge button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .bolgebas{padding:12px 16px 2px;font-size:10px;letter-spacing:.6px;color:var(--grey);font-weight:700}
+  .secuyari.kirmizi{border-left-color:var(--red)}
   .secuyari{margin:0 20px 10px;padding:10px 14px;border-left:3px solid var(--gold);background:#fff;font-size:12px;color:var(--ink);line-height:1.5}
   .hidden{display:none}
 </style>
@@ -249,7 +265,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A27</div>
+      <div class="by">brier · by BT · build A30</div>
     </footer>
   </div>
 
@@ -274,7 +290,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A27</div>
+      <div class="by">brier · by BT · build A30</div>
     </footer>
   </div>
 </div>
@@ -448,6 +464,9 @@ function cekmeceCiz(){
       const li=window._cekL.length;window._cekL.push(ad);
       h+=`<button class="cek-lig" onclick="ligAc(${li})">${esc(ad)}<span class="n">${n}</span></button>`;});
   });
+  const b=bolge();
+  h+=`<div class="bolgebas">MY REGION · books on my shelf first</div><div class="bolge">`+
+     [['all','ALL'],['us','US'],['eu','EU']].map(([v,t])=>`<button class="${b===v?'on':''}" onclick="bolgeSec('${v}')">${t}</button>`).join('')+`</div>`;
   document.getElementById('cekIc').innerHTML=h;
 }
 function cekGrupSec(gi){const g=(window._cekG||[])[gi];cekGrup=(cekGrup===g?null:g);cekmeceCiz();}
@@ -655,6 +674,15 @@ const LEDGER_AD={afl:'AFL',aleague:'A-League',arjantin:'Primera División (ARG)'
   portekiz:'Primeira Liga',segunda:'La Liga 2',seriea:'Serie A',serieb:'Serie B',
   sudamericana:'Copa Sudamericana',turkiye:'Süper Lig',ucl:'Champions League',
   uel:'Europa League',wnba:'WNBA',yunanistan:'Greek Super League'};
+const BOLGE_US=new Set(['draftkings','fanduel','betmgm','caesars','pointsbetus','betrivers','unibet_us','williamhill_us',
+ 'bovada','betonlineag','mybookieag','lowvig','betus','twinspires','barstool','superbook','wynnbet','fanatics','espnbet',
+ 'hardrockbet','ballybet','betparx','fliff','novig','prophetx','tipico_us','betanysports','gtbets','everygame']);
+function kitapBolge(k){k=String(k||'').toLowerCase();if(BOLGE_US.has(k)||/_us$/.test(k))return 'us';return 'eu';}
+function bolge(){try{return localStorage.getItem('brier_bolge')||'all'}catch(e){return 'all'}}
+function bolgeSec(b){try{localStorage.setItem('brier_bolge',b)}catch(e){}cekmeceCiz();
+  if(window._detayIdx!=null&&!document.getElementById('view-detail').classList.contains('hidden'))showDetail(window._detayIdx);
+  seritGuncelle();}
+function bolgeFiltre(liste){const b=bolge();if(b==='all')return liste||[];return (liste||[]).filter(x=>kitapBolge(x.k)===b);}
 let STRATEJI=null, GOLK=null;
 const SEC_MAX=8;
 function secimler(){try{return JSON.parse(localStorage.getItem('brier_secimler')||'[]')}catch(e){return []}}
@@ -666,9 +694,9 @@ function secEkle(ev,i){
   if(!s||!mac)return;
   const k=secAnahtar(mac,s.ad);
   let l=secimler();
-  if(l.some(x=>x.k===k)){l=l.filter(x=>x.k!==k);}
+  if(l.some(x=>x.k===k&&!x.sonuc)){l=l.filter(x=>!(x.k===k&&!x.sonuc));}
   else{
-    if(l.length>=SEC_MAX)return;
+    if(l.filter(x=>!x.sonuc).length>=SEC_MAX)return;
     l.push({k:k,ad:s.ad,p:s.p,liste:(s.liste||[]).map(x=>({k:x.k,o:x.o})),
             mac:{key:mac.key,t:mac.t,h:mac.h,a:mac.a,lig:mac.ligAd}});
   }
@@ -677,64 +705,160 @@ function secEkle(ev,i){
   seritGuncelle();
 }
 function secSil(k){secKaydet(secimler().filter(x=>x.k!==k));renderSecListesi();seritGuncelle();}
-function secHesap(l){
-  // en iyi bilesik: her secimin en iyi fiyatinin carpimi (kitaplar karisik)
+function secHesap(l,tumDunya){
+  const f=(x)=>tumDunya?(x.liste||[]):bolgeFiltre(x.liste||[]);
   let bilesik=1, dagilim={}, eksik=false;
   l.forEach(s=>{
-    const sl=sirala(s.liste||[]);
+    const sl=sirala(f(s));
     if(!sl.length){eksik=true;return;}
     bilesik*=sl[0].o; dagilim[sl[0].k]=(dagilim[sl[0].k]||0)+1;
   });
-  // tek kitap: tum secimleri fiyatlayan kitaplarin carpimlari
   let ortak=null;
-  l.forEach(s=>{const ks=new Set((s.liste||[]).map(x=>x.k));ortak=ortak?new Set([...ortak].filter(x=>ks.has(x))):ks;});
+  l.forEach(s=>{const ks=new Set(f(s).map(x=>x.k));ortak=ortak?new Set([...ortak].filter(x=>ks.has(x))):ks;});
   let tek=null;
   (ortak?[...ortak]:[]).forEach(k=>{
-    let c=1;l.forEach(s=>{const f=(s.liste||[]).find(x=>x.k===k);c*=f?f.o:1;});
+    let c=1;l.forEach(s=>{const x=(s.liste||[]).find(y=>y.k===k);c*=x?x.o:1;});
     if(!tek||c>tek.c)tek={k:k,c:c};
   });
   return {bilesik:bilesik,dagilim:dagilim,tek:tek,eksik:eksik};
 }
+function karsitlar(l){
+  // ayni macta birbirini dislayan secimler
+  const grup={};l.forEach(s=>{const mk=[s.mac.key,s.mac.t,s.mac.h,s.mac.a].join('|');(grup[mk]=grup[mk]||[]).push(s.ad);});
+  let n=0;
+  Object.values(grup).forEach(ads=>{
+    if(ads.length<2)return;
+    const ou=ads.filter(a=>/^(Over|Under)\s/.test(a));
+    const ouC={};ou.forEach(a=>{const c=a.split(/\s+/)[1];(ouC[c]=ouC[c]||new Set()).add(a.split(/\s+/)[0]);});
+    if(Object.values(ouC).some(s=>s.size>1))n++;
+    const spr=ads.filter(a=>/\s[+-][\d.]+$/.test(a)); if(spr.length>1)n++;
+    const h2h=ads.filter(a=>!/^(Over|Under)\s/.test(a)&&!/\s[+-][\d.]+$/.test(a)); if(h2h.length>1)n++;
+  });
+  return n;
+}
 function seritGuncelle(){
   const el=document.getElementById('secSerit');if(!el)return;
-  const l=secimler();
+  const l=secimler().filter(x=>!x.sonuc);
   if(!l.length){el.classList.add('hidden');return;}
   const h=secHesap(l);
   el.innerHTML=`<span>${l.length} selection${l.length>1?'s':''} · best combined <span class="sn">${h.bilesik.toFixed(2)}</span></span><span class="sok">open ›</span>`;
   el.classList.remove('hidden');
 }
-function showSecimler(){
+let DUN=null;
+async function dunGetir(){
+  try{const r=await fetch(HOST+'/dun.json',{cache:'no-store'});if(r.ok)DUN=await r.json();}catch(e){}
+}
+function dunBul(mac){
+  if(!DUN||!DUN.gunler)return null;
+  for(const g of Object.values(DUN.gunler)){
+    const e=g.find(x=>x.t===mac.t&&x.h===mac.h&&x.a===mac.a);
+    if(e)return e;
+  }
+  return null;
+}
+function secSonuclandir(s,e){
+  if(!e||e.hs==null||e.as==null)return null;
+  const ad=s.ad, hs=e.hs, as=e.as, mac=s.mac, kap=e.kap||{};
+  let tuttu=null, kapP=null;
+  const m1=ad.match(/^(Over|Under)\s+([\d.]+)$/);
+  if(m1){
+    const c=parseFloat(m1[2]), t=hs+as;
+    tuttu=(t===c)?null:((m1[1]==='Over')?t>c:t<c);
+    if(kap.tot&&kap.tot.cizgi===c&&kap.tot.p)kapP=m1[1]==='Over'?kap.tot.p.o:kap.tot.p.u;
+  }else{
+    const m2=ad.match(/^(.*)\s([+-][\d.]+)$/);
+    if(m2&&(m2[1]===mac.h||m2[1]===mac.a)){
+      const num=parseFloat(m2[2]), ev=(m2[1]===mac.h);
+      const fark=(ev?hs-as:as-hs)+num;
+      tuttu=(fark===0)?null:fark>0;
+      if(kap.spr&&kap.spr.p&&kap.spr.cizgi===(ev?num:-num))kapP=ev?kap.spr.p.h:kap.spr.p.a;
+    }else{
+      const kaz=hs>as?mac.h:(as>hs?mac.a:'Draw');
+      tuttu=(ad===kaz);
+      if(kap.p){kapP=ad===mac.h?kap.p.h:(ad===mac.a?kap.p.a:kap.p.d);}
+    }
+  }
+  return {tuttu:tuttu, kapFair:(kapP?1/kapP:null), skor:e.skor||(hs+'-'+as)};
+}
+function secimleriSonuclandir(){
+  const l=secimler();let degisti=false;
+  l.forEach(s=>{
+    if(s.sonuc)return;
+    const e=dunBul(s.mac);const r=e?secSonuclandir(s,e):null;
+    if(r){s.sonuc=r;degisti=true;}
+  });
+  if(degisti)secKaydet(l.slice(-200));
+}
+function aynaOzet(gecmis){
+  const kar=gecmis.filter(x=>x.sonuc&&x.sonuc.tuttu!==null);
+  if(!kar.length)return '';
+  const kaz=kar.filter(x=>x.sonuc.tuttu).length;
+  const clv=gecmis.filter(x=>x.sonuc&&x.sonuc.kapFair&&x.p);
+  let clvS='';
+  if(clv.length){
+    const yen=clv.filter(x=>(1/x.p)>x.sonuc.kapFair).length;
+    const ort=clv.reduce((a,x)=>a+((1/x.p)/x.sonuc.kapFair-1),0)/clv.length*100;
+    clvS=` Against the closing line: you beat the close on <b>${yen} of ${clv.length}</b> (avg <b>${ort>=0?'+':''}${ort.toFixed(1)}%</b>).`;
+  }
+  return `<div class="ayna"><div class="ab">YOUR MIRROR · ${gecmis.length} SETTLED</div>
+    <div class="as">Of <b>${kar.length}</b> decided selections, <b>${kaz}</b> came in.${clvS}</div>
+    <div class="an">Picked-vs-closing is the honest test: beating the close over many picks means you read the market before it moved. Not money, not advice — a mirror.</div></div>`;
+}
+function secSatir(s,gecmis){
+  const sl=sirala(s.liste||[]);const top=sl[0];
+  let durum='';
+  if(s.sonuc){
+    const r=s.sonuc, picked=s.p?(1/s.p).toFixed(2):'—';
+    const cls=r.tuttu===null?'bekle':(r.tuttu?'kaz':'kayip');
+    const etiket=r.tuttu===null?'push':(r.tuttu?'✓ came in':'✗ did not');
+    durum=`<div class="sdurum ${cls}"><b>${etiket}</b> · ${esc(r.skor)} · picked at fair ${picked}${r.kapFair?` → closed ${r.kapFair.toFixed(2)}`:''}</div>`;
+  }else{
+    durum=`<div class="sdurum bekle">pending · picked at fair ${s.p?(1/s.p).toFixed(2):'—'}</div>`;
+  }
+  return `<div class="secrow${gecmis?' gecmis':''}"><span class="smid"><div class="sad">${esc(s.ad)}</div>
+    <div class="smac">${esc(s.mac.h)} — ${esc(s.mac.a)} · ${esc(s.mac.lig||'')} · ${gun(s.mac.t)}${saat(s.mac.t)}</div>${durum}</span>
+    <span><div class="sfiyat">${top?top.o.toFixed(2):'—'}</div><div class="skitap">${top?esc(top.k):''}</div></span>
+    <button class="sil" onclick="secSil('${s.k.replace(/'/g,"\\'")}')">×</button></div>`;
+}
+async function showSecimler(){
+  await dunGetir();secimleriSonuclandir();seritGuncelle();
   ['view-list','view-detail','view-ledger'].forEach(id=>document.getElementById(id).classList.add('hidden'));
   document.getElementById('view-sec').classList.remove('hidden');
   window.scrollTo(0,0);renderSecListesi();
 }
 function renderSecListesi(){
-  const kutu=document.getElementById('secBody');const l=secimler();
-  if(!l.length){kutu.innerHTML='<div class="empty">Nothing selected yet.<br>Tap + next to any price to start a line-shopping list.</div>';return;}
-  const h=secHesap(l);
-  const dag=Object.entries(h.dagilim).sort((a,b)=>b[1]-a[1]).map(([k,n])=>`${n} at <b>${esc(k)}</b>`).join(', ');
-  let html=`<div class="secozet"><div class="buyuk">${h.bilesik.toFixed(2)}</div>
-    <div class="kucuk">Best combined price across books — to get it: ${dag}.`;
-  if(h.tek){const fark=(h.bilesik/h.tek.c-1)*100;
-    html+=`<br>Best single book: <b>${esc(h.tek.k)}</b> at <b>${h.tek.c.toFixed(2)}</b>${fark>=0.05?` — splitting across books is worth <b>${fark.toFixed(1)}%</b> more`:` — no gain from splitting`}.`;}
-  else html+=`<br>No single book prices all of these.`;
-  html+=`</div></div>`;
-  const macSayac={};l.forEach(s=>{const mk=[s.mac.key,s.mac.t,s.mac.h,s.mac.a].join('|');macSayac[mk]=(macSayac[mk]||0)+1;});
-  const korele=Object.values(macSayac).filter(n=>n>1).length;
-  if(korele){
-    html+=`<div class="secuyari"><b>Same-game selections detected.</b> Outcomes from one match are correlated — multiplying their prices does not reflect how books price the combination, and many won't take it as a plain accumulator. The combined figure above is arithmetic only for those legs.</div>`;
+  const kutu=document.getElementById('secBody');const tum=secimler();
+  const l=tum.filter(x=>!x.sonuc), gecmis=tum.filter(x=>x.sonuc).slice().reverse();
+  let html='';
+  if(!l.length&&!gecmis.length){kutu.innerHTML='<div class="empty">Nothing selected yet.<br>Tap + next to any price to start a line-shopping list.</div>';return;}
+  if(l.length){
+    const h=secHesap(l), b=bolge();
+    const dag=Object.entries(h.dagilim).sort((a,b)=>b[1]-a[1]).map(([k,n])=>`${n} at <b>${esc(k)}</b>`).join(', ');
+    html+=`<div class="secozet"><div class="buyuk">${h.eksik?'—':h.bilesik.toFixed(2)}</div>
+      <div class="kucuk">${b==='all'?'Best combined price across books':'Best combined price on your <b>'+b.toUpperCase()+'</b> shelf'} — ${h.eksik?'some legs have no price on this shelf':'to get it: '+dag+'.'}`;
+    if(h.tek){const fark=(h.bilesik/h.tek.c-1)*100;
+      html+=`<br>Best single book: <b>${esc(h.tek.k)}</b> at <b>${h.tek.c.toFixed(2)}</b>${fark>=0.05?` — splitting across books is worth <b>${fark.toFixed(1)}%</b> more`:` — no gain from splitting`}.`;}
+    else html+=`<br>No single book prices all of these.`;
+    if(b!=='all'){const d=secHesap(l,true);
+      if(!d.eksik&&d.bilesik>h.bilesik*1.005){const dd=Object.entries(d.dagilim).map(([k,n])=>`${n} at ${esc(k)}`).join(', ');
+        html+=`<br><span style="color:var(--gold)">Beyond your region:</span> <b>${d.bilesik.toFixed(2)}</b>${h.eksik?'':` — <b>+${((d.bilesik/h.bilesik-1)*100).toFixed(1)}%</b> more`} (${dd}).`;}}
+    html+=`</div></div>`;
+    const kars=karsitlar(l);
+    if(kars){html+=`<div class="secuyari kirmizi"><b>Mutually exclusive selections.</b> Two picks from the same market can't both come in (Over and Under, home and away, both sides of a spread). The combined price above has no meaning for those legs.</div>`;}
+    const macSayac={};l.forEach(s=>{const mk=[s.mac.key,s.mac.t,s.mac.h,s.mac.a].join('|');macSayac[mk]=(macSayac[mk]||0)+1;});
+    if(Object.values(macSayac).some(n=>n>1)){
+      html+=`<div class="secuyari"><b>Same-game selections detected.</b> Outcomes from one match are correlated — multiplying their prices does not reflect how books price the combination, and many won't take it as a plain accumulator. The combined figure above is arithmetic only for those legs.</div>`;
+    }
+    l.forEach(s=>{html+=secSatir(s,false);});
+    html+=`<div class="ligkarne">Prices are the best on record at the moment of selection. Each added leg multiplies the book's cut — a three-leg combination carries roughly three times the margin of a single bet. The record, not a recommendation.</div>`;
   }
-  l.forEach(s=>{
-    const sl=sirala(s.liste||[]);const top=sl[0];
-    html+=`<div class="secrow"><span class="smid"><div class="sad">${esc(s.ad)}</div>
-      <div class="smac">${esc(s.mac.h)} — ${esc(s.mac.a)} · ${esc(s.mac.lig||'')} · ${gun(s.mac.t)}${saat(s.mac.t)}</div></span>
-      <span><div class="sfiyat">${top?top.o.toFixed(2):'—'}</div><div class="skitap">${top?esc(top.k):''}</div></span>
-      <button class="sil" onclick="secSil('${s.k.replace(/'/g,"\\'")}')">×</button></div>`;
-  });
-  html+=`<div class="ligkarne">Prices are the best on record at the moment of selection. Each added leg multiplies the book's cut — a three-leg combination carries roughly three times the margin of a single bet. The record, not a recommendation.</div>`;
+  if(gecmis.length){
+    html+=aynaOzet(gecmis);
+    html+=`<div class="gunbas">SETTLED · ${gecmis.length}</div>`;
+    gecmis.forEach(s=>{html+=secSatir(s,true);});
+  }
   kutu.innerHTML=html;
 }
-(async()=>{try{const r=await fetch(MEMORY+'brier_golkarne.json?v=a17',{cache:'no-store'});if(r.ok)GOLK=await r.json();}catch(e){}})();
 function yildizlar(){try{return new Set(JSON.parse(localStorage.getItem('brier_yildiz')||'[]'))}catch(e){return new Set()}}
 function ligYildiz(ev,slug){ev.stopPropagation();
   const s=yildizlar();s.has(slug)?s.delete(slug):s.add(slug);
@@ -828,21 +952,41 @@ function sirala(liste){
     return String.fromCharCode(((c.charCodeAt(0)-97+26-kay)%26)+97)+c.slice(1);};
   return [...liste].sort((x,y)=> y.o - x.o || dondur(x.k).localeCompare(dondur(y.k)));
 }
+function ustunluk(listeler){
+  // her secim icin: (gosterilen en iyi / ortalama fiyat - 1); secimler arasi ortalama
+  const oranlar=[];
+  listeler.forEach(L=>{
+    const dunya=(L||[]).filter(x=>x&&x.o>1);if(dunya.length<3)return;
+    const gost=sirala(bolgeFiltre(dunya))[0];if(!gost)return;
+    const ort=dunya.reduce((a,x)=>a+x.o,0)/dunya.length;
+    oranlar.push(gost.o/ort-1);
+  });
+  if(!oranlar.length)return null;
+  return {yuzde:oranlar.reduce((a,b)=>a+b,0)/oranlar.length*100,n:oranlar.length};
+}
+function ustCumle(listeler){
+  const u=ustunluk(listeler);
+  if(!u||u.yuzde<0.05)return '';
+  return ` Here, the best price beats the average quoted for this match by <b>${u.yuzde.toFixed(1)}%</b>.`;
+}
 function fiyatSatiri(ad,tag,liste,p){
-  liste=sirala(liste);
-  const top=(liste&&liste[0])||null;
+  const dunya=sirala(liste);
+  liste=sirala(bolgeFiltre(dunya));
+  const top=(liste&&liste[0])||null, dTop=(dunya&&dunya[0])||null;
+  const uzak=(bolge()!=='all'&&dTop&&top&&dTop.o>top.o*1.01)?`<span class="uzak">world ${dTop.o.toFixed(2)} · ${esc(dTop.k)}</span>`:
+             ((bolge()!=='all'&&dTop&&!top)?`<span class="uzak">no ${bolge().toUpperCase()} price · world ${dTop.o.toFixed(2)} ${esc(dTop.k)}</span>`:'');
   const pct=p!=null?` · market ${Math.round(p*100)}% · fair ${(1/p).toFixed(2)}`:'';
   let btn='';
   if(window._detayMac&&top){
-    const i=(window._satirlar=window._satirlar||[]).push({ad:ad,liste:liste,p:p})-1;
-    const k=secAnahtar(window._detayMac,ad), l=secimler(), on=l.some(x=>x.k===k);
+    const i=(window._satirlar=window._satirlar||[]).push({ad:ad,liste:dunya,p:p})-1;
+    const k=secAnahtar(window._detayMac,ad), l=secimler().filter(x=>!x.sonuc), on=l.some(x=>x.k===k);
     const dolu=!on&&l.length>=SEC_MAX;
     btn=`<button class="secbtn${on?' on':''}" ${dolu?'disabled':''} onclick="secEkle(event,${i})" title="${on?'remove from':'add to'} selections">${on?'✓':'+'}</button>`;
   }
   return `<div class="orow">
     <span class="sel">${esc(ad)}<span class="tag">${esc(tag)}${pct}</span></span>
     <span class="odd">${top?top.o.toFixed(2):'—'}</span>
-    <span class="book">${top?esc(top.k):''}</span>${btn}</div>`;
+    <span class="book">${top?esc(top.k):''}${uzak}</span>${btn}</div>`;
 }
 function digerleri(etiket,liste){
   liste=sirala(liste);
@@ -874,8 +1018,8 @@ async function showDetail(i){
   html+=fiyatSatiri(depAd,'away',best.a,(m.p||{}).a);
   const diger=digerleri(ilkKelime(evAd),best.h)+(m.sonuc3?digerleri('Draw',best.d):'')+digerleri(ilkKelime(depAd),best.a);
   if(diger)html+=`<details class="more"><summary>Other books</summary>${diger}</details>`;
-  if(m.tot_cizgi!=null&&!(m.tot&&m.tot.over))html+=`<div class="foot">Total line: ${m.tot_cizgi}. Best price per selection, whichever book holds it — no book is best at everything. "Market %" is the de-vigged consensus (sums to 100); "fair" is that consensus as a price — the gap between fair and the best price is the take. Ties at the best price are listed alphabetically, and the starting letter shifts one step each day — fairness by rotation, so no book owns the top spot.</div>`;
-  else html+=`<div class="foot">Best price per selection, whichever book holds it — no book is best at everything. "Market %" is the de-vigged consensus (sums to 100); "fair" is that consensus as a price — the gap between fair and the best price is the take. Ties at the best price are listed alphabetically, and the starting letter shifts one step each day — fairness by rotation, so no book owns the top spot.</div>`;
+  if(m.tot_cizgi!=null&&!(m.tot&&m.tot.over))html+=`<div class="foot">Total line: ${m.tot_cizgi}. Best price per selection, whichever book holds it — no book is best at everything. "Market %" is the de-vigged consensus (sums to 100); "fair" is that consensus as a price — the gap between fair and the best price is the take.${ustCumle([best.h,best.d,best.a])} Ties at the best price are listed alphabetically, and the starting letter shifts one step each day — fairness by rotation, so no book owns the top spot.</div>`;
+  else html+=`<div class="foot">Best price per selection, whichever book holds it — no book is best at everything. "Market %" is the de-vigged consensus (sums to 100); "fair" is that consensus as a price — the gap between fair and the best price is the take.${ustCumle([best.h,best.d,best.a])} Ties at the best price are listed alphabetically, and the starting letter shifts one step each day — fairness by rotation, so no book owns the top spot.</div>`;
   if(!best.h&&!best.a&&!best.d){
     html=html.replace(/<div class="card"><div class="head"><span class="t">Best prices<\/span>[\s\S]*?<\/div>$/,'');
     html+=`<div class="card"><div class="memempty">Live prices for this game aren't in the feed yet.<br>Check back closer to kickoff.</div></div>`;
@@ -917,7 +1061,7 @@ async function showDetail(i){
         }
       }
     }catch(e){}
-    html+=`<div class="foot">Only the <b>${tc.kitap} books</b> quoting the consensus line (<b>${tc.cizgi}</b>) are shown — books on other lines are left out, never mixed in.${gk}</div></div>`;
+    html+=`<div class="foot">Only the <b>${tc.kitap} books</b> quoting the consensus line (<b>${tc.cizgi}</b>) are shown — books on other lines are left out, never mixed in.${ustCumle([tc.over,tc.under])}${gk}</div></div>`;
   }
 
   // --- spread karti ---
@@ -926,7 +1070,7 @@ async function showDetail(i){
     html+=`<div class="card"><div class="head"><span class="t">Spread</span><span class="k">${esc(ilkKelime(evAd))} ${art(c)}</span></div>`;
     html+=fiyatSatiri(evAd+' '+art(c),'home',sp.ev,(sp.p||{}).h);
     html+=fiyatSatiri(depAd+' '+art(-c),'away',sp.dep,(sp.p||{}).a);
-    html+=`<div class="foot">Only the <b>${sp.kitap} books</b> quoting the consensus line (<b>${art(c)}</b>) are shown — books on other lines are left out, never mixed in. Same reading: market %, fair, best price.</div></div>`;
+    html+=`<div class="foot">Only the <b>${sp.kitap} books</b> quoting the consensus line (<b>${art(c)}</b>) are shown — books on other lines are left out, never mixed in.${ustCumle([sp.ev,sp.dep])} Same reading: market %, fair, best price.</div></div>`;
   }
 
   // --- ayrisma satiri (ciplak) ---
