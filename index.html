@@ -182,6 +182,11 @@
   .ledok{color:var(--rule-dark);font-size:12px;padding-left:6px}
   .ledipucu{padding:10px 20px 4px;font-size:10.5px;color:var(--grey);font-family:'IBM Plex Mono',monospace;letter-spacing:.4px}
   .foot b{color:var(--ink);font-weight:600}
+  .pill{display:flex;align-items:baseline;padding:9px 16px;border-bottom:1px solid var(--rule);font-size:13px}
+  .pill:last-of-type{border-bottom:0}
+  .pill .pad{flex:1;font-weight:600;color:var(--ink)}
+  .pill .pv{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--grey);white-space:nowrap}
+  .pill .pv b{color:var(--ink);font-weight:600}
   .hidden{display:none}
 </style>
 </head>
@@ -221,7 +226,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A23</div>
+      <div class="by">brier · by BT · build A24</div>
     </footer>
   </div>
 
@@ -239,7 +244,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A23</div>
+      <div class="by">brier · by BT · build A24</div>
     </footer>
   </div>
 </div>
@@ -811,6 +816,27 @@ async function showDetail(i){
     if(ay){
       const favAd=ay.favEv?evAd:depAd;
       html+=`<div class="ligkarne">Widest split: <b>${esc(ay.b)}</b> prices ${esc(favAd)} at <b>${Math.round((ay.favP+ay.f)*100)}%</b> — <b>${ay.n} books</b> say <b>${Math.round(ay.favP*100)}%</b>. A record of disagreement, not a signal.</div>`;
+    }
+  }catch(e){}
+
+  // --- turetilen pazarlar (Derived) ---
+  try{
+    const parca=[];
+    // Cifte Sans: h2h olasiliklarindan (sonuc3 liglerde)
+    if(m.sonuc3 && m.p && m.p.d!=null){
+      const hd=m.p.h+m.p.d, da=m.p.d+m.p.a, ha=m.p.h+m.p.a;
+      const hap=(ad,pr)=>`<div class="pill"><span class="pad">${ad}</span><span class="pv"><b>${Math.round(pr*100)}%</b> · fair <b>${(1/pr).toFixed(2)}</b></span></div>`;
+      parca.push(hap(esc(ilkKelime(evAd))+' or draw', hd));
+      parca.push(hap('Draw or '+esc(ilkKelime(depAd)), da));
+      parca.push(hap(esc(ilkKelime(evAd))+' or '+esc(ilkKelime(depAd))+' (no draw)', ha));
+    }
+    // BTTS: gol karnesinden tarihsel oran
+    const G=GOLK&&GOLK[ligBul(m.key)];
+    if(G&&G.btts!=null){
+      parca.push(`<div class="pill"><span class="pad">Both teams scored <span style="color:var(--grey);font-weight:400">— league history</span></span><span class="pv"><b>${G.btts}%</b> of ${G.mac.toLocaleString('en-US')} games</span></div>`);
+    }
+    if(parca.length){
+      html+=`<div class="card"><div class="head"><span class="t">Derived</span><span class="k">no book, just the math</span></div>${parca.join('')}<div class="foot">Double chance comes straight from the match-result consensus — de-vigged, no book attached. Both-teams-scored is this league's historical rate, not a live price. Percent and fair only — bring your own book.</div></div>`;
     }
   }catch(e){}
 
