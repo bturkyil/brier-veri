@@ -204,10 +204,11 @@
   .secrow .sfiyat{font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:600;white-space:nowrap}
   .secrow .skitap{font-size:9px;font-family:'IBM Plex Mono',monospace;color:var(--grey);text-align:right}
   .secrow .sil{background:none;border:0;color:var(--grey);font-size:18px;cursor:pointer;padding:0 4px}
-  .secozet{background:#fff;border:1px solid var(--rule-dark);margin:14px 20px;padding:14px 16px}
+  .secozet{background:var(--teal-soft);border:1px solid var(--rule-dark);margin:14px 20px;padding:14px 16px}
   .secozet .buyuk{font-family:'IBM Plex Mono',monospace;font-size:30px;font-weight:600;color:var(--ink)}
   .secozet .kucuk{font-size:12px;color:var(--grey);margin-top:6px;line-height:1.5}
   .secozet .kucuk b{color:var(--ink)}
+  .secuyari{margin:0 20px 10px;padding:10px 14px;border-left:3px solid var(--gold);background:#fff;font-size:12px;color:var(--ink);line-height:1.5}
   .hidden{display:none}
 </style>
 </head>
@@ -248,7 +249,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A26</div>
+      <div class="by">brier · by BT · build A27</div>
     </footer>
   </div>
 
@@ -273,7 +274,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A26</div>
+      <div class="by">brier · by BT · build A27</div>
     </footer>
   </div>
 </div>
@@ -718,6 +719,11 @@ function renderSecListesi(){
     html+=`<br>Best single book: <b>${esc(h.tek.k)}</b> at <b>${h.tek.c.toFixed(2)}</b>${fark>=0.05?` — splitting across books is worth <b>${fark.toFixed(1)}%</b> more`:` — no gain from splitting`}.`;}
   else html+=`<br>No single book prices all of these.`;
   html+=`</div></div>`;
+  const macSayac={};l.forEach(s=>{const mk=[s.mac.key,s.mac.t,s.mac.h,s.mac.a].join('|');macSayac[mk]=(macSayac[mk]||0)+1;});
+  const korele=Object.values(macSayac).filter(n=>n>1).length;
+  if(korele){
+    html+=`<div class="secuyari"><b>Same-game selections detected.</b> Outcomes from one match are correlated — multiplying their prices does not reflect how books price the combination, and many won't take it as a plain accumulator. The combined figure above is arithmetic only for those legs.</div>`;
+  }
   l.forEach(s=>{
     const sl=sirala(s.liste||[]);const top=sl[0];
     html+=`<div class="secrow"><span class="smid"><div class="sad">${esc(s.ad)}</div>
