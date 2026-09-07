@@ -221,7 +221,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A18</div>
+      <div class="by">brier · by BT · build A20</div>
     </footer>
   </div>
 
@@ -239,7 +239,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A18</div>
+      <div class="by">brier · by BT · build A20</div>
     </footer>
   </div>
 </div>
@@ -389,6 +389,7 @@ function ayrismaHesap(m,s3){
   Object.entries(kt).forEach(([k,o])=>{
     if(!o.h||!o.a||(s3&&!o.d))return;
     const ih=1/o.h, ia=1/o.a, idr=s3?1/o.d:0, top=ih+ia+idr;
+    if(top<0.97||top>1.15)return; // likiditesiz borsa tahtasi / sakat fiyat elenir
     const pb=(favEv?ih:ia)/top; n++;
     const f=pb-favP;
     if(Math.abs(f)>Math.abs(enF)){enF=f;enB=k;}
@@ -768,18 +769,25 @@ async function showDetail(i){
       const G=GOLK&&GOLK[ligBul(m.key)];
       if(G){
         const nS=G.mac.toLocaleString('en-US');
-        if(G.bantlar&&G.bantlar[String(tc.cizgi)]!=null&&tc.p&&tc.p.o!=null){
-          const ligY=G.bantlar[String(tc.cizgi)], piyY=Math.round(tc.p.o*100), fark=piyY-ligY;
+        let ligY=null;
+        if(G.hist){
+          let ust=0,top=0;
+          Object.entries(G.hist).forEach(([t,c])=>{top+=c;if(parseFloat(t)>tc.cizgi)ust+=c;});
+          if(top>0)ligY=Math.round(1000*ust/top)/10;
+        }else if(G.bantlar&&G.bantlar[String(tc.cizgi)]!=null){
+          ligY=G.bantlar[String(tc.cizgi)];
+        }
+        if(ligY!=null&&tc.p&&tc.p.o!=null){
+          const piyY=Math.round(tc.p.o*100), fark=piyY-ligY;
           if(fark>=4){
-            gk=` League-wide, only <b>${ligY}%</b> of the last <b>${nS}</b> games went over <b>${tc.cizgi}</b> — but books price this one at <b>${piyY}%</b>. The market isn't treating this as an ordinary game.`;
+            gk=` League-wide, only <b>${ligY}%</b> of the last <b>${nS}</b> games finished over <b>${tc.cizgi}</b> — but books price this one at <b>${piyY}%</b>. The market isn't treating this as an ordinary game.`;
           }else if(fark<=-4){
-            gk=` League-wide, <b>${ligY}%</b> of the last <b>${nS}</b> games went over <b>${tc.cizgi}</b> — yet books price this one at just <b>${piyY}%</b>. The market expects a quieter game than this league usually delivers.`;
+            gk=` League-wide, <b>${ligY}%</b> of the last <b>${nS}</b> games finished over <b>${tc.cizgi}</b> — yet books price this one at just <b>${piyY}%</b>. The market expects a quieter game than this league usually delivers.`;
           }else{
-            gk=` Books price the over at <b>${piyY}%</b> — right at this league's history: <b>${ligY}%</b> of the last <b>${nS}</b> games went over <b>${tc.cizgi}</b>.`;
+            gk=` Books price the over at <b>${piyY}%</b> — right at this league's history: <b>${ligY}%</b> of the last <b>${nS}</b> games finished over <b>${tc.cizgi}</b>.`;
           }
-        }else if(G.bantlar){
-          const ilk=Object.keys(G.bantlar)[1]||Object.keys(G.bantlar)[0];
-          gk=` This league, last <b>${nS}</b> games: <b>${G.ort}</b> goals/game — <b>${G.bantlar[ilk]}%</b> finished over <b>${ilk}</b>.`;
+        }else if(ligY!=null){
+          gk=` This league, last <b>${nS}</b> games: <b>${ligY}%</b> finished over <b>${tc.cizgi}</b>.`;
         }else{
           gk=` This league, last <b>${nS}</b> games: <b>${G.ort}</b> points/game on average.`;
         }
