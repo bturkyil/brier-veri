@@ -181,6 +181,7 @@
   .leddet tr.yilbasi td{border-top:2px solid var(--rule-dark);padding-top:6px}
   .ledok{color:var(--rule-dark);font-size:12px;padding-left:6px}
   .ledipucu{padding:10px 20px 4px;font-size:10.5px;color:var(--grey);font-family:'IBM Plex Mono',monospace;letter-spacing:.4px}
+  .foot b{color:var(--ink);font-weight:600}
   .hidden{display:none}
 </style>
 </head>
@@ -220,7 +221,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A17</div>
+      <div class="by">brier · by BT · build A18</div>
     </footer>
   </div>
 
@@ -238,7 +239,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A17</div>
+      <div class="by">brier · by BT · build A18</div>
     </footer>
   </div>
 </div>
@@ -766,17 +767,25 @@ async function showDetail(i){
     try{
       const G=GOLK&&GOLK[ligBul(m.key)];
       if(G){
-        if(G.bantlar&&G.bantlar[String(tc.cizgi)]!=null){
-          gk=` This league, last ${G.mac.toLocaleString('en-US')} games: ${G.ort} goals/game — ${G.bantlar[String(tc.cizgi)]}% finished over ${tc.cizgi}.`;
+        const nS=G.mac.toLocaleString('en-US');
+        if(G.bantlar&&G.bantlar[String(tc.cizgi)]!=null&&tc.p&&tc.p.o!=null){
+          const ligY=G.bantlar[String(tc.cizgi)], piyY=Math.round(tc.p.o*100), fark=piyY-ligY;
+          if(fark>=4){
+            gk=` League-wide, only <b>${ligY}%</b> of the last <b>${nS}</b> games went over <b>${tc.cizgi}</b> — but books price this one at <b>${piyY}%</b>. The market isn't treating this as an ordinary game.`;
+          }else if(fark<=-4){
+            gk=` League-wide, <b>${ligY}%</b> of the last <b>${nS}</b> games went over <b>${tc.cizgi}</b> — yet books price this one at just <b>${piyY}%</b>. The market expects a quieter game than this league usually delivers.`;
+          }else{
+            gk=` Books price the over at <b>${piyY}%</b> — right at this league's history: <b>${ligY}%</b> of the last <b>${nS}</b> games went over <b>${tc.cizgi}</b>.`;
+          }
         }else if(G.bantlar){
           const ilk=Object.keys(G.bantlar)[1]||Object.keys(G.bantlar)[0];
-          gk=` This league, last ${G.mac.toLocaleString('en-US')} games: ${G.ort} goals/game — ${G.bantlar[ilk]}% finished over ${ilk}.`;
+          gk=` This league, last <b>${nS}</b> games: <b>${G.ort}</b> goals/game — <b>${G.bantlar[ilk]}%</b> finished over <b>${ilk}</b>.`;
         }else{
-          gk=` This league, last ${G.mac.toLocaleString('en-US')} games: ${G.ort} points/game on average.`;
+          gk=` This league, last <b>${nS}</b> games: <b>${G.ort}</b> points/game on average.`;
         }
       }
     }catch(e){}
-    html+=`<div class="foot">Only the ${tc.kitap} books quoting the consensus line (${tc.cizgi}) are shown — books on other lines are left out, never mixed in.${gk}</div></div>`;
+    html+=`<div class="foot">Only the <b>${tc.kitap} books</b> quoting the consensus line (<b>${tc.cizgi}</b>) are shown — books on other lines are left out, never mixed in.${gk}</div></div>`;
   }
 
   // --- spread karti ---
@@ -785,7 +794,7 @@ async function showDetail(i){
     html+=`<div class="card"><div class="head"><span class="t">Spread</span><span class="k">${esc(ilkKelime(evAd))} ${art(c)}</span></div>`;
     html+=fiyatSatiri(evAd+' '+art(c),'home',sp.ev,(sp.p||{}).h);
     html+=fiyatSatiri(depAd+' '+art(-c),'away',sp.dep,(sp.p||{}).a);
-    html+=`<div class="foot">Only the ${sp.kitap} books quoting the consensus line (${art(c)}) are shown — books on other lines are left out, never mixed in. Same reading: market %, fair, best price.</div></div>`;
+    html+=`<div class="foot">Only the <b>${sp.kitap} books</b> quoting the consensus line (<b>${art(c)}</b>) are shown — books on other lines are left out, never mixed in. Same reading: market %, fair, best price.</div></div>`;
   }
 
   // --- ayrisma satiri (ciplak) ---
@@ -793,7 +802,7 @@ async function showDetail(i){
     const ay=ayrismaHesap(m,m.sonuc3);
     if(ay){
       const favAd=ay.favEv?evAd:depAd;
-      html+=`<div class="ligkarne">Widest split: <b>${esc(ay.b)}</b> prices ${esc(favAd)} at <b>${Math.round((ay.favP+ay.f)*100)}%</b> — the consensus of ${ay.n} books says <b>${Math.round(ay.favP*100)}%</b>. A record of disagreement, not a signal.</div>`;
+      html+=`<div class="ligkarne">Widest split: <b>${esc(ay.b)}</b> prices ${esc(favAd)} at <b>${Math.round((ay.favP+ay.f)*100)}%</b> — <b>${ay.n} books</b> say <b>${Math.round(ay.favP*100)}%</b>. A record of disagreement, not a signal.</div>`;
     }
   }catch(e){}
 
@@ -816,7 +825,7 @@ async function showDetail(i){
         <span class="pct">${r.medyan_marj.toFixed(1)}%</span></div>`;
     });
     const adil=H.rontgen[0], genis=H.rontgen[H.rontgen.length-1];
-    x+=`<div class="xread">Historically the leanest price in this league is <b>${esc(adil.kitap)}</b> (median take ${adil.medyan_marj.toFixed(1)}%); the widest is <b>${esc(genis.kitap)}</b> (${genis.medyan_marj.toFixed(1)}%). The take is the book's cut of every pot — the lower it runs, the more of the pot goes back to bettors. A record of what books charge — not a signal to bet.</div></div>`;
+    x+=`<div class="xread">Historically the leanest price in this league is <b>${esc(adil.kitap)}</b> (median take ${adil.medyan_marj.toFixed(1)}%); the widest is <b>${esc(genis.kitap)}</b> (${genis.medyan_marj.toFixed(1)}%). The take is <b>the book's cut</b> of every pot — the lower it runs, <b>the more goes back to bettors</b>. A record of what books charge — not a signal to bet.</div></div>`;
   }
   document.getElementById('xraySlot').innerHTML=x;
 
