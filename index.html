@@ -221,7 +221,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A20</div>
+      <div class="by">brier · by BT · build A22</div>
     </footer>
   </div>
 
@@ -239,7 +239,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A20</div>
+      <div class="by">brier · by BT · build A22</div>
     </footer>
   </div>
 </div>
@@ -394,7 +394,7 @@ function ayrismaHesap(m,s3){
     const f=pb-favP;
     if(Math.abs(f)>Math.abs(enF)){enF=f;enB=k;}
   });
-  return (enB&&n>=4&&Math.abs(enF)>=0.03)?{b:enB,f:enF,n:n,favEv:favEv,favP:favP}:null;
+  return (enB&&n>=4&&Math.abs(enF)>=0.04)?{b:enB,f:enF,n:n,favEv:favEv,favP:favP}:null;
 }
 function menuAc(){document.getElementById('perde').classList.remove('hidden');
   document.getElementById('cekmece').classList.remove('hidden');cekmeceCiz();}
@@ -750,7 +750,7 @@ async function showDetail(i){
   html+=fiyatSatiri(depAd,'away',best.a,(m.p||{}).a);
   const diger=digerleri(ilkKelime(evAd),best.h)+(m.sonuc3?digerleri('Draw',best.d):'')+digerleri(ilkKelime(depAd),best.a);
   if(diger)html+=`<details class="more"><summary>Other books</summary>${diger}</details>`;
-  if(m.tot_cizgi!=null&&!(m.tot&&m.tot.over))html+=`<div class="foot">Total line: ${m.tot_cizgi}. Best price per selection, whichever book holds it — no book is best at everything. "Market %" is the de-vigged consensus (sums to 100); "fair" is that consensus as a price — the gap between fair and the best price is the take.</div>`;
+  if(m.tot_cizgi!=null&&!(m.tot&&m.tot.over))html+=`<div class="foot">Total line: ${m.tot_cizgi}. Best price per selection, whichever book holds it — no book is best at everything. "Market %" is the de-vigged consensus (sums to 100); "fair" is that consensus as a price — the gap between fair and the best price is the take. When books tie at the best price, the one named rotates daily — no book wins the shelf by its alphabet.</div>`;
   else html+=`<div class="foot">Best price per selection, whichever book holds it — no book is best at everything. "Market %" is the de-vigged consensus (sums to 100); "fair" is that consensus as a price — the gap between fair and the best price is the take.</div>`;
   if(!best.h&&!best.a&&!best.d){
     html=html.replace(/<div class="card"><div class="head"><span class="t">Best prices<\/span>[\s\S]*?<\/div>$/,'');
