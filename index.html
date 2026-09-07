@@ -187,6 +187,27 @@
   .pill .pad{flex:1;font-weight:600;color:var(--ink)}
   .pill .pv{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--grey);white-space:nowrap}
   .pill .pv b{color:var(--ink);font-weight:600}
+  .secbtn{width:26px;height:26px;border-radius:13px;border:1px solid var(--rule-dark);background:#fff;
+    color:var(--teal);font-size:16px;line-height:24px;text-align:center;cursor:pointer;margin-left:10px;
+    font-family:inherit;padding:0;flex:none}
+  .secbtn.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+  .secbtn:disabled{opacity:.35;cursor:default}
+  .serit{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--ink);color:#fff;
+    padding:12px 20px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;
+    font-size:13px;box-shadow:0 -4px 16px rgba(22,33,31,.25)}
+  .serit .sn{font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600}
+  .serit .sok{color:var(--teal);font-weight:700}
+  .secrow{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--rule);background:#fff}
+  .secrow .smid{flex:1;min-width:0}
+  .secrow .sad{font-size:14px;font-weight:700}
+  .secrow .smac{font-size:11px;color:var(--grey);margin-top:2px}
+  .secrow .sfiyat{font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:600;white-space:nowrap}
+  .secrow .skitap{font-size:9px;font-family:'IBM Plex Mono',monospace;color:var(--grey);text-align:right}
+  .secrow .sil{background:none;border:0;color:var(--grey);font-size:18px;cursor:pointer;padding:0 4px}
+  .secozet{background:#fff;border:1px solid var(--rule-dark);margin:14px 20px;padding:14px 16px}
+  .secozet .buyuk{font-family:'IBM Plex Mono',monospace;font-size:30px;font-weight:600;color:var(--ink)}
+  .secozet .kucuk{font-size:12px;color:var(--grey);margin-top:6px;line-height:1.5}
+  .secozet .kucuk b{color:var(--ink)}
   .hidden{display:none}
 </style>
 </head>
@@ -199,6 +220,7 @@
   </header>
   <div id="feedline" class="feedline">connecting to live feed…</div>
 
+  <div id="secSerit" class="serit hidden" onclick="showSecimler()"></div>
   <div id="perde" class="perde hidden" onclick="menuKapat()"></div>
   <nav id="cekmece" class="cekmece hidden">
     <div class="cek-baslik">SPORTS &amp; LEAGUES</div>
@@ -226,8 +248,15 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A24</div>
+      <div class="by">brier · by BT · build A25</div>
     </footer>
+  </div>
+
+  <div id="view-sec" class="hidden">
+    <button class="back" onclick="showList()">‹ Back</button>
+    <div class="dhead"><div class="dlig">MY SELECTIONS</div>
+      <div class="dteams">Line shopping</div></div>
+    <div id="secBody"></div>
   </div>
 
   <div id="view-ledger" class="hidden">
@@ -244,7 +273,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A24</div>
+      <div class="by">brier · by BT · build A25</div>
     </footer>
   </div>
 </div>
@@ -606,7 +635,9 @@ function toggleLig(ix){
 }
 
 function showList(){
+  document.getElementById('view-sec').classList.add('hidden');
   document.getElementById('view-ledger').classList.add('hidden');
+  window._detayMac=null;seritGuncelle();
   document.getElementById('view-detail').classList.add('hidden');
   document.getElementById('view-list').classList.remove('hidden');
   window.scrollTo(0,0);
@@ -624,6 +655,79 @@ const LEDGER_AD={afl:'AFL',aleague:'A-League',arjantin:'Primera División (ARG)'
   sudamericana:'Copa Sudamericana',turkiye:'Süper Lig',ucl:'Champions League',
   uel:'Europa League',wnba:'WNBA',yunanistan:'Greek Super League'};
 let STRATEJI=null, GOLK=null;
+const SEC_MAX=8;
+function secimler(){try{return JSON.parse(localStorage.getItem('brier_secimler')||'[]')}catch(e){return []}}
+function secKaydet(l){try{localStorage.setItem('brier_secimler',JSON.stringify(l))}catch(e){}}
+function secAnahtar(mac,ad){return [mac.key,mac.t,mac.h,mac.a,ad].join('|');}
+function secEkle(ev,i){
+  ev.stopPropagation();
+  const s=(window._satirlar||[])[i], mac=window._detayMac;
+  if(!s||!mac)return;
+  const k=secAnahtar(mac,s.ad);
+  let l=secimler();
+  if(l.some(x=>x.k===k)){l=l.filter(x=>x.k!==k);}
+  else{
+    if(l.length>=SEC_MAX)return;
+    l.push({k:k,ad:s.ad,p:s.p,liste:(s.liste||[]).map(x=>({k:x.k,o:x.o})),
+            mac:{key:mac.key,t:mac.t,h:mac.h,a:mac.a,lig:mac.ligAd}});
+  }
+  secKaydet(l);
+  if(window._detayIdx!=null)showDetail(window._detayIdx);
+  seritGuncelle();
+}
+function secSil(k){secKaydet(secimler().filter(x=>x.k!==k));renderSecimler();seritGuncelle();}
+function secHesap(l){
+  // en iyi bilesik: her secimin en iyi fiyatinin carpimi (kitaplar karisik)
+  let bilesik=1, dagilim={}, eksik=false;
+  l.forEach(s=>{
+    const sl=sirala(s.liste||[]);
+    if(!sl.length){eksik=true;return;}
+    bilesik*=sl[0].o; dagilim[sl[0].k]=(dagilim[sl[0].k]||0)+1;
+  });
+  // tek kitap: tum secimleri fiyatlayan kitaplarin carpimlari
+  let ortak=null;
+  l.forEach(s=>{const ks=new Set((s.liste||[]).map(x=>x.k));ortak=ortak?new Set([...ortak].filter(x=>ks.has(x))):ks;});
+  let tek=null;
+  (ortak?[...ortak]:[]).forEach(k=>{
+    let c=1;l.forEach(s=>{const f=(s.liste||[]).find(x=>x.k===k);c*=f?f.o:1;});
+    if(!tek||c>tek.c)tek={k:k,c:c};
+  });
+  return {bilesik:bilesik,dagilim:dagilim,tek:tek,eksik:eksik};
+}
+function seritGuncelle(){
+  const el=document.getElementById('secSerit');if(!el)return;
+  const l=secimler();
+  if(!l.length){el.classList.add('hidden');return;}
+  const h=secHesap(l);
+  el.innerHTML=`<span>${l.length} selection${l.length>1?'s':''} · best combined <span class="sn">${h.bilesik.toFixed(2)}</span></span><span class="sok">open ›</span>`;
+  el.classList.remove('hidden');
+}
+function showSecimler(){
+  ['view-list','view-detail','view-ledger'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+  document.getElementById('view-sec').classList.remove('hidden');
+  window.scrollTo(0,0);renderSecimler();
+}
+function renderSecimler(){
+  const kutu=document.getElementById('secBody');const l=secimler();
+  if(!l.length){kutu.innerHTML='<div class="empty">Nothing selected yet.<br>Tap + next to any price to start a line-shopping list.</div>';return;}
+  const h=secHesap(l);
+  const dag=Object.entries(h.dagilim).sort((a,b)=>b[1]-a[1]).map(([k,n])=>`${n} at <b>${esc(k)}</b>`).join(', ');
+  let html=`<div class="secozet"><div class="buyuk">${h.bilesik.toFixed(2)}</div>
+    <div class="kucuk">Best combined price across books — to get it: ${dag}.`;
+  if(h.tek){const fark=(h.bilesik/h.tek.c-1)*100;
+    html+=`<br>Best single book: <b>${esc(h.tek.k)}</b> at <b>${h.tek.c.toFixed(2)}</b>${fark>=0.05?` — splitting across books is worth <b>${fark.toFixed(1)}%</b> more`:` — no gain from splitting`}.`;}
+  else html+=`<br>No single book prices all of these.`;
+  html+=`</div></div>`;
+  l.forEach(s=>{
+    const sl=sirala(s.liste||[]);const top=sl[0];
+    html+=`<div class="secrow"><span class="smid"><div class="sad">${esc(s.ad)}</div>
+      <div class="smac">${esc(s.mac.h)} — ${esc(s.mac.a)} · ${esc(s.mac.lig||'')} · ${gun(s.mac.t)}${saat(s.mac.t)}</div></span>
+      <span><div class="sfiyat">${top?top.o.toFixed(2):'—'}</div><div class="skitap">${top?esc(top.k):''}</div></span>
+      <button class="sil" onclick="secSil('${s.k.replace(/'/g,"\\'")}')">×</button></div>`;
+  });
+  html+=`<div class="ligkarne">Prices are the best on record at the moment of selection. Each added leg multiplies the book's cut — a three-leg combination carries roughly three times the margin of a single bet. The record, not a recommendation.</div>`;
+  kutu.innerHTML=html;
+}
 (async()=>{try{const r=await fetch(MEMORY+'brier_golkarne.json?v=a17',{cache:'no-store'});if(r.ok)GOLK=await r.json();}catch(e){}})();
 function yildizlar(){try{return new Set(JSON.parse(localStorage.getItem('brier_yildiz')||'[]'))}catch(e){return new Set()}}
 function ligYildiz(ev,slug){ev.stopPropagation();
@@ -635,6 +739,7 @@ async function showLedger(){
   menuKapat();
   document.getElementById('view-list').classList.add('hidden');
   document.getElementById('view-detail').classList.add('hidden');
+  document.getElementById('view-sec').classList.add('hidden');
   document.getElementById('view-ledger').classList.remove('hidden');
   window.scrollTo(0,0);
   const kutu=document.getElementById('ledgerBody');
@@ -721,10 +826,17 @@ function fiyatSatiri(ad,tag,liste,p){
   liste=sirala(liste);
   const top=(liste&&liste[0])||null;
   const pct=p!=null?` · market ${Math.round(p*100)}% · fair ${(1/p).toFixed(2)}`:'';
+  let btn='';
+  if(window._detayMac&&top){
+    const i=(window._satirlar=window._satirlar||[]).push({ad:ad,liste:liste,p:p})-1;
+    const k=secAnahtar(window._detayMac,ad), l=secimler(), on=l.some(x=>x.k===k);
+    const dolu=!on&&l.length>=SEC_MAX;
+    btn=`<button class="secbtn${on?' on':''}" ${dolu?'disabled':''} onclick="secEkle(event,${i})" title="${on?'remove from':'add to'} selections">${on?'✓':'+'}</button>`;
+  }
   return `<div class="orow">
     <span class="sel">${esc(ad)}<span class="tag">${esc(tag)}${pct}</span></span>
     <span class="odd">${top?top.o.toFixed(2):'—'}</span>
-    <span class="book">${top?esc(top.k):''}</span></div>`;
+    <span class="book">${top?esc(top.k):''}</span>${btn}</div>`;
 }
 function digerleri(etiket,liste){
   liste=sirala(liste);
@@ -734,6 +846,7 @@ function digerleri(etiket,liste){
 }
 
 async function showDetail(i){
+  window._satirlar=[];window._detayMac=(window._shown||[])[i]||null;window._detayIdx=i;
   const m=window._shown[i];
   if(!m){return;}
   document.getElementById('view-list').classList.add('hidden');
@@ -907,7 +1020,7 @@ async function showDetail(i){
   }catch(e){}
 }
 
-boot();
+boot();seritGuncelle();
 </script>
 </body>
 </html>
