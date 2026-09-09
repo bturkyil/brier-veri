@@ -171,6 +171,28 @@
   .ledsek button{flex:1;padding:10px 0;background:none;border:0;border-bottom:2px solid transparent;font-size:11px;
     font-weight:700;letter-spacing:.7px;color:var(--grey);cursor:pointer;font-family:inherit}
   .ledsek button.on{color:var(--ink);border-bottom-color:var(--ink)}
+  .bulguF{display:flex;gap:6px;padding:10px 20px 4px;flex-wrap:wrap}
+  .bulguF button{padding:6px 12px;font-size:10.5px;font-weight:700;letter-spacing:.5px;border:1px solid var(--rule-dark);
+    background:#fff;color:var(--grey);border-radius:14px;cursor:pointer;font-family:inherit}
+  .bulguF button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .bulguNot{padding:2px 20px 8px;font-size:10.5px;color:var(--grey);font-family:'IBM Plex Mono',monospace;letter-spacing:.3px}
+  .arsiv{margin:14px 20px;background:#fff;border:1px solid var(--rule-dark)}
+  .arsiv .ah{padding:11px 16px;border-bottom:1px solid var(--rule);font-size:11px;font-weight:700;letter-spacing:.6px;color:var(--grey)}
+  .arsiv .ar{display:flex;align-items:baseline;gap:10px;padding:9px 16px;border-bottom:1px solid var(--rule);font-size:12px}
+  .arsiv .ar:last-of-type{border-bottom:0}
+  .arsiv .af{font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:600;min-width:52px}
+  .arsiv .af.under{color:var(--teal)} .arsiv .af.over{color:var(--red)}
+  .arsiv .ae{flex:1;font-weight:600}
+  .arsiv .ae small{display:block;font-weight:400;color:var(--grey);font-family:'IBM Plex Mono',monospace;font-size:10px;margin-top:2px}
+  .bk{display:flex;align-items:baseline;gap:12px}
+  .bk .bf{font-family:'IBM Plex Mono',monospace;font-size:26px;font-weight:600;white-space:nowrap}
+  .bk .bf.under{color:var(--teal)} .bk .bf.over{color:var(--red)}
+  .bk .be{flex:1;font-size:13px;font-weight:700}
+  .bk .bg{font-size:9px;font-family:'IBM Plex Mono',monospace;letter-spacing:.5px;padding:2px 7px;border-radius:9px;border:1px solid var(--rule-dark);color:var(--grey)}
+  .bk .bg.strong{color:var(--ink);border-color:var(--ink)}
+  .bs{display:flex;gap:14px;flex-wrap:wrap;margin-top:7px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--grey)}
+  .bs b{color:var(--ink);font-weight:600}
+  .bulgu .bm.kucuk{font-size:11.5px;color:var(--grey);margin-top:7px}
   .bulgu{background:#fff;border-bottom:1px solid var(--rule);padding:13px 20px}
   .bulgu .bm{font-size:14px;line-height:1.5;color:var(--ink)}
   .bulgu .bm b{font-weight:600}
@@ -259,6 +281,7 @@
     </div>
     <button id="mercek" class="lens" onclick="mercekTgl()">70%+ favourites</button>
     <button id="splens" class="lens" onclick="splitTgl()">◇ splits</button>
+    <button id="bulens" class="lens" onclick="bulguTgl()">◆ findings</button>
     <div id="rotd" class="rotd hidden"></div>
     <div id="manifesto" class="manifesto hidden">
       <button class="mx" onclick="kapatManifesto()" aria-label="close">×</button>
@@ -273,7 +296,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A31</div>
+      <div class="by">brier · by BT · build A35</div>
     </footer>
   </div>
 
@@ -299,7 +322,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A31</div>
+      <div class="by">brier · by BT · build A35</div>
     </footer>
   </div>
 </div>
@@ -335,7 +358,7 @@ const LIG_ESLE = {
 };
 function ligBul(k){return LIG_ESLE[k]||(String(k).indexOf('tennis_')===0?'tenis':null);}
 
-let LIVE=null, INDEX=null, HAFIZA={}, grup='ALL', ligSec=null, gunSec=null, mercek=false, splens=false, tumGun=false, cekGrup=null;
+let LIVE=null, INDEX=null, HAFIZA={}, grup='ALL', ligSec=null, gunSec=null, mercek=false, splens=false, bulens=false, tumGun=false, cekGrup=null;
 
 function kapatManifesto(){
   document.getElementById('manifesto').classList.add('hidden');
@@ -456,6 +479,23 @@ function ayrismaHesap(m,s3){
   });
   return (enB&&n>=4&&Math.abs(enF)>=0.04)?{b:enB,f:enF,n:n,favEv:favEv,favP:favP}:null;
 }
+function macBulgular(m){
+  const I=INSIGHT&&INSIGHT.havuz?INSIGHT.havuz:[];
+  const lig=ligBul(m.key), p=m.p||{};
+  if(!I.length||!lig||p.h==null||p.a==null)return [];
+  const favEv=p.h>=p.a, favP=favEv?p.h:p.a, favAd=favEv?m.h:m.a;
+  const kova=favP<0.6?'50-60%':(favP<0.7?'60-70%':(favP<0.8?'70-80%':'80%+'));
+  return I.filter(x=>x.lig===lig&&x.imp!=null).filter(x=>{
+    const e=String(x.etiket||'');
+    if(x.tur==='sharpness')return true;
+    if(x.tur==='calibration')return e.includes(kova);
+    if(x.tur==='homeaway')return e.startsWith(favEv?'home':'away');
+    if(x.tur==='club')return e.startsWith(favAd+' ');
+    if(x.tur==='draw')return !!m.sonuc3;
+    return false;
+  }).sort((a,b)=>Math.abs(b.fark)-Math.abs(a.fark));
+}
+function macBulguGuclu(m){return macBulgular(m).filter(x=>x.guven==='strong'||x.guven==='lean');}
 function menuAc(){document.getElementById('perde').classList.remove('hidden');
   document.getElementById('cekmece').classList.remove('hidden');cekmeceCiz();}
 function menuKapat(){document.getElementById('perde').classList.add('hidden');
@@ -531,7 +571,7 @@ function gunEtiket(k){
 }
 function renderSecimler(){
   const gs=gunListesi(); window._gunler=gs;
-  const akis=tumGun||mercek||splens;
+  const akis=tumGun||mercek||splens||bulens;
   if(!gs.length){gunSec=null;}
   else if(!akis&&(gunSec===null||!gs.includes(gunSec))){gunSec=gs[0];}
   const gsel=document.getElementById('gunSel');
@@ -549,7 +589,7 @@ function renderSecimler(){
 }
 function gunSecim(v){
   gunSec=v;
-  if(tumGun||mercek||splens){
+  if(tumGun||mercek||splens||bulens){
     const el=document.getElementById('g-'+v);
     if(el){el.scrollIntoView({behavior:'smooth',block:'start'});
       const bas=document.getElementById('gunBaslik');if(bas)bas.textContent=gunEtiket(v).toUpperCase();
@@ -559,6 +599,8 @@ function gunSecim(v){
 }
 function sporSecim(v){grup=v;gunSec=null;renderList();recordOfTheDay();}
 function mercekTgl(){mercek=!mercek;const b=document.getElementById('mercek');if(b)b.classList.toggle('on',mercek);renderList();}
+async function bulguTgl(){bulens=!bulens;const b=document.getElementById('bulens');if(b)b.classList.toggle('on',bulens);
+  if(bulens&&!INSIGHT)await insightGetir();renderList();}
 function splitTgl(){splens=!splens;const b=document.getElementById('splens');if(b)b.classList.toggle('on',splens);renderList();}
 function gruplar(){
   const s=new Set();
@@ -579,7 +621,7 @@ function ligleri(){
 
 
 function oyunlar(){
-  const akis=tumGun||mercek||splens;
+  const akis=tumGun||mercek||splens||bulens;
   const out=[];
   Object.entries(LIVE.ligler||{}).forEach(([ad,ld])=>{
     if(grup!=='ALL'&&(ld.grup||'Other')!==grup)return;
@@ -587,6 +629,7 @@ function oyunlar(){
     (ld.maclar||[]).forEach(m=>{if(!akis&&gunSec&&tarihKey(m.t)!==gunSec)return;
       if(mercek){const p=m.p||{};if(Math.max(p.h||0,p.a||0)<0.70)return;}
       if(splens){try{if(!ayrismaHesap(m,!!ld.sonuc3))return;}catch(e){return;}}
+      if(bulens){try{if(!macBulguGuclu({...m,key:ld.key,sonuc3:!!ld.sonuc3}).length)return;}catch(e){return;}}
       out.push({...m,ligAd:ad,key:ld.key,sonuc3:!!ld.sonuc3});});
   });
   out.sort((a,b)=>String(a.t).localeCompare(String(b.t)));
@@ -605,6 +648,7 @@ function macSatiri(m,i){
   }
   let ayT='';
   try{if(ayrismaHesap(m,m.sonuc3))ayT='<span class="splitTag">\u25C7 split</span>';}catch(e){}
+  try{const bg=macBulguGuclu(m);if(bg.length)ayT+=`<span class="splitTag">\u25C6 ${bg[0].fark>0?'+':'\u2212'}${Math.abs(bg[0].fark).toFixed(1)}</span>`;}catch(e){}
   return `<button class="mrow" onclick="showDetail(${i})">
       <span class="time">${saat(m.t)}</span>
       <span class="mid"><span class="comp">${esc(m.ligAd)}</span>
@@ -615,8 +659,8 @@ function renderList(){
   renderSecimler();
   const g=oyunlar();
   const box=document.getElementById('listBody');
-  if(!g.length){box.innerHTML=splens?'<div class="empty">No splits right now.<br>Books are in agreement across the board \u2014 that silence is also a record.</div>':mercek?'<div class="empty">No 70%+ favourites here.<br>The lens keeps only games where the consensus favourite clears 70%.</div>':'<div class="empty">No games for this day.<br>Try another day or sport.</div>';return;}
-  if(tumGun||mercek||splens){
+  if(!g.length){box.innerHTML=bulens?'<div class="empty">No archive findings touch today\'s games.<br>The archive only speaks where it has a strong or lean record for the spot.</div>':splens?'<div class="empty">No splits right now.<br>Books are in agreement across the board \u2014 that silence is also a record.</div>':mercek?'<div class="empty">No 70%+ favourites here.<br>The lens keeps only games where the consensus favourite clears 70%.</div>':'<div class="empty">No games for this day.<br>Try another day or sport.</div>';return;}
+  if(tumGun||mercek||splens||bulens){
     let html=(tumGun&&ligSec!==null)?`<button class="ligsec" onclick="ligKapat()"><span>‹ All games</span><span class="cnt">${esc(ligSec)}</span></button>`:'';
     const shown=[];let gunK=null;
     g.forEach(m=>{
@@ -949,20 +993,40 @@ function ledSekme(s){ledSek=s;
 }
 const TUR_AD={calibration:'calibration',draw:'draws',homeaway:'home / away',club:'club premium',sharpness:'sharpness',book:'books',upset:'upsets'};
 function vurgula(t){return esc(t).replace(/(\d+(?:\.\d+)?%|\d+(?:\.\d+)? points?|over [\d,]+ matches)/g,'<b>$1</b>');}
+let bulguYon='all';
+function bulguYonu(x){
+  if(x.yon)return x.yon;
+  const m=x.metin||'';
+  if(/won more often|outperform|overperform|carried a discount|more often than priced/.test(m))return 'under';
+  if(/won less often|underperform|carried a premium|less often than priced/.test(m))return 'over';
+  return 'none';
+}
+function bulguFiltre(y){bulguYon=y;renderFindings();}
 async function renderFindings(){
   const kutu=document.getElementById('ledgerBody');
   kutu.innerHTML='<div class="empty">Reading the archive…</div>';
   const I=await insightGetir();const h=(I&&I.havuz)||[];
   if(!h.length){kutu.innerHTML='<div class="empty">No findings on file yet.</div>';return;}
   const yld=yildizlar();
-  const liste=h.slice().sort((a,b)=>(yld.has(b.lig)-yld.has(a.lig))||(b.onem-a.onem));
-  let html='';let benimBasladi=false,digerBasladi=false;
+  const liste=h.filter(x=>bulguYon==='all'||bulguYonu(x)===bulguYon).slice().sort((a,b)=>(yld.has(b.lig)-yld.has(a.lig))||(b.onem-a.onem));
+  let html=`<div class="bulguF">`+[['all','ALL'],['under','MARKET UNDER-PRICED'],['over','MARKET OVER-PRICED']].map(([v,t])=>`<button class="${bulguYon===v?'on':''}" onclick="bulguFiltre('${v}')">${t}</button>`).join('')+`</div>`;
+  if(bulguYon!=='all')html+=`<div class="bulguNot">${bulguYon==='under'?'where outcomes beat their price':'where outcomes fell short of their price'} · past gaps, not future edges — markets adapt · strong z≥3 · lean z≥2 · thin below</div>`;
+  if(!liste.length){kutu.innerHTML=html+'<div class="empty">Nothing in this direction yet.</div>';return;}let benimBasladi=false,digerBasladi=false;
   liste.forEach(x=>{
     const benim=yld.has(x.lig);
     if(benim&&!benimBasladi){html+='<div class="gunbas">MY LEAGUES</div>';benimBasladi=true;}
     if(!benim&&benimBasladi&&!digerBasladi){html+='<div class="gunbas">ALL LEAGUES</div>';digerBasladi=true;}
     const ligAd=x.lig==='all'?'all leagues':(LEDGER_AD[x.lig]||x.lig);
-    html+=`<div class="bulgu"><div class="bm">${vurgula(x.metin)}</div><div class="bt">${esc(ligAd)} · ${TUR_AD[x.tur]||x.tur} · n=${(x.n||0).toLocaleString('en-US')}</div></div>`;
+    if(x.imp!=null&&x.act!=null){
+      const yon=x.fark>0?'under':'over', isaret=x.fark>0?'+':'−';
+      html+=`<div class="bulgu">
+        <div class="bk"><span class="bf ${yon}">${isaret}${Math.abs(x.fark).toFixed(1)}</span><span class="be">${esc(x.etiket||'')} · ${esc(ligAd)}</span><span class="bg ${x.guven}">${x.guven}</span></div>
+        <div class="bs"><span>priced <b>${x.imp}%</b> → happened <b>${x.act}%</b></span><span>fair <b>${x.fair}</b> → realised <b>${x.gercek!=null?x.gercek:'—'}</b></span><span>flat-stake <b>${x.getiri>=0?'+':''}${x.getiri}%</b></span></div>
+        <div class="bm kucuk">${esc(x.metin)}</div>
+        <div class="bt">${TUR_AD[x.tur]||x.tur} · n=${(x.n||0).toLocaleString('en-US')} · z=${x.z}</div></div>`;
+    }else{
+      html+=`<div class="bulgu"><div class="bm">${vurgula(x.metin)}</div><div class="bt">${esc(ligAd)} · ${TUR_AD[x.tur]||x.tur} · n=${(x.n||0).toLocaleString('en-US')}</div></div>`;
+    }
   });
   html+='<div class="ligkarne">Findings are recomputed from the score archive each month. Small samples are labelled by their n — read them as leans, not laws.</div>';
   kutu.innerHTML=html;
@@ -1138,6 +1202,26 @@ async function showDetail(i){
     }
     if(parca.length){
       html+=`<div class="card"><div class="head"><span class="t">Derived</span><span class="k">no book, just the math</span></div>${parca.join('')}<div class="foot">Double chance comes straight from the match-result consensus — de-vigged, no book attached. Both-teams-scored is this league's historical rate, not a live price. Percent and fair only — bring your own book.</div></div>`;
+    }
+  }catch(e){}
+
+  // --- bu maca uyan arsiv bulgulari ---
+  try{
+    const I=INSIGHT&&INSIGHT.havuz?INSIGHT.havuz:[];
+    const lig=ligBul(m.key), p=m.p||{};
+    if(I.length&&lig&&p.h!=null&&p.a!=null){
+      const favEv=p.h>=p.a, favP=favEv?p.h:p.a, favAd=favEv?evAd:depAd;
+      const kova=favP<0.6?'50-60%':(favP<0.7?'60-70%':(favP<0.8?'70-80%':'80%+'));
+      const uyan=macBulgular(m).slice(0,4);
+      if(uyan.length){
+        let a=`<div class="arsiv"><div class="ah">WHAT THE ARCHIVE SAYS ABOUT THIS SPOT</div>`;
+        uyan.forEach(x=>{
+          const yon=x.fark>0?'under':'over';
+          a+=`<div class="ar"><span class="af ${yon}">${x.fark>0?'+':'−'}${Math.abs(x.fark).toFixed(1)}</span><span class="ae">${esc(x.etiket||'')} · ${x.guven}<small>priced ${x.imp}% → happened ${x.act}% · n=${(x.n||0).toLocaleString('en-US')}</small></span></div>`;
+        });
+        a+=`<div class="foot">Every finding in this league that touches this match — for and against. Past gaps, not future edges: markets adapt.</div></div>`;
+        html+=a;
+      }
     }
   }catch(e){}
 
