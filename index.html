@@ -78,6 +78,8 @@
   .splitTag{font-family:'IBM Plex Mono',monospace;font-size:9.5px;font-weight:600;color:var(--gold);
     border:1px solid var(--gold);border-radius:8px;padding:1px 5px;margin-left:6px;
     letter-spacing:.4px;vertical-align:1px;white-space:nowrap}
+  .bolgeRozet{margin-left:10px;flex:none;background:none;border:1px solid rgba(255,255,255,.35);
+    color:#fff;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.6px;padding:4px 8px;border-radius:2px;cursor:pointer}
   .ham{background:none;border:0;color:#fff;font-size:19px;padding:0 12px 0 0;cursor:pointer;line-height:1}
   .perde{position:fixed;inset:0;background:rgba(22,33,31,.45);z-index:40}
   .cekmece{position:fixed;top:0;left:0;bottom:0;width:78%;max-width:320px;background:var(--paper);
@@ -116,6 +118,8 @@
   .card .head .k{font-size:9px;color:var(--grey);text-transform:uppercase;letter-spacing:.8px;
                  font-family:'IBM Plex Mono',monospace;text-align:right}
   .card .foot{padding:9px 16px;border-top:1px solid var(--rule);
+              font-size:10.5px;color:var(--grey);line-height:1.5;background:#FBFCFC}
+  .arsiv .foot{padding:9px 16px;border-top:1px solid var(--rule);
               font-size:10.5px;color:var(--grey);line-height:1.5;background:#FBFCFC}
 
   .orow{display:flex;align-items:center;padding:12px 16px;border-bottom:1px solid var(--rule)}
@@ -264,6 +268,7 @@
     <button class="ham" onclick="menuAc()" aria-label="menu">☰</button>
     <h1>BRIER</h1>
     <span class="sub">the record, not the tip</span>
+    <button id="bolgeRozet" class="bolgeRozet" onclick="bolgeDondur()" title="my region">ALL</button>
   </header>
   <div id="feedline" class="feedline">connecting to live feed…</div>
 
@@ -296,7 +301,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A35</div>
+      <div class="by">brier · by BT · build A37</div>
     </footer>
   </div>
 
@@ -322,7 +327,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A35</div>
+      <div class="by">brier · by BT · build A37</div>
     </footer>
   </div>
 </div>
@@ -734,9 +739,11 @@ const BOLGE_UK=new Set(['williamhill','skybet','ladbrokes_uk','ladbrokes','paddy
  'unibet_uk','betfair_ex_uk','betfair_sb_uk','virginbet','livescorebet','grosvenor','casumo','10bet','mrgreen','bet365','betfred','sportnation']);
 function kitapBolge(k){k=String(k||'').toLowerCase();if(BOLGE_US.has(k)||/_us$/.test(k))return 'us';if(BOLGE_UK.has(k)||/_uk$/.test(k))return 'uk';return 'eu';}
 function bolge(){try{return localStorage.getItem('brier_bolge')||'all'}catch(e){return 'all'}}
-function bolgeSec(b){try{localStorage.setItem('brier_bolge',b)}catch(e){}cekmeceCiz();
+function bolgeSec(b){try{localStorage.setItem('brier_bolge',b)}catch(e){}bolgeRozetGuncelle();cekmeceCiz();
   if(window._detayIdx!=null&&!document.getElementById('view-detail').classList.contains('hidden'))showDetail(window._detayIdx);
   seritGuncelle();}
+function bolgeDondur(){const s=['all','us','uk','eu'];bolgeSec(s[(s.indexOf(bolge())+1)%s.length]);}
+function bolgeRozetGuncelle(){const b=document.getElementById('bolgeRozet');if(b)b.textContent=bolge().toUpperCase();}
 function bolgeFiltre(liste){const b=bolge();if(b==='all')return liste||[];return (liste||[]).filter(x=>kitapBolge(x.k)===b);}
 let STRATEJI=null, GOLK=null;
 const SEC_MAX=8;
@@ -988,7 +995,7 @@ let ledSek='l';
 function ledSekme(s){ledSek=s;
   document.getElementById('sekL').classList.toggle('on',s==='l');document.getElementById('sekF').classList.toggle('on',s==='f');
   const not=document.getElementById('ledgerNot');
-  if(s==='f'){not.textContent='What the archive says about each market — favourites, draws, home and away, clubs, books. Every line is a count, not a claim.';renderFindings();}
+  if(s==='f'){not.innerHTML='What the archive says about each market — favourites, draws, home and away, clubs, books. Every line is a count, not a claim. <span style="color:var(--teal);font-weight:600">Teal</span> = outcomes beat their price, <span style="color:var(--red);font-weight:600">red</span> = fell short — direction, not profit.';renderFindings();}
   else{not.textContent='Flat $100 on the consensus favourite, settled at the best closing price. What each season actually paid — not a plan for the next one.';renderLedger();}
 }
 const TUR_AD={calibration:'calibration',draw:'draws',homeaway:'home / away',club:'club premium',sharpness:'sharpness',book:'books',upset:'upsets'};
@@ -1219,7 +1226,7 @@ async function showDetail(i){
           const yon=x.fark>0?'under':'over';
           a+=`<div class="ar"><span class="af ${yon}">${x.fark>0?'+':'−'}${Math.abs(x.fark).toFixed(1)}</span><span class="ae">${esc(x.etiket||'')} · ${x.guven}<small>priced ${x.imp}% → happened ${x.act}% · n=${(x.n||0).toLocaleString('en-US')}</small></span></div>`;
         });
-        a+=`<div class="foot">Every finding in this league that touches this match — for and against. Past gaps, not future edges: markets adapt.</div></div>`;
+        a+=`<div class="foot">Every finding in this league that touches this match — for and against. <span style="color:var(--teal);font-weight:600">Teal</span>: outcomes beat their price; <span style="color:var(--red);font-weight:600">red</span>: fell short. Direction, not profit — past gaps, not future edges.</div></div>`;
         html+=a;
       }
     }
@@ -1292,7 +1299,7 @@ async function showDetail(i){
   }catch(e){}
 }
 
-boot();seritGuncelle();
+boot();seritGuncelle();bolgeRozetGuncelle();
 </script>
 </body>
 </html>
