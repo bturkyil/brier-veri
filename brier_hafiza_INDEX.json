@@ -292,11 +292,11 @@
   },
   {
    "lig": "ligue1",
-   "mac": 578,
-   "cift": 184,
+   "mac": 1753,
+   "cift": 295,
    "kalibrasyon": {
-    "favori_ima_ort": 52.1,
-    "favori_tutma": 52.9
+    "favori_ima_ort": 52.4,
+    "favori_tutma": 52.5
    },
    "dosya": "brier_hafiza_ligue1.json"
   },
@@ -518,11 +518,11 @@
   },
   {
    "lig": "turkiye",
-   "mac": 719,
-   "cift": 241,
+   "mac": 2067,
+   "cift": 365,
    "kalibrasyon": {
-    "favori_ima_ort": 51.7,
-    "favori_tutma": 58.3
+    "favori_ima_ort": 50.4,
+    "favori_tutma": 54.0
    },
    "dosya": "brier_hafiza_turkiye.json"
   },
