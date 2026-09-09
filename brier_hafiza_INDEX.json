@@ -75,6 +75,16 @@
    "dosya": "brier_hafiza_brezilya.json"
   },
   {
+   "lig": "brezilya2",
+   "mac": 1370,
+   "cift": 465,
+   "kalibrasyon": {
+    "favori_ima_ort": 47.1,
+    "favori_tutma": 48.3
+   },
+   "dosya": "brier_hafiza_brezilya2.json"
+  },
+  {
    "lig": "bundes2",
    "mac": 614,
    "cift": 227,
@@ -501,9 +511,12 @@
   },
   {
    "lig": "superleague",
-   "mac": 1013,
-   "cift": 0,
-   "kalibrasyon": null,
+   "mac": 1014,
+   "cift": 297,
+   "kalibrasyon": {
+    "favori_ima_ort": 55.6,
+    "favori_tutma": 56.9
+   },
    "dosya": "brier_hafiza_superleague.json"
   },
   {
