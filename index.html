@@ -167,6 +167,14 @@
   footer{padding:26px 20px 34px;text-align:center}
   footer .creed{font-size:12px;font-weight:700;letter-spacing:.4px}
   footer .by{margin-top:6px;font-size:10px;color:var(--grey);font-family:'IBM Plex Mono',monospace}
+  .ledsek{display:flex;margin:12px 20px 0;border-bottom:1px solid var(--rule-dark)}
+  .ledsek button{flex:1;padding:10px 0;background:none;border:0;border-bottom:2px solid transparent;font-size:11px;
+    font-weight:700;letter-spacing:.7px;color:var(--grey);cursor:pointer;font-family:inherit}
+  .ledsek button.on{color:var(--ink);border-bottom-color:var(--ink)}
+  .bulgu{background:#fff;border-bottom:1px solid var(--rule);padding:13px 20px}
+  .bulgu .bm{font-size:14px;line-height:1.5;color:var(--ink)}
+  .bulgu .bm b{font-weight:600}
+  .bulgu .bt{font-size:10px;font-family:'IBM Plex Mono',monospace;color:var(--grey);margin-top:5px;letter-spacing:.4px}
   .ledrow{width:100%;text-align:left;background:#fff;border:0;border-bottom:1px solid var(--rule);
     padding:13px 20px;display:flex;align-items:baseline;gap:10px;cursor:pointer;font-family:inherit;color:var(--ink)}
   .ledrow .lad{flex:1;font-size:14px;font-weight:700}
@@ -265,7 +273,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A30</div>
+      <div class="by">brier · by BT · build A31</div>
     </footer>
   </div>
 
@@ -280,7 +288,8 @@
     <button class="back" onclick="showList()">‹ Back</button>
     <div class="dhead"><div class="dlig">SEASON RECORDS</div>
       <div class="dteams">The Ledger</div></div>
-    <div class="ligkarne">Flat $100 on the consensus favourite, settled at the best closing price.
+    <div class="ledsek"><button id="sekL" class="on" onclick="ledSekme('l')">LEAGUES</button><button id="sekF" onclick="ledSekme('f')">FINDINGS</button></div>
+    <div id="ledgerNot" class="ligkarne">Flat $100 on the consensus favourite, settled at the best closing price.
       What each season actually paid — not a plan for the next one.</div>
     <div id="ledgerBody"></div>
   </div>
@@ -290,7 +299,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A30</div>
+      <div class="by">brier · by BT · build A31</div>
     </footer>
   </div>
 </div>
@@ -466,7 +475,7 @@ function cekmeceCiz(){
   });
   const b=bolge();
   h+=`<div class="bolgebas">MY REGION · books on my shelf first</div><div class="bolge">`+
-     [['all','ALL'],['us','US'],['eu','EU']].map(([v,t])=>`<button class="${b===v?'on':''}" onclick="bolgeSec('${v}')">${t}</button>`).join('')+`</div>`;
+     [['all','ALL'],['us','US'],['uk','UK'],['eu','EU']].map(([v,t])=>`<button class="${b===v?'on':''}" onclick="bolgeSec('${v}')">${t}</button>`).join('')+`</div>`;
   document.getElementById('cekIc').innerHTML=h;
 }
 function cekGrupSec(gi){const g=(window._cekG||[])[gi];cekGrup=(cekGrup===g?null:g);cekmeceCiz();}
@@ -677,7 +686,9 @@ const LEDGER_AD={afl:'AFL',aleague:'A-League',arjantin:'Primera División (ARG)'
 const BOLGE_US=new Set(['draftkings','fanduel','betmgm','caesars','pointsbetus','betrivers','unibet_us','williamhill_us',
  'bovada','betonlineag','mybookieag','lowvig','betus','twinspires','barstool','superbook','wynnbet','fanatics','espnbet',
  'hardrockbet','ballybet','betparx','fliff','novig','prophetx','tipico_us','betanysports','gtbets','everygame']);
-function kitapBolge(k){k=String(k||'').toLowerCase();if(BOLGE_US.has(k)||/_us$/.test(k))return 'us';return 'eu';}
+const BOLGE_UK=new Set(['williamhill','skybet','ladbrokes_uk','ladbrokes','paddypower','coral','betvictor','boylesports','betway',
+ 'unibet_uk','betfair_ex_uk','betfair_sb_uk','virginbet','livescorebet','grosvenor','casumo','10bet','mrgreen','bet365','betfred','sportnation']);
+function kitapBolge(k){k=String(k||'').toLowerCase();if(BOLGE_US.has(k)||/_us$/.test(k))return 'us';if(BOLGE_UK.has(k)||/_uk$/.test(k))return 'uk';return 'eu';}
 function bolge(){try{return localStorage.getItem('brier_bolge')||'all'}catch(e){return 'all'}}
 function bolgeSec(b){try{localStorage.setItem('brier_bolge',b)}catch(e){}cekmeceCiz();
   if(window._detayIdx!=null&&!document.getElementById('view-detail').classList.contains('hidden'))showDetail(window._detayIdx);
@@ -863,7 +874,7 @@ function yildizlar(){try{return new Set(JSON.parse(localStorage.getItem('brier_y
 function ligYildiz(ev,slug){ev.stopPropagation();
   const s=yildizlar();s.has(slug)?s.delete(slug):s.add(slug);
   try{localStorage.setItem('brier_yildiz',JSON.stringify([...s]))}catch(e){}
-  renderLedger();}
+  if(ledSek==='f')renderFindings();else renderLedger();}
 function fmtPara(k){const m=Math.abs(k).toLocaleString('en-US');return (k<0?'−$':'+$')+m;}
 async function showLedger(){
   menuKapat();
@@ -883,7 +894,7 @@ async function showLedger(){
       return;
     }
   }
-  renderLedger();
+  if(ledSek==='f')renderFindings();else renderLedger();
 }
 function renderLedger(){
   const kutu=document.getElementById('ledgerBody');
@@ -928,6 +939,33 @@ function renderLedger(){
   digerleri.forEach(L=>{h+=satir(L);});
   h+='<div class="ligkarne">Ranked by sample size. Tap \u2606 to pin a league to the top \u2014 saved on this device only. Single-season rows carry less weight \u2014 one year is a data point, not a pattern.</div>';
   kutu.innerHTML=h;
+}
+let ledSek='l';
+function ledSekme(s){ledSek=s;
+  document.getElementById('sekL').classList.toggle('on',s==='l');document.getElementById('sekF').classList.toggle('on',s==='f');
+  const not=document.getElementById('ledgerNot');
+  if(s==='f'){not.textContent='What the archive says about each market — favourites, draws, home and away, clubs, books. Every line is a count, not a claim.';renderFindings();}
+  else{not.textContent='Flat $100 on the consensus favourite, settled at the best closing price. What each season actually paid — not a plan for the next one.';renderLedger();}
+}
+const TUR_AD={calibration:'calibration',draw:'draws',homeaway:'home / away',club:'club premium',sharpness:'sharpness',book:'books',upset:'upsets'};
+function vurgula(t){return esc(t).replace(/(\d+(?:\.\d+)?%|\d+(?:\.\d+)? points?|over [\d,]+ matches)/g,'<b>$1</b>');}
+async function renderFindings(){
+  const kutu=document.getElementById('ledgerBody');
+  kutu.innerHTML='<div class="empty">Reading the archive…</div>';
+  const I=await insightGetir();const h=(I&&I.havuz)||[];
+  if(!h.length){kutu.innerHTML='<div class="empty">No findings on file yet.</div>';return;}
+  const yld=yildizlar();
+  const liste=h.slice().sort((a,b)=>(yld.has(b.lig)-yld.has(a.lig))||(b.onem-a.onem));
+  let html='';let benimBasladi=false,digerBasladi=false;
+  liste.forEach(x=>{
+    const benim=yld.has(x.lig);
+    if(benim&&!benimBasladi){html+='<div class="gunbas">MY LEAGUES</div>';benimBasladi=true;}
+    if(!benim&&benimBasladi&&!digerBasladi){html+='<div class="gunbas">ALL LEAGUES</div>';digerBasladi=true;}
+    const ligAd=x.lig==='all'?'all leagues':(LEDGER_AD[x.lig]||x.lig);
+    html+=`<div class="bulgu"><div class="bm">${vurgula(x.metin)}</div><div class="bt">${esc(ligAd)} · ${TUR_AD[x.tur]||x.tur} · n=${(x.n||0).toLocaleString('en-US')}</div></div>`;
+  });
+  html+='<div class="ligkarne">Findings are recomputed from the score archive each month. Small samples are labelled by their n — read them as leans, not laws.</div>';
+  kutu.innerHTML=html;
 }
 function ledTgl(slug){
   window._ledAcik=window._ledAcik||new Set();
