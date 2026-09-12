@@ -89,6 +89,7 @@
     border-top:1px solid var(--rule);font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;color:var(--ink)}
   .cek-lig{display:block;width:100%;text-align:left;padding:10px 16px 10px 28px;background:none;border:0;
     font-size:12.5px;cursor:pointer;font-family:inherit;color:var(--ink)}
+  .cek-lig .ark{color:var(--teal);font-size:11px;margin-left:6px}
   .cek-lig .n{color:var(--grey);font-family:'IBM Plex Mono',monospace;font-size:10px;margin-left:6px}
   .gunbas{padding:14px 20px 6px;font-size:10.5px;font-weight:700;letter-spacing:.6px;color:var(--grey);
     font-family:'IBM Plex Mono',monospace;border-bottom:1px solid var(--rule)}
@@ -301,7 +302,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A37</div>
+      <div class="by">brier · by BT · build A40</div>
     </footer>
   </div>
 
@@ -327,7 +328,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A37</div>
+      <div class="by">brier · by BT · build A40</div>
     </footer>
   </div>
 </div>
@@ -347,7 +348,8 @@ const LIG_ESLE = {
   soccer_austria_bundesliga:'avusturya', soccer_switzerland_superleague:'isvicre',
   soccer_denmark_superliga:'danimarka', soccer_sweden_allsvenskan:'isvec',
   soccer_norway_eliteserien:'norvec', soccer_japan_j_league:'japonya',
-  soccer_brazil_campeonato:'brezilya', soccer_argentina_primera_division:'arjantin',
+  soccer_brazil_campeonato:'brezilya',
+  soccer_brazil_serie_b:'brezilya2', soccer_china_superleague:'superleague', soccer_argentina_primera_division:'arjantin',
   soccer_mexico_ligamx:'meksika', soccer_usa_mls:'mls', soccer_australia_aleague:'aleague',
   soccer_efl_champ:'champ', soccer_england_league1:'efl1', soccer_england_league2:'efl2',
   soccer_spain_segunda_division:'segunda', soccer_italy_serie_b:'serieb',
@@ -378,7 +380,7 @@ function gunTohum(){
 }
 function ligAdiDuzgun(l){
   const m={epl:'Premier League',laliga:'La Liga',seriea:'Serie A',bundesliga:'Bundesliga',
-    ligue1:'Ligue 1',turkiye:'Süper Lig',nba:'NBA',nfl:'NFL',mlb:'MLB',nhl:'NHL',
+    ligue1:'Ligue 1',turkiye:'Süper Lig',brezilya2:'Brazil Série B',superleague:'Chinese Super League',nba:'NBA',nfl:'NFL',mlb:'MLB',nhl:'NHL',
     ncaab:'NCAA basketball',ncaaf:'NCAA football',mls:'MLS',eredivisie:'Eredivisie',
     euroleague:'EuroLeague',portekiz:'Primeira Liga',champ:'Championship',
     wnba:'WNBA',brezilya:'Brasileirão',arjantin:'Primera División',japonya:'J-League',
@@ -505,7 +507,13 @@ function menuAc(){document.getElementById('perde').classList.remove('hidden');
   document.getElementById('cekmece').classList.remove('hidden');cekmeceCiz();}
 function menuKapat(){document.getElementById('perde').classList.add('hidden');
   document.getElementById('cekmece').classList.add('hidden');}
+function arsivliLigler(){
+  const s=new Set();
+  if(INDEX&&INDEX.ligler)INDEX.ligler.forEach(l=>{if(l.kalibrasyon)s.add(l.lig);});
+  return s;
+}
 function cekmeceCiz(){
+  const ark=arsivliLigler();
   const gr={};
   Object.entries((LIVE&&LIVE.ligler)||{}).forEach(([ad,ld])=>{
     const g=ld.grup||'Other';(gr[g]=gr[g]||[]).push([ad,(ld.maclar||[]).length]);});
@@ -516,7 +524,9 @@ function cekmeceCiz(){
     h+=`<button class="cek-grup" onclick="cekGrupSec(${gi})">${esc(g)}<span style="float:right;color:var(--grey)">${acik?'▾':'▸'}</span></button>`;
     if(acik)gr[g].sort((a,b)=>a[0].localeCompare(b[0])).forEach(([ad,n])=>{
       const li=window._cekL.length;window._cekL.push(ad);
-      h+=`<button class="cek-lig" onclick="ligAc(${li})">${esc(ad)}<span class="n">${n}</span></button>`;});
+      const ldk=(LIVE.ligler[ad]||{}).key, lg=ldk?ligBul(ldk):null;
+      const nis=(lg&&ark.has(lg))?'<span class="ark" title="historical archive">\u25C6</span>':'';
+      h+=`<button class="cek-lig" onclick="ligAc(${li})">${esc(ad)}${nis}<span class="n">${n}</span></button>`;});
   });
   const b=bolge();
   h+=`<div class="bolgebas">MY REGION · books on my shelf first</div><div class="bolge">`+
@@ -1226,7 +1236,7 @@ async function showDetail(i){
           const yon=x.fark>0?'under':'over';
           a+=`<div class="ar"><span class="af ${yon}">${x.fark>0?'+':'−'}${Math.abs(x.fark).toFixed(1)}</span><span class="ae">${esc(x.etiket||'')} · ${x.guven}<small>priced ${x.imp}% → happened ${x.act}% · n=${(x.n||0).toLocaleString('en-US')}</small></span></div>`;
         });
-        a+=`<div class="foot">Every finding in this league that touches this match — for and against. <span style="color:var(--teal);font-weight:600">Teal</span>: outcomes beat their price; <span style="color:var(--red);font-weight:600">red</span>: fell short. Direction, not profit — past gaps, not future edges.</div></div>`;
+        a+=`<div class="foot">Every archived finding for this league that fits this matchup — for and against, at any confidence. <span style="color:var(--teal);font-weight:600">Teal</span>: outcomes beat their price; <span style="color:var(--red);font-weight:600">red</span>: fell short. Direction, not profit — past gaps, not future edges.</div></div>`;
         html+=a;
       }
     }
@@ -1279,7 +1289,7 @@ async function showDetail(i){
     }
     mem+=`</div>`;
   }else{
-    mem=`<div class="card"><div class="memempty">No archive for this league yet — live prices only.<br>We only show memory where we truly have it.</div></div>`;
+    mem=`<div class="card"><div class="memempty">Live prices and market analysis are here — the historical record for this league is still building — live prices only.<br>We only show memory where we truly have it.</div></div>`;
   }
   document.getElementById('memSlot').innerHTML=mem;
 
