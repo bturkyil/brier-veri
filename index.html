@@ -279,6 +279,12 @@
   .bolgebas{padding:12px 16px 2px;font-size:10px;letter-spacing:.6px;color:var(--grey);font-weight:700}
   .secuyari.kirmizi{border-left-color:var(--red)}
   .secuyari{margin:0 20px 10px;padding:10px 14px;border-left:3px solid var(--gold);background:#fff;font-size:12px;color:var(--ink);line-height:1.5}
+  .hareket{margin:14px 20px 0;background:#fff;border:1px solid var(--rule-dark);padding:12px 16px}
+  .hareket .hh{font-size:11px;font-weight:700;letter-spacing:.6px;color:var(--grey)}
+  .hareket .hs{font-size:14px;line-height:1.55;margin-top:6px;color:var(--ink)}
+  .hareket .hs b{font-weight:600}
+  .hareket .hd{font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:600;margin-top:4px}
+  .hareket .hd.up{color:var(--teal)} .hareket .hd.down{color:var(--red)}
   .hidden{display:none}
 </style>
 </head>
@@ -321,7 +327,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A48</div>
+      <div class="by">brier · by BT · build A49</div>
     </footer>
   </div>
 
@@ -347,7 +353,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A48</div>
+      <div class="by">brier · by BT · build A49</div>
     </footer>
   </div>
 </div>
@@ -1321,6 +1327,24 @@ async function showDetail(i){
     if(sprDiger)html+=`<details class="more"><summary>Other books</summary>${sprDiger}</details>`;
     html+=`<div class="foot">Only the <b>${sp.kitap} books</b> quoting the consensus line (<b>${art(c)}</b>) are shown — books on other lines are left out, never mixed in.${ustCumle([sp.ev,sp.dep])} Same reading: market %, fair, best price.</div></div>`;
   }
+
+  // --- cizgi hareketi (açılış -> güncel favori olasiligi) ---
+  try{
+    if(m.ac&&m.ac.favP!=null&&m.p){
+      const favEv=m.p.h>=m.p.a, guncelP=favEv?m.p.h:m.p.a, favAd=favEv?evAd:depAd;
+      // açılıştaki favori ile şimdiki favori ayni tarafta mi?
+      const acAyniTaraf=(m.ac.favEv===favEv);
+      const acP=acAyniTaraf?m.ac.favP:(1-m.ac.favP);
+      const farkP=(guncelP-acP)*100;
+      if(Math.abs(farkP)>=1.5){
+        const yon=farkP>0?'up':'down';
+        const acFair=(1/acP).toFixed(2), guncelFair=(1/guncelP).toFixed(2);
+        html+=`<div class="hareket"><div class="hh">LINE MOVEMENT · SINCE WE FIRST SAW IT</div>
+          <div class="hd ${yon}">${farkP>0?'+':'−'}${Math.abs(farkP).toFixed(0)} pts</div>
+          <div class="hs">The market has moved <b>toward ${farkP>0?esc(favAd):'the underdog'}</b>: <b>${esc(favAd)}</b> opened at <b>${Math.round(acP*100)}%</b> (${acFair}) and now sits at <b>${Math.round(guncelP*100)}%</b> (${guncelFair}). Money is following the ${farkP>0?'favourite':'longshot'}. The record of where the line is going, not a call on where it lands.</div></div>`;
+      }
+    }
+  }catch(e){}
 
   // --- ayrisma satiri (ciplak) ---
   try{
