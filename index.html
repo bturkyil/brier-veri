@@ -140,6 +140,12 @@
   .minirow{display:flex;justify-content:space-between;padding:6px 16px;font-size:11px;
            font-family:'IBM Plex Mono',monospace;color:var(--grey)}
   .minirow .o{color:var(--ink);font-weight:600}
+  .minirow{align-items:center}
+  .mbtn{width:22px;height:22px;border-radius:11px;border:1px solid var(--rule-dark);background:#fff;color:var(--teal);
+    font-size:14px;line-height:20px;text-align:center;cursor:pointer;margin-left:8px;padding:0;flex:none;font-family:inherit}
+  .mbtn.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+  .mbtn:disabled{opacity:.35;cursor:default}
+  .secrow .skitapsec{font-size:10px;color:var(--teal);font-family:'IBM Plex Mono',monospace;margin-top:2px}
 
   .xrow{display:flex;align-items:center;gap:10px;padding:8px 16px}
   .xrow:first-of-type{padding-top:13px}
@@ -302,7 +308,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A40</div>
+      <div class="by">brier · by BT · build A42</div>
     </footer>
   </div>
 
@@ -328,7 +334,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A40</div>
+      <div class="by">brier · by BT · build A42</div>
     </footer>
   </div>
 </div>
@@ -361,7 +367,8 @@ const LIG_ESLE = {
   basketball_euroleague:'euroleague', americanfootball_cfl:'cfl',
   soccer_finland_veikkausliiga:'veikkausliiga', soccer_poland_ekstraklasa:'ekstraklasa',
   soccer_league_of_ireland:'ireland', soccer_korea_kleague1:'kleague1',
-  soccer_sweden_superettan:'superettan', soccer_germany_liga3:'liga3',
+  soccer_sweden_superettan:'superettan',
+  soccer_ireland_premier_division:'ireland', soccer_germany_liga3:'liga3',
 };
 function ligBul(k){return LIG_ESLE[k]||(String(k).indexOf('tennis_')===0?'tenis':null);}
 
@@ -380,7 +387,7 @@ function gunTohum(){
 }
 function ligAdiDuzgun(l){
   const m={epl:'Premier League',laliga:'La Liga',seriea:'Serie A',bundesliga:'Bundesliga',
-    ligue1:'Ligue 1',turkiye:'Süper Lig',brezilya2:'Brazil Série B',superleague:'Chinese Super League',nba:'NBA',nfl:'NFL',mlb:'MLB',nhl:'NHL',
+    ligue1:'Ligue 1',turkiye:'Süper Lig',ekstraklasa:'Ekstraklasa',kleague1:'K League 1',veikkausliiga:'Veikkausliiga',superettan:'Superettan',ireland:'League of Ireland',brezilya2:'Brazil Série B',superleague:'Chinese Super League',nba:'NBA',nfl:'NFL',mlb:'MLB',nhl:'NHL',
     ncaab:'NCAA basketball',ncaaf:'NCAA football',mls:'MLS',eredivisie:'Eredivisie',
     euroleague:'EuroLeague',portekiz:'Primeira Liga',champ:'Championship',
     wnba:'WNBA',brezilya:'Brasileirão',arjantin:'Primera División',japonya:'J-League',
@@ -781,9 +788,12 @@ function secHesap(l,tumDunya){
   const f=(x)=>tumDunya?(x.liste||[]):bolgeFiltre(x.liste||[]);
   let bilesik=1, dagilim={}, eksik=false;
   l.forEach(s=>{
-    const sl=sirala(f(s));
-    if(!sl.length){eksik=true;return;}
-    bilesik*=sl[0].o; dagilim[sl[0].k]=(dagilim[sl[0].k]||0)+1;
+    // kullanici bir kitap sectiyse onu kullan, yoksa (bolgesel) en iyi
+    let sec=null;
+    if(s.kitap&&!tumDunya){const f2=(s.liste||[]).find(x=>x.k===s.kitap);if(f2)sec=f2;}
+    if(!sec){const sl=sirala(f(s));if(sl.length)sec=sl[0];}
+    if(!sec){eksik=true;return;}
+    bilesik*=sec.o; dagilim[sec.k]=(dagilim[sec.k]||0)+1;
   });
   let ortak=null;
   l.forEach(s=>{const ks=new Set(f(s).map(x=>x.k));ortak=ortak?new Set([...ortak].filter(x=>ks.has(x))):ks;});
@@ -877,7 +887,8 @@ function aynaOzet(gecmis){
     <div class="an">Picked-vs-closing is the honest test: beating the close over many picks means you read the market before it moved. Not money, not advice — a mirror.</div></div>`;
 }
 function secSatir(s,gecmis){
-  const sl=sirala(s.liste||[]);const top=sl[0];
+  const sl=sirala(s.liste||[]);let top=sl[0];
+  if(s.kitap){const f=(s.liste||[]).find(x=>x.k===s.kitap);if(f)top=f;}
   let durum='';
   if(s.sonuc){
     const r=s.sonuc, picked=s.p?(1/s.p).toFixed(2):'—';
@@ -888,7 +899,7 @@ function secSatir(s,gecmis){
     durum=`<div class="sdurum bekle">pending · picked at fair ${s.p?(1/s.p).toFixed(2):'—'}</div>`;
   }
   return `<div class="secrow${gecmis?' gecmis':''}"><span class="smid"><div class="sad">${esc(s.ad)}</div>
-    <div class="smac">${esc(s.mac.h)} — ${esc(s.mac.a)} · ${esc(s.mac.lig||'')} · ${gun(s.mac.t)}${saat(s.mac.t)}</div>${durum}</span>
+    <div class="smac">${esc(s.mac.h)} — ${esc(s.mac.a)} · ${esc(s.mac.lig||'')} · ${gun(s.mac.t)}${saat(s.mac.t)}</div>${s.kitap?`<div class="skitapsec">your book: ${esc(s.kitap)}</div>`:""}${durum}</span>
     <span><div class="sfiyat">${top?top.o.toFixed(2):'—'}</div><div class="skitap">${top?esc(top.k):''}</div></span>
     <button class="sil" onclick="secSil('${s.k.replace(/'/g,"\\'")}')">×</button></div>`;
 }
@@ -1107,11 +1118,39 @@ function fiyatSatiri(ad,tag,liste,p){
     <span class="odd">${top?top.o.toFixed(2):'—'}</span>
     <span class="book">${top?esc(top.k):''}${uzak}</span>${btn}</div>`;
 }
-function digerleri(etiket,liste){
-  liste=sirala(liste);
-  if(!liste||liste.length<2)return'';
-  return liste.slice(1,5).map(x=>
-    `<div class="minirow"><span>${esc(etiket)} · ${esc(x.k)}</span><span class="o">${x.o.toFixed(2)}</span></div>`).join('');
+function digerleri(ad,etiket,liste){
+  const sl=sirala(liste);
+  if(!sl||sl.length<2)return'';
+  return sl.slice(1,5).map(x=>{
+    let btn='';
+    if(window._detayMac){
+      const k=secAnahtar(window._detayMac,ad), l=secimler().filter(s=>!s.sonuc);
+      const secili=l.find(s=>s.k===k), on=secili&&secili.kitap===x.k;
+      const dolu=!secili&&l.length>=SEC_MAX;
+      btn=`<button class="mbtn${on?' on':''}" ${dolu?'disabled':''} onclick="secEkleKitap(event,'${encodeURIComponent(ad)}','${esc(x.k)}',${x.o})" title="add ${esc(x.k)} price to selections">${on?'\u2713':'+'}</button>`;
+    }
+    return `<div class="minirow"><span>${esc(etiket)} · ${esc(x.k)}</span><span class="o">${x.o.toFixed(2)}</span>${btn}</div>`;
+  }).join('');
+}
+function secEkleKitap(ev,adEnc,kitap,oran){
+  ev.stopPropagation();
+  const ad=decodeURIComponent(adEnc), mac=window._detayMac;
+  if(!mac)return;
+  const k=secAnahtar(mac,ad);
+  // o secimin tam listesini _satirlar'dan bul (fair hesabi icin)
+  const sr=(window._satirlar||[]).find(s=>s.ad===ad);
+  let l=secimler();
+  const mevcut=l.find(x=>x.k===k&&!x.sonuc);
+  if(mevcut&&mevcut.kitap===kitap){ l=l.filter(x=>!(x.k===k&&!x.sonuc)); }  // ayni kitaba tekrar bas -> kaldir
+  else if(mevcut){ mevcut.kitap=kitap; }  // baska secime gec
+  else{
+    if(l.filter(x=>!x.sonuc).length>=SEC_MAX)return;
+    l.push({k:k,ad:ad,p:sr?sr.p:null,liste:(sr?sr.liste:[]).map(x=>({k:x.k,o:x.o})),
+            kitap:kitap, mac:{key:mac.key,t:mac.t,h:mac.h,a:mac.a,lig:mac.ligAd}});
+  }
+  secKaydet(l);
+  if(window._detayIdx!=null)showDetail(window._detayIdx);
+  seritGuncelle();
 }
 
 async function showDetail(i){
@@ -1135,7 +1174,7 @@ async function showDetail(i){
   html+=fiyatSatiri(evAd,'home',best.h,(m.p||{}).h);
   if(m.sonuc3)html+=fiyatSatiri('Draw','',best.d,(m.p||{}).d);
   html+=fiyatSatiri(depAd,'away',best.a,(m.p||{}).a);
-  const diger=digerleri(ilkKelime(evAd),best.h)+(m.sonuc3?digerleri('Draw',best.d):'')+digerleri(ilkKelime(depAd),best.a);
+  const diger=digerleri(evAd,ilkKelime(evAd),best.h)+(m.sonuc3?digerleri('Draw','Draw',best.d):'')+digerleri(depAd,ilkKelime(depAd),best.a);
   if(diger)html+=`<details class="more"><summary>Other books</summary>${diger}</details>`;
   if(m.tot_cizgi!=null&&!(m.tot&&m.tot.over))html+=`<div class="foot">Total line: ${m.tot_cizgi}. Best price per selection, whichever book holds it — no book is best at everything. "Market %" is the de-vigged consensus (sums to 100); "fair" is that consensus as a price — the gap between fair and the best price is the take.${ustCumle([best.h,best.d,best.a])} Ties at the best price are listed alphabetically, and the starting letter shifts one step each day — fairness by rotation, so no book owns the top spot.</div>`;
   else html+=`<div class="foot">Best price per selection, whichever book holds it — no book is best at everything. "Market %" is the de-vigged consensus (sums to 100); "fair" is that consensus as a price — the gap between fair and the best price is the take.${ustCumle([best.h,best.d,best.a])} Ties at the best price are listed alphabetically, and the starting letter shifts one step each day — fairness by rotation, so no book owns the top spot.</div>`;

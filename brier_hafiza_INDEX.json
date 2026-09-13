@@ -164,8 +164,11 @@
   {
    "lig": "ekstraklasa",
    "mac": 1009,
-   "cift": 0,
-   "kalibrasyon": null,
+   "cift": 217,
+   "kalibrasyon": {
+    "favori_ima_ort": 47.8,
+    "favori_tutma": 45.0
+   },
    "dosya": "brier_hafiza_ekstraklasa.json"
   },
   {
@@ -215,8 +218,11 @@
   {
    "lig": "ireland",
    "mac": 813,
-   "cift": 0,
-   "kalibrasyon": null,
+   "cift": 51,
+   "kalibrasyon": {
+    "favori_ima_ort": 50.5,
+    "favori_tutma": 49.2
+   },
    "dosya": "brier_hafiza_ireland.json"
   },
   {
@@ -262,8 +268,11 @@
   {
    "lig": "kleague1",
    "mac": 1079,
-   "cift": 0,
-   "kalibrasyon": null,
+   "cift": 90,
+   "kalibrasyon": {
+    "favori_ima_ort": 44.1,
+    "favori_tutma": 42.3
+   },
    "dosya": "brier_hafiza_kleague1.json"
   },
   {
@@ -505,8 +514,11 @@
   {
    "lig": "superettan",
    "mac": 1196,
-   "cift": 0,
-   "kalibrasyon": null,
+   "cift": 141,
+   "kalibrasyon": {
+    "favori_ima_ort": 47.9,
+    "favori_tutma": 46.5
+   },
    "dosya": "brier_hafiza_superettan.json"
   },
   {
@@ -562,8 +574,11 @@
   {
    "lig": "veikkausliiga",
    "mac": 848,
-   "cift": 0,
-   "kalibrasyon": null,
+   "cift": 76,
+   "kalibrasyon": {
+    "favori_ima_ort": 49.3,
+    "favori_tutma": 54.1
+   },
    "dosya": "brier_hafiza_veikkausliiga.json"
   },
   {
