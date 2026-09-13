@@ -308,7 +308,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A43</div>
+      <div class="by">brier · by BT · build A44</div>
     </footer>
   </div>
 
@@ -334,7 +334,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A43</div>
+      <div class="by">brier · by BT · build A44</div>
     </footer>
   </div>
 </div>
@@ -681,7 +681,14 @@ function renderList(){
   renderSecimler();
   const g=oyunlar();
   const box=document.getElementById('listBody');
-  if(!g.length){box.innerHTML=bulens?'<div class="empty">No archive findings touch today\'s games.<br>The archive only speaks where it has a strong or lean record for the spot.</div>':splens?'<div class="empty">No splits right now.<br>Books are in agreement across the board \u2014 that silence is also a record.</div>':mercek?'<div class="empty">No 70%+ favourites here.<br>The lens keeps only games where the consensus favourite clears 70%.</div>':'<div class="empty">No games for this day.<br>Try another day or sport.</div>';return;}
+  if(!g.length){
+    const yer=(tumGun&&ligSec)?` in ${esc(ligSec)}`:'';
+    const kapat='<br><span style="color:var(--teal)">Tap the chip above to see all games.</span>';
+    box.innerHTML=bulens?`<div class="empty">\u25C6 findings is on \u2014 the archive has no strong or lean record for any game${yer} right now.${kapat}</div>`
+      :splens?`<div class="empty">\u25C7 splits is on \u2014 no book disagreements${yer} over these days. That silence is also a record.${kapat}</div>`
+      :mercek?`<div class="empty">70%+ is on \u2014 no consensus favourite clears 70%${yer} right now.${kapat}</div>`
+      :`<div class="empty">No games${yer} for this day.<br>Try another day or sport.</div>`;
+    return;}
   if(tumGun||mercek||splens||bulens){
     let html=(tumGun&&ligSec!==null)?`<button class="ligsec" onclick="ligKapat()"><span>‹ All games</span><span class="cnt">${esc(ligSec)}</span></button>`:'';
     const shown=[];let gunK=null;
