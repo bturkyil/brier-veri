@@ -308,7 +308,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A42</div>
+      <div class="by">brier · by BT · build A43</div>
     </footer>
   </div>
 
@@ -334,7 +334,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A42</div>
+      <div class="by">brier · by BT · build A43</div>
     </footer>
   </div>
 </div>
@@ -1190,6 +1190,8 @@ async function showDetail(i){
     html+=`<div class="card"><div class="head"><span class="t">Totals</span><span class="k">over/under ${tc.cizgi}</span></div>`;
     html+=fiyatSatiri('Over '+tc.cizgi,'',tc.over,(tc.p||{}).o);
     html+=fiyatSatiri('Under '+tc.cizgi,'',tc.under,(tc.p||{}).u);
+    const totDiger=digerleri('Over '+tc.cizgi,'Over',tc.over)+digerleri('Under '+tc.cizgi,'Under',tc.under);
+    if(totDiger)html+=`<details class="more"><summary>Other books</summary>${totDiger}</details>`;
     let gk='';
     try{
       const G=GOLK&&GOLK[ligBul(m.key)];
@@ -1228,6 +1230,8 @@ async function showDetail(i){
     html+=`<div class="card"><div class="head"><span class="t">Spread</span><span class="k">${esc(ilkKelime(evAd))} ${art(c)}</span></div>`;
     html+=fiyatSatiri(evAd+' '+art(c),'home',sp.ev,(sp.p||{}).h);
     html+=fiyatSatiri(depAd+' '+art(-c),'away',sp.dep,(sp.p||{}).a);
+    const sprDiger=digerleri(evAd+' '+art(c),esc(ilkKelime(evAd))+' '+art(c),sp.ev)+digerleri(depAd+' '+art(-c),esc(ilkKelime(depAd))+' '+art(-c),sp.dep);
+    if(sprDiger)html+=`<details class="more"><summary>Other books</summary>${sprDiger}</details>`;
     html+=`<div class="foot">Only the <b>${sp.kitap} books</b> quoting the consensus line (<b>${art(c)}</b>) are shown — books on other lines are left out, never mixed in.${ustCumle([sp.ev,sp.dep])} Same reading: market %, fair, best price.</div></div>`;
   }
 
