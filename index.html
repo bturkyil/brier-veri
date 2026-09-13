@@ -308,7 +308,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A44</div>
+      <div class="by">brier · by BT · build A46</div>
     </footer>
   </div>
 
@@ -334,7 +334,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A44</div>
+      <div class="by">brier · by BT · build A46</div>
     </footer>
   </div>
 </div>
@@ -882,15 +882,38 @@ function aynaOzet(gecmis){
   const kar=gecmis.filter(x=>x.sonuc&&x.sonuc.tuttu!==null);
   if(!kar.length)return '';
   const kaz=kar.filter(x=>x.sonuc.tuttu).length;
-  const clv=gecmis.filter(x=>x.sonuc&&x.sonuc.kapFair&&x.p);
+  // gercekte oynanan fiyat: kitap secildiyse o kitabin fiyati, yoksa (bolgesel) en iyi
+  const oynananFiyat=(x)=>{
+    if(x.kitap&&x.liste){const f=x.liste.find(y=>y.k===x.kitap);if(f)return f.o;}
+    if(x.liste&&x.liste.length)return Math.max(...x.liste.map(y=>y.o));
+    return x.p?1/x.p:null;
+  };
+  const clv=gecmis.filter(x=>x.sonuc&&x.sonuc.kapFair&&oynananFiyat(x));
   let clvS='';
   if(clv.length){
-    const yen=clv.filter(x=>(1/x.p)>x.sonuc.kapFair).length;
-    const ort=clv.reduce((a,x)=>a+((1/x.p)/x.sonuc.kapFair-1),0)/clv.length*100;
-    clvS=` Against the closing line: you beat the close on <b>${yen} of ${clv.length}</b> (avg <b>${ort>=0?'+':''}${ort.toFixed(1)}%</b>).`;
+    const yen=clv.filter(x=>oynananFiyat(x)>x.sonuc.kapFair).length;
+    const ort=clv.reduce((a,x)=>a+(oynananFiyat(x)/x.sonuc.kapFair-1),0)/clv.length*100;
+    clvS=` Against the closing line: the price you took beat the close on <b>${yen} of ${clv.length}</b> (avg <b>${ort>=0?'+':''}${ort.toFixed(1)}%</b>).`;
+  }
+  // ---- kitap-kaybi: sectigin kitap vs o macta en iyi fiyat ----
+  const kk=gecmis.filter(x=>x.kitap&&x.liste&&x.liste.length>=2);
+  let kkS='';
+  if(kk.length){
+    let seninTop=1, enIyiTop=1, farkli=0;
+    kk.forEach(x=>{
+      const senin=(x.liste.find(y=>y.k===x.kitap)||{}).o;
+      const enIyi=Math.max(...x.liste.map(y=>y.o));
+      if(!senin||!enIyi)return;
+      seninTop*=senin; enIyiTop*=enIyi;
+      if(enIyi>senin*1.001)farkli++;
+    });
+    const fazla=(enIyiTop/seninTop-1)*100;
+    if(fazla>=0.1){
+      kkS=` On the <b>${kk.length}</b> you set a book, the best available price would have returned <b>+${fazla.toFixed(1)}%</b> more — line-shopping left that on the table on <b>${farkli}</b> of them.`;
+    }
   }
   return `<div class="ayna"><div class="ab">YOUR MIRROR · ${gecmis.length} SETTLED</div>
-    <div class="as">Of <b>${kar.length}</b> decided selections, <b>${kaz}</b> came in.${clvS}</div>
+    <div class="as">Of <b>${kar.length}</b> decided selections, <b>${kaz}</b> came in.${clvS}${kkS}</div>
     <div class="an">Picked-vs-closing is the honest test: beating the close over many picks means you read the market before it moved. Not money, not advice — a mirror.</div></div>`;
 }
 function secSatir(s,gecmis){
