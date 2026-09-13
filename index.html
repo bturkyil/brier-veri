@@ -182,6 +182,19 @@
   .ledsek button{flex:1;padding:10px 0;background:none;border:0;border-bottom:2px solid transparent;font-size:11px;
     font-weight:700;letter-spacing:.7px;color:var(--grey);cursor:pointer;font-family:inherit}
   .ledsek button.on{color:var(--ink);border-bottom-color:var(--ink)}
+  .ygun{padding:14px 20px 6px;font-size:11px;font-weight:700;letter-spacing:.6px;color:var(--grey);font-family:'IBM Plex Mono',monospace;border-bottom:1px solid var(--rule)}
+  .yozet{background:var(--ink);color:#fff;margin:0;padding:16px 20px}
+  .yozet .yb{font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:600}
+  .yozet .yl{font-size:9px;letter-spacing:.6px;color:#9AA8A5;font-weight:600;margin-top:8px}
+  .yozet .ys{font-size:13px;line-height:1.55;margin-top:4px}
+  .yozet .ys b{color:#fff}
+  .ykova{display:flex;gap:12px;padding:11px 20px;border-bottom:1px solid var(--rule);font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--grey)}
+  .ykova .yk{min-width:70px;font-weight:600;color:var(--ink)}
+  .ykova b{color:var(--ink)}
+  .ykova .yf{margin-left:auto;font-weight:600}
+  .ykova .yf.u{color:var(--teal)} .ykova .yf.o{color:var(--red)}
+  .yiska{padding:11px 20px;border-bottom:1px solid var(--rule);font-size:12px;color:var(--ink)}
+  .yiska b{font-weight:600}
   .bulguF{display:flex;gap:6px;padding:10px 20px 4px;flex-wrap:wrap}
   .bulguF button{padding:6px 12px;font-size:10.5px;font-weight:700;letter-spacing:.5px;border:1px solid var(--rule-dark);
     background:#fff;color:var(--grey);border-radius:14px;cursor:pointer;font-family:inherit}
@@ -308,7 +321,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A46</div>
+      <div class="by">brier · by BT · build A48</div>
     </footer>
   </div>
 
@@ -323,7 +336,7 @@
     <button class="back" onclick="showList()">‹ Back</button>
     <div class="dhead"><div class="dlig">SEASON RECORDS</div>
       <div class="dteams">The Ledger</div></div>
-    <div class="ledsek"><button id="sekL" class="on" onclick="ledSekme('l')">LEAGUES</button><button id="sekF" onclick="ledSekme('f')">FINDINGS</button></div>
+    <div class="ledsek"><button id="sekL" class="on" onclick="ledSekme('l')">LEAGUES</button><button id="sekF" onclick="ledSekme('f')">FINDINGS</button><button id="sekY" onclick="ledSekme('y')">YESTERDAY</button></div>
     <div id="ledgerNot" class="ligkarne">Flat $100 on the consensus favourite, settled at the best closing price.
       What each season actually paid — not a plan for the next one.</div>
     <div id="ledgerBody"></div>
@@ -334,7 +347,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A46</div>
+      <div class="by">brier · by BT · build A48</div>
     </footer>
   </div>
 </div>
@@ -390,7 +403,7 @@ function ligAdiDuzgun(l){
     ligue1:'Ligue 1',turkiye:'Süper Lig',ekstraklasa:'Ekstraklasa',kleague1:'K League 1',veikkausliiga:'Veikkausliiga',superettan:'Superettan',ireland:'League of Ireland',brezilya2:'Brazil Série B',superleague:'Chinese Super League',nba:'NBA',nfl:'NFL',mlb:'MLB',nhl:'NHL',
     ncaab:'NCAA basketball',ncaaf:'NCAA football',mls:'MLS',eredivisie:'Eredivisie',
     euroleague:'EuroLeague',portekiz:'Primeira Liga',champ:'Championship',
-    wnba:'WNBA',brezilya:'Brasileirão',arjantin:'Primera División',japonya:'J-League',
+    wnba:'WNBA',brezilya:'Brazil Série A',arjantin:'Primera División',japonya:'J-League',
     seriea:'Serie A',ligue2:'Ligue 2',segunda:'Segunda División',serieb:'Serie B'};
   return m[l]||l;
 }
@@ -1044,13 +1057,57 @@ function renderLedger(){
 }
 let ledSek='l';
 function ledSekme(s){ledSek=s;
-  document.getElementById('sekL').classList.toggle('on',s==='l');document.getElementById('sekF').classList.toggle('on',s==='f');
   const not=document.getElementById('ledgerNot');
   if(s==='f'){not.innerHTML='What the archive says about each market — favourites, draws, home and away, clubs, books. Every line is a count, not a claim. <span style="color:var(--teal);font-weight:600">Teal</span> = outcomes beat their price, <span style="color:var(--red);font-weight:600">red</span> = fell short — direction, not profit.';renderFindings();}
+  else if(s==='y'){not.textContent='What the market said and what happened — closing favourites, by day. A daily calibration record, not a scoreboard.';renderYesterday();}
   else{not.textContent='Flat $100 on the consensus favourite, settled at the best closing price. What each season actually paid — not a plan for the next one.';renderLedger();}
+  ['sekL','sekF','sekY'].forEach(id=>{const b=document.getElementById(id);if(b)b.classList.toggle('on',id==='sek'+s.toUpperCase());});
 }
 const TUR_AD={calibration:'calibration',draw:'draws',homeaway:'home / away',club:'club premium',sharpness:'sharpness',book:'books',upset:'upsets'};
 function vurgula(t){return esc(t).replace(/(\d+(?:\.\d+)?%|\d+(?:\.\d+)? points?|over [\d,]+ matches)/g,'<b>$1</b>');}
+let DUN_L=null;
+async function renderYesterday(){
+  const kutu=document.getElementById('ledgerBody');
+  kutu.innerHTML='<div class="empty">Reading yesterday…</div>';
+  if(!DUN_L){try{const r=await fetch(HOST+'/dun.json',{cache:'no-store'});if(r.ok)DUN_L=await r.json();}catch(e){}}
+  const gunler=DUN_L&&DUN_L.gunler?DUN_L.gunler:{};
+  const tarihler=Object.keys(gunler).sort().reverse();
+  if(!tarihler.length){kutu.innerHTML='<div class="empty">No settled days yet.<br>Closing prices and results are still being collected — the first day fills once matches finish.</div>';return;}
+  let html='';
+  tarihler.forEach(tar=>{
+    const maclar=(gunler[tar]||[]).filter(m=>m.kap&&m.kap.p&&m.ima!=null);
+    if(!maclar.length)return;
+    // gun basligi
+    const gk=gunEtiket(tar);
+    html+=`<div class="ygun">${esc(gk).toUpperCase()} · ${maclar.length} MATCHES PRICED</div>`;
+    // ozet: favori tutma
+    const kaz=maclar.filter(m=>m.tuttu).length;
+    const imaOrt=maclar.reduce((a,m)=>a+m.ima,0)/maclar.length;
+    const beklenen=Math.round(maclar.length*imaOrt/100);
+    const fark=((kaz/maclar.length)-(imaOrt/100))*100;
+    html+=`<div class="yozet"><div class="yb">${kaz} / ${maclar.length}</div>
+      <div class="yl">CLOSING FAVOURITES THAT WON</div>
+      <div class="ys">The market's closing favourites averaged <b>${imaOrt.toFixed(0)}%</b> implied and <b>${kaz}</b> came in — expected about <b>${beklenen}</b>. ${Math.abs(fark)<3?'Right on the number.':`Favourites ${fark>0?'beat':'fell short of'} the market by <b>${Math.abs(fark).toFixed(1)} points</b> this day.`}</div></div>`;
+    // kalibrasyon kovalari
+    const kovalar=[['70%+',m=>m.ima>=70],['60-70%',m=>m.ima>=60&&m.ima<70],['50-60%',m=>m.ima>=50&&m.ima<60]];
+    kovalar.forEach(([ad,f])=>{
+      const g=maclar.filter(f);
+      if(g.length<3)return;
+      const w=g.filter(m=>m.tuttu).length;
+      const im=g.reduce((a,m)=>a+m.ima,0)/g.length;
+      const d=(100*w/g.length)-im;
+      html+=`<div class="ykova"><span class="yk">${ad}</span><span>priced <b>${im.toFixed(0)}%</b> · won <b>${Math.round(100*w/g.length)}%</b> (${w}/${g.length})</span><span class="yf ${d>=0?'u':'o'}">${d>=0?'+':'−'}${Math.abs(d).toFixed(0)}</span></div>`;
+    });
+    // en buyuk iska: en yuksek ima'li kaybeden favori
+    const iskalar=maclar.filter(m=>!m.tuttu).sort((a,b)=>b.ima-a.ima);
+    if(iskalar.length){
+      const i=iskalar[0];
+      html+=`<div class="yiska">Biggest miss: the market's <b>${i.ima}%</b> favourite <b>${esc(i.fav)}</b> didn't come through — ${esc(i.h)} <b>${esc(i.skor)}</b> ${esc(i.a)}.</div>`;
+    }
+  });
+  html+='<div class="ligkarne">Every match whose closing price we captured, grouped by day. What the market believed, and what the result was — a record, not a tip.</div>';
+  kutu.innerHTML=html||'<div class="empty">No settled matches with closing prices yet.</div>';
+}
 let bulguYon='all';
 function bulguYonu(x){
   if(x.yon)return x.yon;
