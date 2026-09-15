@@ -285,6 +285,7 @@
   .hareket .hs b{font-weight:600}
   .hareket .hd{font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:600;margin-top:4px}
   .hareket .hd.up{color:var(--teal)} .hareket .hd.down{color:var(--red)}
+  .hpar{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--grey);margin-top:8px;padding-top:8px;border-top:1px solid var(--rule)}
   .hidden{display:none}
 </style>
 </head>
@@ -328,7 +329,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A50</div>
+      <div class="by">brier · by BT · build A51</div>
     </footer>
   </div>
 
@@ -354,7 +355,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A50</div>
+      <div class="by">brier · by BT · build A51</div>
     </footer>
   </div>
 </div>
@@ -495,13 +496,23 @@ async function recordOfTheDay(){
 }
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 function hareketHesap(m){
-  if(!m.ac||m.ac.favP==null||!m.p)return null;
+  if(!m.ac||!m.p)return null;
   const favEv=m.p.h>=m.p.a, guncelP=favEv?m.p.h:m.p.a;
-  const acAyniTaraf=(m.ac.favEv===favEv);
-  const acP=acAyniTaraf?m.ac.favP:(1-m.ac.favP);
+  let acP=null, acH=null, acD=null, acA=null;
+  if(m.ac.h!=null){
+    // yeni format: tam dagilim (h/d/a)
+    acH=m.ac.h; acA=m.ac.a; acD=m.ac.d;
+    acP=favEv?acH:acA;
+  }else if(m.ac.favP!=null){
+    // eski format: sadece favP (taraf degisimi 3-yollu macta hatali olabilir, sadece ayni tarafta guven)
+    if(m.ac.favEv!==favEv)return null;  // taraf degistiyse eski formatla hesaplama, yanlis cikar
+    acP=m.ac.favP;
+  }else return null;
+  if(acP==null)return null;
   const farkP=(guncelP-acP)*100;
   if(Math.abs(farkP)<1.5)return null;
-  return {favEv:favEv, guncelP:guncelP, acP:acP, farkP:farkP};
+  return {favEv:favEv, guncelP:guncelP, acP:acP, farkP:farkP,
+          acH:acH, acD:acD, acA:acA, gH:m.p.h, gD:m.p.d, gA:m.p.a};
 }
 function ayrismaHesap(m,s3){
   const p=m.p||{}, best=m.best||{};
@@ -1350,7 +1361,16 @@ async function showDetail(i){
       const acFair=(1/hr.acP).toFixed(2), guncelFair=(1/hr.guncelP).toFixed(2);
       html+=`<div class="hareket"><div class="hh">LINE MOVEMENT · SINCE WE FIRST SAW IT</div>
         <div class="hd ${yon}">${hr.farkP>0?'+':'−'}${Math.abs(hr.farkP).toFixed(0)} pts</div>
-        <div class="hs">The market has moved <b>toward ${hr.farkP>0?esc(favAd):'the underdog'}</b>: <b>${esc(favAd)}</b> opened at <b>${Math.round(hr.acP*100)}%</b> (fair ${acFair}) and now sits at <b>${Math.round(hr.guncelP*100)}%</b> (fair ${guncelFair}). Money is following the ${hr.farkP>0?'favourite':'longshot'}. The record of where the line is going, not a call on where it lands.</div></div>`;
+        <div class="hs">The market has moved <b>toward ${hr.farkP>0?esc(favAd):'the underdog'}</b>: <b>${esc(favAd)}</b> opened at <b>${Math.round(hr.acP*100)}%</b> (fair ${acFair}) and now sits at <b>${Math.round(hr.guncelP*100)}%</b> (fair ${guncelFair}). Money is following the ${hr.farkP>0?'favourite':'longshot'}. The record of where the line is going, not a call on where it lands.</div>`;
+      // uc-sonuc ikincil satiri (tam dagilim varsa)
+      if(hr.acH!=null){
+        const ok=(a,b)=>{const d=Math.round((b-a)*100);return d===0?'\u2192':(d>0?`\u2191${d}`:`\u2193${Math.abs(d)}`);};
+        let par=`${esc(ilkKelime(evAd))} ${ok(hr.acH,hr.gH)}`;
+        if(m.sonuc3&&hr.acD!=null)par+=` · draw ${ok(hr.acD,hr.gD)}`;
+        par+=` · ${esc(ilkKelime(depAd))} ${ok(hr.acA,hr.gA)}`;
+        html+=`<div class="hpar">${par}</div>`;
+      }
+      html+=`</div>`;
     }
   }catch(e){}
 
