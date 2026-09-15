@@ -281,7 +281,7 @@
   .secuyari{margin:0 20px 10px;padding:10px 14px;border-left:3px solid var(--gold);background:#fff;font-size:12px;color:var(--ink);line-height:1.5}
   .hareket{margin:14px 20px 0;background:#fff;border:1px solid var(--rule-dark);padding:12px 16px}
   .hareket .hh{font-size:11px;font-weight:700;letter-spacing:.6px;color:var(--grey)}
-  .hareket .hs{font-size:14px;line-height:1.55;margin-top:6px;color:var(--ink)}
+  .hareket .hs{font-size:12.5px;line-height:1.55;margin-top:6px;color:var(--ink)}
   .hareket .hs b{font-weight:600}
   .hareket .hd{font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:600;margin-top:4px}
   .hareket .hd.up{color:var(--teal)} .hareket .hd.down{color:var(--red)}
@@ -313,6 +313,7 @@
     <button id="mercek" class="lens" onclick="mercekTgl()">70%+ favourites</button>
     <button id="splens" class="lens" onclick="splitTgl()">◇ splits</button>
     <button id="bulens" class="lens" onclick="bulguTgl()">◆ findings</button>
+    <button id="movlens" class="lens" onclick="movTgl()">◈ moves</button>
     <div id="rotd" class="rotd hidden"></div>
     <div id="manifesto" class="manifesto hidden">
       <button class="mx" onclick="kapatManifesto()" aria-label="close">×</button>
@@ -327,7 +328,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A49</div>
+      <div class="by">brier · by BT · build A50</div>
     </footer>
   </div>
 
@@ -353,7 +354,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A49</div>
+      <div class="by">brier · by BT · build A50</div>
     </footer>
   </div>
 </div>
@@ -391,7 +392,7 @@ const LIG_ESLE = {
 };
 function ligBul(k){return LIG_ESLE[k]||(String(k).indexOf('tennis_')===0?'tenis':null);}
 
-let LIVE=null, INDEX=null, HAFIZA={}, grup='ALL', ligSec=null, gunSec=null, mercek=false, splens=false, bulens=false, tumGun=false, cekGrup=null;
+let LIVE=null, INDEX=null, HAFIZA={}, grup='ALL', ligSec=null, gunSec=null, mercek=false, splens=false, bulens=false, movlens=false, tumGun=false, cekGrup=null;
 
 function kapatManifesto(){
   document.getElementById('manifesto').classList.add('hidden');
@@ -493,6 +494,15 @@ async function recordOfTheDay(){
   el.classList.remove('hidden');
 }
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function hareketHesap(m){
+  if(!m.ac||m.ac.favP==null||!m.p)return null;
+  const favEv=m.p.h>=m.p.a, guncelP=favEv?m.p.h:m.p.a;
+  const acAyniTaraf=(m.ac.favEv===favEv);
+  const acP=acAyniTaraf?m.ac.favP:(1-m.ac.favP);
+  const farkP=(guncelP-acP)*100;
+  if(Math.abs(farkP)<1.5)return null;
+  return {favEv:favEv, guncelP:guncelP, acP:acP, farkP:farkP};
+}
 function ayrismaHesap(m,s3){
   const p=m.p||{}, best=m.best||{};
   if(p.h==null||p.a==null)return null;
@@ -612,7 +622,7 @@ function gunEtiket(k){
 }
 function renderSecimler(){
   const gs=gunListesi(); window._gunler=gs;
-  const akis=tumGun||mercek||splens||bulens;
+  const akis=tumGun||mercek||splens||bulens||movlens;
   if(!gs.length){gunSec=null;}
   else if(!akis&&(gunSec===null||!gs.includes(gunSec))){gunSec=gs[0];}
   const gsel=document.getElementById('gunSel');
@@ -630,7 +640,7 @@ function renderSecimler(){
 }
 function gunSecim(v){
   gunSec=v;
-  if(tumGun||mercek||splens||bulens){
+  if(tumGun||mercek||splens||bulens||movlens){
     const el=document.getElementById('g-'+v);
     if(el){el.scrollIntoView({behavior:'smooth',block:'start'});
       const bas=document.getElementById('gunBaslik');if(bas)bas.textContent=gunEtiket(v).toUpperCase();
@@ -640,6 +650,7 @@ function gunSecim(v){
 }
 function sporSecim(v){grup=v;gunSec=null;renderList();recordOfTheDay();}
 function mercekTgl(){mercek=!mercek;const b=document.getElementById('mercek');if(b)b.classList.toggle('on',mercek);renderList();}
+function movTgl(){movlens=!movlens;const b=document.getElementById('movlens');if(b)b.classList.toggle('on',movlens);renderList();}
 async function bulguTgl(){bulens=!bulens;const b=document.getElementById('bulens');if(b)b.classList.toggle('on',bulens);
   if(bulens&&!INSIGHT)await insightGetir();renderList();}
 function splitTgl(){splens=!splens;const b=document.getElementById('splens');if(b)b.classList.toggle('on',splens);renderList();}
@@ -662,7 +673,7 @@ function ligleri(){
 
 
 function oyunlar(){
-  const akis=tumGun||mercek||splens||bulens;
+  const akis=tumGun||mercek||splens||bulens||movlens;
   const out=[];
   Object.entries(LIVE.ligler||{}).forEach(([ad,ld])=>{
     if(grup!=='ALL'&&(ld.grup||'Other')!==grup)return;
@@ -671,6 +682,7 @@ function oyunlar(){
       if(mercek){const p=m.p||{};if(Math.max(p.h||0,p.a||0)<0.70)return;}
       if(splens){try{if(!ayrismaHesap(m,!!ld.sonuc3))return;}catch(e){return;}}
       if(bulens){try{if(!macBulguGuclu({...m,key:ld.key,sonuc3:!!ld.sonuc3}).length)return;}catch(e){return;}}
+      if(movlens){try{if(!hareketHesap(m))return;}catch(e){return;}}
       out.push({...m,ligAd:ad,key:ld.key,sonuc3:!!ld.sonuc3});});
   });
   out.sort((a,b)=>String(a.t).localeCompare(String(b.t)));
@@ -690,6 +702,7 @@ function macSatiri(m,i){
   let ayT='';
   try{if(ayrismaHesap(m,m.sonuc3))ayT='<span class="splitTag">\u25C7 split</span>';}catch(e){}
   try{const bg=macBulguGuclu(m);if(bg.length)ayT+=`<span class="splitTag">\u25C6 ${bg[0].fark>0?'+':'\u2212'}${Math.abs(bg[0].fark).toFixed(1)}</span>`;}catch(e){}
+  try{const hr=hareketHesap(m);if(hr)ayT+=`<span class="splitTag">\u25C8 ${hr.farkP>0?'+':'\u2212'}${Math.abs(hr.farkP).toFixed(0)}</span>`;}catch(e){}
   return `<button class="mrow" onclick="showDetail(${i})">
       <span class="time">${saat(m.t)}</span>
       <span class="mid"><span class="comp">${esc(m.ligAd)}</span>
@@ -703,12 +716,12 @@ function renderList(){
   if(!g.length){
     const yer=(tumGun&&ligSec)?` in ${esc(ligSec)}`:'';
     const kapat='<br><span style="color:var(--teal)">Tap the chip above to see all games.</span>';
-    box.innerHTML=bulens?`<div class="empty">\u25C6 findings is on \u2014 the archive has no strong or lean record for any game${yer} right now.${kapat}</div>`
+    box.innerHTML=movlens?`<div class="empty">\u25C8 moves is on \u2014 no line has moved enough${yer} yet. Openings are captured from now on; movement builds as matches approach kickoff.${kapat}</div>`:bulens?`<div class="empty">\u25C6 findings is on \u2014 the archive has no strong or lean record for any game${yer} right now.${kapat}</div>`
       :splens?`<div class="empty">\u25C7 splits is on \u2014 no book disagreements${yer} over these days. That silence is also a record.${kapat}</div>`
       :mercek?`<div class="empty">70%+ is on \u2014 no consensus favourite clears 70%${yer} right now.${kapat}</div>`
       :`<div class="empty">No games${yer} for this day.<br>Try another day or sport.</div>`;
     return;}
-  if(tumGun||mercek||splens||bulens){
+  if(tumGun||mercek||splens||bulens||movlens){
     let html=(tumGun&&ligSec!==null)?`<button class="ligsec" onclick="ligKapat()"><span>‹ All games</span><span class="cnt">${esc(ligSec)}</span></button>`:'';
     const shown=[];let gunK=null;
     g.forEach(m=>{
@@ -1330,23 +1343,18 @@ async function showDetail(i){
 
   // --- cizgi hareketi (açılış -> güncel favori olasiligi) ---
   try{
-    if(m.ac&&m.ac.favP!=null&&m.p){
-      const favEv=m.p.h>=m.p.a, guncelP=favEv?m.p.h:m.p.a, favAd=favEv?evAd:depAd;
-      // açılıştaki favori ile şimdiki favori ayni tarafta mi?
-      const acAyniTaraf=(m.ac.favEv===favEv);
-      const acP=acAyniTaraf?m.ac.favP:(1-m.ac.favP);
-      const farkP=(guncelP-acP)*100;
-      if(Math.abs(farkP)>=1.5){
-        const yon=farkP>0?'up':'down';
-        const acFair=(1/acP).toFixed(2), guncelFair=(1/guncelP).toFixed(2);
-        html+=`<div class="hareket"><div class="hh">LINE MOVEMENT · SINCE WE FIRST SAW IT</div>
-          <div class="hd ${yon}">${farkP>0?'+':'−'}${Math.abs(farkP).toFixed(0)} pts</div>
-          <div class="hs">The market has moved <b>toward ${farkP>0?esc(favAd):'the underdog'}</b>: <b>${esc(favAd)}</b> opened at <b>${Math.round(acP*100)}%</b> (${acFair}) and now sits at <b>${Math.round(guncelP*100)}%</b> (${guncelFair}). Money is following the ${farkP>0?'favourite':'longshot'}. The record of where the line is going, not a call on where it lands.</div></div>`;
-      }
+    const hr=hareketHesap(m);
+    if(hr){
+      const favAd=hr.favEv?evAd:depAd;
+      const yon=hr.farkP>0?'up':'down';
+      const acFair=(1/hr.acP).toFixed(2), guncelFair=(1/hr.guncelP).toFixed(2);
+      html+=`<div class="hareket"><div class="hh">LINE MOVEMENT · SINCE WE FIRST SAW IT</div>
+        <div class="hd ${yon}">${hr.farkP>0?'+':'−'}${Math.abs(hr.farkP).toFixed(0)} pts</div>
+        <div class="hs">The market has moved <b>toward ${hr.farkP>0?esc(favAd):'the underdog'}</b>: <b>${esc(favAd)}</b> opened at <b>${Math.round(hr.acP*100)}%</b> (fair ${acFair}) and now sits at <b>${Math.round(hr.guncelP*100)}%</b> (fair ${guncelFair}). Money is following the ${hr.farkP>0?'favourite':'longshot'}. The record of where the line is going, not a call on where it lands.</div></div>`;
     }
   }catch(e){}
 
-  // --- ayrisma satiri (ciplak) ---
+  // --- ayrisma satiri (ciplak) ---  // --- ayrisma satiri (ciplak) ---
   try{
     const ay=ayrismaHesap(m,m.sonuc3);
     if(ay){
