@@ -329,7 +329,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A51</div>
+      <div class="by">brier · by BT · build A52</div>
     </footer>
   </div>
 
@@ -355,7 +355,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A51</div>
+      <div class="by">brier · by BT · build A52</div>
     </footer>
   </div>
 </div>
@@ -408,7 +408,7 @@ function gunTohum(){
 }
 function ligAdiDuzgun(l){
   const m={epl:'Premier League',laliga:'La Liga',seriea:'Serie A',bundesliga:'Bundesliga',
-    ligue1:'Ligue 1',turkiye:'Süper Lig',ekstraklasa:'Ekstraklasa',kleague1:'K League 1',veikkausliiga:'Veikkausliiga',superettan:'Superettan',ireland:'League of Ireland',brezilya2:'Brazil Série B',superleague:'Chinese Super League',nba:'NBA',nfl:'NFL',mlb:'MLB',nhl:'NHL',
+    ligue1:'Ligue 1',turkiye:'Turkish Super League',ekstraklasa:'Ekstraklasa',kleague1:'K League 1',veikkausliiga:'Veikkausliiga',superettan:'Superettan',ireland:'League of Ireland',brezilya2:'Brazil Série B',superleague:'Chinese Super League',nba:'NBA',nfl:'NFL',mlb:'MLB',nhl:'NHL',
     ncaab:'NCAA basketball',ncaaf:'NCAA football',mls:'MLS',eredivisie:'Eredivisie',
     euroleague:'EuroLeague',portekiz:'Primeira Liga',champ:'Championship',
     wnba:'WNBA',brezilya:'Brazil Série A',arjantin:'Primera División',japonya:'J-League',
@@ -1126,7 +1126,7 @@ async function renderYesterday(){
       const w=g.filter(m=>m.tuttu).length;
       const im=g.reduce((a,m)=>a+m.ima,0)/g.length;
       const d=(100*w/g.length)-im;
-      html+=`<div class="ykova"><span class="yk">${ad}</span><span>priced <b>${im.toFixed(0)}%</b> · won <b>${Math.round(100*w/g.length)}%</b> (${w}/${g.length})</span><span class="yf ${d>=0?'u':'o'}">${d>=0?'+':'−'}${Math.abs(d).toFixed(0)}</span></div>`;
+      html+=`<div class="ykova"><span class="yk">${ad}</span><span>priced <b>${im.toFixed(0)}%</b> · won <b>${Math.round(100*w/g.length)}%</b> (${w}/${g.length})</span><span class="yf ${d>=0?'u':'o'}">${d>=0?'+':'−'}${Math.abs(d).toFixed(0)} pts</span></div>`;
     });
     // en buyuk iska: en yuksek ima'li kaybeden favori
     const iskalar=maclar.filter(m=>!m.tuttu).sort((a,b)=>b.ima-a.ima);
@@ -1135,7 +1135,7 @@ async function renderYesterday(){
       html+=`<div class="yiska">Biggest miss: the market's <b>${i.ima}%</b> favourite <b>${esc(i.fav)}</b> didn't come through — ${esc(i.h)} <b>${esc(i.skor)}</b> ${esc(i.a)}.</div>`;
     }
   });
-  html+='<div class="ligkarne">Every match whose closing price we captured, grouped by day. What the market believed, and what the result was — a record, not a tip.</div>';
+  html+='<div class="ligkarne"><span style="color:var(--teal);font-weight:600">Teal</span> = favourites beat their price, <span style="color:var(--red);font-weight:600">red</span> = fell short — direction, not profit. Figures round to the nearest whole, so a gap may differ by a point from the shown percentages. Every match whose closing price we captured, grouped by day — a record, not a tip.</div>';
   kutu.innerHTML=html||'<div class="empty">No settled matches with closing prices yet.</div>';
 }
 let bulguYon='all';
@@ -1155,7 +1155,7 @@ async function renderFindings(){
   const yld=yildizlar();
   const liste=h.filter(x=>bulguYon==='all'||bulguYonu(x)===bulguYon).slice().sort((a,b)=>(yld.has(b.lig)-yld.has(a.lig))||(b.onem-a.onem));
   let html=`<div class="bulguF">`+[['all','ALL'],['under','MARKET UNDER-PRICED'],['over','MARKET OVER-PRICED']].map(([v,t])=>`<button class="${bulguYon===v?'on':''}" onclick="bulguFiltre('${v}')">${t}</button>`).join('')+`</div>`;
-  if(bulguYon!=='all')html+=`<div class="bulguNot">${bulguYon==='under'?'where outcomes beat their price':'where outcomes fell short of their price'} · past gaps, not future edges — markets adapt · strong z≥3 · lean z≥2 · thin below</div>`;
+  if(bulguYon!=='all')html+=`<div class="bulguNot">${bulguYon==='under'?'where outcomes beat their price':'where outcomes fell short of their price'} · past gaps, not future edges — markets adapt · strong z≥3 · lean z≥2 · thin below · figures round to nearest whole</div>`;
   if(!liste.length){kutu.innerHTML=html+'<div class="empty">Nothing in this direction yet.</div>';return;}let benimBasladi=false,digerBasladi=false;
   liste.forEach(x=>{
     const benim=yld.has(x.lig);
