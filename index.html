@@ -319,9 +319,9 @@
       <span class="selwrap"><select class="sel" id="sporSel" onchange="sporSecim(this.value)"></select></span>
     </div>
     <button id="mercek" class="lens" onclick="mercekTgl()">70%+ favourites</button>
-    <button id="splens" class="lens" onclick="splitTgl()">◇ splits</button>
-    <button id="bulens" class="lens" onclick="bulguTgl()">◆ findings</button>
-    <button id="movlens" class="lens" onclick="movTgl()">◈ moves</button>
+    <button id="splens" class="lens" onclick="splitTgl()">◇ books disagree</button>
+    <button id="bulens" class="lens" onclick="bulguTgl()">◆ the record</button>
+    <button id="movlens" class="lens" onclick="movTgl()">◈ line moved</button>
     <div id="rotd" class="rotd hidden"></div>
     <div id="manifesto" class="manifesto hidden">
       <button class="mx" onclick="kapatManifesto()" aria-label="close">×</button>
@@ -336,7 +336,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A53</div>
+      <div class="by">brier · by BT · build A54</div>
     </footer>
   </div>
 
@@ -351,7 +351,7 @@
     <button class="back" onclick="showList()">‹ Back</button>
     <div class="dhead"><div class="dlig">SEASON RECORDS</div>
       <div class="dteams">The Ledger</div></div>
-    <div class="ledsek"><button id="sekL" class="on" onclick="ledSekme('l')">LEAGUES</button><button id="sekF" onclick="ledSekme('f')">FINDINGS</button><button id="sekY" onclick="ledSekme('y')">YESTERDAY</button></div>
+    <div class="ledsek"><button id="sekL" class="on" onclick="ledSekme('l')">LEAGUES</button><button id="sekF" onclick="ledSekme('f')">THE RECORD</button><button id="sekY" onclick="ledSekme('y')">YESTERDAY</button></div>
     <div id="ledgerNot" class="ligkarne">Flat $100 on the consensus favourite, settled at the best closing price.
       What each season actually paid — not a plan for the next one.</div>
     <div id="ledgerBody"></div>
@@ -362,7 +362,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A53</div>
+      <div class="by">brier · by BT · build A54</div>
     </footer>
   </div>
 </div>
@@ -734,8 +734,8 @@ function renderList(){
   if(!g.length){
     const yer=(tumGun&&ligSec)?` in ${esc(ligSec)}`:'';
     const kapat='<br><span style="color:var(--teal)">Tap the chip above to see all games.</span>';
-    box.innerHTML=movlens?`<div class="empty">\u25C8 moves is on \u2014 no line has moved enough${yer} yet. Openings are captured from now on; movement builds as matches approach kickoff.${kapat}</div>`:bulens?`<div class="empty">\u25C6 findings is on \u2014 the archive has no strong or lean record for any game${yer} right now.${kapat}</div>`
-      :splens?`<div class="empty">\u25C7 splits is on \u2014 no book disagreements${yer} over these days. That silence is also a record.${kapat}</div>`
+    box.innerHTML=movlens?`<div class="empty">\u25C8 line moved is on \u2014 no line has moved enough${yer} yet. Openings are captured from now on; movement builds as matches approach kickoff.${kapat}</div>`:bulens?`<div class="empty">\u25C6 the record is on \u2014 the archive has no strong or lean record for any game${yer} right now.${kapat}</div>`
+      :splens?`<div class="empty">\u25C7 books disagree is on \u2014 no book disagreements${yer} over these days. That silence is also a record.${kapat}</div>`
       :mercek?`<div class="empty">70%+ is on \u2014 no consensus favourite clears 70%${yer} right now.${kapat}</div>`
       :`<div class="empty">No games${yer} for this day.<br>Try another day or sport.</div>`;
     return;}
@@ -1158,7 +1158,7 @@ async function renderFindings(){
   const kutu=document.getElementById('ledgerBody');
   kutu.innerHTML='<div class="empty">Reading the archive…</div>';
   const I=await insightGetir();const h=(I&&I.havuz)||[];
-  if(!h.length){kutu.innerHTML='<div class="empty">No findings on file yet.</div>';return;}
+  if(!h.length){kutu.innerHTML='<div class="empty">No record on file yet.</div>';return;}
   const yld=yildizlar();
   const liste=h.filter(x=>bulguYon==='all'||bulguYonu(x)===bulguYon).slice().sort((a,b)=>(yld.has(b.lig)-yld.has(a.lig))||(b.onem-a.onem));
   let html=`<div class="bulguF">`+[['all','ALL'],['under','MARKET UNDER-PRICED'],['over','MARKET OVER-PRICED']].map(([v,t])=>`<button class="${bulguYon===v?'on':''}" onclick="bulguFiltre('${v}')">${t}</button>`).join('')+`</div>`;
