@@ -2,11 +2,11 @@
  "ligler": [
   {
    "lig": "afl",
-   "mac": 380,
+   "mac": 431,
    "cift": 136,
    "kalibrasyon": {
-    "favori_ima_ort": 69.4,
-    "favori_tutma": 68.4
+    "favori_ima_ort": 69.1,
+    "favori_tutma": 68.9
    },
    "dosya": "brier_hafiza_afl.json"
   },
@@ -22,10 +22,10 @@
   },
   {
    "lig": "arjantin",
-   "mac": 885,
+   "mac": 896,
    "cift": 409,
    "kalibrasyon": {
-    "favori_ima_ort": 45.7,
+    "favori_ima_ort": 45.3,
     "favori_tutma": 42.8
    },
    "dosya": "brier_hafiza_arjantin.json"
@@ -36,7 +36,7 @@
    "cift": 74,
    "kalibrasyon": {
     "favori_ima_ort": 50.3,
-    "favori_tutma": 48.5
+    "favori_tutma": 48.8
    },
    "dosya": "brier_hafiza_avusturya.json"
   },
@@ -89,8 +89,8 @@
    "mac": 614,
    "cift": 227,
    "kalibrasyon": {
-    "favori_ima_ort": 47.6,
-    "favori_tutma": 47.5
+    "favori_ima_ort": 47.7,
+    "favori_tutma": 47.4
    },
    "dosya": "brier_hafiza_bundes2.json"
   },
@@ -137,27 +137,27 @@
    "cift": 85,
    "kalibrasyon": {
     "favori_ima_ort": 50.2,
-    "favori_tutma": 49.9
+    "favori_tutma": 50.1
    },
    "dosya": "brier_hafiza_danimarka.json"
   },
   {
    "lig": "efl1",
-   "mac": 1109,
+   "mac": 1123,
    "cift": 432,
    "kalibrasyon": {
-    "favori_ima_ort": 48.5,
-    "favori_tutma": 49.6
+    "favori_ima_ort": 47.9,
+    "favori_tutma": 50.0
    },
    "dosya": "brier_hafiza_efl1.json"
   },
   {
    "lig": "efl2",
-   "mac": 1109,
+   "mac": 1130,
    "cift": 416,
    "kalibrasyon": {
-    "favori_ima_ort": 47.1,
-    "favori_tutma": 45.7
+    "favori_ima_ort": 46.6,
+    "favori_tutma": 46.1
    },
    "dosya": "brier_hafiza_efl2.json"
   },
@@ -200,11 +200,11 @@
   },
   {
    "lig": "euroleague",
-   "mac": 1494,
+   "mac": 1498,
    "cift": 283,
    "kalibrasyon": {
-    "favori_ima_ort": 66.5,
-    "favori_tutma": 67.1
+    "favori_ima_ort": 64.7,
+    "favori_tutma": 66.5
    },
    "dosya": "brier_hafiza_euroleague.json"
   },
@@ -231,17 +231,17 @@
    "cift": 77,
    "kalibrasyon": {
     "favori_ima_ort": 54.0,
-    "favori_tutma": 54.5
+    "favori_tutma": 54.7
    },
    "dosya": "brier_hafiza_iskocya.json"
   },
   {
    "lig": "isvec",
-   "mac": 480,
+   "mac": 483,
    "cift": 149,
    "kalibrasyon": {
-    "favori_ima_ort": 50.2,
-    "favori_tutma": 51.2
+    "favori_ima_ort": 49.8,
+    "favori_tutma": 50.4
    },
    "dosya": "brier_hafiza_isvec.json"
   },
@@ -250,7 +250,7 @@
    "mac": 462,
    "cift": 77,
    "kalibrasyon": {
-    "favori_ima_ort": 48.3,
+    "favori_ima_ort": 48.4,
     "favori_tutma": 49.0
    },
    "dosya": "brier_hafiza_isvicre.json"
@@ -260,8 +260,8 @@
    "mac": 761,
    "cift": 242,
    "kalibrasyon": {
-    "favori_ima_ort": 44.9,
-    "favori_tutma": 44.3
+    "favori_ima_ort": 45.0,
+    "favori_tutma": 44.1
    },
    "dosya": "brier_hafiza_japonya.json"
   },
@@ -277,11 +277,11 @@
   },
   {
    "lig": "laliga",
-   "mac": 1924,
+   "mac": 1927,
    "cift": 348,
    "kalibrasyon": {
-    "favori_ima_ort": 51.7,
-    "favori_tutma": 54.9
+    "favori_ima_ort": 51.5,
+    "favori_tutma": 55.3
    },
    "dosya": "brier_hafiza_laliga.json"
   },
@@ -294,10 +294,10 @@
   },
   {
    "lig": "libertadores",
-   "mac": 296,
+   "mac": 310,
    "cift": 145,
    "kalibrasyon": {
-    "favori_ima_ort": 55.3,
+    "favori_ima_ort": 55.0,
     "favori_tutma": 58.1
    },
    "dosya": "brier_hafiza_libertadores.json"
@@ -315,7 +315,7 @@
    "cift": 295,
    "kalibrasyon": {
     "favori_ima_ort": 52.4,
-    "favori_tutma": 52.5
+    "favori_tutma": 52.4
    },
    "dosya": "brier_hafiza_ligue1.json"
   },
@@ -325,17 +325,17 @@
    "cift": 297,
    "kalibrasyon": {
     "favori_ima_ort": 46.0,
-    "favori_tutma": 47.3
+    "favori_tutma": 47.1
    },
    "dosya": "brier_hafiza_ligue2.json"
   },
   {
    "lig": "meksika",
-   "mac": 671,
+   "mac": 672,
    "cift": 153,
    "kalibrasyon": {
-    "favori_ima_ort": 51.6,
-    "favori_tutma": 53.9
+    "favori_ima_ort": 51.0,
+    "favori_tutma": 53.8
    },
    "dosya": "brier_hafiza_meksika.json"
   },
@@ -354,8 +354,8 @@
    "mac": 1065,
    "cift": 391,
    "kalibrasyon": {
-    "favori_ima_ort": 49.7,
-    "favori_tutma": 47.9
+    "favori_ima_ort": 49.6,
+    "favori_tutma": 47.8
    },
    "dosya": "brier_hafiza_mls.json"
   },
@@ -371,11 +371,11 @@
   },
   {
    "lig": "ncaab",
-   "mac": 8959,
-   "cift": 5183,
+   "mac": 9239,
+   "cift": 5222,
    "kalibrasyon": {
-    "favori_ima_ort": 71.9,
-    "favori_tutma": 73.6
+    "favori_ima_ort": 71.7,
+    "favori_tutma": 73.9
    },
    "dosya": "brier_hafiza_ncaab.json"
   },
@@ -422,7 +422,7 @@
    "cift": 148,
    "kalibrasyon": {
     "favori_ima_ort": 52.9,
-    "favori_tutma": 55.2
+    "favori_tutma": 55.4
    },
    "dosya": "brier_hafiza_norvec.json"
   },
@@ -442,41 +442,41 @@
   },
   {
    "lig": "portekiz",
-   "mac": 610,
+   "mac": 617,
    "cift": 201,
    "kalibrasyon": {
-    "favori_ima_ort": 54.1,
-    "favori_tutma": 57.0
+    "favori_ima_ort": 53.6,
+    "favori_tutma": 56.6
    },
    "dosya": "brier_hafiza_portekiz.json"
   },
   {
    "lig": "segunda",
-   "mac": 930,
+   "mac": 933,
    "cift": 357,
    "kalibrasyon": {
-    "favori_ima_ort": 45.9,
-    "favori_tutma": 48.1
+    "favori_ima_ort": 45.4,
+    "favori_tutma": 47.8
    },
    "dosya": "brier_hafiza_segunda.json"
   },
   {
    "lig": "seriea",
-   "mac": 1902,
+   "mac": 1930,
    "cift": 386,
    "kalibrasyon": {
-    "favori_ima_ort": 52.4,
+    "favori_ima_ort": 52.3,
     "favori_tutma": 54.2
    },
    "dosya": "brier_hafiza_seriea.json"
   },
   {
    "lig": "serieb",
-   "mac": 767,
+   "mac": 777,
    "cift": 302,
    "kalibrasyon": {
-    "favori_ima_ort": 44.4,
-    "favori_tutma": 44.1
+    "favori_ima_ort": 44.0,
+    "favori_tutma": 43.8
    },
    "dosya": "brier_hafiza_serieb.json"
   },
@@ -503,11 +503,11 @@
   },
   {
    "lig": "sudamericana",
-   "mac": 117,
+   "mac": 141,
    "cift": 59,
    "kalibrasyon": {
     "favori_ima_ort": 54.1,
-    "favori_tutma": 49.6
+    "favori_tutma": 51.3
    },
    "dosya": "brier_hafiza_sudamericana.json"
   },
@@ -547,26 +547,26 @@
    "cift": 365,
    "kalibrasyon": {
     "favori_ima_ort": 50.4,
-    "favori_tutma": 54.0
+    "favori_tutma": 54.2
    },
    "dosya": "brier_hafiza_turkiye.json"
   },
   {
    "lig": "ucl",
-   "mac": 306,
+   "mac": 314,
    "cift": 215,
    "kalibrasyon": {
-    "favori_ima_ort": 57.2,
-    "favori_tutma": 60.5
+    "favori_ima_ort": 57.0,
+    "favori_tutma": 61.1
    },
    "dosya": "brier_hafiza_ucl.json"
   },
   {
    "lig": "uel",
-   "mac": 282,
+   "mac": 364,
    "cift": 195,
    "kalibrasyon": {
-    "favori_ima_ort": 54.1,
+    "favori_ima_ort": 53.9,
     "favori_tutma": 57.4
    },
    "dosya": "brier_hafiza_uel.json"
@@ -586,8 +586,8 @@
    "mac": 574,
    "cift": 78,
    "kalibrasyon": {
-    "favori_ima_ort": 70.9,
-    "favori_tutma": 69.3
+    "favori_ima_ort": 70.8,
+    "favori_tutma": 69.5
    },
    "dosya": "brier_hafiza_wnba.json"
   },
