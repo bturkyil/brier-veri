@@ -279,6 +279,13 @@
   .bolgebas{padding:12px 16px 2px;font-size:10px;letter-spacing:.6px;color:var(--grey);font-weight:700}
   .secuyari.kirmizi{border-left-color:var(--red)}
   .secuyari{margin:0 20px 10px;padding:10px 14px;border-left:3px solid var(--gold);background:#fff;font-size:12px;color:var(--ink);line-height:1.5}
+  .tgol{margin:14px 20px 0;background:#fff;border:1px solid var(--rule-dark);padding:12px 16px}
+  .tgol .th{font-size:11px;font-weight:700;letter-spacing:.6px;color:var(--grey)}
+  .tgol .tbaslik{font-size:15px;font-weight:600;margin-top:6px;color:var(--ink)}
+  .tgol .tbaslik.hot{color:var(--red)} .tgol .tbaslik.cold{color:var(--teal)}
+  .tgol .ts{font-size:13px;line-height:1.55;margin-top:5px;color:var(--ink)}
+  .tgol .ts b{font-weight:600}
+  .tgol .tf{font-size:10.5px;color:var(--grey);margin-top:7px;padding-top:7px;border-top:1px solid var(--rule);font-family:'IBM Plex Mono',monospace}
   .hareket{margin:14px 20px 0;background:#fff;border:1px solid var(--rule-dark);padding:12px 16px}
   .hareket .hh{font-size:11px;font-weight:700;letter-spacing:.6px;color:var(--grey)}
   .hareket .hs{font-size:12.5px;line-height:1.55;margin-top:6px;color:var(--ink)}
@@ -329,7 +336,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A52</div>
+      <div class="by">brier · by BT · build A53</div>
     </footer>
   </div>
 
@@ -355,7 +362,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A52</div>
+      <div class="by">brier · by BT · build A53</div>
     </footer>
   </div>
 </div>
@@ -1339,6 +1346,44 @@ async function showDetail(i){
       }
     }catch(e){}
     html+=`<div class="foot">Only the <b>${tc.kitap} books</b> quoting the consensus line (<b>${tc.cizgi}</b>) are shown — books on other lines are left out, never mixed in.${ustCumle([tc.over,tc.under])}${gk}</div></div>`;
+
+    // --- TAKIM-GOL karti (ev takimi ev ort + dep takimi dep ort + lig + h2h) ---
+    try{
+      const Ht=await hafizaGetir(ligBul(m.key));
+      if(Ht&&Ht.takim_gol&&Ht.lig_gol_ort){
+        const tg=Ht.takim_gol, ligO=Ht.lig_gol_ort;
+        const evT=tg[evAd], depT=tg[depAd];
+        const evO=evT&&evT.ev_ort!=null?evT.ev_ort:null, evN=evT?evT.ev_n:0;
+        const depO=depT&&depT.dep_ort!=null?depT.dep_ort:null, depN=depT?depT.dep_n:0;
+        // birim: spora gore
+        const k=m.key||'';
+        let birim='goals';
+        if(/basketball|nba|ncaab|wnba|euroleague/.test(k))birim='points';
+        else if(/baseball|mlb/.test(k))birim='runs';
+        else if(/football_nfl|americanfootball|ncaaf/.test(k))birim='points';
+        if(evO!=null&&depO!=null){
+          const macOrt=(evO+depO)/2;
+          const fark=macOrt-ligO, yuzFark=ligO>0?(fark/ligO*100):0;
+          let sinif='', baslik='';
+          if(yuzFark>=10){sinif='hot';baslik='This matchup runs hot';}
+          else if(yuzFark<=-10){sinif='cold';baslik='This matchup runs cold';}
+          else{sinif='';baslik='In line with the league';}
+          // h2h ortalama toplam
+          let h2hCumle='';
+          const anah=[String(evAd).toLowerCase(),String(depAd).toLowerCase()].sort().join('|');
+          const gecmis=(Ht.h2h||{})[anah];
+          if(gecmis&&gecmis.length&&gecmis[0].top!=null){
+            const topSum=gecmis.reduce((a,x)=>a+(x.top||0),0);
+            const h2hOrt=(topSum/gecmis.length).toFixed(1);
+            h2hCumle=` Their last <b>${gecmis.length}</b> meeting${gecmis.length>1?'s':''} averaged <b>${h2hOrt}</b>.`;
+          }
+          html+=`<div class="tgol"><div class="th">SCORING RECORD · ${birim.toUpperCase()}</div>
+            <div class="tbaslik ${sinif}">${esc(baslik)}</div>
+            <div class="ts"><b>${esc(ilkKelime(evAd))}</b>'s home games average <b>${evO}</b> (${evN}), <b>${esc(ilkKelime(depAd))}</b>'s away games <b>${depO}</b> (${depN}). The league sits at <b>${ligO}</b>.${h2hCumle} Line is <b>${tc.cizgi}</b>.</div>
+            <div class="tf">team form over many games · matchup sample is small · a record, not a forecast</div></div>`;
+        }
+      }
+    }catch(e){}
   }
 
   // --- spread karti ---
