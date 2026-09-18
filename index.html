@@ -25,6 +25,14 @@
          display:flex;align-items:baseline;justify-content:space-between}
   header h1{margin:0;font-size:17px;font-weight:800;letter-spacing:.4px}
   header .sub{font-size:10px;color:#9fb4b0;font-family:'IBM Plex Mono',monospace;letter-spacing:.5px}
+  .aramaKutu{position:relative;margin:0 20px 10px;display:flex;align-items:center}
+  .aramaIkon{position:absolute;left:12px;font-size:16px;color:var(--grey);pointer-events:none}
+  .aramaInput{width:100%;padding:10px 34px 10px 34px;font-size:14px;font-family:inherit;
+    border:1px solid var(--rule-dark);border-radius:6px;background:#fff;color:var(--ink)}
+  .aramaInput:focus{outline:none;border-color:var(--teal)}
+  .aramaInput::placeholder{color:var(--grey)}
+  .aramaTemizle{position:absolute;right:8px;width:24px;height:24px;border:0;background:none;
+    font-size:18px;color:var(--grey);cursor:pointer;padding:0;line-height:1}
   .feedline{background:#fff;border-bottom:1px solid var(--rule);padding:6px 20px;
             font-size:10px;color:var(--grey);font-family:'IBM Plex Mono',monospace}
   .feedline.err{background:var(--red-soft);color:var(--red)}
@@ -305,6 +313,11 @@
     <button id="bolgeRozet" class="bolgeRozet" onclick="bolgeDondur()" title="my region">ALL</button>
   </header>
   <div id="feedline" class="feedline">connecting to live feed…</div>
+  <div class="aramaKutu">
+    <span class="aramaIkon">⌕</span>
+    <input id="aramaInput" class="aramaInput" type="text" placeholder="search a team or league" oninput="aramaGir(this.value)" autocomplete="off">
+    <button id="aramaTemizle" class="aramaTemizle" onclick="aramaTemizleAll()" style="display:none">×</button>
+  </div>
 
   <div id="secSerit" class="serit hidden" onclick="showSecimler()"></div>
   <div id="perde" class="perde hidden" onclick="menuKapat()"></div>
@@ -336,7 +349,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A55</div>
+      <div class="by">brier · by BT · build A56</div>
     </footer>
   </div>
 
@@ -362,7 +375,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A55</div>
+      <div class="by">brier · by BT · build A56</div>
     </footer>
   </div>
 </div>
@@ -400,6 +413,7 @@ const LIG_ESLE = {
 };
 function ligBul(k){return LIG_ESLE[k]||(String(k).indexOf('tennis_')===0?'tenis':null);}
 
+let ARAMA='';
 let LIVE=null, INDEX=null, HAFIZA={}, grup='ALL', ligSec=null, gunSec=null, mercek=false, splens=false, bulens=false, movlens=false, tumGun=false, cekGrup=null;
 
 function kapatManifesto(){
@@ -625,8 +639,8 @@ function tarihKey(t){
 function gunListesi(){
   const s=new Set();
   Object.entries((LIVE&&LIVE.ligler)||{}).forEach(([ad,ld])=>{
-    if(grup!=='ALL'&&(ld.grup||'Other')!==grup)return;
-    if(ligSec!==null&&ad!==ligSec)return;
+    if(!ARAMA&&grup!=='ALL'&&(ld.grup||'Other')!==grup)return;
+    if(!ARAMA&&ligSec!==null&&ad!==ligSec)return;
     (ld.maclar||[]).forEach(m=>s.add(tarihKey(m.t)));
   });
   return [...s].sort();
@@ -640,7 +654,7 @@ function gunEtiket(k){
 }
 function renderSecimler(){
   const gs=gunListesi(); window._gunler=gs;
-  const akis=tumGun||mercek||splens||bulens||movlens;
+  const akis=tumGun||mercek||splens||bulens||movlens||!!ARAMA;
   if(!gs.length){gunSec=null;}
   else if(!akis&&(gunSec===null||!gs.includes(gunSec))){gunSec=gs[0];}
   const gsel=document.getElementById('gunSel');
@@ -690,6 +704,21 @@ function ligleri(){
 
 
 
+function aramaGir(v){
+  ARAMA=(v||'').trim().toLowerCase();
+  const t=document.getElementById('aramaTemizle');if(t)t.style.display=ARAMA?'block':'none';
+  renderList();
+}
+function aramaTemizleAll(){
+  ARAMA='';const inp=document.getElementById('aramaInput');if(inp)inp.value='';
+  const t=document.getElementById('aramaTemizle');if(t)t.style.display='none';
+  renderList();
+}
+function aramaUyar(m,ad){
+  if(!ARAMA)return true;
+  const hedef=((m.h||'')+' '+(m.a||'')+' '+(ad||'')).toLowerCase();
+  return hedef.includes(ARAMA);
+}
 function oyunlar(){
   const akis=tumGun||mercek||splens||bulens||movlens;
   const out=[];
@@ -701,6 +730,7 @@ function oyunlar(){
       if(splens){try{if(!ayrismaHesap(m,!!ld.sonuc3))return;}catch(e){return;}}
       if(bulens){try{if(!macBulguGuclu({...m,key:ld.key,sonuc3:!!ld.sonuc3}).length)return;}catch(e){return;}}
       if(movlens){try{if(!hareketHesap(m))return;}catch(e){return;}}
+      if(!aramaUyar(m,ad))return;
       out.push({...m,ligAd:ad,key:ld.key,sonuc3:!!ld.sonuc3});});
   });
   out.sort((a,b)=>String(a.t).localeCompare(String(b.t)));
