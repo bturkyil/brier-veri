@@ -351,7 +351,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A58</div>
+      <div class="by">brier · by BT · build A59</div>
     </footer>
   </div>
 
@@ -377,7 +377,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A58</div>
+      <div class="by">brier · by BT · build A59</div>
     </footer>
   </div>
 </div>
@@ -1398,9 +1398,9 @@ async function showDetail(i){
           const macOrt=(evO+depO)/2;
           const fark=macOrt-ligO, yuzFark=ligO>0?(fark/ligO*100):0;
           let sinif='', baslik='';
-          if(yuzFark>=10){sinif='hot';baslik='This matchup runs hot';}
-          else if(yuzFark<=-10){sinif='cold';baslik='This matchup runs cold';}
-          else{sinif='';baslik='In line with the league';}
+          if(yuzFark>=10){sinif='hot';baslik='Above the league average';}
+          else if(yuzFark<=-10){sinif='cold';baslik='Below the league average';}
+          else{sinif='';baslik='Around the league average';}
           // h2h ortalama toplam
           let h2hCumle='';
           const anah=[String(evAd).toLowerCase(),String(depAd).toLowerCase()].sort().join('|');
@@ -1414,6 +1414,37 @@ async function showDetail(i){
             <div class="tbaslik ${sinif}">${esc(baslik)}</div>
             <div class="ts"><b>${esc(ilkKelime(evAd))}</b>'s home games average <b>${evO}</b> (${evN}), <b>${esc(ilkKelime(depAd))}</b>'s away games <b>${depO}</b> (${depN}). The league sits at <b>${ligO}</b>.${h2hCumle} Line is <b>${tc.cizgi}</b>.</div>
             <div class="tf">team form over many games · matchup sample is small · a record, not a forecast</div></div>`;
+        }
+      }
+      // --- PRICE RECORD: arsivdeki son 3 karsilasmada bu takimin ort. fiyatlanmasi vs bugunku canli ---
+      if(Ht&&Ht.h2h&&m.p){
+        const anah2=[String(evAd).toLowerCase(),String(depAd).toLowerCase()].sort().join('|');
+        const gec=(Ht.h2h||{})[anah2];
+        if(gec&&gec.length>=1){
+          // arsivdeki son 3 karsilasmada EV takiminin (evAd) de-vigli olasiligi
+          const son3=gec.slice(0,3);
+          let toplamP=0, sayi=0;
+          son3.forEach(x=>{
+            if(x.ima==null||!x.fav)return;
+            // x.ima o maçin favorisinin %'si; ev takimi favori miydi?
+            const evFavdi=(String(x.fav).toLowerCase()===String(evAd).toLowerCase());
+            const evP=evFavdi?x.ima:(x.h!=null&&x.a!=null?null:(100-x.ima));
+            // 3-yollu maçta ev-favori degilse 100-ima yaklasimi kaba; sadece ev-favori olanlari al (temiz)
+            if(evFavdi){toplamP+=x.ima;sayi++;}
+          });
+          // bugunku ev takiminin de-vigli %'si
+          const bp=m.p, top=(bp.h||0)+(bp.a||0)+(bp.d||0);
+          const evBugun=top>0?Math.round((bp.h/top)*100):null;
+          if(sayi>=1&&evBugun!=null){
+            const gecmisOrt=Math.round(toplamP/sayi);
+            const farkP=evBugun-gecmisOrt;
+            if(Math.abs(farkP)>=5){
+              const yon=farkP<0?'less':'more';
+              html+=`<div class="tgol"><div class="th">PRICE RECORD</div>
+                <div class="ts">In the last <b>${sayi}</b> archived meeting${sayi>1?'s':''}, <b>${esc(ilkKelime(evAd))}</b> was priced <b>${gecmisOrt}%</b> on average (de-vigged). Today they sit at <b>${evBugun}%</b> — the market trusts them <b>${yon}</b> this time.</div>
+                <div class="tf">de-vigged (margin removed) · archived meetings, form changes · updates as the live price moves · a record, not a forecast</div></div>`;
+            }
+          }
         }
       }
     }catch(e){}
