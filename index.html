@@ -351,7 +351,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A59</div>
+      <div class="by">brier · by BT · build A60</div>
     </footer>
   </div>
 
@@ -377,7 +377,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A59</div>
+      <div class="by">brier · by BT · build A60</div>
     </footer>
   </div>
 </div>
@@ -1440,9 +1440,10 @@ async function showDetail(i){
             const farkP=evBugun-gecmisOrt;
             if(Math.abs(farkP)>=5){
               const yon=farkP<0?'less':'more';
+              const gecOran=(100/gecmisOrt).toFixed(2), bugOran=(100/evBugun).toFixed(2);
               html+=`<div class="tgol"><div class="th">PRICE RECORD</div>
-                <div class="ts">In the last <b>${sayi}</b> archived meeting${sayi>1?'s':''}, <b>${esc(ilkKelime(evAd))}</b> was priced <b>${gecmisOrt}%</b> on average (de-vigged). Today they sit at <b>${evBugun}%</b> — the market trusts them <b>${yon}</b> this time.</div>
-                <div class="tf">de-vigged (margin removed) · archived meetings, form changes · updates as the live price moves · a record, not a forecast</div></div>`;
+                <div class="ts">In the last <b>${sayi}</b> archived meeting${sayi>1?'s':''}, <b>${esc(ilkKelime(evAd))}</b> was priced <b>${gecOran}</b> (${gecmisOrt}%) on average; today they sit at <b>${bugOran}</b> (${evBugun}%) — the market trusts them <b>${yon}</b> this time.</div>
+                <div class="tf">fair odds from the de-vigged consensus (margin removed), not a single book's price · archived meetings, form changes · updates as the live price moves · a record, not a forecast</div></div>`;
             }
           }
         }
