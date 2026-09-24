@@ -349,7 +349,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A56</div>
+      <div class="by">brier · by BT · build A57</div>
     </footer>
   </div>
 
@@ -375,7 +375,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A56</div>
+      <div class="by">brier · by BT · build A57</div>
     </footer>
   </div>
 </div>
@@ -720,7 +720,7 @@ function aramaUyar(m,ad){
   return hedef.includes(ARAMA);
 }
 function oyunlar(){
-  const akis=tumGun||mercek||splens||bulens||movlens;
+  const akis=tumGun||mercek||splens||bulens||movlens||!!ARAMA;
   const out=[];
   Object.entries(LIVE.ligler||{}).forEach(([ad,ld])=>{
     if(grup!=='ALL'&&(ld.grup||'Other')!==grup)return;
