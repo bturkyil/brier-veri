@@ -97,10 +97,10 @@
   {
    "lig": "bundesliga",
    "mac": 1566,
-   "cift": 284,
+   "cift": 303,
    "kalibrasyon": {
     "favori_ima_ort": 53.4,
-    "favori_tutma": 54.0
+    "favori_tutma": 53.5
    },
    "dosya": "brier_hafiza_bundesliga.json"
   },
@@ -164,10 +164,10 @@
   {
    "lig": "ekstraklasa",
    "mac": 1009,
-   "cift": 217,
+   "cift": 246,
    "kalibrasyon": {
-    "favori_ima_ort": 47.8,
-    "favori_tutma": 45.0
+    "favori_ima_ort": 47.5,
+    "favori_tutma": 44.6
    },
    "dosya": "brier_hafiza_ekstraklasa.json"
   },
@@ -218,10 +218,10 @@
   {
    "lig": "ireland",
    "mac": 813,
-   "cift": 51,
+   "cift": 63,
    "kalibrasyon": {
-    "favori_ima_ort": 50.5,
-    "favori_tutma": 49.2
+    "favori_ima_ort": 50.9,
+    "favori_tutma": 48.4
    },
    "dosya": "brier_hafiza_ireland.json"
   },
@@ -268,10 +268,10 @@
   {
    "lig": "kleague1",
    "mac": 1079,
-   "cift": 90,
+   "cift": 102,
    "kalibrasyon": {
-    "favori_ima_ort": 44.1,
-    "favori_tutma": 42.3
+    "favori_ima_ort": 44.4,
+    "favori_tutma": 43.0
    },
    "dosya": "brier_hafiza_kleague1.json"
   },
@@ -312,10 +312,10 @@
   {
    "lig": "ligue1",
    "mac": 1753,
-   "cift": 295,
+   "cift": 318,
    "kalibrasyon": {
-    "favori_ima_ort": 52.4,
-    "favori_tutma": 52.4
+    "favori_ima_ort": 52.3,
+    "favori_tutma": 52.8
    },
    "dosya": "brier_hafiza_ligue1.json"
   },
@@ -463,10 +463,10 @@
   {
    "lig": "seriea",
    "mac": 1930,
-   "cift": 386,
+   "cift": 405,
    "kalibrasyon": {
-    "favori_ima_ort": 52.3,
-    "favori_tutma": 54.2
+    "favori_ima_ort": 52.4,
+    "favori_tutma": 54.5
    },
    "dosya": "brier_hafiza_seriea.json"
   },
@@ -514,10 +514,10 @@
   {
    "lig": "superettan",
    "mac": 1196,
-   "cift": 141,
+   "cift": 204,
    "kalibrasyon": {
-    "favori_ima_ort": 47.9,
-    "favori_tutma": 46.5
+    "favori_ima_ort": 47.2,
+    "favori_tutma": 46.6
    },
    "dosya": "brier_hafiza_superettan.json"
   },
@@ -544,10 +544,10 @@
   {
    "lig": "turkiye",
    "mac": 2067,
-   "cift": 365,
+   "cift": 393,
    "kalibrasyon": {
-    "favori_ima_ort": 50.4,
-    "favori_tutma": 54.2
+    "favori_ima_ort": 50.3,
+    "favori_tutma": 54.7
    },
    "dosya": "brier_hafiza_turkiye.json"
   },
@@ -574,10 +574,10 @@
   {
    "lig": "veikkausliiga",
    "mac": 848,
-   "cift": 76,
+   "cift": 88,
    "kalibrasyon": {
-    "favori_ima_ort": 49.3,
-    "favori_tutma": 54.1
+    "favori_ima_ort": 49.8,
+    "favori_tutma": 53.7
    },
    "dosya": "brier_hafiza_veikkausliiga.json"
   },
