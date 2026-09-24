@@ -481,6 +481,16 @@
    "dosya": "brier_hafiza_serieb.json"
   },
   {
+   "lig": "shl",
+   "mac": 1530,
+   "cift": 139,
+   "kalibrasyon": {
+    "favori_ima_ort": 79.9,
+    "favori_tutma": 79.2
+   },
+   "dosya": "brier_hafiza_shl.json"
+  },
+  {
    "lig": "soccer_efl_champ",
    "mac": 51,
    "cift": 0,
@@ -583,11 +593,11 @@
   },
   {
    "lig": "wnba",
-   "mac": 574,
+   "mac": 1026,
    "cift": 78,
    "kalibrasyon": {
-    "favori_ima_ort": 70.8,
-    "favori_tutma": 69.5
+    "favori_ima_ort": 70.9,
+    "favori_tutma": 70.2
    },
    "dosya": "brier_hafiza_wnba.json"
   },
