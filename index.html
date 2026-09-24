@@ -242,6 +242,8 @@
   .leddet td{padding:3px 6px 3px 0;border-top:1px solid var(--rule)}
   .leddet tr.yilbasi td{border-top:2px solid var(--rule-dark);padding-top:6px}
   .ledok{color:var(--rule-dark);font-size:12px;padding-left:6px}
+  .ledgernot{font-size:11px;color:var(--grey);line-height:1.55;padding:10px 4px 2px;border-top:1px solid var(--rule);margin-top:6px}
+  .ledgernot b{color:var(--ink);font-weight:600}
   .ledipucu{padding:10px 20px 4px;font-size:10.5px;color:var(--grey);font-family:'IBM Plex Mono',monospace;letter-spacing:.4px}
   .foot b{color:var(--ink);font-weight:600}
   .pill{display:flex;align-items:baseline;padding:9px 16px;border-bottom:1px solid var(--rule);font-size:13px}
@@ -349,7 +351,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A57</div>
+      <div class="by">brier · by BT · build A58</div>
     </footer>
   </div>
 
@@ -375,7 +377,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A57</div>
+      <div class="by">brier · by BT · build A58</div>
     </footer>
   </div>
 </div>
@@ -1085,30 +1087,31 @@ function renderLedger(){
   const ligler=Object.entries(STRATEJI||{}).map(([slug,yillar])=>{
     const ys=Object.keys(yillar).sort();
     const son=ys[ys.length-1];
-    const topBahis=ys.reduce((a,y)=>a+(yillar[y].s3?yillar[y].s3.bahis:0),0);
+    const topBahis=ys.reduce((a,y)=>{const ef=yillar[y].s4||yillar[y].s3;return a+(ef?ef.bahis:0);},0);
     return {slug,yillar,ys,son,topBahis};
   }).sort((a,b)=>b.topBahis-a.topBahis);
   const benim=ligler.filter(L=>yld.has(L.slug)), digerleri=ligler.filter(L=>!yld.has(L.slug));
   const satir=(L)=>{
-    const s3=L.yillar[L.son].s3;
+    const _son=L.yillar[L.son];
+    const s3=_son.s4||_son.s3;
     const kapsam=L.ys.length>1?`${L.ys[0]}\u2013${L.ys[L.ys.length-1]}`:`${L.son} \u00b7 single season`;
     const acik=window._ledAcik.has(L.slug);
     let h=`<button class="ledrow" onclick="ledTgl('${L.slug}')">
       <span class="lyld${yld.has(L.slug)?' on':''}" onclick="ligYildiz(event,'${L.slug}')">${yld.has(L.slug)?'\u2605':'\u2606'}</span>
       <span class="lad">${esc(LEDGER_AD[L.slug]||L.slug.toUpperCase())}
-        <span class="lyil">${kapsam} \u00b7 ${L.son}: every favourite \u00b7 ${s3.bahis.toLocaleString('en-US')} bets</span></span>
+        <span class="lyil">${kapsam} \u00b7 ${L.son}: every favourite \u00b7 ${s3.bahis.toLocaleString('en-US')} matches</span></span>
       <span class="lkar">${fmtPara(s3.kar)}</span><span class="ledok">${acik?"\u25be":"\u25b8"}</span></button>`;
     if(acik){
       h+='<div class="leddet"><table><tr><th>year</th><th>strategy</th><th>bets</th><th>hit</th><th>net</th></tr>';
       L.ys.slice().reverse().forEach(y=>{
         const S=L.yillar[y];let ilk=true;
-        [['s1','biggest fav of the week'],['s2','top two favs of the week'],['s3','every favourite']].forEach(([k,ad])=>{
+        [['s1','biggest fav of the week'],['s2','top two favs of the week'],['s3','top three favs of the week'],['s4','every favourite']].forEach(([k,ad])=>{
           if(!S[k])return;
           h+=`<tr${ilk?' class="yilbasi"':''}><td>${ilk?('<b>'+y+'</b>'):''}</td><td>${ad}</td><td>${S[k].bahis.toLocaleString('en-US')}</td><td>%${S[k].tutma}</td><td>${fmtPara(S[k].kar)}</td></tr>`;
           ilk=false;
         });
       });
-      h+='</table></div>';
+      h+='</table><div class="ledgernot">The first rows are the week\u2019s most selective picks. <b>Every favourite</b> is not a plan to follow \u2014 it\u2019s the whole-league test: what backing every single favourite would have paid, flat stake. The record of the market, not a call to bet.</div></div>';
     }
     return h;
   };
