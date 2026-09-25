@@ -351,7 +351,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A60</div>
+      <div class="by">brier · by BT · build A61</div>
     </footer>
   </div>
 
@@ -377,7 +377,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A60</div>
+      <div class="by">brier · by BT · build A61</div>
     </footer>
   </div>
 </div>
@@ -416,7 +416,7 @@ const LIG_ESLE = {
 function ligBul(k){return LIG_ESLE[k]||(String(k).indexOf('tennis_')===0?'tenis':null);}
 
 let ARAMA='';
-let LIVE=null, INDEX=null, HAFIZA={}, grup='ALL', ligSec=null, gunSec=null, mercek=false, splens=false, bulens=false, movlens=false, tumGun=false, cekGrup=null;
+let LIVE=null, INDEX=null, HAFIZA={}, GKARNE=null, grup='ALL', ligSec=null, gunSec=null, mercek=false, splens=false, bulens=false, movlens=false, tumGun=false, cekGrup=null;
 
 function kapatManifesto(){
   document.getElementById('manifesto').classList.add('hidden');
@@ -1221,6 +1221,14 @@ function ledTgl(slug){
   window._ledAcik.has(slug)?window._ledAcik.delete(slug):window._ledAcik.add(slug);
   renderLedger();
 }
+async function golkarneGetir(){
+  if(GKARNE!==null)return GKARNE;
+  try{
+    const r=await fetch(MEMORY+'brier_golkarne.json?v=a61',{cache:'no-store'});
+    GKARNE=r.ok?await r.json():{};
+  }catch(e){GKARNE={};}
+  return GKARNE;
+}
 async function hafizaGetir(lig){
   if(!lig)return null;
   if(HAFIZA[lig]!==undefined)return HAFIZA[lig];
@@ -1555,7 +1563,23 @@ async function showDetail(i){
     const adil=H.rontgen[0], genis=H.rontgen[H.rontgen.length-1];
     x+=`<div class="xread">Historically the leanest price in this league is <b>${esc(adil.kitap)}</b> (median take ${adil.medyan_marj.toFixed(1)}%); the widest is <b>${esc(genis.kitap)}</b> (${genis.medyan_marj.toFixed(1)}%). The take is <b>the book's cut</b> of every pot — the lower it runs, <b>the more goes back to bettors</b>. A record of what books charge — not a signal to bet.</div></div>`;
   }
-  document.getElementById('xraySlot').innerHTML=x;
+  // --- MARGIN READ: bu macin marji (worker) vs lig ortalamasi ---
+  try{
+    const gk=await golkarneGetir();
+    const lg=ligBul(m.key);
+    const ligMarj=gk&&gk[lg]?gk[lg].lig_marj_ort:null;
+    // m.marj = worker'in verdigi konsensus kitap marji (%)
+    if(ligMarj!=null && ligMarj>=2 && m.marj!=null && m.marj>0){
+      const fark=m.marj-ligMarj;
+      if(Math.abs(fark)>=1.5){
+        const yon=fark>0?'wider':'tighter';
+        const anlam=fark>0?'books are less certain here':'books are confident here';
+        x+=`<div class="card"><div class="head"><span class="t">MARGIN READ</span><span class="k">this match vs league</span></div>
+          <div class="xread">Books are pricing this match about <b>${Math.abs(fark).toFixed(1)} points ${yon}</b> than the ${esc(m.ligAd)} norm (${ligMarj.toFixed(1)}%) \u2014 ${anlam}. A wider margin is a book's caution, a tighter one its confidence. A record of the take, not a signal.</div></div>`;
+      }
+    }
+  }catch(e){}
+    document.getElementById('xraySlot').innerHTML=x;
 
   // --- market memory ---
   let mem='';
