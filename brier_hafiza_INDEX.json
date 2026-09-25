@@ -162,6 +162,16 @@
    "dosya": "brier_hafiza_efl2.json"
   },
   {
+   "lig": "eflcup",
+   "mac": 362,
+   "cift": 328,
+   "kalibrasyon": {
+    "favori_ima_ort": 82.7,
+    "favori_tutma": 66.9
+   },
+   "dosya": "brier_hafiza_eflcup.json"
+  },
+  {
    "lig": "ekstraklasa",
    "mac": 1009,
    "cift": 246,
