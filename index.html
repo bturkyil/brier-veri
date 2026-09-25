@@ -353,7 +353,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A62</div>
+      <div class="by">brier · by BT · build A63</div>
     </footer>
   </div>
 
@@ -379,7 +379,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A62</div>
+      <div class="by">brier · by BT · build A63</div>
     </footer>
   </div>
 </div>
@@ -1578,6 +1578,30 @@ async function showDetail(i){
         const myon=fark>0?'kirmizi':'teal';
         x+=`<div class="card"><div class="head"><span class="t">MARGIN READ</span><span class="k">vs league</span></div>
           <div class="xread"><span class="${myon=="teal"?"kartArti":"kartEksi"}"><b>${Math.abs(fark).toFixed(1)} pts ${yon}</b></span> than league norm (${ligMarj.toFixed(1)}%) · books ${fark>0?'less sure':'confident'} here</div></div>`;
+      }
+    }
+  }catch(e){}
+
+  // --- HOLD SKEW: vergi hangi tarafta yogun (ham implied - de-vig) ---
+  try{
+    const p=m.p||{}, hm=m.ham||{};
+    if(hm.h!=null && hm.a!=null && p.h!=null && p.a!=null){
+      // her sonuca binen vergi (oransal): (ham - devig) / devig
+      const vh=p.h>0?(hm.h-p.h)/p.h:0;
+      const va=p.a>0?(hm.a-p.a)/p.a:0;
+      const vd=(hm.d!=null&&p.d>0)?(hm.d-p.d)/p.d:null;
+      // favori/underdog belirle
+      const favEv=p.h>=p.a;
+      const favV=favEv?vh:va, dogV=favEv?va:vh;
+      const favAd=favEv?evAd:depAd, dogAd=favEv?depAd:evAd;
+      // anlamli fark: favori vs underdog vergi orani
+      const oran=dogV>0?favV/dogV:(favV>0?99:1);
+      if(Math.abs(favV-dogV)>=0.015){  // en az 1.5 puan oransal fark
+        let nerede, temiz;
+        if(favV>dogV){nerede=favAd; temiz=dogAd;}
+        else{nerede=dogAd; temiz=favAd;}
+        x+=`<div class="card"><div class="head"><span class="t">HOLD SKEW</span><span class="k">where the vig sits</span></div>
+          <div class="xread">Vig sits mostly on <b>${esc(ilkKelime(nerede))}</b> · <b>${esc(ilkKelime(temiz))}</b> price closer to fair · books tax the crowded side</div></div>`;
       }
     }
   }catch(e){}
