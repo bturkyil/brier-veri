@@ -168,6 +168,8 @@
   .xrow.leanest .pct{color:var(--teal)}
   .xrow.widest .pct{color:var(--red)}
   .xread{padding:11px 16px;border-top:1px solid var(--rule);font-size:12.5px;line-height:1.55}
+  .kartArti{color:var(--teal);font-weight:600}
+  .kartEksi{color:var(--red);font-weight:600}
 
   .memrow{display:flex;align-items:center;padding:10px 16px;border-bottom:1px solid var(--rule);gap:10px}
   .memrow:last-of-type{border-bottom:0}
@@ -351,7 +353,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A61</div>
+      <div class="by">brier · by BT · build A62</div>
     </footer>
   </div>
 
@@ -377,7 +379,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A61</div>
+      <div class="by">brier · by BT · build A62</div>
     </footer>
   </div>
 </div>
@@ -1420,8 +1422,7 @@ async function showDetail(i){
           }
           html+=`<div class="tgol"><div class="th">SCORING RECORD · ${birim.toUpperCase()}</div>
             <div class="tbaslik ${sinif}">${esc(baslik)}</div>
-            <div class="ts"><b>${esc(ilkKelime(evAd))}</b>'s home games average <b>${evO}</b> (${evN}), <b>${esc(ilkKelime(depAd))}</b>'s away games <b>${depO}</b> (${depN}). The league sits at <b>${ligO}</b>.${h2hCumle} Line is <b>${tc.cizgi}</b>.</div>
-            <div class="tf">team form over many games · matchup sample is small · a record, not a forecast</div></div>`;
+            <div class="ts"><b>${esc(ilkKelime(evAd))}</b> home <b>${evO}</b> · <b>${esc(ilkKelime(depAd))}</b> away <b>${depO}</b> · league <b>${ligO}</b> · line ${tc.cizgi}</div></div>`;
         }
       }
       // --- PRICE RECORD: arsivdeki son 3 karsilasmada bu takimin ort. fiyatlanmasi vs bugunku canli ---
@@ -1449,9 +1450,9 @@ async function showDetail(i){
             if(Math.abs(farkP)>=5){
               const yon=farkP<0?'less':'more';
               const gecOran=(100/gecmisOrt).toFixed(2), bugOran=(100/evBugun).toFixed(2);
+              const pyon=farkP<0?'kirmizi':'teal';
               html+=`<div class="tgol"><div class="th">PRICE RECORD</div>
-                <div class="ts">In the last <b>${sayi}</b> archived meeting${sayi>1?'s':''}, <b>${esc(ilkKelime(evAd))}</b> was priced <b>${gecOran}</b> (${gecmisOrt}%) on average; today they sit at <b>${bugOran}</b> (${evBugun}%) — the market trusts them <b>${yon}</b> this time.</div>
-                <div class="tf">fair odds from the de-vigged consensus (margin removed), not a single book's price · archived meetings, form changes · updates as the live price moves · a record, not a forecast</div></div>`;
+                <div class="ts"><b>${esc(ilkKelime(evAd))}</b> was <b>${gecOran}</b> (${gecmisOrt}%), now <span class="${pyon=="teal"?"kartArti":"kartEksi"}"><b>${bugOran}</b> (${evBugun}%)</span> · market <b>${yon=='less'?'cooler':'warmer'}</b> on them · last ${sayi}</div></div>`;
             }
           }
         }
@@ -1574,8 +1575,9 @@ async function showDetail(i){
       if(Math.abs(fark)>=1.5){
         const yon=fark>0?'wider':'tighter';
         const anlam=fark>0?'books are less certain here':'books are confident here';
-        x+=`<div class="card"><div class="head"><span class="t">MARGIN READ</span><span class="k">this match vs league</span></div>
-          <div class="xread">Books are pricing this match about <b>${Math.abs(fark).toFixed(1)} points ${yon}</b> than the ${esc(m.ligAd)} norm (${ligMarj.toFixed(1)}%) \u2014 ${anlam}. A wider margin is a book's caution, a tighter one its confidence. A record of the take, not a signal.</div></div>`;
+        const myon=fark>0?'kirmizi':'teal';
+        x+=`<div class="card"><div class="head"><span class="t">MARGIN READ</span><span class="k">vs league</span></div>
+          <div class="xread"><span class="${myon=="teal"?"kartArti":"kartEksi"}"><b>${Math.abs(fark).toFixed(1)} pts ${yon}</b></span> than league norm (${ligMarj.toFixed(1)}%) · books ${fark>0?'less sure':'confident'} here</div></div>`;
       }
     }
   }catch(e){}
