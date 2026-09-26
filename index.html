@@ -353,7 +353,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A63</div>
+      <div class="by">brier · by BT · build A64</div>
     </footer>
   </div>
 
@@ -379,7 +379,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A63</div>
+      <div class="by">brier · by BT · build A64</div>
     </footer>
   </div>
 </div>
@@ -1443,16 +1443,18 @@ async function showDetail(i){
           });
           // bugunku ev takiminin de-vigli %'si
           const bp=m.p, top=(bp.h||0)+(bp.a||0)+(bp.d||0);
-          const evBugun=top>0?Math.round((bp.h/top)*100):null;
+          const bugP=top>0?(bp.h/top):null;
+          const evBugun=bugP!=null?Math.round(bugP*100):null;
           if(sayi>=1&&evBugun!=null){
             const gecmisOrt=Math.round(toplamP/sayi);
             const farkP=evBugun-gecmisOrt;
             if(Math.abs(farkP)>=5){
               const yon=farkP<0?'less':'more';
-              const gecOran=(100/gecmisOrt).toFixed(2), bugOran=(100/evBugun).toFixed(2);
+              // fair oran: bugun 1/bugP (Best prices ile ayni, ara yuvarlama yok); gecmis %'den
+              const gecOran=(100/gecmisOrt).toFixed(2), bugOran=(1/bugP).toFixed(2);
               const pyon=farkP<0?'kirmizi':'teal';
               html+=`<div class="tgol"><div class="th">PRICE RECORD</div>
-                <div class="ts"><b>${esc(ilkKelime(evAd))}</b> was <b>${gecOran}</b> (${gecmisOrt}%), now <span class="${pyon=="teal"?"kartArti":"kartEksi"}"><b>${bugOran}</b> (${evBugun}%)</span> · market <b>${yon=='less'?'cooler':'warmer'}</b> on them · last ${sayi}</div></div>`;
+                <div class="ts"><b>${esc(ilkKelime(evAd))}</b> fair was <b>${gecOran}</b> (${gecmisOrt}%), now <span class="${pyon=="teal"?"kartArti":"kartEksi"}"><b>${bugOran}</b> (${evBugun}%)</span> · market <b>${yon=='less'?'cooler':'warmer'}</b> on them · last ${sayi}</div></div>`;
             }
           }
         }
