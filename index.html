@@ -353,7 +353,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A64</div>
+      <div class="by">brier · by BT · build A65</div>
     </footer>
   </div>
 
@@ -379,7 +379,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A64</div>
+      <div class="by">brier · by BT · build A65</div>
     </footer>
   </div>
 </div>
@@ -1425,6 +1425,29 @@ async function showDetail(i){
             <div class="ts"><b>${esc(ilkKelime(evAd))}</b> home <b>${evO}</b> · <b>${esc(ilkKelime(depAd))}</b> away <b>${depO}</b> · league <b>${ligO}</b> · line ${tc.cizgi}</div></div>`;
         }
       }
+      // --- CORNER RECORD: golkarne'den lig+takim korner (sadece futbol, market var) ---
+      try{
+        const gk=await golkarneGetir();
+        const lg=ligBul(m.key);
+        const gkl=gk&&gk[lg]?gk[lg]:null;
+        if(gkl&&gkl.lig_korner_ort&&gkl.takim_korner){
+          const tk=gkl.takim_korner, ligK=gkl.lig_korner_ort;
+          const evTk=tk[evAd], depTk=tk[depAd];
+          const evK=evTk&&evTk.ev_ort!=null?evTk.ev_ort:null;
+          const depK=depTk&&depTk.dep_ort!=null?depTk.dep_ort:null;
+          if(evK!=null&&depK!=null){
+            const macK=(evK+depK)/2;
+            const farkK=macK-ligK, yuzK=ligK>0?(farkK/ligK*100):0;
+            let sinifK, baslikK;
+            if(yuzK>=10){sinifK='hot';baslikK='Above the league average';}
+            else if(yuzK<=-10){sinifK='cold';baslikK='Below the league average';}
+            else{sinifK='';baslikK='Around the league average';}
+            html+=`<div class="tgol"><div class="th">CORNER RECORD</div>
+              <div class="tbaslik ${sinifK}">${esc(baslikK)}</div>
+              <div class="ts"><b>${esc(ilkKelime(evAd))}</b> home <b>${evK}</b> · <b>${esc(ilkKelime(depAd))}</b> away <b>${depK}</b> · league <b>${ligK}</b> corners</div></div>`;
+          }
+        }
+      }catch(e){}
       // --- PRICE RECORD: arsivdeki son 3 karsilasmada bu takimin ort. fiyatlanmasi vs bugunku canli ---
       if(Ht&&Ht.h2h&&m.p){
         const anah2=[String(evAd).toLowerCase(),String(depAd).toLowerCase()].sort().join('|');
