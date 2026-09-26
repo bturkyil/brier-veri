@@ -353,7 +353,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A65</div>
+      <div class="by">brier · by BT · build A66</div>
     </footer>
   </div>
 
@@ -379,7 +379,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A65</div>
+      <div class="by">brier · by BT · build A66</div>
     </footer>
   </div>
 </div>
@@ -1445,6 +1445,29 @@ async function showDetail(i){
             html+=`<div class="tgol"><div class="th">CORNER RECORD</div>
               <div class="tbaslik ${sinifK}">${esc(baslikK)}</div>
               <div class="ts"><b>${esc(ilkKelime(evAd))}</b> home <b>${evK}</b> · <b>${esc(ilkKelime(depAd))}</b> away <b>${depK}</b> · league <b>${ligK}</b> corners</div></div>`;
+          }
+        }
+      }catch(e){}
+      // --- CARD RECORD: golkarne'den lig+takim kart (sari+kirmizi, sadece futbol) ---
+      try{
+        const gk=await golkarneGetir();
+        const lg=ligBul(m.key);
+        const gkl=gk&&gk[lg]?gk[lg]:null;
+        if(gkl&&gkl.lig_kart_ort&&gkl.takim_kart){
+          const tkk=gkl.takim_kart, ligKart=gkl.lig_kart_ort;
+          const evTk=tkk[evAd], depTk=tkk[depAd];
+          const evKart=evTk&&evTk.ev_ort!=null?evTk.ev_ort:null;
+          const depKart=depTk&&depTk.dep_ort!=null?depTk.dep_ort:null;
+          if(evKart!=null&&depKart!=null){
+            const macKart=(evKart+depKart)/2;
+            const farkKart=macKart-ligKart, yuzKart=ligKart>0?(farkKart/ligKart*100):0;
+            let sinifKt, baslikKt;
+            if(yuzKart>=10){sinifKt='hot';baslikKt='Above the league average';}
+            else if(yuzKart<=-10){sinifKt='cold';baslikKt='Below the league average';}
+            else{sinifKt='';baslikKt='Around the league average';}
+            html+=`<div class="tgol"><div class="th">CARD RECORD</div>
+              <div class="tbaslik ${sinifKt}">${esc(baslikKt)}</div>
+              <div class="ts"><b>${esc(ilkKelime(evAd))}</b> home <b>${evKart}</b> · <b>${esc(ilkKelime(depAd))}</b> away <b>${depKart}</b> · league <b>${ligKart}</b> cards</div></div>`;
           }
         }
       }catch(e){}
