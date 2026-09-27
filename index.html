@@ -4,6 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Brier — the record, not the tip</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0E7C6B">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Brier">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -353,7 +360,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A68</div>
+      <div class="by">brier · by BT · build A70 (PWA)</div>
     </footer>
   </div>
 
@@ -379,7 +386,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A68</div>
+      <div class="by">brier · by BT · build A70 (PWA)</div>
     </footer>
   </div>
 </div>
@@ -1343,7 +1350,7 @@ async function showDetail(i){
   html+=fiyatSatiri(depAd,'away',best.a,(m.p||{}).a);
   const diger=digerleri(evAd,ilkKelime(evAd),best.h)+(m.sonuc3?digerleri('Draw','Draw',best.d):'')+digerleri(depAd,ilkKelime(depAd),best.a);
   if(diger)html+=`<details class="more"><summary>Other books</summary>${diger}</details>`;
-  if(m.tot_cizgi!=null&&!(m.tot&&m.tot.over))html+=`<div class="foot">Total line: ${m.tot_cizgi}. Best price per selection, whichever book holds it — no book is best at everything. "Market %" is the de-vigged consensus (sums to 100); "fair" is that consensus as a price — the gap between fair and the best price is the take.${ustCumle([best.h,best.d,best.a])} Ties at the best price are listed alphabetically, and the starting letter shifts one step each day — fairness by rotation, so no book owns the top spot.</div>`;
+  if(m.tot_cizgi!=null&&!(m.tot&&m.tot.over))html+=`<div class="foot">Total line: ${m.tot_cizgi}. Best price per selection, whichever book holds it. "Market %" = de-vigged consensus; "fair" = that as a price; the gap to the best price is the take.${ustCumle([best.h,best.d,best.a])} Ties listed alphabetically, rotating daily.</div>`;
   else html+=`<div class="foot">Best price per selection, whichever book holds it — no book is best at everything. "Market %" is the de-vigged consensus (sums to 100); "fair" is that consensus as a price — the gap between fair and the best price is the take.${ustCumle([best.h,best.d,best.a])} Ties at the best price are listed alphabetically, and the starting letter shifts one step each day — fairness by rotation, so no book owns the top spot.</div>`;
   if(!best.h&&!best.a&&!best.d){
     html=html.replace(/<div class="card"><div class="head"><span class="t">Best prices<\/span>[\s\S]*?<\/div>$/,'');
@@ -1728,7 +1735,13 @@ async function showDetail(i){
   }catch(e){}
 }
 
-boot();seritGuncelle();bolgeRozetGuncelle();
+boot();
+// PWA service worker
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  });
+}seritGuncelle();bolgeRozetGuncelle();
 </script>
 </body>
 </html>
