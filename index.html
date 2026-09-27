@@ -353,7 +353,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A66</div>
+      <div class="by">brier · by BT · build A67</div>
     </footer>
   </div>
 
@@ -379,7 +379,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A66</div>
+      <div class="by">brier · by BT · build A67</div>
     </footer>
   </div>
 </div>
@@ -1425,6 +1425,35 @@ async function showDetail(i){
             <div class="ts"><b>${esc(ilkKelime(evAd))}</b> home <b>${evO}</b> · <b>${esc(ilkKelime(depAd))}</b> away <b>${depO}</b> · league <b>${ligO}</b> · line ${tc.cizgi}</div></div>`;
         }
       }
+      // --- BASKETBALL BOX (ribaund/ucluk/asist - sadece basketbol, tek kart) ---
+      try{
+        const gkb=await golkarneGetir();
+        const lgb=ligBul(m.key);
+        const gb=gkb&&gkb[lgb]?gkb[lgb]:null;
+        if(gb&&gb.lig_ribaund_ort){
+          // ev takiminin ev ort + dep takiminin dep ort, her metrik icin
+          const satirlar=[];
+          const metrik=[['ribaund','rebounds','takim_ribaund','lig_ribaund_ort'],
+                        ['ucluk','threes','takim_ucluk','lig_ucluk_ort'],
+                        ['asist','assists','takim_asist','lig_asist_ort']];
+          for(const [mt,etiket,tkey,lkey] of metrik){
+            const tk=gb[tkey]||{}, ligM=gb[lkey];
+            if(ligM==null)continue;
+            const et=tk[evAd], dt=tk[depAd];
+            const ev=et&&et.ev_ort!=null?et.ev_ort:null;
+            const dp=dt&&dt.dep_ort!=null?dt.dep_ort:null;
+            if(ev!=null&&dp!=null){
+              const macM=(ev+dp)/2, fark=macM-ligM, yuz=ligM>0?(fark/ligM*100):0;
+              const renk=yuz>=8?'kartArti':(yuz<=-8?'kartEksi':'');
+              satirlar.push(`<span class="${renk}"><b>${esc(ilkKelime(evAd))}</b> ${ev} · <b>${esc(ilkKelime(depAd))}</b> ${dp}</span> ${etiket} <span style="color:var(--grey)">(lig ${ligM})</span>`);
+            }
+          }
+          if(satirlar.length){
+            html+=`<div class="tgol"><div class="th">BOX SCORE · PER GAME</div>
+              <div class="ts" style="line-height:1.9">${satirlar.join('<br>')}</div></div>`;
+          }
+        }
+      }catch(e){}
       // --- CORNER RECORD: golkarne'den lig+takim korner (sadece futbol, market var) ---
       try{
         const gk=await golkarneGetir();
