@@ -21,6 +21,16 @@
    "dosya": "brier_hafiza_aleague.json"
   },
   {
+   "lig": "allsven",
+   "mac": 1536,
+   "cift": 179,
+   "kalibrasyon": {
+    "favori_ima_ort": 77.8,
+    "favori_tutma": 76.4
+   },
+   "dosya": "brier_hafiza_allsven.json"
+  },
+  {
    "lig": "arjantin",
    "mac": 896,
    "cift": 409,
@@ -371,11 +381,11 @@
   },
   {
    "lig": "nba",
-   "mac": 2638,
+   "mac": 3944,
    "cift": 435,
    "kalibrasyon": {
-    "favori_ima_ort": 68.5,
-    "favori_tutma": 69.0
+    "favori_ima_ort": 69.6,
+    "favori_tutma": 69.8
    },
    "dosya": "brier_hafiza_nba.json"
   },
