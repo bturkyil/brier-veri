@@ -360,7 +360,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A70 (PWA)</div>
+      <div class="by">brier · by BT · build A72 (PWA)</div>
     </footer>
   </div>
 
@@ -386,7 +386,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A70 (PWA)</div>
+      <div class="by">brier · by BT · build A72 (PWA)</div>
     </footer>
   </div>
 </div>
@@ -600,7 +600,7 @@ function cekmeceCiz(){
   let h='<button class="cek-grup" onclick="showLedger()">The Ledger<span style="float:right;color:var(--grey)">›</span></button>';
   gAd.forEach((g,gi)=>{
     const acik=cekGrup===g;
-    h+=`<button class="cek-grup" onclick="cekGrupSec(${gi})">${esc(g)}<span style="float:right;color:var(--grey)">${acik?'▾':'▸'}</span></button>`;
+    h+=`<button class="cek-grup" onclick="cekGrupSec(${gi})">${esc(grupGoster(g))}<span style="float:right;color:var(--grey)">${acik?'▾':'▸'}</span></button>`;
     if(acik)gr[g].sort((a,b)=>a[0].localeCompare(b[0])).forEach(([ad,n])=>{
       const li=window._cekL.length;window._cekL.push(ad);
       const ldk=(LIVE.ligler[ad]||{}).key, lg=ldk?ligBul(ldk):null;
@@ -675,7 +675,7 @@ function renderSecimler(){
   const sp=gruplar();
   const ssel=document.getElementById('sporSel');
   if(ssel)ssel.innerHTML=sp.map(g=>
-    `<option value="${esc(g)}"${g===grup?' selected':''}>${g==='ALL'?'All sports':esc(g)} · ${say(g)}</option>`).join('');
+    `<option value="${esc(g)}"${g===grup?' selected':''}>${g==='ALL'?'All sports':esc(grupGoster(g))} · ${say(g)}</option>`).join('');
   const bas=document.getElementById('gunBaslik');
   if(bas)bas.textContent=gunSec?gunEtiket(gunSec).toUpperCase():'TODAY';
   const td=document.getElementById('today');
@@ -697,6 +697,18 @@ function movTgl(){movlens=!movlens;const b=document.getElementById('movlens');if
 async function bulguTgl(){bulens=!bulens;const b=document.getElementById('bulens');if(b)b.classList.toggle('on',bulens);
   if(bulens&&!INSIGHT)await insightGetir();renderList();}
 function splitTgl(){splens=!splens;const b=document.getElementById('splens');if(b)b.classList.toggle('on',splens);renderList();}
+function grupGoster(g){
+  // The Odds API "Soccer" der. ABD/Kanada kullanicisi "soccer" der, dunyanin geri kalani "football".
+  // Kullanicinin diline gore goster (urun kullanicinin).
+  if(g==='Soccer'){
+    const dil=(navigator.language||navigator.userLanguage||'en').toLowerCase();
+    const tz=(Intl.DateTimeFormat().resolvedOptions().timeZone||'').toLowerCase();
+    // ABD/Kanada: en-US, en-CA, ya da Amerika saat dilimi -> soccer
+    const abd = dil==='en-us' || dil==='en-ca' || /america\/(new_york|chicago|denver|los_angeles|phoenix|anchorage|toronto|detroit)/.test(tz);
+    return abd ? 'Soccer' : 'Football';
+  }
+  return g;
+}
 function gruplar(){
   const s=new Set();
   Object.values(LIVE.ligler||{}).forEach(l=>{
