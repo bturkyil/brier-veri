@@ -219,6 +219,16 @@
    "dosya": "brier_hafiza_eredivisie.json"
   },
   {
+   "lig": "euro",
+   "mac": 44,
+   "cift": 44,
+   "kalibrasyon": {
+    "favori_ima_ort": 56.8,
+    "favori_tutma": 59.1
+   },
+   "dosya": "brier_hafiza_euro.json"
+  },
+  {
    "lig": "euroleague",
    "mac": 1498,
    "cift": 283,
@@ -378,6 +388,16 @@
     "favori_tutma": 47.8
    },
    "dosya": "brier_hafiza_mls.json"
+  },
+  {
+   "lig": "nationsleague",
+   "mac": 257,
+   "cift": 154,
+   "kalibrasyon": {
+    "favori_ima_ort": 60.5,
+    "favori_tutma": 66.1
+   },
+   "dosya": "brier_hafiza_nationsleague.json"
   },
   {
    "lig": "nba",
@@ -620,6 +640,16 @@
     "favori_tutma": 70.2
    },
    "dosya": "brier_hafiza_wnba.json"
+  },
+  {
+   "lig": "worldcup",
+   "mac": 64,
+   "cift": 63,
+   "kalibrasyon": {
+    "favori_ima_ort": 63.1,
+    "favori_tutma": 64.1
+   },
+   "dosya": "brier_hafiza_worldcup.json"
   },
   {
    "lig": "yunanistan",
