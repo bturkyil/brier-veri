@@ -583,11 +583,11 @@
   },
   {
    "lig": "tenis",
-   "mac": 5054,
-   "cift": 1050,
+   "mac": 4779,
+   "cift": 3143,
    "kalibrasyon": {
     "favori_ima_ort": 72.3,
-    "favori_tutma": 73.3
+    "favori_tutma": 73.9
    },
    "dosya": "brier_hafiza_tenis.json"
   },
