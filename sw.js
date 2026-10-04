@@ -3,7 +3,7 @@
 // live data (bugun.json, dun.json, memory JSONs) is always network-first so
 // the terminal never shows stale prices — falls back to last cache only if offline.
 
-const SURUM = 'brier-v1';
+const SURUM = 'brier-v2';
 const KABUK = [
   './',
   './index.html',
@@ -33,7 +33,9 @@ self.addEventListener('activate', (e) => {
 //  - everything else (shell, fonts) → cache-first, then network
 self.addEventListener('fetch', (e) => {
   const url = e.request.url;
-  const canliVeri = /bugun\.json|dun\.json|brier_.*\.json|\.up\.railway\.app/.test(url);
+  // index.html + kok de network-first (her acilista taze build) + canli veri
+  const kabukTaze = /\/index\.html$|\/$/.test(new URL(url).pathname);
+  const canliVeri = kabukTaze || /bugun\.json|dun\.json|brier_.*\.json|\.up\.railway\.app/.test(url);
 
   if (canliVeri) {
     // network-first: always try live, cache only as offline fallback
