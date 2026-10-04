@@ -360,7 +360,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A72 (PWA)</div>
+      <div class="by">brier · by BT · build A73 (PWA)</div>
     </footer>
   </div>
 
@@ -386,7 +386,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A72 (PWA)</div>
+      <div class="by">brier · by BT · build A73 (PWA)</div>
     </footer>
   </div>
 </div>
@@ -1469,6 +1469,34 @@ async function showDetail(i){
           }
           if(satirlar.length){
             html+=`<div class="tgol"><div class="th">BOX SCORE · PER GAME</div>
+              <div class="ts" style="line-height:1.9">${satirlar.join('<br>')}</div></div>`;
+          }
+        }
+      }catch(e){}
+      // --- NFL RECORD: yards/first downs/passing (sadece NFL, en buyuk sharp) ---
+      try{
+        const gkn=await golkarneGetir();
+        const lgn=ligBul(m.key);
+        const gn=gkn&&gkn[lgn]?gkn[lgn]:null;
+        if(gn&&gn.lig_yards_ort){
+          const satirlar=[];
+          const metrik=[['yards','total yards','takim_yards','lig_yards_ort'],
+                        ['first_downs','first downs','takim_first_downs','lig_first_downs_ort'],
+                        ['passing_yards','passing yds','takim_passing_yards','lig_passing_yards_ort']];
+          for(const [mt,etiket,tkey,lkey] of metrik){
+            const tk=gn[tkey]||{}, ligM=gn[lkey];
+            if(ligM==null)continue;
+            const et=tk[evAd], dt=tk[depAd];
+            const ev=et&&et.ev_ort!=null?et.ev_ort:null;
+            const dp=dt&&dt.dep_ort!=null?dt.dep_ort:null;
+            if(ev!=null&&dp!=null){
+              const macM=(ev+dp)/2, fark=macM-ligM, yuz=ligM>0?(fark/ligM*100):0;
+              const renk=yuz>=8?'kartArti':(yuz<=-8?'kartEksi':'');
+              satirlar.push(`<span class="${renk}"><b>${esc(ilkKelime(evAd))}</b> ${ev} · <b>${esc(ilkKelime(depAd))}</b> ${dp}</span> ${etiket} <span style="color:var(--grey)">(league ${ligM})</span>`);
+            }
+          }
+          if(satirlar.length){
+            html+=`<div class="tgol"><div class="th">TEAM RECORD · PER GAME</div>
               <div class="ts" style="line-height:1.9">${satirlar.join('<br>')}</div></div>`;
           }
         }
