@@ -360,7 +360,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A79 (PWA)</div>
+      <div class="by">brier · by BT · build A80 (PWA)</div>
     </footer>
   </div>
 
@@ -386,7 +386,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A79 (PWA)</div>
+      <div class="by">brier · by BT · build A80 (PWA)</div>
     </footer>
   </div>
 </div>
@@ -677,6 +677,13 @@ function mapTeamNameToGkarne(workerName,gkarneTeams){
     return words.some(w=>cw.some(g=>g===w));
   });
   return m||workerName;
+}
+// RECORD kartlari icin: takim objesini normalize ederek bul
+function tkGet(tk, ad){
+  if(!tk||!ad)return undefined;
+  if(tk[ad])return tk[ad];  // once direkt (hizli)
+  const g=mapTeamNameToGkarne(ad, Object.keys(tk));
+  return tk[g];
 }
 
 async function injectBelgiumData(){
@@ -1557,7 +1564,7 @@ async function showDetail(i){
           for(const [mt,etiket,tkey,lkey] of metrik){
             const tk=gb[tkey]||{}, ligM=gb[lkey];
             if(ligM==null)continue;
-            const et=tk[evAd], dt=tk[depAd];
+            const et=tkGet(tk,evAd), dt=tkGet(tk,depAd);
             const ev=et&&et.ev_ort!=null?et.ev_ort:null;
             const dp=dt&&dt.dep_ort!=null?dt.dep_ort:null;
             if(ev!=null&&dp!=null){
@@ -1568,7 +1575,7 @@ async function showDetail(i){
           }
           if(satirlar.length){
             const rk=gb.takim_ribaund||{};
-            const ins=recordInsight(evAd,depAd,(rk[evAd]||{}).ev_ort,(rk[depAd]||{}).dep_ort,gb.lig_ribaund_ort,'rebound');
+            const ins=recordInsight(evAd,depAd,(tkGet(rk,evAd)||{}).ev_ort,(tkGet(rk,depAd)||{}).dep_ort,gb.lig_ribaund_ort,'rebound');
             html+=`<div class="tgol"><div class="th">BOX SCORE · PER GAME</div>
               <div class="ts" style="line-height:1.9">${satirlar.join('<br>')}</div>${ins}</div>`;
           }
@@ -1587,7 +1594,7 @@ async function showDetail(i){
           for(const [mt,etiket,tkey,lkey] of metrik){
             const tk=gn[tkey]||{}, ligM=gn[lkey];
             if(ligM==null)continue;
-            const et=tk[evAd], dt=tk[depAd];
+            const et=tkGet(tk,evAd), dt=tkGet(tk,depAd);
             const ev=et&&et.ev_ort!=null?et.ev_ort:null;
             const dp=dt&&dt.dep_ort!=null?dt.dep_ort:null;
             if(ev!=null&&dp!=null){
@@ -1598,7 +1605,7 @@ async function showDetail(i){
           }
           if(satirlar.length){
             const yk=gn.takim_yards||{};
-            const ins=recordInsight(evAd,depAd,(yk[evAd]||{}).ev_ort,(yk[depAd]||{}).dep_ort,gn.lig_yards_ort,'yards');
+            const ins=recordInsight(evAd,depAd,(tkGet(yk,evAd)||{}).ev_ort,(tkGet(yk,depAd)||{}).dep_ort,gn.lig_yards_ort,'yards');
             html+=`<div class="tgol"><div class="th">TEAM RECORD · PER GAME</div>
               <div class="ts" style="line-height:1.9">${satirlar.join('<br>')}</div>${ins}</div>`;
           }
@@ -1618,7 +1625,7 @@ async function showDetail(i){
           for(const [mt,etiket,tkey,lkey] of metrik){
             const tk=gm[tkey]||{}, ligM=gm[lkey];
             if(ligM==null)continue;
-            const et=tk[evAd], dt=tk[depAd];
+            const et=tkGet(tk,evAd), dt=tkGet(tk,depAd);
             const ev=et&&et.ev_ort!=null?et.ev_ort:null;
             const dp=dt&&dt.dep_ort!=null?dt.dep_ort:null;
             if(ev!=null&&dp!=null){
@@ -1630,7 +1637,7 @@ async function showDetail(i){
           }
           if(satirlar.length){
             const hk=gm.takim_hits||{};
-            const ins=recordInsight(evAd,depAd,(hk[evAd]||{}).ev_ort,(hk[depAd]||{}).dep_ort,gm.lig_hits_ort,'hits');
+            const ins=recordInsight(evAd,depAd,(tkGet(hk,evAd)||{}).ev_ort,(tkGet(hk,depAd)||{}).dep_ort,gm.lig_hits_ort,'hits');
             html+=`<div class="tgol"><div class="th">TEAM RECORD · PER GAME</div>
               <div class="ts" style="line-height:1.9">${satirlar.join('<br>')}</div>${ins}</div>`;
           }
@@ -1643,7 +1650,7 @@ async function showDetail(i){
         const gh=gkh&&gkh[lgh]?gkh[lgh]:null;
         if(gh&&gh.lig_sog_ort){
           const tk=gh.takim_sog||{}, ligM=gh.lig_sog_ort;
-          const et=tk[evAd], dt=tk[depAd];
+          const et=tkGet(tk,evAd), dt=tkGet(tk,depAd);
           const ev=et&&et.ev_ort!=null?et.ev_ort:null;
           const dp=dt&&dt.dep_ort!=null?dt.dep_ort:null;
           if(ev!=null&&dp!=null){
