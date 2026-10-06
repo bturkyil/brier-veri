@@ -360,7 +360,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A76 (PWA)</div>
+      <div class="by">brier · by BT · build A77 (PWA)</div>
     </footer>
   </div>
 
@@ -386,7 +386,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A76 (PWA)</div>
+      <div class="by">brier · by BT · build A77 (PWA)</div>
     </footer>
   </div>
 </div>
@@ -1280,7 +1280,7 @@ function ledTgl(slug){
 async function golkarneGetir(){
   if(GKARNE!==null)return GKARNE;
   try{
-    const r=await fetch(MEMORY+'brier_golkarne.json?v=a61',{cache:'no-store'});
+    const r=await fetch(MEMORY+'brier_golkarne.json?v=a76',{cache:'no-store'});
     GKARNE=r.ok?await r.json():{};
   }catch(e){GKARNE={};}
   return GKARNE;
