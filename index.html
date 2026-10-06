@@ -360,7 +360,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A74 (PWA)</div>
+      <div class="by">brier · by BT · build A75 (PWA)</div>
     </footer>
   </div>
 
@@ -386,7 +386,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A74 (PWA)</div>
+      <div class="by">brier · by BT · build A75 (PWA)</div>
     </footer>
   </div>
 </div>
@@ -1468,8 +1468,10 @@ async function showDetail(i){
             }
           }
           if(satirlar.length){
+            const rk=gb.takim_ribaund||{};
+            const ins=recordInsight(evAd,depAd,(rk[evAd]||{}).ev_ort,(rk[depAd]||{}).dep_ort,gb.lig_ribaund_ort,'rebound');
             html+=`<div class="tgol"><div class="th">BOX SCORE · PER GAME</div>
-              <div class="ts" style="line-height:1.9">${satirlar.join('<br>')}</div></div>`;
+              <div class="ts" style="line-height:1.9">${satirlar.join('<br>')}</div>${ins}</div>`;
           }
         }
       }catch(e){}
@@ -1496,8 +1498,10 @@ async function showDetail(i){
             }
           }
           if(satirlar.length){
+            const yk=gn.takim_yards||{};
+            const ins=recordInsight(evAd,depAd,(yk[evAd]||{}).ev_ort,(yk[depAd]||{}).dep_ort,gn.lig_yards_ort,'yards');
             html+=`<div class="tgol"><div class="th">TEAM RECORD · PER GAME</div>
-              <div class="ts" style="line-height:1.9">${satirlar.join('<br>')}</div></div>`;
+              <div class="ts" style="line-height:1.9">${satirlar.join('<br>')}</div>${ins}</div>`;
           }
         }
       }catch(e){}
@@ -1526,8 +1530,10 @@ async function showDetail(i){
             }
           }
           if(satirlar.length){
+            const hk=gm.takim_hits||{};
+            const ins=recordInsight(evAd,depAd,(hk[evAd]||{}).ev_ort,(hk[depAd]||{}).dep_ort,gm.lig_hits_ort,'hits');
             html+=`<div class="tgol"><div class="th">TEAM RECORD · PER GAME</div>
-              <div class="ts" style="line-height:1.9">${satirlar.join('<br>')}</div></div>`;
+              <div class="ts" style="line-height:1.9">${satirlar.join('<br>')}</div>${ins}</div>`;
           }
         }
       }catch(e){}
@@ -1544,8 +1550,9 @@ async function showDetail(i){
           if(ev!=null&&dp!=null){
             const macM=(ev+dp)/2, fark=macM-ligM, yuz=ligM>0?(fark/ligM*100):0;
             const renk=yuz>=8?'kartArti':(yuz<=-8?'kartEksi':'');
+            const ins=recordInsight(evAd,depAd,ev,dp,ligM,'shot');
             html+=`<div class="tgol"><div class="th">TEAM RECORD · PER GAME</div>
-              <div class="ts" style="line-height:1.9"><span class="${renk}"><b>${esc(ilkKelime(evAd))}</b> ${ev} · <b>${esc(ilkKelime(depAd))}</b> ${dp}</span> shots on goal <span style="color:var(--grey)">(league ${ligM})</span></div></div>`;
+              <div class="ts" style="line-height:1.9"><span class="${renk}"><b>${esc(ilkKelime(evAd))}</b> ${ev} · <b>${esc(ilkKelime(depAd))}</b> ${dp}</span> shots on goal <span style="color:var(--grey)">(league ${ligM})</span></div>${ins}</div>`;
           }
         }
       }catch(e){}
