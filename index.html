@@ -656,6 +656,29 @@ function saat(t){const d=new Date(t);return d.toLocaleTimeString([],{hour:'2-dig
 function gun(t){const d=new Date(t);const bugun=new Date();
   return d.toDateString()===bugun.toDateString()?'':d.toLocaleDateString('en-GB',{weekday:'short'})+' · ';}
 
+// Team name normalization - matches worker names to GKARNE names
+function normalizeTeamName(name){
+  if(!name)return '';
+  return String(name).toLowerCase().replace(/[üö]/g,u=>u==='ü'?'u':'o').replace(/\s+/g,' ').trim();
+}
+function mapTeamNameToGkarne(workerName,gkarneTeams){
+  if(!gkarneTeams)return workerName;
+  const norm=normalizeTeamName(workerName);
+  // 1. Exact normalized match
+  let m=gkarneTeams.find(c=>normalizeTeamName(c)===norm);
+  if(m)return m;
+  // 2. Substring match
+  m=gkarneTeams.find(c=>normalizeTeamName(c).includes(norm)||norm.includes(normalizeTeamName(c)));
+  if(m)return m;
+  // 3. First word match (for "FC Augsburg" vs "Augsburg")
+  const words=norm.split(' ');
+  m=gkarneTeams.find(c=>{
+    const cw=normalizeTeamName(c).split(' ');
+    return words.some(w=>cw.some(g=>g===w));
+  });
+  return m||workerName;
+}
+
 async function injectBelgiumData(){
   // Fallback: If worker didn't return Belgium football, inject from golkarne
   if(!LIVE.ligler) LIVE.ligler={};
@@ -1638,7 +1661,10 @@ async function showDetail(i){
         const gkl=gk&&gk[lg]?gk[lg]:null;
         if(gkl&&gkl.lig_korner_ort&&gkl.takim_korner){
           const tk=gkl.takim_korner, ligK=gkl.lig_korner_ort;
-          const evTk=tk[evAd], depTk=tk[depAd];
+          const gkTeams=Object.keys(tk);
+          const evAdMapped=mapTeamNameToGkarne(evAd,gkTeams);
+          const depAdMapped=mapTeamNameToGkarne(depAd,gkTeams);
+          const evTk=tk[evAdMapped], depTk=tk[depAdMapped];
           const evK=evTk&&evTk.ev_ort!=null?evTk.ev_ort:null;
           const depK=depTk&&depTk.dep_ort!=null?depTk.dep_ort:null;
           if(evK!=null&&depK!=null){
@@ -1661,7 +1687,10 @@ async function showDetail(i){
         const gkl=gk&&gk[lg]?gk[lg]:null;
         if(gkl&&gkl.lig_kart_ort&&gkl.takim_kart){
           const tkk=gkl.takim_kart, ligKart=gkl.lig_kart_ort;
-          const evTk=tkk[evAd], depTk=tkk[depAd];
+          const gkTeams=Object.keys(tkk);
+          const evAdMapped=mapTeamNameToGkarne(evAd,gkTeams);
+          const depAdMapped=mapTeamNameToGkarne(depAd,gkTeams);
+          const evTk=tkk[evAdMapped], depTk=tkk[depAdMapped];
           const evKart=evTk&&evTk.ev_ort!=null?evTk.ev_ort:null;
           const depKart=depTk&&depTk.dep_ort!=null?depTk.dep_ort:null;
           if(evKart!=null&&depKart!=null){
