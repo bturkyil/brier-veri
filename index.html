@@ -360,7 +360,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A75 (PWA)</div>
+      <div class="by">brier · by BT · build A76 (PWA)</div>
     </footer>
   </div>
 
@@ -386,7 +386,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A75 (PWA)</div>
+      <div class="by">brier · by BT · build A76 (PWA)</div>
     </footer>
   </div>
 </div>
@@ -423,6 +423,41 @@ const LIG_ESLE = {
   soccer_ireland_premier_division:'ireland', soccer_germany_liga3:'liga3',
 };
 function ligBul(k){return LIG_ESLE[k]||(String(k).indexOf('tennis_')===0?'tenis':null);}
+
+function recordInsight(evAd, depAd, evVal, depVal, ligVal, tur){
+  if(evVal==null||depVal==null||ligVal==null)return '';
+  const e=ilkKelime(evAd), d=ilkKelime(depAd);
+  const evUst=evVal>ligVal, depUst=depVal>ligVal;
+  let msg='';
+  if(evUst&&depUst){
+    if(tur==='card')msg='Both run hot — a card-heavy pairing.';
+    else if(tur==='corner')msg='Both above the line — a corner-heavy matchup.';
+    else if(tur==='rebound')msg='Both crash the glass — rebounds pile up here.';
+    else if(tur==='shot')msg='Both fire often — a high-volume game.';
+    else if(tur==='hits')msg='Both bats are live — hits should come.';
+    else if(tur==='yards')msg='Both move the ball — a high-yardage game.';
+    else msg='Both sit above the league line.';
+  } else if(!evUst&&!depUst){
+    if(tur==='card')msg='A clean pairing — cards run low.';
+    else if(tur==='corner')msg='Both below the line — corners stay scarce.';
+    else if(tur==='rebound')msg='Neither dominates the glass.';
+    else if(tur==='shot')msg='Both are shot-shy — a low-volume game.';
+    else if(tur==='hits')msg='Both offences run quiet.';
+    else if(tur==='yards')msg='Both grind it out — low yardage.';
+    else msg='Both sit below the league line.';
+  } else {
+    const lider = evUst?e:d;
+    if(tur==='card')msg=lider+' plays it rougher.';
+    else if(tur==='corner')msg=lider+' wins the corner battle on paper.';
+    else if(tur==='rebound')msg=lider+' controls the glass.';
+    else if(tur==='shot')msg=lider+' drives the shot count.';
+    else if(tur==='hits')msg=lider+' has the livelier bats.';
+    else if(tur==='yards')msg=lider+' moves the ball better.';
+    else if(tur==='era')msg=lider+' shuts it down better.';
+    else msg=lider+' leads here.';
+  }
+  return '<div style="color:var(--grey);font-size:.82em;margin-top:4px">↑ '+msg+'</div>';
+}
 
 let ARAMA='';
 let LIVE=null, INDEX=null, HAFIZA={}, GKARNE=null, grup='ALL', ligSec=null, gunSec=null, mercek=false, splens=false, bulens=false, movlens=false, tumGun=false, cekGrup=null;
