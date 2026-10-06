@@ -360,7 +360,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A78debug (PWA)</div>
+      <div class="by">brier · by BT · build A79 (PWA)</div>
     </footer>
   </div>
 
@@ -386,7 +386,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A78debug (PWA)</div>
+      <div class="by">brier · by BT · build A79 (PWA)</div>
     </footer>
   </div>
 </div>
@@ -414,7 +414,7 @@ const LIG_ESLE = {
   soccer_uefa_champs_league:'ucl', soccer_uefa_europa_league:'uel',
   soccer_conmebol_copa_libertadores:'libertadores', soccer_conmebol_copa_sudamericana:'sudamericana',
   americanfootball_nfl:'nfl', americanfootball_ncaaf:'ncaaf',
-  basketball_nba:'nba', basketball_wnba:'wnba', basketball_ncaab:'ncaab',
+  basketball_nba:'nba', basketball_nba_preseason:'nba', basketball_wnba:'wnba', basketball_ncaab:'ncaab',
   baseball_mlb:'mlb', icehockey_nhl:'nhl', aussierules_afl:'afl',
   basketball_euroleague:'euroleague', americanfootball_cfl:'cfl',
   soccer_finland_veikkausliiga:'veikkausliiga', soccer_poland_ekstraklasa:'ekstraklasa',
@@ -1484,7 +1484,6 @@ async function showDetail(i){
         const gkb=await golkarneGetir();
         const lgb=ligBul(m.key);
         const gb=gkb&&gkb[lgb]?gkb[lgb]:null;
-        if(m.key&&m.key.indexOf('basketball')>=0){console.log('BOXDEBUG key=',m.key,'lgb=',lgb,'gb?',!!gb,'ribaund?',gb&&gb.lig_ribaund_ort,'evAd=',evAd,'depAd=',depAd,'ev match?',gb&&gb.takim_ribaund&&gb.takim_ribaund[evAd]);}
         if(gb&&gb.lig_ribaund_ort){
           // ev takiminin ev ort + dep takiminin dep ort, her metrik icin
           const satirlar=[];
