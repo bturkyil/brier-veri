@@ -678,11 +678,66 @@ function mapTeamNameToGkarne(workerName,gkarneTeams){
   });
   return m||workerName;
 }
-// RECORD kartlari icin: takim objesini normalize ederek bul
+// FUZZY MATCHING FONKSIYONLARI (85% similarity threshold)
+function levenshteinDistance(s1, s2) {
+  const costs = [];
+  for (let i = 0; i <= s1.length; i++) {
+    let lastValue = i;
+    for (let j = 0; j <= s2.length; j++) {
+      if (i === 0) {
+        costs[j] = j;
+      } else if (j > 0) {
+        let newValue = costs[j - 1];
+        if (s1.charAt(i - 1) !== s2.charAt(j - 1)) {
+          newValue = Math.min(Math.min(newValue, lastValue), costs[j]) + 1;
+        }
+        costs[j - 1] = lastValue;
+        lastValue = newValue;
+      }
+    }
+    if (i > 0) costs[s2.length] = lastValue;
+  }
+  return costs[s2.length];
+}
+
+function calculateTeamSimilarity(team1, team2) {
+  const norm1 = normalizeTeamName(team1);
+  const norm2 = normalizeTeamName(team2);
+  if (norm1 === norm2) return 100;
+  if (norm1.length === 0 || norm2.length === 0) return 0;
+  const distance = levenshteinDistance(norm1, norm2);
+  const maxLen = Math.max(norm1.length, norm2.length);
+  return Math.round(((maxLen - distance) / maxLen) * 100);
+}
+
+function findBestTeamMatchFuzzy(workerTeam, gkarneTeams, threshold = 85) {
+  let bestMatch = null;
+  let bestSimilarity = threshold - 1;
+  for (const gkarneTeam of gkarneTeams) {
+    const similarity = calculateTeamSimilarity(workerTeam, gkarneTeam);
+    if (similarity > bestSimilarity) {
+      bestSimilarity = similarity;
+      bestMatch = { name: gkarneTeam, similarity };
+    }
+  }
+  return bestMatch;
+}
+
+// RECORD kartlari icin: takim objesini normalize ederek bul (fuzzy matching ile)
 function tkGet(tk, ad){
   if(!tk||!ad)return undefined;
   if(tk[ad])return tk[ad];  // once direkt (hizli)
-  const g=mapTeamNameToGkarne(ad, Object.keys(tk));
+
+  // Fuzzy matching with 85% threshold
+  const gkarneKeys = Object.keys(tk);
+  const fuzzyMatch = findBestTeamMatchFuzzy(ad, gkarneKeys, 85);
+  if(fuzzyMatch && fuzzyMatch.similarity >= 85){
+    console.log(`🔍 Fuzzy match: "${ad}" → "${fuzzyMatch.name}" (${fuzzyMatch.similarity}%)`);
+    return tk[fuzzyMatch.name];
+  }
+
+  // Fallback: Original normalization method
+  const g=mapTeamNameToGkarne(ad, gkarneKeys);
   return tk[g];
 }
 
