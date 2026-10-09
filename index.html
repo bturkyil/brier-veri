@@ -661,22 +661,57 @@ function normalizeTeamName(name){
   if(!name)return '';
   return String(name).toLowerCase().replace(/[üö]/g,u=>u==='ü'?'u':'o').replace(/\s+/g,' ').trim();
 }
+
+// Levenshtein distance for fuzzy matching
+function levenshteinDistance(a,b){
+  const matrix=[];
+  for(let i=0;i<=b.length;i++)matrix[i]=[i];
+  for(let j=0;j<=a.length;j++)matrix[0][j]=j;
+  for(let i=1;i<=b.length;i++){
+    for(let j=1;j<=a.length;j++){
+      if(b.charAt(i-1)===a.charAt(j-1)){
+        matrix[i][j]=matrix[i-1][j-1];
+      }else{
+        matrix[i][j]=Math.min(matrix[i-1][j-1]+1,matrix[i][j-1]+1,matrix[i-1][j]+1);
+      }
+    }
+  }
+  return matrix[b.length][a.length];
+}
+
+// Calculate similarity percentage (0-100)
+function calculateSimilarity(a,b){
+  const distance=levenshteinDistance(a,b);
+  const maxLen=Math.max(a.length,b.length);
+  return maxLen>0?((maxLen-distance)/maxLen)*100:0;
+}
+
 function mapTeamNameToGkarne(workerName,gkarneTeams){
   if(!gkarneTeams)return workerName;
   const norm=normalizeTeamName(workerName);
+
   // 1. Exact normalized match
   let m=gkarneTeams.find(c=>normalizeTeamName(c)===norm);
   if(m)return m;
+
   // 2. Substring match
   m=gkarneTeams.find(c=>normalizeTeamName(c).includes(norm)||norm.includes(normalizeTeamName(c)));
   if(m)return m;
-  // 3. First word match (for "FC Augsburg" vs "Augsburg")
-  const words=norm.split(' ');
-  m=gkarneTeams.find(c=>{
-    const cw=normalizeTeamName(c).split(' ');
-    return words.some(w=>cw.some(g=>g===w));
-  });
-  return m||workerName;
+
+  // 3. Fuzzy match with 80% similarity threshold
+  let bestMatch=null, bestScore=0;
+  for(const team of gkarneTeams){
+    const normTeam=normalizeTeamName(team);
+    const sim=calculateSimilarity(norm,normTeam);
+    if(sim>=80&&sim>bestScore){
+      bestScore=sim;
+      bestMatch=team;
+    }
+  }
+  if(bestMatch)return bestMatch;
+
+  // 4. No match found - return original name (will fail quietly in CORNER/CARD blocks)
+  return null;
 }
 // FUZZY MATCHING FONKSIYONLARI (85% similarity threshold)
 function levenshteinDistance(s1, s2) {
