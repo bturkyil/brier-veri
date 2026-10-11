@@ -305,5 +305,466 @@
         "hafiza": "Dender"
       }
     }
+  },
+  "nba": {
+    "Atlanta Hawks": {
+      "transfermarkt_id": "90",
+      "display_names": {
+        "en": "Atlanta Hawks",
+        "tr": "Atlanta Hawks",
+        "de": "Atlanta Hawks"
+      },
+      "aliases": [
+        "Atlanta Hawks",
+        "Hawks"
+      ],
+      "sources": {
+        "hafiza": "Atlanta Hawks"
+      }
+    },
+    "Boston Celtics": {
+      "transfermarkt_id": "82",
+      "display_names": {
+        "en": "Boston Celtics",
+        "tr": "Boston Celtics",
+        "de": "Boston Celtics"
+      },
+      "aliases": [
+        "Boston Celtics",
+        "Celtics"
+      ],
+      "sources": {
+        "hafiza": "Boston Celtics"
+      }
+    },
+    "Brooklyn Nets": {
+      "transfermarkt_id": "89",
+      "display_names": {
+        "en": "Brooklyn Nets",
+        "tr": "Brooklyn Nets",
+        "de": "Brooklyn Nets"
+      },
+      "aliases": [
+        "Brooklyn Nets",
+        "Nets"
+      ],
+      "sources": {
+        "hafiza": "Brooklyn Nets"
+      }
+    },
+    "Charlotte Hornets": {
+      "transfermarkt_id": "109",
+      "display_names": {
+        "en": "Charlotte Hornets",
+        "tr": "Charlotte Hornets",
+        "de": "Charlotte Hornets"
+      },
+      "aliases": [
+        "Charlotte Hornets",
+        "Hornets"
+      ],
+      "sources": {
+        "hafiza": "Charlotte Hornets"
+      }
+    },
+    "Chicago Bulls": {
+      "transfermarkt_id": "86",
+      "display_names": {
+        "en": "Chicago Bulls",
+        "tr": "Chicago Bulls",
+        "de": "Chicago Bulls"
+      },
+      "aliases": [
+        "Chicago Bulls",
+        "Bulls"
+      ],
+      "sources": {
+        "hafiza": "Chicago Bulls"
+      }
+    },
+    "Cleveland Cavaliers": {
+      "transfermarkt_id": "108",
+      "display_names": {
+        "en": "Cleveland Cavaliers",
+        "tr": "Cleveland Cavaliers",
+        "de": "Cleveland Cavaliers"
+      },
+      "aliases": [
+        "Cleveland Cavaliers",
+        "Cavaliers",
+        "Cavs"
+      ],
+      "sources": {
+        "hafiza": "Cleveland Cavaliers"
+      }
+    },
+    "Dallas Mavericks": {
+      "transfermarkt_id": "104",
+      "display_names": {
+        "en": "Dallas Mavericks",
+        "tr": "Dallas Mavericks",
+        "de": "Dallas Mavericks"
+      },
+      "aliases": [
+        "Dallas Mavericks",
+        "Mavericks",
+        "Mavs"
+      ],
+      "sources": {
+        "hafiza": "Dallas Mavericks"
+      }
+    },
+    "Denver Nuggets": {
+      "transfermarkt_id": "106",
+      "display_names": {
+        "en": "Denver Nuggets",
+        "tr": "Denver Nuggets",
+        "de": "Denver Nuggets"
+      },
+      "aliases": [
+        "Denver Nuggets",
+        "Nuggets"
+      ],
+      "sources": {
+        "hafiza": "Denver Nuggets"
+      }
+    },
+    "Detroit Pistons": {
+      "transfermarkt_id": "87",
+      "display_names": {
+        "en": "Detroit Pistons",
+        "tr": "Detroit Pistons",
+        "de": "Detroit Pistons"
+      },
+      "aliases": [
+        "Detroit Pistons",
+        "Pistons"
+      ],
+      "sources": {
+        "hafiza": "Detroit Pistons"
+      }
+    },
+    "Golden State Warriors": {
+      "transfermarkt_id": "100",
+      "display_names": {
+        "en": "Golden State Warriors",
+        "tr": "Golden State Warriors",
+        "de": "Golden State Warriors"
+      },
+      "aliases": [
+        "Golden State Warriors",
+        "Warriors",
+        "GSW"
+      ],
+      "sources": {
+        "hafiza": "Golden State Warriors"
+      }
+    },
+    "Houston Rockets": {
+      "transfermarkt_id": "102",
+      "display_names": {
+        "en": "Houston Rockets",
+        "tr": "Houston Rockets",
+        "de": "Houston Rockets"
+      },
+      "aliases": [
+        "Houston Rockets",
+        "Rockets"
+      ],
+      "sources": {
+        "hafiza": "Houston Rockets"
+      }
+    },
+    "Indiana Pacers": {
+      "transfermarkt_id": "110",
+      "display_names": {
+        "en": "Indiana Pacers",
+        "tr": "Indiana Pacers",
+        "de": "Indiana Pacers"
+      },
+      "aliases": [
+        "Indiana Pacers",
+        "Pacers"
+      ],
+      "sources": {
+        "hafiza": "Indiana Pacers"
+      }
+    },
+    "Los Angeles Clippers": {
+      "transfermarkt_id": "99",
+      "display_names": {
+        "en": "Los Angeles Clippers",
+        "tr": "Los Angeles Clippers",
+        "de": "Los Angeles Clippers"
+      },
+      "aliases": [
+        "Los Angeles Clippers",
+        "Clippers",
+        "LAC"
+      ],
+      "sources": {
+        "hafiza": "Los Angeles Clippers"
+      }
+    },
+    "Los Angeles Lakers": {
+      "transfermarkt_id": "91",
+      "display_names": {
+        "en": "Los Angeles Lakers",
+        "tr": "Los Angeles Lakers",
+        "de": "Los Angeles Lakers"
+      },
+      "aliases": [
+        "Los Angeles Lakers",
+        "Lakers",
+        "LAL"
+      ],
+      "sources": {
+        "hafiza": "Los Angeles Lakers"
+      }
+    },
+    "Memphis Grizzlies": {
+      "transfermarkt_id": "111",
+      "display_names": {
+        "en": "Memphis Grizzlies",
+        "tr": "Memphis Grizzlies",
+        "de": "Memphis Grizzlies"
+      },
+      "aliases": [
+        "Memphis Grizzlies",
+        "Grizzlies"
+      ],
+      "sources": {
+        "hafiza": "Memphis Grizzlies"
+      }
+    },
+    "Miami Heat": {
+      "transfermarkt_id": "95",
+      "display_names": {
+        "en": "Miami Heat",
+        "tr": "Miami Heat",
+        "de": "Miami Heat"
+      },
+      "aliases": [
+        "Miami Heat",
+        "Heat"
+      ],
+      "sources": {
+        "hafiza": "Miami Heat"
+      }
+    },
+    "Milwaukee Bucks": {
+      "transfermarkt_id": "83",
+      "display_names": {
+        "en": "Milwaukee Bucks",
+        "tr": "Milwaukee Bucks",
+        "de": "Milwaukee Bucks"
+      },
+      "aliases": [
+        "Milwaukee Bucks",
+        "Bucks"
+      ],
+      "sources": {
+        "hafiza": "Milwaukee Bucks"
+      }
+    },
+    "Minnesota Timberwolves": {
+      "transfermarkt_id": "107",
+      "display_names": {
+        "en": "Minnesota Timberwolves",
+        "tr": "Minnesota Timberwolves",
+        "de": "Minnesota Timberwolves"
+      },
+      "aliases": [
+        "Minnesota Timberwolves",
+        "Timberwolves",
+        "Wolves"
+      ],
+      "sources": {
+        "hafiza": "Minnesota Timberwolves"
+      }
+    },
+    "New Orleans Pelicans": {
+      "transfermarkt_id": "112",
+      "display_names": {
+        "en": "New Orleans Pelicans",
+        "tr": "New Orleans Pelicans",
+        "de": "New Orleans Pelicans"
+      },
+      "aliases": [
+        "New Orleans Pelicans",
+        "Pelicans"
+      ],
+      "sources": {
+        "hafiza": "New Orleans Pelicans"
+      }
+    },
+    "New York Knicks": {
+      "transfermarkt_id": "85",
+      "display_names": {
+        "en": "New York Knicks",
+        "tr": "New York Knicks",
+        "de": "New York Knicks"
+      },
+      "aliases": [
+        "New York Knicks",
+        "Knicks"
+      ],
+      "sources": {
+        "hafiza": "New York Knicks"
+      }
+    },
+    "Oklahoma City Thunder": {
+      "transfermarkt_id": "113",
+      "display_names": {
+        "en": "Oklahoma City Thunder",
+        "tr": "Oklahoma City Thunder",
+        "de": "Oklahoma City Thunder"
+      },
+      "aliases": [
+        "Oklahoma City Thunder",
+        "Thunder",
+        "OKC"
+      ],
+      "sources": {
+        "hafiza": "Oklahoma City Thunder"
+      }
+    },
+    "Orlando Magic": {
+      "transfermarkt_id": "96",
+      "display_names": {
+        "en": "Orlando Magic",
+        "tr": "Orlando Magic",
+        "de": "Orlando Magic"
+      },
+      "aliases": [
+        "Orlando Magic",
+        "Magic"
+      ],
+      "sources": {
+        "hafiza": "Orlando Magic"
+      }
+    },
+    "Philadelphia 76ers": {
+      "transfermarkt_id": "84",
+      "display_names": {
+        "en": "Philadelphia 76ers",
+        "tr": "Philadelphia 76ers",
+        "de": "Philadelphia 76ers"
+      },
+      "aliases": [
+        "Philadelphia 76ers",
+        "76ers",
+        "Sixers"
+      ],
+      "sources": {
+        "hafiza": "Philadelphia 76ers"
+      }
+    },
+    "Phoenix Suns": {
+      "transfermarkt_id": "101",
+      "display_names": {
+        "en": "Phoenix Suns",
+        "tr": "Phoenix Suns",
+        "de": "Phoenix Suns"
+      },
+      "aliases": [
+        "Phoenix Suns",
+        "Suns"
+      ],
+      "sources": {
+        "hafiza": "Phoenix Suns"
+      }
+    },
+    "Portland Trail Blazers": {
+      "transfermarkt_id": "103",
+      "display_names": {
+        "en": "Portland Trail Blazers",
+        "tr": "Portland Trail Blazers",
+        "de": "Portland Trail Blazers"
+      },
+      "aliases": [
+        "Portland Trail Blazers",
+        "Trail Blazers",
+        "Blazers"
+      ],
+      "sources": {
+        "hafiza": "Portland Trail Blazers"
+      }
+    },
+    "Sacramento Kings": {
+      "transfermarkt_id": "88",
+      "display_names": {
+        "en": "Sacramento Kings",
+        "tr": "Sacramento Kings",
+        "de": "Sacramento Kings"
+      },
+      "aliases": [
+        "Sacramento Kings",
+        "Kings"
+      ],
+      "sources": {
+        "hafiza": "Sacramento Kings"
+      }
+    },
+    "San Antonio Spurs": {
+      "transfermarkt_id": "98",
+      "display_names": {
+        "en": "San Antonio Spurs",
+        "tr": "San Antonio Spurs",
+        "de": "San Antonio Spurs"
+      },
+      "aliases": [
+        "San Antonio Spurs",
+        "Spurs"
+      ],
+      "sources": {
+        "hafiza": "San Antonio Spurs"
+      }
+    },
+    "Toronto Raptors": {
+      "transfermarkt_id": "114",
+      "display_names": {
+        "en": "Toronto Raptors",
+        "tr": "Toronto Raptors",
+        "de": "Toronto Raptors"
+      },
+      "aliases": [
+        "Toronto Raptors",
+        "Raptors"
+      ],
+      "sources": {
+        "hafiza": "Toronto Raptors"
+      }
+    },
+    "Utah Jazz": {
+      "transfermarkt_id": "105",
+      "display_names": {
+        "en": "Utah Jazz",
+        "tr": "Utah Jazz",
+        "de": "Utah Jazz"
+      },
+      "aliases": [
+        "Utah Jazz",
+        "Jazz"
+      ],
+      "sources": {
+        "hafiza": "Utah Jazz"
+      }
+    },
+    "Washington Wizards": {
+      "transfermarkt_id": "97",
+      "display_names": {
+        "en": "Washington Wizards",
+        "tr": "Washington Wizards",
+        "de": "Washington Wizards"
+      },
+      "aliases": [
+        "Washington Wizards",
+        "Wizards"
+      ],
+      "sources": {
+        "hafiza": "Washington Wizards"
+      }
+    }
   }
 }
