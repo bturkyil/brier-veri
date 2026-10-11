@@ -52,15 +52,9 @@ jobs:
       - name: Commit changes
         run: |
           git add betting_data/
-          git diff --cached --quiet || git commit -m "🎲 Update betting odds from OddsAPI
-
-Generated: $(date -u +'%Y-%m-%d %H:%M:%S UTC')
-Sport coverage: All active sports
-Markets: H2H, Spreads, Totals
-Regions: US, EU, UK
-Bookmakers: All available
-
-Co-Authored-By: Brier Odds Bot <bot@brier.dev>"
+          if ! git diff --cached --quiet; then
+            git commit -m "🎲 Update betting odds from OddsAPI - $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
+          fi
 
       - name: Push changes
         run: |
