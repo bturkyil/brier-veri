@@ -360,7 +360,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A80 (PWA)</div>
+      <div class="by">brier · by BT · build A81 (PWA)</div>
     </footer>
   </div>
 
@@ -386,7 +386,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A80 (PWA)</div>
+      <div class="by">brier · by BT · build A81 (PWA)</div>
     </footer>
   </div>
 </div>
@@ -1823,26 +1823,19 @@ async function showDetail(i){
         const gkl=gk&&gk[lg]?gk[lg]:null;
         if(gkl&&gkl.lig_korner_ort&&gkl.takim_korner){
           const tk=gkl.takim_korner, ligK=gkl.lig_korner_ort;
-
-          // Use master mapping to find correct team names
-          const evTeam=await findTeamByName(evAd, lg);
-          const depTeam=await findTeamByName(depAd, lg);
-
-          if(evTeam&&depTeam){
-            const evTk=tk[evTeam.golkarne_name], depTk=tk[depTeam.golkarne_name];
-            const evK=evTk&&evTk.ev_ort!=null?evTk.ev_ort:null;
-            const depK=depTk&&depTk.dep_ort!=null?depTk.dep_ort:null;
-            if(evK!=null&&depK!=null){
-              const macK=(evK+depK)/2;
-              const farkK=macK-ligK, yuzK=ligK>0?(farkK/ligK*100):0;
-              let sinifK, baslikK;
-              if(yuzK>=10){sinifK='hot';baslikK='Above the league average';}
-              else if(yuzK<=-10){sinifK='cold';baslikK='Below the league average';}
-              else{sinifK='';baslikK='Around the league average';}
-              html+=`<div class="tgol"><div class="th">CORNER RECORD</div>
-                <div class="tbaslik ${sinifK}">${esc(baslikK)}</div>
-                <div class="ts"><b>${esc(ilkKelime(evAd))}</b> home <b>${evK}</b> · <b>${esc(ilkKelime(depAd))}</b> away <b>${depK}</b> · league <b>${ligK}</b> corners</div></div>`;
-            }
+          const evTk=tkGet(tk,evAd), depTk=tkGet(tk,depAd);
+          const evK=evTk&&evTk.ev_ort!=null?evTk.ev_ort:null;
+          const depK=depTk&&depTk.dep_ort!=null?depTk.dep_ort:null;
+          if(evK!=null&&depK!=null){
+            const macK=(evK+depK)/2;
+            const farkK=macK-ligK, yuzK=ligK>0?(farkK/ligK*100):0;
+            let sinifK, baslikK;
+            if(yuzK>=10){sinifK='hot';baslikK='Above the league average';}
+            else if(yuzK<=-10){sinifK='cold';baslikK='Below the league average';}
+            else{sinifK='';baslikK='Around the league average';}
+            html+=`<div class="tgol"><div class="th">CORNER RECORD</div>
+              <div class="tbaslik ${sinifK}">${esc(baslikK)}</div>
+              <div class="ts"><b>${esc(ilkKelime(evAd))}</b> home <b>${evK}</b> · <b>${esc(ilkKelime(depAd))}</b> away <b>${depK}</b> · league <b>${ligK}</b> corners</div></div>`;
           }
         }
       }catch(e){
@@ -1855,26 +1848,19 @@ async function showDetail(i){
         const gkl=gk&&gk[lg]?gk[lg]:null;
         if(gkl&&gkl.lig_kart_ort&&gkl.takim_kart){
           const tkk=gkl.takim_kart, ligKart=gkl.lig_kart_ort;
-
-          // Use master mapping to find correct team names
-          const evTeam=await findTeamByName(evAd, lg);
-          const depTeam=await findTeamByName(depAd, lg);
-
-          if(evTeam&&depTeam){
-            const evTk=tkk[evTeam.golkarne_name], depTk=tkk[depTeam.golkarne_name];
-            const evKart=evTk&&evTk.ev_ort!=null?evTk.ev_ort:null;
-            const depKart=depTk&&depTk.dep_ort!=null?depTk.dep_ort:null;
-            if(evKart!=null&&depKart!=null){
-              const macKart=(evKart+depKart)/2;
-              const farkKart=macKart-ligKart, yuzKart=ligKart>0?(farkKart/ligKart*100):0;
-              let sinifKt, baslikKt;
-              if(yuzKart>=10){sinifKt='hot';baslikKt='Above the league average';}
-              else if(yuzKart<=-10){sinifKt='cold';baslikKt='Below the league average';}
-              else{sinifKt='';baslikKt='Around the league average';}
-              html+=`<div class="tgol"><div class="th">CARD RECORD</div>
-                <div class="tbaslik ${sinifKt}">${esc(baslikKt)}</div>
-                <div class="ts"><b>${esc(ilkKelime(evAd))}</b> home <b>${evKart}</b> · <b>${esc(ilkKelime(depAd))}</b> away <b>${depKart}</b> · league <b>${ligKart}</b> cards</div></div>`;
-            }
+          const evTk=tkGet(tkk,evAd), depTk=tkGet(tkk,depAd);
+          const evKart=evTk&&evTk.ev_ort!=null?evTk.ev_ort:null;
+          const depKart=depTk&&depTk.dep_ort!=null?depTk.dep_ort:null;
+          if(evKart!=null&&depKart!=null){
+            const macKart=(evKart+depKart)/2;
+            const farkKart=macKart-ligKart, yuzKart=ligKart>0?(farkKart/ligKart*100):0;
+            let sinifKt, baslikKt;
+            if(yuzKart>=10){sinifKt='hot';baslikKt='Above the league average';}
+            else if(yuzKart<=-10){sinifKt='cold';baslikKt='Below the league average';}
+            else{sinifKt='';baslikKt='Around the league average';}
+            html+=`<div class="tgol"><div class="th">CARD RECORD</div>
+              <div class="tbaslik ${sinifKt}">${esc(baslikKt)}</div>
+              <div class="ts"><b>${esc(ilkKelime(evAd))}</b> home <b>${evKart}</b> · <b>${esc(ilkKelime(depAd))}</b> away <b>${depKart}</b> · league <b>${ligKart}</b> cards</div></div>`;
           }
         }
       }catch(e){
@@ -2047,19 +2033,10 @@ async function showDetail(i){
       [sport, leagueForOdds] = mapping;
     }
 
-    // Maç verisini hazırla (takım adları ve saat ile eşleştirme için)
-    const matchData = {
-      id: m.id,
-      home: m.h,
-      away: m.a,
-      commenceTime: m.t ? new Date(m.t).toISOString() : null
-    };
-
-    if (sport && leagueForOdds && (m.id || (m.h && m.a))) {
-      // Maç ID'si veya takım adları + saat ile eşleştirmeyi dene
-      await component.render(sport, leagueForOdds, matchData, {home: m.h, away: m.a}, lig);
+    if (sport && leagueForOdds && m.id) {
+      await component.render(sport, leagueForOdds, m.id, {home: m.h, away: m.a}, lig);
     } else {
-      console.warn('[Betting] Insufficient data for odds:', {key, sport, leagueForOdds, matchId: m.id, home: m.h, away: m.a});
+      console.warn('[Betting] Insufficient data for odds:', {key, sport, leagueForOdds, matchId: m.id});
     }
   } catch(e) {
     console.warn('[Betting] Error loading odds:', e);
