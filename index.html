@@ -656,13 +656,73 @@ function saat(t){const d=new Date(t);return d.toLocaleTimeString([],{hour:'2-dig
 function gun(t){const d=new Date(t);const bugun=new Date();
   return d.toDateString()===bugun.toDateString()?'':d.toLocaleDateString('en-GB',{weekday:'short'})+' · ';}
 
+// ============================================================================
+// MASTER TEAM MAPPING SYSTEM - Wikidata IDs for universal team identification
+// ============================================================================
+
+let TEAM_MASTER_MAPPING = null;
+
+// Load master mapping on startup
+async function loadTeamMasterMapping(){
+  if(TEAM_MASTER_MAPPING) return TEAM_MASTER_MAPPING;
+  try{
+    const resp = await fetch('team_master_mapping.json');
+    if(!resp.ok) throw new Error('Mapping not found');
+    TEAM_MASTER_MAPPING = await resp.json();
+    console.log('✓ Team master mapping loaded');
+    return TEAM_MASTER_MAPPING;
+  }catch(e){
+    console.warn('⚠ Team master mapping not available:', e.message);
+    return null;
+  }
+}
+
+// Find team by any name (Worker API, Golkarne, or alias)
+async function findTeamByName(teamName, league = 'belcika'){
+  const mapping = await loadTeamMasterMapping();
+  if(!mapping || !mapping[league]) return null;
+
+  const normalized = normalizeTeamName(teamName);
+
+  // Try to find in league mapping
+  for(const [displayName, teamData] of Object.entries(mapping[league])){
+    // Check exact match in aliases
+    if(teamData.aliases){
+      for(const alias of teamData.aliases){
+        if(normalizeTeamName(alias) === normalized){
+          return {
+            wikidata_id: teamData.wikidata_id,
+            transfermarkt_id: teamData.transfermarkt_id,
+            display_name: displayName,
+            golkarne_name: teamData.sources.golkarne,
+            hafiza_name: teamData.sources.hafiza
+          };
+        }
+      }
+    }
+
+    // Check display name
+    if(normalizeTeamName(displayName) === normalized){
+      return {
+        wikidata_id: teamData.wikidata_id,
+        transfermarkt_id: teamData.transfermarkt_id,
+        display_name: displayName,
+        golkarne_name: teamData.sources.golkarne,
+        hafiza_name: teamData.sources.hafiza
+      };
+    }
+  }
+
+  return null;
+}
+
 // Team name normalization - matches worker names to GKARNE names
 function normalizeTeamName(name){
   if(!name)return '';
   return String(name).toLowerCase().replace(/[üö]/g,u=>u==='ü'?'u':'o').replace(/\s+/g,' ').trim();
 }
 
-// Levenshtein distance for fuzzy matching
+// Levenshtein distance for fuzzy matching (fallback only)
 function levenshteinDistance(a,b){
   const matrix=[];
   for(let i=0;i<=b.length;i++)matrix[i]=[i];
@@ -834,6 +894,10 @@ async function boot(){
     const r=await fetch(MEMORY+'brier_hafiza_INDEX.json',{cache:'no-store'});
     if(r.ok) INDEX=await r.json();
   }catch(e){ INDEX=null; }
+
+  // Load master team mapping at startup
+  await loadTeamMasterMapping();
+
   await injectBelgiumData();
   renderList();
   manifestoAc();
@@ -1752,58 +1816,70 @@ async function showDetail(i){
           }
         }
       }catch(e){}
-      // --- CORNER RECORD: golkarne'den lig+takim korner (sadece futbol, market var) ---
+      // --- CORNER RECORD: golkarne'den lig+takim korner (sadece futbol, master mapping ile) ---
       try{
         const gk=await golkarneGetir();
         const lg=ligBul(m.key);
         const gkl=gk&&gk[lg]?gk[lg]:null;
         if(gkl&&gkl.lig_korner_ort&&gkl.takim_korner){
           const tk=gkl.takim_korner, ligK=gkl.lig_korner_ort;
-          const gkTeams=Object.keys(tk);
-          const evAdMapped=mapTeamNameToGkarne(evAd,gkTeams);
-          const depAdMapped=mapTeamNameToGkarne(depAd,gkTeams);
-          const evTk=tk[evAdMapped], depTk=tk[depAdMapped];
-          const evK=evTk&&evTk.ev_ort!=null?evTk.ev_ort:null;
-          const depK=depTk&&depTk.dep_ort!=null?depTk.dep_ort:null;
-          if(evK!=null&&depK!=null){
-            const macK=(evK+depK)/2;
-            const farkK=macK-ligK, yuzK=ligK>0?(farkK/ligK*100):0;
-            let sinifK, baslikK;
-            if(yuzK>=10){sinifK='hot';baslikK='Above the league average';}
-            else if(yuzK<=-10){sinifK='cold';baslikK='Below the league average';}
-            else{sinifK='';baslikK='Around the league average';}
-            html+=`<div class="tgol"><div class="th">CORNER RECORD</div>
-              <div class="tbaslik ${sinifK}">${esc(baslikK)}</div>
-              <div class="ts"><b>${esc(ilkKelime(evAd))}</b> home <b>${evK}</b> · <b>${esc(ilkKelime(depAd))}</b> away <b>${depK}</b> · league <b>${ligK}</b> corners</div></div>`;
+
+          // Use master mapping to find correct team names
+          const evTeam=await findTeamByName(evAd, lg);
+          const depTeam=await findTeamByName(depAd, lg);
+
+          if(evTeam&&depTeam){
+            const evTk=tk[evTeam.golkarne_name], depTk=tk[depTeam.golkarne_name];
+            const evK=evTk&&evTk.ev_ort!=null?evTk.ev_ort:null;
+            const depK=depTk&&depTk.dep_ort!=null?depTk.dep_ort:null;
+            if(evK!=null&&depK!=null){
+              const macK=(evK+depK)/2;
+              const farkK=macK-ligK, yuzK=ligK>0?(farkK/ligK*100):0;
+              let sinifK, baslikK;
+              if(yuzK>=10){sinifK='hot';baslikK='Above the league average';}
+              else if(yuzK<=-10){sinifK='cold';baslikK='Below the league average';}
+              else{sinifK='';baslikK='Around the league average';}
+              html+=`<div class="tgol"><div class="th">CORNER RECORD</div>
+                <div class="tbaslik ${sinifK}">${esc(baslikK)}</div>
+                <div class="ts"><b>${esc(ilkKelime(evAd))}</b> home <b>${evK}</b> · <b>${esc(ilkKelime(depAd))}</b> away <b>${depK}</b> · league <b>${ligK}</b> corners</div></div>`;
+            }
           }
         }
-      }catch(e){}
-      // --- CARD RECORD: golkarne'den lig+takim kart (sari+kirmizi, sadece futbol) ---
+      }catch(e){
+        console.log('CORNER RECORD error:', e.message);
+      }
+      // --- CARD RECORD: golkarne'den lig+takim kart (sari+kirmizi, sadece futbol, master mapping ile) ---
       try{
         const gk=await golkarneGetir();
         const lg=ligBul(m.key);
         const gkl=gk&&gk[lg]?gk[lg]:null;
         if(gkl&&gkl.lig_kart_ort&&gkl.takim_kart){
           const tkk=gkl.takim_kart, ligKart=gkl.lig_kart_ort;
-          const gkTeams=Object.keys(tkk);
-          const evAdMapped=mapTeamNameToGkarne(evAd,gkTeams);
-          const depAdMapped=mapTeamNameToGkarne(depAd,gkTeams);
-          const evTk=tkk[evAdMapped], depTk=tkk[depAdMapped];
-          const evKart=evTk&&evTk.ev_ort!=null?evTk.ev_ort:null;
-          const depKart=depTk&&depTk.dep_ort!=null?depTk.dep_ort:null;
-          if(evKart!=null&&depKart!=null){
-            const macKart=(evKart+depKart)/2;
-            const farkKart=macKart-ligKart, yuzKart=ligKart>0?(farkKart/ligKart*100):0;
-            let sinifKt, baslikKt;
-            if(yuzKart>=10){sinifKt='hot';baslikKt='Above the league average';}
-            else if(yuzKart<=-10){sinifKt='cold';baslikKt='Below the league average';}
-            else{sinifKt='';baslikKt='Around the league average';}
-            html+=`<div class="tgol"><div class="th">CARD RECORD</div>
-              <div class="tbaslik ${sinifKt}">${esc(baslikKt)}</div>
-              <div class="ts"><b>${esc(ilkKelime(evAd))}</b> home <b>${evKart}</b> · <b>${esc(ilkKelime(depAd))}</b> away <b>${depKart}</b> · league <b>${ligKart}</b> cards</div></div>`;
+
+          // Use master mapping to find correct team names
+          const evTeam=await findTeamByName(evAd, lg);
+          const depTeam=await findTeamByName(depAd, lg);
+
+          if(evTeam&&depTeam){
+            const evTk=tkk[evTeam.golkarne_name], depTk=tkk[depTeam.golkarne_name];
+            const evKart=evTk&&evTk.ev_ort!=null?evTk.ev_ort:null;
+            const depKart=depTk&&depTk.dep_ort!=null?depTk.dep_ort:null;
+            if(evKart!=null&&depKart!=null){
+              const macKart=(evKart+depKart)/2;
+              const farkKart=macKart-ligKart, yuzKart=ligKart>0?(farkKart/ligKart*100):0;
+              let sinifKt, baslikKt;
+              if(yuzKart>=10){sinifKt='hot';baslikKt='Above the league average';}
+              else if(yuzKart<=-10){sinifKt='cold';baslikKt='Below the league average';}
+              else{sinifKt='';baslikKt='Around the league average';}
+              html+=`<div class="tgol"><div class="th">CARD RECORD</div>
+                <div class="tbaslik ${sinifKt}">${esc(baslikKt)}</div>
+                <div class="ts"><b>${esc(ilkKelime(evAd))}</b> home <b>${evKart}</b> · <b>${esc(ilkKelime(depAd))}</b> away <b>${depKart}</b> · league <b>${ligKart}</b> cards</div></div>`;
+            }
           }
         }
-      }catch(e){}
+      }catch(e){
+        console.log('CARD RECORD error:', e.message);
+      }
       // --- PRICE RECORD: arsivdeki son 3 karsilasmada bu takimin ort. fiyatlanmasi vs bugunku canli ---
       if(Ht&&Ht.h2h&&m.p){
         const anah2=[String(evAd).toLowerCase(),String(depAd).toLowerCase()].sort().join('|');

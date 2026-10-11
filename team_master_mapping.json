@@ -1,0 +1,309 @@
+{
+  "belcika": {
+    "Club Brugge": {
+      "wikidata_id": "Q18749",
+      "transfermarkt_id": "549",
+      "display_names": {
+        "en": "Club Brugge",
+        "tr": "Club Brugge",
+        "de": "Club Brugge"
+      },
+      "aliases": [
+        "Club Brugge",
+        "Club Brugge KV"
+      ],
+      "sources": {
+        "golkarne": "Club Brugge KV",
+        "hafiza": "Club Brugge"
+      }
+    },
+    "Union Saint-Gilloise": {
+      "wikidata_id": "Q183612",
+      "transfermarkt_id": "629",
+      "display_names": {
+        "en": "Union Saint-Gilloise",
+        "tr": "Union Saint-Gilloise",
+        "de": "Union Saint-Gilloise"
+      },
+      "aliases": [
+        "Union Saint-Gilloise",
+        "Union St. Gilloise"
+      ],
+      "sources": {
+        "golkarne": "Union St. Gilloise",
+        "hafiza": "Union Saint-Gilloise"
+      }
+    },
+    "Anderlecht": {
+      "wikidata_id": "Q11854",
+      "transfermarkt_id": "223",
+      "display_names": {
+        "en": "Anderlecht",
+        "tr": "Anderlecht",
+        "de": "Anderlecht"
+      },
+      "aliases": [
+        "Anderlecht"
+      ],
+      "sources": {
+        "golkarne": "Anderlecht",
+        "hafiza": "Anderlecht"
+      }
+    },
+    "Standard Liege": {
+      "wikidata_id": "Q40612",
+      "transfermarkt_id": "318",
+      "display_names": {
+        "en": "Standard Liege",
+        "tr": "Standard Liege",
+        "de": "Standard Liege"
+      },
+      "aliases": [
+        "Standard Liege",
+        "Standard Liège"
+      ],
+      "sources": {
+        "golkarne": "Standard Liege",
+        "hafiza": "Standard Liege"
+      }
+    },
+    "Cercle Brugge": {
+      "wikidata_id": "Q18750",
+      "transfermarkt_id": "550",
+      "display_names": {
+        "en": "Cercle Brugge",
+        "tr": "Cercle Brugge",
+        "de": "Cercle Brugge"
+      },
+      "aliases": [
+        "Cercle Brugge",
+        "Cercle Brugge KSV"
+      ],
+      "sources": {
+        "golkarne": "Cercle Brugge",
+        "hafiza": "Cercle Brugge KSV"
+      }
+    },
+    "Royal Antwerp": {
+      "wikidata_id": "Q18760",
+      "transfermarkt_id": "560",
+      "display_names": {
+        "en": "Royal Antwerp",
+        "tr": "Royal Antwerp",
+        "de": "Royal Antwerp"
+      },
+      "aliases": [
+        "Royal Antwerp",
+        "Antwerp",
+        "Antwerp FC"
+      ],
+      "sources": {
+        "golkarne": "Antwerp",
+        "hafiza": "Royal Antwerp"
+      }
+    },
+    "KAA Gent": {
+      "wikidata_id": "Q53768",
+      "transfermarkt_id": "490",
+      "display_names": {
+        "en": "KAA Gent",
+        "tr": "KAA Gent",
+        "de": "KAA Gent"
+      },
+      "aliases": [
+        "Gent",
+        "KAA Gent"
+      ],
+      "sources": {
+        "golkarne": "Gent",
+        "hafiza": "Gent"
+      }
+    },
+    "Genk": {
+      "wikidata_id": "Q18752",
+      "transfermarkt_id": "552",
+      "display_names": {
+        "en": "Genk",
+        "tr": "Genk",
+        "de": "Genk"
+      },
+      "aliases": [
+        "Genk",
+        "K.R.C. Genk"
+      ],
+      "sources": {
+        "golkarne": "Genk",
+        "hafiza": "Genk"
+      }
+    },
+    "Sint-Truiden": {
+      "wikidata_id": "Q40547",
+      "transfermarkt_id": "578",
+      "display_names": {
+        "en": "Sint-Truiden",
+        "tr": "Sint-Truiden",
+        "de": "Sint-Truiden"
+      },
+      "aliases": [
+        "Sint Truiden",
+        "St. Truiden",
+        "Sint-Truiden"
+      ],
+      "sources": {
+        "golkarne": "St. Truiden",
+        "hafiza": "Sint Truiden"
+      }
+    },
+    "KV Kortrijk": {
+      "wikidata_id": "Q18753",
+      "transfermarkt_id": "553",
+      "display_names": {
+        "en": "KV Kortrijk",
+        "tr": "KV Kortrijk",
+        "de": "KV Kortrijk"
+      },
+      "aliases": [
+        "KV Kortrijk",
+        "Kortrijk"
+      ],
+      "sources": {
+        "golkarne": "Kortrijk",
+        "hafiza": "KV Kortrijk"
+      }
+    },
+    "Charleroi": {
+      "wikidata_id": "Q18755",
+      "transfermarkt_id": "555",
+      "display_names": {
+        "en": "Charleroi",
+        "tr": "Charleroi",
+        "de": "Charleroi"
+      },
+      "aliases": [
+        "Charleroi"
+      ],
+      "sources": {
+        "golkarne": "Charleroi",
+        "hafiza": "Charleroi"
+      }
+    },
+    "KV Mechelen": {
+      "wikidata_id": "Q18754",
+      "transfermarkt_id": "554",
+      "display_names": {
+        "en": "KV Mechelen",
+        "tr": "KV Mechelen",
+        "de": "KV Mechelen"
+      },
+      "aliases": [
+        "KV Mechelen"
+      ],
+      "sources": {
+        "golkarne": "KV Mechelen",
+        "hafiza": "KV Mechelen"
+      }
+    },
+    "Beerschot": {
+      "wikidata_id": "Q269066",
+      "transfermarkt_id": "563",
+      "display_names": {
+        "en": "Beerschot",
+        "tr": "Beerschot",
+        "de": "Beerschot"
+      },
+      "aliases": [
+        "Beerschot",
+        "Beerschot VA",
+        "Beerschot Wilrijk"
+      ],
+      "sources": {
+        "golkarne": "Beerschot VA",
+        "hafiza": "Beerschot Wilrijk"
+      }
+    },
+    "KVC Westerlo": {
+      "wikidata_id": "Q18756",
+      "transfermarkt_id": "556",
+      "display_names": {
+        "en": "KVC Westerlo",
+        "tr": "KVC Westerlo",
+        "de": "KVC Westerlo"
+      },
+      "aliases": [
+        "Westerlo",
+        "KVC Westerlo"
+      ],
+      "sources": {
+        "golkarne": "KVC Westerlo",
+        "hafiza": "Westerlo"
+      }
+    },
+    "RWD Molenbeek": {
+      "wikidata_id": "Q2739346",
+      "transfermarkt_id": "581",
+      "display_names": {
+        "en": "RWD Molenbeek",
+        "tr": "RWD Molenbeek",
+        "de": "RWD Molenbeek"
+      },
+      "aliases": [
+        "RWD Molenbeek",
+        "RWDM"
+      ],
+      "sources": {
+        "golkarne": "RWDM",
+        "hafiza": "RWD Molenbeek"
+      }
+    },
+    "AS Eupen": {
+      "wikidata_id": "Q312945",
+      "transfermarkt_id": "561",
+      "display_names": {
+        "en": "AS Eupen",
+        "tr": "AS Eupen",
+        "de": "AS Eupen"
+      },
+      "aliases": [
+        "Eupen",
+        "AS Eupen"
+      ],
+      "sources": {
+        "golkarne": "AS Eupen",
+        "hafiza": "Eupen"
+      }
+    },
+    "OH Leuven": {
+      "wikidata_id": "Q2739344",
+      "transfermarkt_id": "585",
+      "display_names": {
+        "en": "OH Leuven",
+        "tr": "OH Leuven",
+        "de": "OH Leuven"
+      },
+      "aliases": [
+        "Leuven",
+        "OH Leuven"
+      ],
+      "sources": {
+        "golkarne": "OH Leuven",
+        "hafiza": "Leuven"
+      }
+    },
+    "Dender": {
+      "wikidata_id": "Q2046220",
+      "transfermarkt_id": "14769",
+      "display_names": {
+        "en": "Dender",
+        "tr": "Dender",
+        "de": "Dender"
+      },
+      "aliases": [
+        "Dender"
+      ],
+      "sources": {
+        "golkarne": "Dender",
+        "hafiza": "Dender"
+      }
+    }
+  }
+}
