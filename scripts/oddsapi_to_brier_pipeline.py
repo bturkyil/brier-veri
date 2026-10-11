@@ -47,7 +47,16 @@ class OddsAPIClient:
             with urllib.request.urlopen(url) as response:
                 data = json.loads(response.read().decode())
                 self.session_count += 1
-                return data.get('events', [])
+
+                # Debug: log response type and first item
+                if isinstance(data, dict):
+                    return data.get('events', [])
+                elif isinstance(data, list):
+                    # API returns array directly
+                    return data
+                else:
+                    print(f"  ⚠️  Unexpected response type for {sport_key}: {type(data)}")
+                    return []
         except urllib.error.HTTPError as e:
             if e.code == 404:
                 print(f"Sport {sport_key} not found")
