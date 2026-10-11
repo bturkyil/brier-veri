@@ -1529,7 +1529,7 @@
   },
   "bundesliga": {
     "1. fc heidenheim": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "476",
       "display_names": {
         "en": "1. fc heidenheim",
         "tr": "1. fc heidenheim",
@@ -2275,7 +2275,7 @@
   },
   "eredivisie": {
     "Feyenoord": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "1",
       "display_names": {
         "en": "Feyenoord",
         "tr": "Feyenoord",
@@ -2289,7 +2289,7 @@
       }
     },
     "FC Volendam": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "1133",
       "display_names": {
         "en": "FC Volendam",
         "tr": "FC Volendam",
@@ -2303,7 +2303,7 @@
       }
     },
     "FC Emmen": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "1146",
       "display_names": {
         "en": "FC Emmen",
         "tr": "FC Emmen",
@@ -2317,7 +2317,7 @@
       }
     },
     "NAC Breda": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "1051",
       "display_names": {
         "en": "NAC Breda",
         "tr": "NAC Breda",
@@ -2331,7 +2331,7 @@
       }
     },
     "PSV Eindhoven": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "39",
       "display_names": {
         "en": "PSV Eindhoven",
         "tr": "PSV Eindhoven",
@@ -2345,7 +2345,7 @@
       }
     },
     "AZ Alkmaar": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "2",
       "display_names": {
         "en": "AZ Alkmaar",
         "tr": "AZ Alkmaar",
@@ -3669,7 +3669,7 @@
   },
   "mlb": {
     "Washington Nationals": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "1079",
       "display_names": {
         "en": "Washington Nationals",
         "tr": "Washington Nationals",
@@ -3683,7 +3683,7 @@
       }
     },
     "Baltimore Orioles": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "1074",
       "display_names": {
         "en": "Baltimore Orioles",
         "tr": "Baltimore Orioles",
@@ -3697,7 +3697,7 @@
       }
     },
     "Pittsburgh Pirates": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "356",
       "display_names": {
         "en": "Pittsburgh Pirates",
         "tr": "Pittsburgh Pirates",
@@ -3711,7 +3711,7 @@
       }
     },
     "New York Mets": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "364",
       "display_names": {
         "en": "New York Mets",
         "tr": "New York Mets",
@@ -3725,7 +3725,7 @@
       }
     },
     "New York Yankees": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "365",
       "display_names": {
         "en": "New York Yankees",
         "tr": "New York Yankees",
@@ -3739,7 +3739,7 @@
       }
     },
     "Chicago Cubs": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "335",
       "display_names": {
         "en": "Chicago Cubs",
         "tr": "Chicago Cubs",
@@ -3753,7 +3753,7 @@
       }
     },
     "Los Angeles Angels": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "346",
       "display_names": {
         "en": "Los Angeles Angels",
         "tr": "Los Angeles Angels",
@@ -3767,7 +3767,7 @@
       }
     },
     "Colorado Rockies": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "369",
       "display_names": {
         "en": "Colorado Rockies",
         "tr": "Colorado Rockies",
@@ -3781,7 +3781,7 @@
       }
     },
     "Miami Marlins": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "1075",
       "display_names": {
         "en": "Miami Marlins",
         "tr": "Miami Marlins",
@@ -3795,7 +3795,7 @@
       }
     },
     "Detroit Tigers": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "338",
       "display_names": {
         "en": "Detroit Tigers",
         "tr": "Detroit Tigers",
@@ -3809,7 +3809,7 @@
       }
     },
     "Minnesota Twins": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "344",
       "display_names": {
         "en": "Minnesota Twins",
         "tr": "Minnesota Twins",
@@ -3823,7 +3823,7 @@
       }
     },
     "San Diego Padres": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "357",
       "display_names": {
         "en": "San Diego Padres",
         "tr": "San Diego Padres",
@@ -3837,7 +3837,7 @@
       }
     },
     "Philadelphia Phillies": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "366",
       "display_names": {
         "en": "Philadelphia Phillies",
         "tr": "Philadelphia Phillies",
@@ -3851,7 +3851,7 @@
       }
     },
     "Houston Astros": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "340",
       "display_names": {
         "en": "Houston Astros",
         "tr": "Houston Astros",
@@ -3865,7 +3865,7 @@
       }
     },
     "Kansas City Royals": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "368",
       "display_names": {
         "en": "Kansas City Royals",
         "tr": "Kansas City Royals",
@@ -3879,7 +3879,7 @@
       }
     },
     "Milwaukee Brewers": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "341",
       "display_names": {
         "en": "Milwaukee Brewers",
         "tr": "Milwaukee Brewers",
@@ -3893,7 +3893,7 @@
       }
     },
     "Atlanta Braves": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "328",
       "display_names": {
         "en": "Atlanta Braves",
         "tr": "Atlanta Braves",
@@ -3907,7 +3907,7 @@
       }
     },
     "Arizona Diamondbacks": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "327",
       "display_names": {
         "en": "Arizona Diamondbacks",
         "tr": "Arizona Diamondbacks",
@@ -3921,7 +3921,7 @@
       }
     },
     "Toronto Blue Jays": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "1076",
       "display_names": {
         "en": "Toronto Blue Jays",
         "tr": "Toronto Blue Jays",
@@ -3935,7 +3935,7 @@
       }
     },
     "St. Louis Cardinals": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "358",
       "display_names": {
         "en": "St. Louis Cardinals",
         "tr": "St. Louis Cardinals",
@@ -3963,7 +3963,7 @@
       }
     },
     "Cincinnati Reds": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "337",
       "display_names": {
         "en": "Cincinnati Reds",
         "tr": "Cincinnati Reds",
@@ -3977,7 +3977,7 @@
       }
     },
     "Boston Red Sox": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "331",
       "display_names": {
         "en": "Boston Red Sox",
         "tr": "Boston Red Sox",
@@ -3991,7 +3991,7 @@
       }
     },
     "Texas Rangers": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "360",
       "display_names": {
         "en": "Texas Rangers",
         "tr": "Texas Rangers",
@@ -4005,7 +4005,7 @@
       }
     },
     "Los Angeles Dodgers": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "345",
       "display_names": {
         "en": "Los Angeles Dodgers",
         "tr": "Los Angeles Dodgers",
@@ -4019,7 +4019,7 @@
       }
     },
     "San Francisco Giants": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "359",
       "display_names": {
         "en": "San Francisco Giants",
         "tr": "San Francisco Giants",
@@ -4033,7 +4033,7 @@
       }
     },
     "Chicago White Sox": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "336",
       "display_names": {
         "en": "Chicago White Sox",
         "tr": "Chicago White Sox",
@@ -4047,7 +4047,7 @@
       }
     },
     "Tampa Bay Rays": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "1078",
       "display_names": {
         "en": "Tampa Bay Rays",
         "tr": "Tampa Bay Rays",
@@ -4061,7 +4061,7 @@
       }
     },
     "Seattle Mariners": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "360",
       "display_names": {
         "en": "Seattle Mariners",
         "tr": "Seattle Mariners",
@@ -4075,7 +4075,7 @@
       }
     },
     "Oakland Athletics": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "1077",
       "display_names": {
         "en": "Oakland Athletics",
         "tr": "Oakland Athletics",
@@ -4119,7 +4119,7 @@
       }
     },
     "Los Angeles FC": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "11",
       "display_names": {
         "en": "Los Angeles FC",
         "tr": "Los Angeles FC",
@@ -4133,7 +4133,7 @@
       }
     },
     "San Jose Earthquakes": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "2",
       "display_names": {
         "en": "San Jose Earthquakes",
         "tr": "San Jose Earthquakes",
@@ -4203,7 +4203,7 @@
       }
     },
     "Vancouver Whitecaps FC": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "5",
       "display_names": {
         "en": "Vancouver Whitecaps FC",
         "tr": "Vancouver Whitecaps FC",
@@ -4259,7 +4259,7 @@
       }
     },
     "Portland Timbers": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "4",
       "display_names": {
         "en": "Portland Timbers",
         "tr": "Portland Timbers",
@@ -4315,7 +4315,7 @@
       }
     },
     "Colorado Rapids": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "6",
       "display_names": {
         "en": "Colorado Rapids",
         "tr": "Colorado Rapids",
@@ -4385,7 +4385,7 @@
       }
     },
     "Real Salt Lake": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "10",
       "display_names": {
         "en": "Real Salt Lake",
         "tr": "Real Salt Lake",
@@ -4413,7 +4413,7 @@
       }
     },
     "FC Dallas": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "7",
       "display_names": {
         "en": "FC Dallas",
         "tr": "FC Dallas",
@@ -4469,7 +4469,7 @@
       }
     },
     "Houston Dynamo": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "8",
       "display_names": {
         "en": "Houston Dynamo",
         "tr": "Houston Dynamo",
@@ -4483,7 +4483,7 @@
       }
     },
     "Seattle Sounders FC": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "3",
       "display_names": {
         "en": "Seattle Sounders FC",
         "tr": "Seattle Sounders FC",
@@ -4511,7 +4511,7 @@
       }
     },
     "LA Galaxy": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "1",
       "display_names": {
         "en": "LA Galaxy",
         "tr": "LA Galaxy",
@@ -6993,7 +6993,7 @@
   },
   "nfl": {
     "Denver Broncos": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "583",
       "display_names": {
         "en": "Denver Broncos",
         "tr": "Denver Broncos",
@@ -7007,7 +7007,7 @@
       }
     },
     "Green Bay Packers": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "590",
       "display_names": {
         "en": "Green Bay Packers",
         "tr": "Green Bay Packers",
@@ -7021,7 +7021,7 @@
       }
     },
     "Kansas City Chiefs": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "594",
       "display_names": {
         "en": "Kansas City Chiefs",
         "tr": "Kansas City Chiefs",
@@ -7035,7 +7035,7 @@
       }
     },
     "Tennessee Titans": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "599",
       "display_names": {
         "en": "Tennessee Titans",
         "tr": "Tennessee Titans",
@@ -7049,7 +7049,7 @@
       }
     },
     "Cleveland Browns": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "589",
       "display_names": {
         "en": "Cleveland Browns",
         "tr": "Cleveland Browns",
@@ -7063,7 +7063,7 @@
       }
     },
     "Detroit Lions": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "5976",
       "display_names": {
         "en": "Detroit Lions",
         "tr": "Detroit Lions",
@@ -7077,7 +7077,7 @@
       }
     },
     "New Orleans Saints": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "600",
       "display_names": {
         "en": "New Orleans Saints",
         "tr": "New Orleans Saints",
@@ -7091,7 +7091,7 @@
       }
     },
     "Las Vegas Raiders": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "1071",
       "display_names": {
         "en": "Las Vegas Raiders",
         "tr": "Las Vegas Raiders",
@@ -7105,7 +7105,7 @@
       }
     },
     "Indianapolis Colts": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "591",
       "display_names": {
         "en": "Indianapolis Colts",
         "tr": "Indianapolis Colts",
@@ -7119,7 +7119,7 @@
       }
     },
     "New York Jets": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "595",
       "display_names": {
         "en": "New York Jets",
         "tr": "New York Jets",
@@ -7133,7 +7133,7 @@
       }
     },
     "Minnesota Vikings": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "5978",
       "display_names": {
         "en": "Minnesota Vikings",
         "tr": "Minnesota Vikings",
@@ -7147,7 +7147,7 @@
       }
     },
     "New England Patriots": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "596",
       "display_names": {
         "en": "New England Patriots",
         "tr": "New England Patriots",
@@ -7161,7 +7161,7 @@
       }
     },
     "Tampa Bay Buccaneers": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "5985",
       "display_names": {
         "en": "Tampa Bay Buccaneers",
         "tr": "Tampa Bay Buccaneers",
@@ -7175,7 +7175,7 @@
       }
     },
     "New York Giants": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "5980",
       "display_names": {
         "en": "New York Giants",
         "tr": "New York Giants",
@@ -7189,7 +7189,7 @@
       }
     },
     "Los Angeles Rams": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "5986",
       "display_names": {
         "en": "Los Angeles Rams",
         "tr": "Los Angeles Rams",
@@ -7203,7 +7203,7 @@
       }
     },
     "Dallas Cowboys": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "5979",
       "display_names": {
         "en": "Dallas Cowboys",
         "tr": "Dallas Cowboys",
@@ -7217,7 +7217,7 @@
       }
     },
     "Houston Texans": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "5989",
       "display_names": {
         "en": "Houston Texans",
         "tr": "Houston Texans",
@@ -7231,7 +7231,7 @@
       }
     },
     "Baltimore Ravens": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "584",
       "display_names": {
         "en": "Baltimore Ravens",
         "tr": "Baltimore Ravens",
@@ -7245,7 +7245,7 @@
       }
     },
     "Carolina Panthers": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "5983",
       "display_names": {
         "en": "Carolina Panthers",
         "tr": "Carolina Panthers",
@@ -7259,7 +7259,7 @@
       }
     },
     "Jacksonville Jaguars": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "5988",
       "display_names": {
         "en": "Jacksonville Jaguars",
         "tr": "Jacksonville Jaguars",
@@ -7287,7 +7287,7 @@
       }
     },
     "Atlanta Falcons": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "5984",
       "display_names": {
         "en": "Atlanta Falcons",
         "tr": "Atlanta Falcons",
@@ -7301,7 +7301,7 @@
       }
     },
     "Chicago Bears": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "5977",
       "display_names": {
         "en": "Chicago Bears",
         "tr": "Chicago Bears",
@@ -7315,7 +7315,7 @@
       }
     },
     "Seattle Seahawks": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "598",
       "display_names": {
         "en": "Seattle Seahawks",
         "tr": "Seattle Seahawks",
@@ -7329,7 +7329,7 @@
       }
     },
     "Buffalo Bills": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "587",
       "display_names": {
         "en": "Buffalo Bills",
         "tr": "Buffalo Bills",
@@ -7343,7 +7343,7 @@
       }
     },
     "Pittsburgh Steelers": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "597",
       "display_names": {
         "en": "Pittsburgh Steelers",
         "tr": "Pittsburgh Steelers",
@@ -7357,7 +7357,7 @@
       }
     },
     "San Francisco 49ers": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "5987",
       "display_names": {
         "en": "San Francisco 49ers",
         "tr": "San Francisco 49ers",
@@ -7371,7 +7371,7 @@
       }
     },
     "Philadelphia Eagles": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "5981",
       "display_names": {
         "en": "Philadelphia Eagles",
         "tr": "Philadelphia Eagles",
@@ -7399,7 +7399,7 @@
       }
     },
     "Arizona Cardinals": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "583",
       "display_names": {
         "en": "Arizona Cardinals",
         "tr": "Arizona Cardinals",
@@ -7413,7 +7413,7 @@
       }
     },
     "Miami Dolphins": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "592",
       "display_names": {
         "en": "Miami Dolphins",
         "tr": "Miami Dolphins",
@@ -7427,7 +7427,7 @@
       }
     },
     "Los Angeles Chargers": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "1070",
       "display_names": {
         "en": "Los Angeles Chargers",
         "tr": "Los Angeles Chargers",
@@ -7441,7 +7441,7 @@
       }
     },
     "Washington Commanders": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "5982",
       "display_names": {
         "en": "Washington Commanders",
         "tr": "Washington Commanders",
@@ -7457,7 +7457,7 @@
   },
   "nhl": {
     "Vancouver Canucks": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "25",
       "display_names": {
         "en": "Vancouver Canucks",
         "tr": "Vancouver Canucks",
@@ -7471,7 +7471,7 @@
       }
     },
     "New York Islanders": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "7",
       "display_names": {
         "en": "New York Islanders",
         "tr": "New York Islanders",
@@ -7485,7 +7485,7 @@
       }
     },
     "Seattle Kraken": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "29",
       "display_names": {
         "en": "Seattle Kraken",
         "tr": "Seattle Kraken",
@@ -7499,7 +7499,7 @@
       }
     },
     "Philadelphia Flyers": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "8",
       "display_names": {
         "en": "Philadelphia Flyers",
         "tr": "Philadelphia Flyers",
@@ -7513,7 +7513,7 @@
       }
     },
     "San Jose Sharks": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "23",
       "display_names": {
         "en": "San Jose Sharks",
         "tr": "San Jose Sharks",
@@ -7541,7 +7541,7 @@
       }
     },
     "Dallas Stars": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "15",
       "display_names": {
         "en": "Dallas Stars",
         "tr": "Dallas Stars",
@@ -7555,7 +7555,7 @@
       }
     },
     "New York Rangers": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "6",
       "display_names": {
         "en": "New York Rangers",
         "tr": "New York Rangers",
@@ -7569,7 +7569,7 @@
       }
     },
     "Arizona Coyotes": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "24",
       "display_names": {
         "en": "Arizona Coyotes",
         "tr": "Arizona Coyotes",
@@ -7583,7 +7583,7 @@
       }
     },
     "Chicago Blackhawks": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "19",
       "display_names": {
         "en": "Chicago Blackhawks",
         "tr": "Chicago Blackhawks",
@@ -7597,7 +7597,7 @@
       }
     },
     "Winnipeg Jets": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "28",
       "display_names": {
         "en": "Winnipeg Jets",
         "tr": "Winnipeg Jets",
@@ -7611,7 +7611,7 @@
       }
     },
     "Detroit Red Wings": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "4",
       "display_names": {
         "en": "Detroit Red Wings",
         "tr": "Detroit Red Wings",
@@ -7639,7 +7639,7 @@
       }
     },
     "Boston Bruins": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "5",
       "display_names": {
         "en": "Boston Bruins",
         "tr": "Boston Bruins",
@@ -7653,7 +7653,7 @@
       }
     },
     "Los Angeles Kings": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "21",
       "display_names": {
         "en": "Los Angeles Kings",
         "tr": "Los Angeles Kings",
@@ -7667,7 +7667,7 @@
       }
     },
     "Carolina Hurricanes": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "13",
       "display_names": {
         "en": "Carolina Hurricanes",
         "tr": "Carolina Hurricanes",
@@ -7681,7 +7681,7 @@
       }
     },
     "Edmonton Oilers": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "27",
       "display_names": {
         "en": "Edmonton Oilers",
         "tr": "Edmonton Oilers",
@@ -7695,7 +7695,7 @@
       }
     },
     "Nashville Predators": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "20",
       "display_names": {
         "en": "Nashville Predators",
         "tr": "Nashville Predators",
@@ -7709,7 +7709,7 @@
       }
     },
     "Minnesota Wild": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "17",
       "display_names": {
         "en": "Minnesota Wild",
         "tr": "Minnesota Wild",
@@ -7723,7 +7723,7 @@
       }
     },
     "Tampa Bay Lightning": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "11",
       "display_names": {
         "en": "Tampa Bay Lightning",
         "tr": "Tampa Bay Lightning",
@@ -7737,7 +7737,7 @@
       }
     },
     "Columbus Blue Jackets": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "14",
       "display_names": {
         "en": "Columbus Blue Jackets",
         "tr": "Columbus Blue Jackets",
@@ -7751,7 +7751,7 @@
       }
     },
     "Pittsburgh Penguins": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "9",
       "display_names": {
         "en": "Pittsburgh Penguins",
         "tr": "Pittsburgh Penguins",
@@ -7765,7 +7765,7 @@
       }
     },
     "Toronto Maple Leafs": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "2",
       "display_names": {
         "en": "Toronto Maple Leafs",
         "tr": "Toronto Maple Leafs",
@@ -7793,7 +7793,7 @@
       }
     },
     "Buffalo Sabres": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "3",
       "display_names": {
         "en": "Buffalo Sabres",
         "tr": "Buffalo Sabres",
@@ -7807,7 +7807,7 @@
       }
     },
     "Calgary Flames": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "26",
       "display_names": {
         "en": "Calgary Flames",
         "tr": "Calgary Flames",
@@ -7821,7 +7821,7 @@
       }
     },
     "Washington Capitals": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "10",
       "display_names": {
         "en": "Washington Capitals",
         "tr": "Washington Capitals",
@@ -7849,7 +7849,7 @@
       }
     },
     "Vegas Golden Knights": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "30",
       "display_names": {
         "en": "Vegas Golden Knights",
         "tr": "Vegas Golden Knights",
@@ -7863,7 +7863,7 @@
       }
     },
     "Colorado Avalanche": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "16",
       "display_names": {
         "en": "Colorado Avalanche",
         "tr": "Colorado Avalanche",
@@ -7905,7 +7905,7 @@
       }
     },
     "Florida Panthers": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "12",
       "display_names": {
         "en": "Florida Panthers",
         "tr": "Florida Panthers",
@@ -7919,7 +7919,7 @@
       }
     },
     "Anaheim Ducks": {
-      "transfermarkt_id": "TBD",
+      "transfermarkt_id": "22",
       "display_names": {
         "en": "Anaheim Ducks",
         "tr": "Anaheim Ducks",
