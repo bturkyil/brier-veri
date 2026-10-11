@@ -1,0 +1,85 @@
+name: OddsAPI Sync
+
+on:
+  schedule:
+    # Her gün saat 2 AM UTC (sabah 5 AM İstanbul saati)
+    - cron: '0 2 * * *'
+
+  # Manual trigger için
+  workflow_dispatch:
+
+jobs:
+  sync-odds:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Create scripts directory
+        run: mkdir -p scripts
+
+      - name: Run OddsAPI Pipeline
+        env:
+          ODDSAPI_KEY: ${{ secrets.ODDSAPI_KEY }}
+        run: |
+          python scripts/oddsapi_to_brier_pipeline.py \
+            --api-key "$ODDSAPI_KEY" \
+            --output ./betting_data \
+            --regions us,eu,uk \
+            --markets h2h,spreads,totals
+
+      - name: Compress betting data
+        run: |
+          cd betting_data
+          find . -name "*.json" -type f | while read file; do
+            gzip -f "$file"
+          done
+          cd ..
+
+      - name: Configure git
+        run: |
+          git config user.email "bot@brier.dev"
+          git config user.name "Brier Odds Bot"
+
+      - name: Commit changes
+        run: |
+          git add betting_data/
+          git diff --cached --quiet || git commit -m "🎲 Update betting odds from OddsAPI
+
+Generated: $(date -u +'%Y-%m-%d %H:%M:%S UTC')
+Sport coverage: All active sports
+Markets: H2H, Spreads, Totals
+Regions: US, EU, UK
+Bookmakers: All available
+
+Co-Authored-By: Brier Odds Bot <bot@brier.dev>"
+
+      - name: Push changes
+        run: |
+          git push origin main || true
+
+      - name: Create release (monthly)
+        if: github.event_name == 'schedule' && github.run_number % 30 == 0
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: odds-${{ github.run_id }}
+          release_name: Betting Data Release ${{ github.run_id }}
+          body: Monthly betting odds snapshot
+          draft: false
+          prerelease: true
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "❌ OddsAPI sync failed"
+          echo "Check logs above for details"
