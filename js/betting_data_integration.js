@@ -10,6 +10,8 @@ class BettingDataManager {
     this.baseUrl = baseUrl;
     this.cache = new Map();
     this.loadingPromises = new Map();
+    this.statsCache = new Map();
+    this.statsLoadingPromises = new Map();
   }
 
   /**
@@ -168,6 +170,70 @@ class BettingDataManager {
 
     return totals;
   }
+
+  /**
+   * Get match statistics (corners, cards, goals) from brier_hafiza files
+   */
+  async getMatchStats(leagueCode, matchId) {
+    const cacheKey = `stats:${leagueCode}:${matchId}`;
+
+    if (this.statsCache.has(cacheKey)) {
+      return this.statsCache.get(cacheKey);
+    }
+
+    if (this.statsLoadingPromises.has(cacheKey)) {
+      return this.statsLoadingPromises.get(cacheKey);
+    }
+
+    const loadPromise = this._loadStatsData(leagueCode)
+      .then(data => {
+        // Find matching game in the h2h section
+        const h2hData = data.h2h || {};
+        for (const matchups of Object.values(h2hData)) {
+          const match = matchups.find(m =>
+            m.id === matchId || (m.home && m.away &&
+            `${m.home}|${m.away}`.includes(matchId))
+          );
+          if (match) {
+            return {
+              skor: match.skor,
+              corner: match.corner,
+              sarı: match.sarı,
+              kırmızı: match.kırmızı
+            };
+          }
+        }
+        return null;
+      })
+      .catch(err => {
+        console.warn(`Failed to load stats for ${cacheKey}:`, err);
+        return null;
+      });
+
+    this.statsLoadingPromises.set(cacheKey, loadPromise);
+    const result = await loadPromise;
+    this.statsCache.set(cacheKey, result);
+    this.statsLoadingPromises.delete(cacheKey);
+
+    return result;
+  }
+
+  /**
+   * Load stats from brier_hafiza_[league].json
+   * @private
+   */
+  async _loadStatsData(leagueCode) {
+    const url = `./brier_hafiza_${leagueCode}.json`;
+
+    try {
+      const response = await fetch(url, { cache: 'no-store' });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      return await response.json();
+    } catch (err) {
+      console.warn(`Error loading stats from ${url}:`, err);
+      return { h2h: {} };
+    }
+  }
 }
 
 /**
@@ -182,17 +248,18 @@ class BettingLinesComponent {
   /**
    * Render betting lines for a match
    */
-  async render(sport, league, matchId, matchInfo) {
+  async render(sport, league, matchId, matchInfo, leagueCode) {
     try {
       const lines = await this.manager.getMatchBettingLines(sport, league, matchId);
+      const stats = leagueCode ? await this.manager.getMatchStats(leagueCode, matchId) : null;
 
-      if (lines.length === 0) {
+      if (lines.length === 0 && !stats) {
         this.container.innerHTML = '<p class="betting-no-data">Bahis verisi yok</p>';
         return;
       }
 
       const grouped = this.manager.groupLinesByMarket(lines);
-      this.container.innerHTML = this._buildHTML(grouped, matchInfo);
+      this.container.innerHTML = this._buildHTML(grouped, matchInfo, stats);
     } catch (err) {
       console.error('Error rendering betting lines:', err);
       this.container.innerHTML = '<p class="betting-error">Bahis verisi yüklenemedi</p>';
@@ -203,8 +270,13 @@ class BettingLinesComponent {
    * Build HTML for betting lines
    * @private
    */
-  _buildHTML(grouped, matchInfo) {
+  _buildHTML(grouped, matchInfo, stats) {
     let html = '<div class="betting-lines-container">';
+
+    // Match statistics section
+    if (stats && (stats.skor || stats.corner || stats.sarı || stats.kırmızı)) {
+      html += this._buildStatsSection(stats);
+    }
 
     // Head-to-Head lines
     if (grouped.h2h && grouped.h2h.length > 0) {
@@ -222,6 +294,32 @@ class BettingLinesComponent {
     }
 
     html += '</div>';
+    return html;
+  }
+
+  /**
+   * Build match statistics section
+   * @private
+   */
+  _buildStatsSection(stats) {
+    let html = '<div class="betting-section stats">';
+    html += '<h4>Maç İstatistikleri</h4>';
+    html += '<div class="stats-row">';
+
+    if (stats.skor) {
+      html += `<div class="stat"><span class="label">Skor:</span> <strong>${stats.skor}</strong></div>`;
+    }
+    if (stats.corner) {
+      html += `<div class="stat"><span class="label">⚽ Korner:</span> <strong>${stats.corner}</strong></div>`;
+    }
+    if (stats.sarı) {
+      html += `<div class="stat"><span class="label">🟨 Sarı Kart:</span> <strong>${stats.sarı}</strong></div>`;
+    }
+    if (stats.kırmızı) {
+      html += `<div class="stat"><span class="label">🟥 Kırmızı Kart:</span> <strong>${stats.kırmızı}</strong></div>`;
+    }
+
+    html += '</div></div>';
     return html;
   }
 
@@ -495,6 +593,31 @@ const BettingStyles = `
 .ou {
   display: block;
   padding: 2px 0;
+}
+
+.stats-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 12px;
+}
+
+.stat {
+  background: white;
+  padding: 6px 10px;
+  border-radius: 3px;
+  border-left: 3px solid #1a73e8;
+}
+
+.stat .label {
+  color: #666;
+  font-size: 11px;
+}
+
+.stat strong {
+  color: #1a73e8;
+  font-weight: bold;
+  font-size: 14px;
 }
 
 .ou strong {

@@ -2001,10 +2001,60 @@ async function showDetail(i){
   }catch(e){}
 
   // placeholders; filled after memory fetch
-  html+=`<div id="xraySlot"></div><div id="memSlot"><div class="card"><div class="memempty">Opening the archive…</div></div></div>`;
+  html+=`<div id="bettingSlot"></div><div id="xraySlot"></div><div id="memSlot"><div class="card"><div class="memempty">Opening the archive…</div></div></div>`;
   document.getElementById('detailBody').innerHTML=html;
 
   const H=await hafizaGetir(lig);
+
+  // --- Bahis kartları (OddsAPI + maç istatistikleri) ---
+  try {
+    const bettingContainer = document.getElementById('bettingSlot');
+    const component = new BettingLinesComponent(bettingContainer, bettingManager);
+
+    // OddsAPI için spor ve liği belirle
+    let sport = 'soccer';
+    let leagueForOdds = null;
+
+    const key = m.key || '';
+    const oddsMapping = {
+      'soccer_epl': ['soccer', 'EPL'],
+      'soccer_spain_la_liga': ['soccer', 'LaLiga'],
+      'soccer_italy_serie_a': ['soccer', 'SerieA'],
+      'soccer_germany_bundesliga': ['soccer', 'Bundesliga'],
+      'soccer_france_ligue_one': ['soccer', 'Ligue1'],
+      'soccer_netherlands_eredivisie': ['soccer', 'Eredivisie'],
+      'soccer_portugal_primeira_liga': ['soccer', 'PrimeiraLiga'],
+      'soccer_belgium_first_div': ['soccer', 'BelgianPro'],
+      'soccer_turkey_super_league': ['soccer', 'TurkishSuperLig'],
+      'soccer_argentina_primera_division': ['soccer', 'Argentina'],
+      'soccer_brazil_campeonato': ['soccer', 'BrazilSerieA'],
+      'soccer_brazil_serie_b': ['soccer', 'BrazilSerieB'],
+      'soccer_mexico_ligamx': ['soccer', 'MexicanLiga'],
+      'soccer_australia_aleague': ['soccer', 'ALeague'],
+      'soccer_japan_j_league': ['soccer', 'JLeague'],
+      'soccer_korea_kleague1': ['soccer', 'KLeague1'],
+      'soccer_usa_mls': ['soccer', 'MLS'],
+      'basketball_nba': ['basketball', 'NBA'],
+      'americanfootball_nfl': ['american_football', 'NFL'],
+      'americanfootball_ncaaf': ['american_football', 'NCAAF'],
+      'americanfootball_cfl': ['american_football', 'CFL'],
+      'baseball_mlb': ['baseball', 'MLB'],
+      'icehockey_nhl': ['ice_hockey', 'NHL']
+    };
+
+    const mapping = oddsMapping[key];
+    if (mapping) {
+      [sport, leagueForOdds] = mapping;
+    }
+
+    if (sport && leagueForOdds && m.id) {
+      await component.render(sport, leagueForOdds, m.id, {home: m.h, away: m.a}, lig);
+    } else {
+      console.warn('[Betting] Insufficient data for odds:', {key, sport, leagueForOdds, matchId: m.id});
+    }
+  } catch(e) {
+    console.warn('[Betting] Error loading odds:', e);
+  }
 
   // --- league x-ray ---
   let x='';
