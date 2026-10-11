@@ -59,21 +59,3 @@ jobs:
       - name: Push changes
         run: |
           git push origin main || true
-
-      - name: Create release (monthly)
-        if: github.event_name == 'schedule' && github.run_number % 30 == 0
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: odds-${{ github.run_id }}
-          release_name: Betting Data Release ${{ github.run_id }}
-          body: Monthly betting odds snapshot
-          draft: false
-          prerelease: true
-
-      - name: Notify on failure
-        if: failure()
-        run: |
-          echo "❌ OddsAPI sync failed"
-          echo "Check logs above for details"
