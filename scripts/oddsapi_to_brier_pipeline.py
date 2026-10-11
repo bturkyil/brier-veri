@@ -78,6 +78,7 @@ class BrierDataBuilder:
         # American Football
         'american_football_nfl': ('american_football', 'NFL'),
         'american_football_ncaaf': ('american_football', 'NCAAF'),
+        'americanfootball_cfl': ('american_football', 'CFL'),
 
         # Baseball
         'baseball_mlb': ('baseball', 'MLB'),
@@ -92,6 +93,10 @@ class BrierDataBuilder:
         # Ice Hockey
         'ice_hockey_nhl': ('ice_hockey', 'NHL'),
         'ice_hockey_shl': ('ice_hockey', 'SHL'),
+        'icehockey_ahl': ('ice_hockey', 'AHL'),
+        'icehockey_liiga': ('ice_hockey', 'Liiga'),
+        'icehockey_sweden_allsvenskan': ('ice_hockey', 'Allsvenskan'),
+        'icehockey_sweden_hockey_league': ('ice_hockey', 'SHL'),
 
         # Soccer - top leagues
         'soccer_england_premier_league': ('soccer', 'EPL'),
@@ -121,14 +126,21 @@ class BrierDataBuilder:
         # Cricket
         'cricket_ipl': ('cricket', 'IPL'),
         'cricket_big_bash': ('cricket', 'BBL'),
+        'cricket_international_t20': ('cricket', 'InternationalT20'),
+        'cricket_test_match': ('cricket', 'TestMatches'),
 
         # Golf
         'golf_major_championships': ('golf', 'MajorChampionships'),
         'golf_pga_tour': ('golf', 'PGATour'),
 
+        # Boxing
+        'boxing_boxing': ('boxing', 'Boxing'),
+
         # MMA
+        'boxing_mixed_martial_arts': ('mma', 'MMA'),
         'mma_ufc': ('mma', 'UFC'),
         'mma_bellator': ('mma', 'Bellator'),
+        'mma_mixed_martial_arts': ('mma', 'MMA'),
 
         # Rugby
         'rugby_union_super_rugby': ('rugby', 'SuperRugby'),
