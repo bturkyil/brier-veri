@@ -766,5 +766,8043 @@
         "hafiza": "Washington Wizards"
       }
     }
+  },
+  "arjantin": {
+    "CA Tigre BA": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "CA Tigre BA",
+        "tr": "CA Tigre BA",
+        "de": "CA Tigre BA"
+      },
+      "aliases": [
+        "CA Tigre BA"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Atlético Huracán": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Atlético Huracán",
+        "tr": "Atlético Huracán",
+        "de": "Atlético Huracán"
+      },
+      "aliases": [
+        "Atlético Huracán"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Sarmiento de Junin": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Sarmiento de Junin",
+        "tr": "Sarmiento de Junin",
+        "de": "Sarmiento de Junin"
+      },
+      "aliases": [
+        "Sarmiento de Junin"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Defensa y Justicia": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Defensa y Justicia",
+        "tr": "Defensa y Justicia",
+        "de": "Defensa y Justicia"
+      },
+      "aliases": [
+        "Defensa y Justicia"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Atlético Tucuman": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Atlético Tucuman",
+        "tr": "Atlético Tucuman",
+        "de": "Atlético Tucuman"
+      },
+      "aliases": [
+        "Atlético Tucuman"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Estudiantes": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Estudiantes",
+        "tr": "Estudiantes",
+        "de": "Estudiantes"
+      },
+      "aliases": [
+        "Estudiantes"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Boca Juniors": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Boca Juniors",
+        "tr": "Boca Juniors",
+        "de": "Boca Juniors"
+      },
+      "aliases": [
+        "Boca Juniors"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Racing Club": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Racing Club",
+        "tr": "Racing Club",
+        "de": "Racing Club"
+      },
+      "aliases": [
+        "Racing Club"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Lanus": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Lanus",
+        "tr": "Lanus",
+        "de": "Lanus"
+      },
+      "aliases": [
+        "Lanus"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Independiente": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Independiente",
+        "tr": "Independiente",
+        "de": "Independiente"
+      },
+      "aliases": [
+        "Independiente"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Union Santa Fe": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Union Santa Fe",
+        "tr": "Union Santa Fe",
+        "de": "Union Santa Fe"
+      },
+      "aliases": [
+        "Union Santa Fe"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Deportivo Riestra": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Deportivo Riestra",
+        "tr": "Deportivo Riestra",
+        "de": "Deportivo Riestra"
+      },
+      "aliases": [
+        "Deportivo Riestra"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "San Martin de San Juan": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "San Martin de San Juan",
+        "tr": "San Martin de San Juan",
+        "de": "San Martin de San Juan"
+      },
+      "aliases": [
+        "San Martin de San Juan"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Belgrano de Cordoba": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Belgrano de Cordoba",
+        "tr": "Belgrano de Cordoba",
+        "de": "Belgrano de Cordoba"
+      },
+      "aliases": [
+        "Belgrano de Cordoba"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Argentinos Juniors": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Argentinos Juniors",
+        "tr": "Argentinos Juniors",
+        "de": "Argentinos Juniors"
+      },
+      "aliases": [
+        "Argentinos Juniors"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Aldosivi Mar del Plata": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Aldosivi Mar del Plata",
+        "tr": "Aldosivi Mar del Plata",
+        "de": "Aldosivi Mar del Plata"
+      },
+      "aliases": [
+        "Aldosivi Mar del Plata"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Central Córdoba": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Central Córdoba",
+        "tr": "Central Córdoba",
+        "de": "Central Córdoba"
+      },
+      "aliases": [
+        "Central Córdoba"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Godoy Cruz": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Godoy Cruz",
+        "tr": "Godoy Cruz",
+        "de": "Godoy Cruz"
+      },
+      "aliases": [
+        "Godoy Cruz"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Instituto de Córdoba": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Instituto de Córdoba",
+        "tr": "Instituto de Córdoba",
+        "de": "Instituto de Córdoba"
+      },
+      "aliases": [
+        "Instituto de Córdoba"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Velez Sarsfield BA": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Velez Sarsfield BA",
+        "tr": "Velez Sarsfield BA",
+        "de": "Velez Sarsfield BA"
+      },
+      "aliases": [
+        "Velez Sarsfield BA"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "River Plate": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "River Plate",
+        "tr": "River Plate",
+        "de": "River Plate"
+      },
+      "aliases": [
+        "River Plate"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "San Lorenzo": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "San Lorenzo",
+        "tr": "San Lorenzo",
+        "de": "San Lorenzo"
+      },
+      "aliases": [
+        "San Lorenzo"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Newells Old Boys": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Newells Old Boys",
+        "tr": "Newells Old Boys",
+        "de": "Newells Old Boys"
+      },
+      "aliases": [
+        "Newells Old Boys"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Barracas Central": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Barracas Central",
+        "tr": "Barracas Central",
+        "de": "Barracas Central"
+      },
+      "aliases": [
+        "Barracas Central"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Platense": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Platense",
+        "tr": "Platense",
+        "de": "Platense"
+      },
+      "aliases": [
+        "Platense"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Talleres": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Talleres",
+        "tr": "Talleres",
+        "de": "Talleres"
+      },
+      "aliases": [
+        "Talleres"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Gimnasia La Plata": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Gimnasia La Plata",
+        "tr": "Gimnasia La Plata",
+        "de": "Gimnasia La Plata"
+      },
+      "aliases": [
+        "Gimnasia La Plata"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Rosario Central": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Rosario Central",
+        "tr": "Rosario Central",
+        "de": "Rosario Central"
+      },
+      "aliases": [
+        "Rosario Central"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Independiente Rivadavia": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Independiente Rivadavia",
+        "tr": "Independiente Rivadavia",
+        "de": "Independiente Rivadavia"
+      },
+      "aliases": [
+        "Independiente Rivadavia"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Banfield": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Banfield",
+        "tr": "Banfield",
+        "de": "Banfield"
+      },
+      "aliases": [
+        "Banfield"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    }
+  },
+  "brezilya": {
+    "Santos": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Santos",
+        "tr": "Santos",
+        "de": "Santos"
+      },
+      "aliases": [
+        "Santos"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Juventude": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Juventude",
+        "tr": "Juventude",
+        "de": "Juventude"
+      },
+      "aliases": [
+        "Juventude"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Cuiabá": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Cuiabá",
+        "tr": "Cuiabá",
+        "de": "Cuiabá"
+      },
+      "aliases": [
+        "Cuiabá"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Atletico Goianiense": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Atletico Goianiense",
+        "tr": "Atletico Goianiense",
+        "de": "Atletico Goianiense"
+      },
+      "aliases": [
+        "Atletico Goianiense"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Flamengo": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Flamengo",
+        "tr": "Flamengo",
+        "de": "Flamengo"
+      },
+      "aliases": [
+        "Flamengo"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Grêmio": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Grêmio",
+        "tr": "Grêmio",
+        "de": "Grêmio"
+      },
+      "aliases": [
+        "Grêmio"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Bahia": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Bahia",
+        "tr": "Bahia",
+        "de": "Bahia"
+      },
+      "aliases": [
+        "Bahia"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Atletico Paranaense": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Atletico Paranaense",
+        "tr": "Atletico Paranaense",
+        "de": "Atletico Paranaense"
+      },
+      "aliases": [
+        "Atletico Paranaense"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Vitoria": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Vitoria",
+        "tr": "Vitoria",
+        "de": "Vitoria"
+      },
+      "aliases": [
+        "Vitoria"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Cruzeiro": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Cruzeiro",
+        "tr": "Cruzeiro",
+        "de": "Cruzeiro"
+      },
+      "aliases": [
+        "Cruzeiro"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Criciuma": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Criciuma",
+        "tr": "Criciuma",
+        "de": "Criciuma"
+      },
+      "aliases": [
+        "Criciuma"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Sao Paulo": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Sao Paulo",
+        "tr": "Sao Paulo",
+        "de": "Sao Paulo"
+      },
+      "aliases": [
+        "Sao Paulo"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Atletico Mineiro": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Atletico Mineiro",
+        "tr": "Atletico Mineiro",
+        "de": "Atletico Mineiro"
+      },
+      "aliases": [
+        "Atletico Mineiro"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Bragantino-SP": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Bragantino-SP",
+        "tr": "Bragantino-SP",
+        "de": "Bragantino-SP"
+      },
+      "aliases": [
+        "Bragantino-SP"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Sport Recife": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Sport Recife",
+        "tr": "Sport Recife",
+        "de": "Sport Recife"
+      },
+      "aliases": [
+        "Sport Recife"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Fortaleza": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Fortaleza",
+        "tr": "Fortaleza",
+        "de": "Fortaleza"
+      },
+      "aliases": [
+        "Fortaleza"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Internacional": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Internacional",
+        "tr": "Internacional",
+        "de": "Internacional"
+      },
+      "aliases": [
+        "Internacional"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Fluminense": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Fluminense",
+        "tr": "Fluminense",
+        "de": "Fluminense"
+      },
+      "aliases": [
+        "Fluminense"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Corinthians": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Corinthians",
+        "tr": "Corinthians",
+        "de": "Corinthians"
+      },
+      "aliases": [
+        "Corinthians"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Botafogo": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Botafogo",
+        "tr": "Botafogo",
+        "de": "Botafogo"
+      },
+      "aliases": [
+        "Botafogo"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Palmeiras": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Palmeiras",
+        "tr": "Palmeiras",
+        "de": "Palmeiras"
+      },
+      "aliases": [
+        "Palmeiras"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Ceará": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Ceará",
+        "tr": "Ceará",
+        "de": "Ceará"
+      },
+      "aliases": [
+        "Ceará"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Vasco da Gama": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Vasco da Gama",
+        "tr": "Vasco da Gama",
+        "de": "Vasco da Gama"
+      },
+      "aliases": [
+        "Vasco da Gama"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Mirassol": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Mirassol",
+        "tr": "Mirassol",
+        "de": "Mirassol"
+      },
+      "aliases": [
+        "Mirassol"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    }
+  },
+  "bundesliga": {
+    "1. fc heidenheim": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "1. fc heidenheim",
+        "tr": "1. fc heidenheim",
+        "de": "1. fc heidenheim"
+      },
+      "aliases": [
+        "1. fc heidenheim"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "1. fc köln": {
+      "transfermarkt_id": "1",
+      "display_names": {
+        "en": "1. fc köln",
+        "tr": "1. fc köln",
+        "de": "1. fc köln"
+      },
+      "aliases": [
+        "1. fc köln"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "arminia bielefeld": {
+      "transfermarkt_id": "13",
+      "display_names": {
+        "en": "arminia bielefeld",
+        "tr": "arminia bielefeld",
+        "de": "arminia bielefeld"
+      },
+      "aliases": [
+        "arminia bielefeld"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "augsburg": {
+      "transfermarkt_id": "7",
+      "display_names": {
+        "en": "augsburg",
+        "tr": "augsburg",
+        "de": "augsburg"
+      },
+      "aliases": [
+        "augsburg"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "bayer leverkusen": {
+      "transfermarkt_id": "35",
+      "display_names": {
+        "en": "bayer leverkusen",
+        "tr": "bayer leverkusen",
+        "de": "bayer leverkusen"
+      },
+      "aliases": [
+        "bayer leverkusen"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "bayern munich": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "bayern munich",
+        "tr": "bayern munich",
+        "de": "bayern munich"
+      },
+      "aliases": [
+        "bayern munich"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "borussia dortmund": {
+      "transfermarkt_id": "16",
+      "display_names": {
+        "en": "borussia dortmund",
+        "tr": "borussia dortmund",
+        "de": "borussia dortmund"
+      },
+      "aliases": [
+        "borussia dortmund"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "borussia monchengladbach": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "borussia monchengladbach",
+        "tr": "borussia monchengladbach",
+        "de": "borussia monchengladbach"
+      },
+      "aliases": [
+        "borussia monchengladbach"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "eintracht frankfurt": {
+      "transfermarkt_id": "32",
+      "display_names": {
+        "en": "eintracht frankfurt",
+        "tr": "eintracht frankfurt",
+        "de": "eintracht frankfurt"
+      },
+      "aliases": [
+        "eintracht frankfurt"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "elversberg": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "elversberg",
+        "tr": "elversberg",
+        "de": "elversberg"
+      },
+      "aliases": [
+        "elversberg"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "fc heidenheim": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "fc heidenheim",
+        "tr": "fc heidenheim",
+        "de": "fc heidenheim"
+      },
+      "aliases": [
+        "fc heidenheim"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "fc koln": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "fc koln",
+        "tr": "fc koln",
+        "de": "fc koln"
+      },
+      "aliases": [
+        "fc koln"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "fc st. pauli": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "fc st. pauli",
+        "tr": "fc st. pauli",
+        "de": "fc st. pauli"
+      },
+      "aliases": [
+        "fc st. pauli"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "fortuna dusseldorf": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "fortuna dusseldorf",
+        "tr": "fortuna dusseldorf",
+        "de": "fortuna dusseldorf"
+      },
+      "aliases": [
+        "fortuna dusseldorf"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "fsv mainz 05": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "fsv mainz 05",
+        "tr": "fsv mainz 05",
+        "de": "fsv mainz 05"
+      },
+      "aliases": [
+        "fsv mainz 05"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "greuther fürth": {
+      "transfermarkt_id": "34",
+      "display_names": {
+        "en": "greuther fürth",
+        "tr": "greuther fürth",
+        "de": "greuther fürth"
+      },
+      "aliases": [
+        "greuther fürth"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "hamburger sv": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "hamburger sv",
+        "tr": "hamburger sv",
+        "de": "hamburger sv"
+      },
+      "aliases": [
+        "hamburger sv"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "hertha berlin": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "hertha berlin",
+        "tr": "hertha berlin",
+        "de": "hertha berlin"
+      },
+      "aliases": [
+        "hertha berlin"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "holstein kiel": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "holstein kiel",
+        "tr": "holstein kiel",
+        "de": "holstein kiel"
+      },
+      "aliases": [
+        "holstein kiel"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "rb leipzig": {
+      "transfermarkt_id": "3455",
+      "display_names": {
+        "en": "rb leipzig",
+        "tr": "rb leipzig",
+        "de": "rb leipzig"
+      },
+      "aliases": [
+        "rb leipzig"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "sc freiburg": {
+      "transfermarkt_id": "25",
+      "display_names": {
+        "en": "sc freiburg",
+        "tr": "sc freiburg",
+        "de": "sc freiburg"
+      },
+      "aliases": [
+        "sc freiburg"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "schalke 04": {
+      "transfermarkt_id": "164",
+      "display_names": {
+        "en": "schalke 04",
+        "tr": "schalke 04",
+        "de": "schalke 04"
+      },
+      "aliases": [
+        "schalke 04"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "sv darmstadt 98": {
+      "transfermarkt_id": "6",
+      "display_names": {
+        "en": "sv darmstadt 98",
+        "tr": "sv darmstadt 98",
+        "de": "sv darmstadt 98"
+      },
+      "aliases": [
+        "sv darmstadt 98"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "tsg hoffenheim": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "tsg hoffenheim",
+        "tr": "tsg hoffenheim",
+        "de": "tsg hoffenheim"
+      },
+      "aliases": [
+        "tsg hoffenheim"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "union berlin": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "union berlin",
+        "tr": "union berlin",
+        "de": "union berlin"
+      },
+      "aliases": [
+        "union berlin"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "vfb stuttgart": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "vfb stuttgart",
+        "tr": "vfb stuttgart",
+        "de": "vfb stuttgart"
+      },
+      "aliases": [
+        "vfb stuttgart"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "vfl bochum": {
+      "transfermarkt_id": "169",
+      "display_names": {
+        "en": "vfl bochum",
+        "tr": "vfl bochum",
+        "de": "vfl bochum"
+      },
+      "aliases": [
+        "vfl bochum"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "vfl wolfsburg": {
+      "transfermarkt_id": "237",
+      "display_names": {
+        "en": "vfl wolfsburg",
+        "tr": "vfl wolfsburg",
+        "de": "vfl wolfsburg"
+      },
+      "aliases": [
+        "vfl wolfsburg"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "werder bremen": {
+      "transfermarkt_id": "89",
+      "display_names": {
+        "en": "werder bremen",
+        "tr": "werder bremen",
+        "de": "werder bremen"
+      },
+      "aliases": [
+        "werder bremen"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    }
+  },
+  "epl": {
+    "Luton": {
+      "transfermarkt_id": "1114",
+      "display_names": {
+        "en": "Luton",
+        "tr": "Luton",
+        "de": "Luton"
+      },
+      "aliases": [
+        "Luton"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Fulham": {
+      "transfermarkt_id": "9",
+      "display_names": {
+        "en": "Fulham",
+        "tr": "Fulham",
+        "de": "Fulham"
+      },
+      "aliases": [
+        "Fulham"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Leeds United": {
+      "transfermarkt_id": "356",
+      "display_names": {
+        "en": "Leeds United",
+        "tr": "Leeds United",
+        "de": "Leeds United"
+      },
+      "aliases": [
+        "Leeds United"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "West Ham United": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "West Ham United",
+        "tr": "West Ham United",
+        "de": "West Ham United"
+      },
+      "aliases": [
+        "West Ham United"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Bournemouth": {
+      "transfermarkt_id": "3",
+      "display_names": {
+        "en": "Bournemouth",
+        "tr": "Bournemouth",
+        "de": "Bournemouth"
+      },
+      "aliases": [
+        "Bournemouth"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Manchester United": {
+      "transfermarkt_id": "14",
+      "display_names": {
+        "en": "Manchester United",
+        "tr": "Manchester United",
+        "de": "Manchester United"
+      },
+      "aliases": [
+        "Manchester United"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Tottenham Hotspur": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Tottenham Hotspur",
+        "tr": "Tottenham Hotspur",
+        "de": "Tottenham Hotspur"
+      },
+      "aliases": [
+        "Tottenham Hotspur"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Chelsea": {
+      "transfermarkt_id": "6",
+      "display_names": {
+        "en": "Chelsea",
+        "tr": "Chelsea",
+        "de": "Chelsea"
+      },
+      "aliases": [
+        "Chelsea"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Ipswich Town": {
+      "transfermarkt_id": "10",
+      "display_names": {
+        "en": "Ipswich Town",
+        "tr": "Ipswich Town",
+        "de": "Ipswich Town"
+      },
+      "aliases": [
+        "Ipswich Town"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Crystal Palace": {
+      "transfermarkt_id": "7",
+      "display_names": {
+        "en": "Crystal Palace",
+        "tr": "Crystal Palace",
+        "de": "Crystal Palace"
+      },
+      "aliases": [
+        "Crystal Palace"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Manchester City": {
+      "transfermarkt_id": "13",
+      "display_names": {
+        "en": "Manchester City",
+        "tr": "Manchester City",
+        "de": "Manchester City"
+      },
+      "aliases": [
+        "Manchester City"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Arsenal": {
+      "transfermarkt_id": "1",
+      "display_names": {
+        "en": "Arsenal",
+        "tr": "Arsenal",
+        "de": "Arsenal"
+      },
+      "aliases": [
+        "Arsenal"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Burnley": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Burnley",
+        "tr": "Burnley",
+        "de": "Burnley"
+      },
+      "aliases": [
+        "Burnley"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Nottingham Forest": {
+      "transfermarkt_id": "16",
+      "display_names": {
+        "en": "Nottingham Forest",
+        "tr": "Nottingham Forest",
+        "de": "Nottingham Forest"
+      },
+      "aliases": [
+        "Nottingham Forest"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Sheffield United": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Sheffield United",
+        "tr": "Sheffield United",
+        "de": "Sheffield United"
+      },
+      "aliases": [
+        "Sheffield United"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Brentford": {
+      "transfermarkt_id": "4",
+      "display_names": {
+        "en": "Brentford",
+        "tr": "Brentford",
+        "de": "Brentford"
+      },
+      "aliases": [
+        "Brentford"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Southampton": {
+      "transfermarkt_id": "17",
+      "display_names": {
+        "en": "Southampton",
+        "tr": "Southampton",
+        "de": "Southampton"
+      },
+      "aliases": [
+        "Southampton"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Wolverhampton Wanderers": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Wolverhampton Wanderers",
+        "tr": "Wolverhampton Wanderers",
+        "de": "Wolverhampton Wanderers"
+      },
+      "aliases": [
+        "Wolverhampton Wanderers"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Aston Villa": {
+      "transfermarkt_id": "2",
+      "display_names": {
+        "en": "Aston Villa",
+        "tr": "Aston Villa",
+        "de": "Aston Villa"
+      },
+      "aliases": [
+        "Aston Villa"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Leicester City": {
+      "transfermarkt_id": "11",
+      "display_names": {
+        "en": "Leicester City",
+        "tr": "Leicester City",
+        "de": "Leicester City"
+      },
+      "aliases": [
+        "Leicester City"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Liverpool": {
+      "transfermarkt_id": "12",
+      "display_names": {
+        "en": "Liverpool",
+        "tr": "Liverpool",
+        "de": "Liverpool"
+      },
+      "aliases": [
+        "Liverpool"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Brighton and Hove Albion": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Brighton and Hove Albion",
+        "tr": "Brighton and Hove Albion",
+        "de": "Brighton and Hove Albion"
+      },
+      "aliases": [
+        "Brighton and Hove Albion"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Newcastle United": {
+      "transfermarkt_id": "15",
+      "display_names": {
+        "en": "Newcastle United",
+        "tr": "Newcastle United",
+        "de": "Newcastle United"
+      },
+      "aliases": [
+        "Newcastle United"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Everton": {
+      "transfermarkt_id": "8",
+      "display_names": {
+        "en": "Everton",
+        "tr": "Everton",
+        "de": "Everton"
+      },
+      "aliases": [
+        "Everton"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    }
+  },
+  "eredivisie": {
+    "Feyenoord": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Feyenoord",
+        "tr": "Feyenoord",
+        "de": "Feyenoord"
+      },
+      "aliases": [
+        "Feyenoord"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "FC Volendam": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "FC Volendam",
+        "tr": "FC Volendam",
+        "de": "FC Volendam"
+      },
+      "aliases": [
+        "FC Volendam"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "FC Emmen": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "FC Emmen",
+        "tr": "FC Emmen",
+        "de": "FC Emmen"
+      },
+      "aliases": [
+        "FC Emmen"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "NAC Breda": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "NAC Breda",
+        "tr": "NAC Breda",
+        "de": "NAC Breda"
+      },
+      "aliases": [
+        "NAC Breda"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "PSV Eindhoven": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "PSV Eindhoven",
+        "tr": "PSV Eindhoven",
+        "de": "PSV Eindhoven"
+      },
+      "aliases": [
+        "PSV Eindhoven"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "AZ Alkmaar": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "AZ Alkmaar",
+        "tr": "AZ Alkmaar",
+        "de": "AZ Alkmaar"
+      },
+      "aliases": [
+        "AZ Alkmaar"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "FC Zwolle": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "FC Zwolle",
+        "tr": "FC Zwolle",
+        "de": "FC Zwolle"
+      },
+      "aliases": [
+        "FC Zwolle"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "VVV Venlo": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "VVV Venlo",
+        "tr": "VVV Venlo",
+        "de": "VVV Venlo"
+      },
+      "aliases": [
+        "VVV Venlo"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Heerenveen": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Heerenveen",
+        "tr": "Heerenveen",
+        "de": "Heerenveen"
+      },
+      "aliases": [
+        "Heerenveen"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Go Ahead Eagles": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Go Ahead Eagles",
+        "tr": "Go Ahead Eagles",
+        "de": "Go Ahead Eagles"
+      },
+      "aliases": [
+        "Go Ahead Eagles"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "NEC Nijmegen": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "NEC Nijmegen",
+        "tr": "NEC Nijmegen",
+        "de": "NEC Nijmegen"
+      },
+      "aliases": [
+        "NEC Nijmegen"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Fortuna Sittard": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Fortuna Sittard",
+        "tr": "Fortuna Sittard",
+        "de": "Fortuna Sittard"
+      },
+      "aliases": [
+        "Fortuna Sittard"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Excelsior": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Excelsior",
+        "tr": "Excelsior",
+        "de": "Excelsior"
+      },
+      "aliases": [
+        "Excelsior"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "ADO Den Haag": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "ADO Den Haag",
+        "tr": "ADO Den Haag",
+        "de": "ADO Den Haag"
+      },
+      "aliases": [
+        "ADO Den Haag"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "SC Telstar": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "SC Telstar",
+        "tr": "SC Telstar",
+        "de": "SC Telstar"
+      },
+      "aliases": [
+        "SC Telstar"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Almere City": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Almere City",
+        "tr": "Almere City",
+        "de": "Almere City"
+      },
+      "aliases": [
+        "Almere City"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Ajax": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Ajax",
+        "tr": "Ajax",
+        "de": "Ajax"
+      },
+      "aliases": [
+        "Ajax"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "SC Cambuur": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "SC Cambuur",
+        "tr": "SC Cambuur",
+        "de": "SC Cambuur"
+      },
+      "aliases": [
+        "SC Cambuur"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Heracles Almelo": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Heracles Almelo",
+        "tr": "Heracles Almelo",
+        "de": "Heracles Almelo"
+      },
+      "aliases": [
+        "Heracles Almelo"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Vitesse Arnhem": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Vitesse Arnhem",
+        "tr": "Vitesse Arnhem",
+        "de": "Vitesse Arnhem"
+      },
+      "aliases": [
+        "Vitesse Arnhem"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "FC Utrecht": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "FC Utrecht",
+        "tr": "FC Utrecht",
+        "de": "FC Utrecht"
+      },
+      "aliases": [
+        "FC Utrecht"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "RKC Waalwijk": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "RKC Waalwijk",
+        "tr": "RKC Waalwijk",
+        "de": "RKC Waalwijk"
+      },
+      "aliases": [
+        "RKC Waalwijk"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Willem II": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Willem II",
+        "tr": "Willem II",
+        "de": "Willem II"
+      },
+      "aliases": [
+        "Willem II"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Groningen": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Groningen",
+        "tr": "Groningen",
+        "de": "Groningen"
+      },
+      "aliases": [
+        "Groningen"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Sparta Rotterdam": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Sparta Rotterdam",
+        "tr": "Sparta Rotterdam",
+        "de": "Sparta Rotterdam"
+      },
+      "aliases": [
+        "Sparta Rotterdam"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "FC Twente Enschede": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "FC Twente Enschede",
+        "tr": "FC Twente Enschede",
+        "de": "FC Twente Enschede"
+      },
+      "aliases": [
+        "FC Twente Enschede"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    }
+  },
+  "laliga": {
+    "alavés": {
+      "transfermarkt_id": "3044",
+      "display_names": {
+        "en": "alavés",
+        "tr": "alavés",
+        "de": "alavés"
+      },
+      "aliases": [
+        "alavés"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "almería": {
+      "transfermarkt_id": "2050",
+      "display_names": {
+        "en": "almería",
+        "tr": "almería",
+        "de": "almería"
+      },
+      "aliases": [
+        "almería"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "athletic bilbao": {
+      "transfermarkt_id": "32",
+      "display_names": {
+        "en": "athletic bilbao",
+        "tr": "athletic bilbao",
+        "de": "athletic bilbao"
+      },
+      "aliases": [
+        "athletic bilbao"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "atlético madrid": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "atlético madrid",
+        "tr": "atlético madrid",
+        "de": "atlético madrid"
+      },
+      "aliases": [
+        "atlético madrid"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "barcelona": {
+      "transfermarkt_id": "131",
+      "display_names": {
+        "en": "barcelona",
+        "tr": "barcelona",
+        "de": "barcelona"
+      },
+      "aliases": [
+        "barcelona"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "ca osasuna": {
+      "transfermarkt_id": "375",
+      "display_names": {
+        "en": "ca osasuna",
+        "tr": "ca osasuna",
+        "de": "ca osasuna"
+      },
+      "aliases": [
+        "ca osasuna"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "celta vigo": {
+      "transfermarkt_id": "119",
+      "display_names": {
+        "en": "celta vigo",
+        "tr": "celta vigo",
+        "de": "celta vigo"
+      },
+      "aliases": [
+        "celta vigo"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "cádiz cf": {
+      "transfermarkt_id": "1025",
+      "display_names": {
+        "en": "cádiz cf",
+        "tr": "cádiz cf",
+        "de": "cádiz cf"
+      },
+      "aliases": [
+        "cádiz cf"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "eibar": {
+      "transfermarkt_id": "198",
+      "display_names": {
+        "en": "eibar",
+        "tr": "eibar",
+        "de": "eibar"
+      },
+      "aliases": [
+        "eibar"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "elche cf": {
+      "transfermarkt_id": "1121",
+      "display_names": {
+        "en": "elche cf",
+        "tr": "elche cf",
+        "de": "elche cf"
+      },
+      "aliases": [
+        "elche cf"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "espanyol": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "espanyol",
+        "tr": "espanyol",
+        "de": "espanyol"
+      },
+      "aliases": [
+        "espanyol"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "getafe": {
+      "transfermarkt_id": "205",
+      "display_names": {
+        "en": "getafe",
+        "tr": "getafe",
+        "de": "getafe"
+      },
+      "aliases": [
+        "getafe"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "girona": {
+      "transfermarkt_id": "93",
+      "display_names": {
+        "en": "girona",
+        "tr": "girona",
+        "de": "girona"
+      },
+      "aliases": [
+        "girona"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "granada cf": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "granada cf",
+        "tr": "granada cf",
+        "de": "granada cf"
+      },
+      "aliases": [
+        "granada cf"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "huesca": {
+      "transfermarkt_id": "1084",
+      "display_names": {
+        "en": "huesca",
+        "tr": "huesca",
+        "de": "huesca"
+      },
+      "aliases": [
+        "huesca"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "las palmas": {
+      "transfermarkt_id": "178",
+      "display_names": {
+        "en": "las palmas",
+        "tr": "las palmas",
+        "de": "las palmas"
+      },
+      "aliases": [
+        "las palmas"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "leganés": {
+      "transfermarkt_id": "1043",
+      "display_names": {
+        "en": "leganés",
+        "tr": "leganés",
+        "de": "leganés"
+      },
+      "aliases": [
+        "leganés"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "levante": {
+      "transfermarkt_id": "248",
+      "display_names": {
+        "en": "levante",
+        "tr": "levante",
+        "de": "levante"
+      },
+      "aliases": [
+        "levante"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "mallorca": {
+      "transfermarkt_id": "274",
+      "display_names": {
+        "en": "mallorca",
+        "tr": "mallorca",
+        "de": "mallorca"
+      },
+      "aliases": [
+        "mallorca"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "oviedo": {
+      "transfermarkt_id": "3859",
+      "display_names": {
+        "en": "oviedo",
+        "tr": "oviedo",
+        "de": "oviedo"
+      },
+      "aliases": [
+        "oviedo"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "rayo vallecano": {
+      "transfermarkt_id": "408",
+      "display_names": {
+        "en": "rayo vallecano",
+        "tr": "rayo vallecano",
+        "de": "rayo vallecano"
+      },
+      "aliases": [
+        "rayo vallecano"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "real betis": {
+      "transfermarkt_id": "426",
+      "display_names": {
+        "en": "real betis",
+        "tr": "real betis",
+        "de": "real betis"
+      },
+      "aliases": [
+        "real betis"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "real madrid": {
+      "transfermarkt_id": "418",
+      "display_names": {
+        "en": "real madrid",
+        "tr": "real madrid",
+        "de": "real madrid"
+      },
+      "aliases": [
+        "real madrid"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "real sociedad": {
+      "transfermarkt_id": "32",
+      "display_names": {
+        "en": "real sociedad",
+        "tr": "real sociedad",
+        "de": "real sociedad"
+      },
+      "aliases": [
+        "real sociedad"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "sevilla": {
+      "transfermarkt_id": "480",
+      "display_names": {
+        "en": "sevilla",
+        "tr": "sevilla",
+        "de": "sevilla"
+      },
+      "aliases": [
+        "sevilla"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "valencia": {
+      "transfermarkt_id": "506",
+      "display_names": {
+        "en": "valencia",
+        "tr": "valencia",
+        "de": "valencia"
+      },
+      "aliases": [
+        "valencia"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "valladolid": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "valladolid",
+        "tr": "valladolid",
+        "de": "valladolid"
+      },
+      "aliases": [
+        "valladolid"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "villarreal": {
+      "transfermarkt_id": "552",
+      "display_names": {
+        "en": "villarreal",
+        "tr": "villarreal",
+        "de": "villarreal"
+      },
+      "aliases": [
+        "villarreal"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    }
+  },
+  "ligue_1": {
+    "ac ajaccio": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "ac ajaccio",
+        "tr": "ac ajaccio",
+        "de": "ac ajaccio"
+      },
+      "aliases": [
+        "ac ajaccio"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "angers": {
+      "transfermarkt_id": "44",
+      "display_names": {
+        "en": "angers",
+        "tr": "angers",
+        "de": "angers"
+      },
+      "aliases": [
+        "angers"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "as monaco": {
+      "transfermarkt_id": "308",
+      "display_names": {
+        "en": "as monaco",
+        "tr": "as monaco",
+        "de": "as monaco"
+      },
+      "aliases": [
+        "as monaco"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "auxerre": {
+      "transfermarkt_id": "45",
+      "display_names": {
+        "en": "auxerre",
+        "tr": "auxerre",
+        "de": "auxerre"
+      },
+      "aliases": [
+        "auxerre"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "bordeaux": {
+      "transfermarkt_id": "59",
+      "display_names": {
+        "en": "bordeaux",
+        "tr": "bordeaux",
+        "de": "bordeaux"
+      },
+      "aliases": [
+        "bordeaux"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "brest": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "brest",
+        "tr": "brest",
+        "de": "brest"
+      },
+      "aliases": [
+        "brest"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "clermont": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "clermont",
+        "tr": "clermont",
+        "de": "clermont"
+      },
+      "aliases": [
+        "clermont"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "dijon": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "dijon",
+        "tr": "dijon",
+        "de": "dijon"
+      },
+      "aliases": [
+        "dijon"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "le havre": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "le havre",
+        "tr": "le havre",
+        "de": "le havre"
+      },
+      "aliases": [
+        "le havre"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "lille": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "lille",
+        "tr": "lille",
+        "de": "lille"
+      },
+      "aliases": [
+        "lille"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "lorient": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "lorient",
+        "tr": "lorient",
+        "de": "lorient"
+      },
+      "aliases": [
+        "lorient"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "lyon": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "lyon",
+        "tr": "lyon",
+        "de": "lyon"
+      },
+      "aliases": [
+        "lyon"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "marseille": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "marseille",
+        "tr": "marseille",
+        "de": "marseille"
+      },
+      "aliases": [
+        "marseille"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "metz": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "metz",
+        "tr": "metz",
+        "de": "metz"
+      },
+      "aliases": [
+        "metz"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "montpellier": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "montpellier",
+        "tr": "montpellier",
+        "de": "montpellier"
+      },
+      "aliases": [
+        "montpellier"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "nantes": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "nantes",
+        "tr": "nantes",
+        "de": "nantes"
+      },
+      "aliases": [
+        "nantes"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "nice": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "nice",
+        "tr": "nice",
+        "de": "nice"
+      },
+      "aliases": [
+        "nice"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "nîmes olympique": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "nîmes olympique",
+        "tr": "nîmes olympique",
+        "de": "nîmes olympique"
+      },
+      "aliases": [
+        "nîmes olympique"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "paris fc": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "paris fc",
+        "tr": "paris fc",
+        "de": "paris fc"
+      },
+      "aliases": [
+        "paris fc"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "paris saint germain": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "paris saint germain",
+        "tr": "paris saint germain",
+        "de": "paris saint germain"
+      },
+      "aliases": [
+        "paris saint germain"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "rc lens": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "rc lens",
+        "tr": "rc lens",
+        "de": "rc lens"
+      },
+      "aliases": [
+        "rc lens"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "rennes": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "rennes",
+        "tr": "rennes",
+        "de": "rennes"
+      },
+      "aliases": [
+        "rennes"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "saint etienne": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "saint etienne",
+        "tr": "saint etienne",
+        "de": "saint etienne"
+      },
+      "aliases": [
+        "saint etienne"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "stade de reims": {
+      "transfermarkt_id": "28",
+      "display_names": {
+        "en": "stade de reims",
+        "tr": "stade de reims",
+        "de": "stade de reims"
+      },
+      "aliases": [
+        "stade de reims"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "strasbourg": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "strasbourg",
+        "tr": "strasbourg",
+        "de": "strasbourg"
+      },
+      "aliases": [
+        "strasbourg"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "toulouse": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "toulouse",
+        "tr": "toulouse",
+        "de": "toulouse"
+      },
+      "aliases": [
+        "toulouse"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "troyes": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "troyes",
+        "tr": "troyes",
+        "de": "troyes"
+      },
+      "aliases": [
+        "troyes"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    }
+  },
+  "meksika": {
+    "FC Juárez": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "FC Juárez",
+        "tr": "FC Juárez",
+        "de": "FC Juárez"
+      },
+      "aliases": [
+        "FC Juárez"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Toluca": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Toluca",
+        "tr": "Toluca",
+        "de": "Toluca"
+      },
+      "aliases": [
+        "Toluca"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Querétaro": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Querétaro",
+        "tr": "Querétaro",
+        "de": "Querétaro"
+      },
+      "aliases": [
+        "Querétaro"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Guadalajara": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Guadalajara",
+        "tr": "Guadalajara",
+        "de": "Guadalajara"
+      },
+      "aliases": [
+        "Guadalajara"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Mazatlán FC": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Mazatlán FC",
+        "tr": "Mazatlán FC",
+        "de": "Mazatlán FC"
+      },
+      "aliases": [
+        "Mazatlán FC"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Atlético San Luis": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Atlético San Luis",
+        "tr": "Atlético San Luis",
+        "de": "Atlético San Luis"
+      },
+      "aliases": [
+        "Atlético San Luis"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Tigres": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Tigres",
+        "tr": "Tigres",
+        "de": "Tigres"
+      },
+      "aliases": [
+        "Tigres"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "León": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "León",
+        "tr": "León",
+        "de": "León"
+      },
+      "aliases": [
+        "León"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Santos Laguna": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Santos Laguna",
+        "tr": "Santos Laguna",
+        "de": "Santos Laguna"
+      },
+      "aliases": [
+        "Santos Laguna"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "América": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "América",
+        "tr": "América",
+        "de": "América"
+      },
+      "aliases": [
+        "América"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Necaxa": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Necaxa",
+        "tr": "Necaxa",
+        "de": "Necaxa"
+      },
+      "aliases": [
+        "Necaxa"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Pumas": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Pumas",
+        "tr": "Pumas",
+        "de": "Pumas"
+      },
+      "aliases": [
+        "Pumas"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Tijuana": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Tijuana",
+        "tr": "Tijuana",
+        "de": "Tijuana"
+      },
+      "aliases": [
+        "Tijuana"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Atlas": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Atlas",
+        "tr": "Atlas",
+        "de": "Atlas"
+      },
+      "aliases": [
+        "Atlas"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Puebla": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Puebla",
+        "tr": "Puebla",
+        "de": "Puebla"
+      },
+      "aliases": [
+        "Puebla"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Pachuca": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Pachuca",
+        "tr": "Pachuca",
+        "de": "Pachuca"
+      },
+      "aliases": [
+        "Pachuca"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Cruz Azul": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Cruz Azul",
+        "tr": "Cruz Azul",
+        "de": "Cruz Azul"
+      },
+      "aliases": [
+        "Cruz Azul"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Monterrey": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Monterrey",
+        "tr": "Monterrey",
+        "de": "Monterrey"
+      },
+      "aliases": [
+        "Monterrey"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    }
+  },
+  "mlb": {
+    "Washington Nationals": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Washington Nationals",
+        "tr": "Washington Nationals",
+        "de": "Washington Nationals"
+      },
+      "aliases": [
+        "Washington Nationals"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Baltimore Orioles": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Baltimore Orioles",
+        "tr": "Baltimore Orioles",
+        "de": "Baltimore Orioles"
+      },
+      "aliases": [
+        "Baltimore Orioles"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Pittsburgh Pirates": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Pittsburgh Pirates",
+        "tr": "Pittsburgh Pirates",
+        "de": "Pittsburgh Pirates"
+      },
+      "aliases": [
+        "Pittsburgh Pirates"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "New York Mets": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "New York Mets",
+        "tr": "New York Mets",
+        "de": "New York Mets"
+      },
+      "aliases": [
+        "New York Mets"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "New York Yankees": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "New York Yankees",
+        "tr": "New York Yankees",
+        "de": "New York Yankees"
+      },
+      "aliases": [
+        "New York Yankees"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Chicago Cubs": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Chicago Cubs",
+        "tr": "Chicago Cubs",
+        "de": "Chicago Cubs"
+      },
+      "aliases": [
+        "Chicago Cubs"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Los Angeles Angels": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Los Angeles Angels",
+        "tr": "Los Angeles Angels",
+        "de": "Los Angeles Angels"
+      },
+      "aliases": [
+        "Los Angeles Angels"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Colorado Rockies": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Colorado Rockies",
+        "tr": "Colorado Rockies",
+        "de": "Colorado Rockies"
+      },
+      "aliases": [
+        "Colorado Rockies"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Miami Marlins": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Miami Marlins",
+        "tr": "Miami Marlins",
+        "de": "Miami Marlins"
+      },
+      "aliases": [
+        "Miami Marlins"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Detroit Tigers": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Detroit Tigers",
+        "tr": "Detroit Tigers",
+        "de": "Detroit Tigers"
+      },
+      "aliases": [
+        "Detroit Tigers"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Minnesota Twins": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Minnesota Twins",
+        "tr": "Minnesota Twins",
+        "de": "Minnesota Twins"
+      },
+      "aliases": [
+        "Minnesota Twins"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "San Diego Padres": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "San Diego Padres",
+        "tr": "San Diego Padres",
+        "de": "San Diego Padres"
+      },
+      "aliases": [
+        "San Diego Padres"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Philadelphia Phillies": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Philadelphia Phillies",
+        "tr": "Philadelphia Phillies",
+        "de": "Philadelphia Phillies"
+      },
+      "aliases": [
+        "Philadelphia Phillies"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Houston Astros": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Houston Astros",
+        "tr": "Houston Astros",
+        "de": "Houston Astros"
+      },
+      "aliases": [
+        "Houston Astros"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Kansas City Royals": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Kansas City Royals",
+        "tr": "Kansas City Royals",
+        "de": "Kansas City Royals"
+      },
+      "aliases": [
+        "Kansas City Royals"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Milwaukee Brewers": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Milwaukee Brewers",
+        "tr": "Milwaukee Brewers",
+        "de": "Milwaukee Brewers"
+      },
+      "aliases": [
+        "Milwaukee Brewers"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Atlanta Braves": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Atlanta Braves",
+        "tr": "Atlanta Braves",
+        "de": "Atlanta Braves"
+      },
+      "aliases": [
+        "Atlanta Braves"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Arizona Diamondbacks": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Arizona Diamondbacks",
+        "tr": "Arizona Diamondbacks",
+        "de": "Arizona Diamondbacks"
+      },
+      "aliases": [
+        "Arizona Diamondbacks"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Toronto Blue Jays": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Toronto Blue Jays",
+        "tr": "Toronto Blue Jays",
+        "de": "Toronto Blue Jays"
+      },
+      "aliases": [
+        "Toronto Blue Jays"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "St. Louis Cardinals": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "St. Louis Cardinals",
+        "tr": "St. Louis Cardinals",
+        "de": "St. Louis Cardinals"
+      },
+      "aliases": [
+        "St. Louis Cardinals"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Cleveland Guardians": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Cleveland Guardians",
+        "tr": "Cleveland Guardians",
+        "de": "Cleveland Guardians"
+      },
+      "aliases": [
+        "Cleveland Guardians"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Cincinnati Reds": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Cincinnati Reds",
+        "tr": "Cincinnati Reds",
+        "de": "Cincinnati Reds"
+      },
+      "aliases": [
+        "Cincinnati Reds"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Boston Red Sox": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Boston Red Sox",
+        "tr": "Boston Red Sox",
+        "de": "Boston Red Sox"
+      },
+      "aliases": [
+        "Boston Red Sox"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Texas Rangers": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Texas Rangers",
+        "tr": "Texas Rangers",
+        "de": "Texas Rangers"
+      },
+      "aliases": [
+        "Texas Rangers"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Los Angeles Dodgers": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Los Angeles Dodgers",
+        "tr": "Los Angeles Dodgers",
+        "de": "Los Angeles Dodgers"
+      },
+      "aliases": [
+        "Los Angeles Dodgers"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "San Francisco Giants": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "San Francisco Giants",
+        "tr": "San Francisco Giants",
+        "de": "San Francisco Giants"
+      },
+      "aliases": [
+        "San Francisco Giants"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Chicago White Sox": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Chicago White Sox",
+        "tr": "Chicago White Sox",
+        "de": "Chicago White Sox"
+      },
+      "aliases": [
+        "Chicago White Sox"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Tampa Bay Rays": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Tampa Bay Rays",
+        "tr": "Tampa Bay Rays",
+        "de": "Tampa Bay Rays"
+      },
+      "aliases": [
+        "Tampa Bay Rays"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Seattle Mariners": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Seattle Mariners",
+        "tr": "Seattle Mariners",
+        "de": "Seattle Mariners"
+      },
+      "aliases": [
+        "Seattle Mariners"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Oakland Athletics": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Oakland Athletics",
+        "tr": "Oakland Athletics",
+        "de": "Oakland Athletics"
+      },
+      "aliases": [
+        "Oakland Athletics"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    }
+  },
+  "mls": {
+    "St. Louis City SC": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "St. Louis City SC",
+        "tr": "St. Louis City SC",
+        "de": "St. Louis City SC"
+      },
+      "aliases": [
+        "St. Louis City SC"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "D.C. United": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "D.C. United",
+        "tr": "D.C. United",
+        "de": "D.C. United"
+      },
+      "aliases": [
+        "D.C. United"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Los Angeles FC": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Los Angeles FC",
+        "tr": "Los Angeles FC",
+        "de": "Los Angeles FC"
+      },
+      "aliases": [
+        "Los Angeles FC"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "San Jose Earthquakes": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "San Jose Earthquakes",
+        "tr": "San Jose Earthquakes",
+        "de": "San Jose Earthquakes"
+      },
+      "aliases": [
+        "San Jose Earthquakes"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Toronto FC": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Toronto FC",
+        "tr": "Toronto FC",
+        "de": "Toronto FC"
+      },
+      "aliases": [
+        "Toronto FC"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Philadelphia Union": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Philadelphia Union",
+        "tr": "Philadelphia Union",
+        "de": "Philadelphia Union"
+      },
+      "aliases": [
+        "Philadelphia Union"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "New York City FC": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "New York City FC",
+        "tr": "New York City FC",
+        "de": "New York City FC"
+      },
+      "aliases": [
+        "New York City FC"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "San Diego FC": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "San Diego FC",
+        "tr": "San Diego FC",
+        "de": "San Diego FC"
+      },
+      "aliases": [
+        "San Diego FC"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Vancouver Whitecaps FC": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Vancouver Whitecaps FC",
+        "tr": "Vancouver Whitecaps FC",
+        "de": "Vancouver Whitecaps FC"
+      },
+      "aliases": [
+        "Vancouver Whitecaps FC"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Charlotte FC": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Charlotte FC",
+        "tr": "Charlotte FC",
+        "de": "Charlotte FC"
+      },
+      "aliases": [
+        "Charlotte FC"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Inter Miami CF": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Inter Miami CF",
+        "tr": "Inter Miami CF",
+        "de": "Inter Miami CF"
+      },
+      "aliases": [
+        "Inter Miami CF"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Austin FC": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Austin FC",
+        "tr": "Austin FC",
+        "de": "Austin FC"
+      },
+      "aliases": [
+        "Austin FC"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Portland Timbers": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Portland Timbers",
+        "tr": "Portland Timbers",
+        "de": "Portland Timbers"
+      },
+      "aliases": [
+        "Portland Timbers"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "New York Red Bulls": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "New York Red Bulls",
+        "tr": "New York Red Bulls",
+        "de": "New York Red Bulls"
+      },
+      "aliases": [
+        "New York Red Bulls"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Columbus Crew SC": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Columbus Crew SC",
+        "tr": "Columbus Crew SC",
+        "de": "Columbus Crew SC"
+      },
+      "aliases": [
+        "Columbus Crew SC"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Chicago Fire": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Chicago Fire",
+        "tr": "Chicago Fire",
+        "de": "Chicago Fire"
+      },
+      "aliases": [
+        "Chicago Fire"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Colorado Rapids": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Colorado Rapids",
+        "tr": "Colorado Rapids",
+        "de": "Colorado Rapids"
+      },
+      "aliases": [
+        "Colorado Rapids"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Atlanta United FC": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Atlanta United FC",
+        "tr": "Atlanta United FC",
+        "de": "Atlanta United FC"
+      },
+      "aliases": [
+        "Atlanta United FC"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "New England Revolution": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "New England Revolution",
+        "tr": "New England Revolution",
+        "de": "New England Revolution"
+      },
+      "aliases": [
+        "New England Revolution"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "CF Montreal": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "CF Montreal",
+        "tr": "CF Montreal",
+        "de": "CF Montreal"
+      },
+      "aliases": [
+        "CF Montreal"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Orlando City SC": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Orlando City SC",
+        "tr": "Orlando City SC",
+        "de": "Orlando City SC"
+      },
+      "aliases": [
+        "Orlando City SC"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Real Salt Lake": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Real Salt Lake",
+        "tr": "Real Salt Lake",
+        "de": "Real Salt Lake"
+      },
+      "aliases": [
+        "Real Salt Lake"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Minnesota United FC": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Minnesota United FC",
+        "tr": "Minnesota United FC",
+        "de": "Minnesota United FC"
+      },
+      "aliases": [
+        "Minnesota United FC"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "FC Dallas": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "FC Dallas",
+        "tr": "FC Dallas",
+        "de": "FC Dallas"
+      },
+      "aliases": [
+        "FC Dallas"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Montreal Impact": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Montreal Impact",
+        "tr": "Montreal Impact",
+        "de": "Montreal Impact"
+      },
+      "aliases": [
+        "Montreal Impact"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Nashville SC": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Nashville SC",
+        "tr": "Nashville SC",
+        "de": "Nashville SC"
+      },
+      "aliases": [
+        "Nashville SC"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "FC Cincinnati": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "FC Cincinnati",
+        "tr": "FC Cincinnati",
+        "de": "FC Cincinnati"
+      },
+      "aliases": [
+        "FC Cincinnati"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Houston Dynamo": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Houston Dynamo",
+        "tr": "Houston Dynamo",
+        "de": "Houston Dynamo"
+      },
+      "aliases": [
+        "Houston Dynamo"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Seattle Sounders FC": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Seattle Sounders FC",
+        "tr": "Seattle Sounders FC",
+        "de": "Seattle Sounders FC"
+      },
+      "aliases": [
+        "Seattle Sounders FC"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Sporting Kansas City": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Sporting Kansas City",
+        "tr": "Sporting Kansas City",
+        "de": "Sporting Kansas City"
+      },
+      "aliases": [
+        "Sporting Kansas City"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "LA Galaxy": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "LA Galaxy",
+        "tr": "LA Galaxy",
+        "de": "LA Galaxy"
+      },
+      "aliases": [
+        "LA Galaxy"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    }
+  },
+  "ncaaf": {
+    "Arizona State Sun Devils": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Arizona State Sun Devils",
+        "tr": "Arizona State Sun Devils",
+        "de": "Arizona State Sun Devils"
+      },
+      "aliases": [
+        "Arizona State Sun Devils"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Troy Trojans": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Troy Trojans",
+        "tr": "Troy Trojans",
+        "de": "Troy Trojans"
+      },
+      "aliases": [
+        "Troy Trojans"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Colorado Buffaloes": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Colorado Buffaloes",
+        "tr": "Colorado Buffaloes",
+        "de": "Colorado Buffaloes"
+      },
+      "aliases": [
+        "Colorado Buffaloes"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "East Carolina Pirates": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "East Carolina Pirates",
+        "tr": "East Carolina Pirates",
+        "de": "East Carolina Pirates"
+      },
+      "aliases": [
+        "East Carolina Pirates"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "UCLA Bruins": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "UCLA Bruins",
+        "tr": "UCLA Bruins",
+        "de": "UCLA Bruins"
+      },
+      "aliases": [
+        "UCLA Bruins"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Tulane Green Wave": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Tulane Green Wave",
+        "tr": "Tulane Green Wave",
+        "de": "Tulane Green Wave"
+      },
+      "aliases": [
+        "Tulane Green Wave"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "UAB Blazers": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "UAB Blazers",
+        "tr": "UAB Blazers",
+        "de": "UAB Blazers"
+      },
+      "aliases": [
+        "UAB Blazers"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Sacramento State Hornets": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Sacramento State Hornets",
+        "tr": "Sacramento State Hornets",
+        "de": "Sacramento State Hornets"
+      },
+      "aliases": [
+        "Sacramento State Hornets"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Lafayette Leopards": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Lafayette Leopards",
+        "tr": "Lafayette Leopards",
+        "de": "Lafayette Leopards"
+      },
+      "aliases": [
+        "Lafayette Leopards"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Western Kentucky Hilltoppers": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Western Kentucky Hilltoppers",
+        "tr": "Western Kentucky Hilltoppers",
+        "de": "Western Kentucky Hilltoppers"
+      },
+      "aliases": [
+        "Western Kentucky Hilltoppers"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Western Michigan Broncos": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Western Michigan Broncos",
+        "tr": "Western Michigan Broncos",
+        "de": "Western Michigan Broncos"
+      },
+      "aliases": [
+        "Western Michigan Broncos"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Colorado State Rams": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Colorado State Rams",
+        "tr": "Colorado State Rams",
+        "de": "Colorado State Rams"
+      },
+      "aliases": [
+        "Colorado State Rams"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "BYU Cougars": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "BYU Cougars",
+        "tr": "BYU Cougars",
+        "de": "BYU Cougars"
+      },
+      "aliases": [
+        "BYU Cougars"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "North Dakota Fighting Hawks": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "North Dakota Fighting Hawks",
+        "tr": "North Dakota Fighting Hawks",
+        "de": "North Dakota Fighting Hawks"
+      },
+      "aliases": [
+        "North Dakota Fighting Hawks"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Tulsa Golden Hurricane": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Tulsa Golden Hurricane",
+        "tr": "Tulsa Golden Hurricane",
+        "de": "Tulsa Golden Hurricane"
+      },
+      "aliases": [
+        "Tulsa Golden Hurricane"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Old Dominion Monarchs": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Old Dominion Monarchs",
+        "tr": "Old Dominion Monarchs",
+        "de": "Old Dominion Monarchs"
+      },
+      "aliases": [
+        "Old Dominion Monarchs"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Cincinnati Bearcats": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Cincinnati Bearcats",
+        "tr": "Cincinnati Bearcats",
+        "de": "Cincinnati Bearcats"
+      },
+      "aliases": [
+        "Cincinnati Bearcats"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Kent State Golden Flashes": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Kent State Golden Flashes",
+        "tr": "Kent State Golden Flashes",
+        "de": "Kent State Golden Flashes"
+      },
+      "aliases": [
+        "Kent State Golden Flashes"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Northern Colorado Bears": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Northern Colorado Bears",
+        "tr": "Northern Colorado Bears",
+        "de": "Northern Colorado Bears"
+      },
+      "aliases": [
+        "Northern Colorado Bears"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Auburn Tigers": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Auburn Tigers",
+        "tr": "Auburn Tigers",
+        "de": "Auburn Tigers"
+      },
+      "aliases": [
+        "Auburn Tigers"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Samford Bulldogs": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Samford Bulldogs",
+        "tr": "Samford Bulldogs",
+        "de": "Samford Bulldogs"
+      },
+      "aliases": [
+        "Samford Bulldogs"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Eastern Illinois Panthers": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Eastern Illinois Panthers",
+        "tr": "Eastern Illinois Panthers",
+        "de": "Eastern Illinois Panthers"
+      },
+      "aliases": [
+        "Eastern Illinois Panthers"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Charlotte 49ers": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Charlotte 49ers",
+        "tr": "Charlotte 49ers",
+        "de": "Charlotte 49ers"
+      },
+      "aliases": [
+        "Charlotte 49ers"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "North Texas Mean Green": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "North Texas Mean Green",
+        "tr": "North Texas Mean Green",
+        "de": "North Texas Mean Green"
+      },
+      "aliases": [
+        "North Texas Mean Green"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "UTEP Miners": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "UTEP Miners",
+        "tr": "UTEP Miners",
+        "de": "UTEP Miners"
+      },
+      "aliases": [
+        "UTEP Miners"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Morgan State Bears": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Morgan State Bears",
+        "tr": "Morgan State Bears",
+        "de": "Morgan State Bears"
+      },
+      "aliases": [
+        "Morgan State Bears"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Georgia Bulldogs": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Georgia Bulldogs",
+        "tr": "Georgia Bulldogs",
+        "de": "Georgia Bulldogs"
+      },
+      "aliases": [
+        "Georgia Bulldogs"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Rutgers Scarlet Knights": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Rutgers Scarlet Knights",
+        "tr": "Rutgers Scarlet Knights",
+        "de": "Rutgers Scarlet Knights"
+      },
+      "aliases": [
+        "Rutgers Scarlet Knights"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Villanova Wildcats": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Villanova Wildcats",
+        "tr": "Villanova Wildcats",
+        "de": "Villanova Wildcats"
+      },
+      "aliases": [
+        "Villanova Wildcats"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Rice Owls": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Rice Owls",
+        "tr": "Rice Owls",
+        "de": "Rice Owls"
+      },
+      "aliases": [
+        "Rice Owls"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "UT Martin Skyhawks": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "UT Martin Skyhawks",
+        "tr": "UT Martin Skyhawks",
+        "de": "UT Martin Skyhawks"
+      },
+      "aliases": [
+        "UT Martin Skyhawks"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Alabama Crimson Tide": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Alabama Crimson Tide",
+        "tr": "Alabama Crimson Tide",
+        "de": "Alabama Crimson Tide"
+      },
+      "aliases": [
+        "Alabama Crimson Tide"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Chattanooga Mocs": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Chattanooga Mocs",
+        "tr": "Chattanooga Mocs",
+        "de": "Chattanooga Mocs"
+      },
+      "aliases": [
+        "Chattanooga Mocs"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Gardner-Webb Runnin Bulldogs": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Gardner-Webb Runnin Bulldogs",
+        "tr": "Gardner-Webb Runnin Bulldogs",
+        "de": "Gardner-Webb Runnin Bulldogs"
+      },
+      "aliases": [
+        "Gardner-Webb Runnin Bulldogs"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Merrimack Warriors": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Merrimack Warriors",
+        "tr": "Merrimack Warriors",
+        "de": "Merrimack Warriors"
+      },
+      "aliases": [
+        "Merrimack Warriors"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Arizona Wildcats": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Arizona Wildcats",
+        "tr": "Arizona Wildcats",
+        "de": "Arizona Wildcats"
+      },
+      "aliases": [
+        "Arizona Wildcats"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "California Golden Bears": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "California Golden Bears",
+        "tr": "California Golden Bears",
+        "de": "California Golden Bears"
+      },
+      "aliases": [
+        "California Golden Bears"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "San Jose State Spartans": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "San Jose State Spartans",
+        "tr": "San Jose State Spartans",
+        "de": "San Jose State Spartans"
+      },
+      "aliases": [
+        "San Jose State Spartans"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Vanderbilt Commodores": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Vanderbilt Commodores",
+        "tr": "Vanderbilt Commodores",
+        "de": "Vanderbilt Commodores"
+      },
+      "aliases": [
+        "Vanderbilt Commodores"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Arkansas Razorbacks": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Arkansas Razorbacks",
+        "tr": "Arkansas Razorbacks",
+        "de": "Arkansas Razorbacks"
+      },
+      "aliases": [
+        "Arkansas Razorbacks"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Kennesaw State Owls": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Kennesaw State Owls",
+        "tr": "Kennesaw State Owls",
+        "de": "Kennesaw State Owls"
+      },
+      "aliases": [
+        "Kennesaw State Owls"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Michigan Wolverines": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Michigan Wolverines",
+        "tr": "Michigan Wolverines",
+        "de": "Michigan Wolverines"
+      },
+      "aliases": [
+        "Michigan Wolverines"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "UC Davis Aggies": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "UC Davis Aggies",
+        "tr": "UC Davis Aggies",
+        "de": "UC Davis Aggies"
+      },
+      "aliases": [
+        "UC Davis Aggies"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Maine Black Bears": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Maine Black Bears",
+        "tr": "Maine Black Bears",
+        "de": "Maine Black Bears"
+      },
+      "aliases": [
+        "Maine Black Bears"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "USC Trojans": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "USC Trojans",
+        "tr": "USC Trojans",
+        "de": "USC Trojans"
+      },
+      "aliases": [
+        "USC Trojans"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "William and Mary Tribe": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "William and Mary Tribe",
+        "tr": "William and Mary Tribe",
+        "de": "William and Mary Tribe"
+      },
+      "aliases": [
+        "William and Mary Tribe"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Army Black Knights": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Army Black Knights",
+        "tr": "Army Black Knights",
+        "de": "Army Black Knights"
+      },
+      "aliases": [
+        "Army Black Knights"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "South Florida Bulls": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "South Florida Bulls",
+        "tr": "South Florida Bulls",
+        "de": "South Florida Bulls"
+      },
+      "aliases": [
+        "South Florida Bulls"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Eastern Michigan Eagles": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Eastern Michigan Eagles",
+        "tr": "Eastern Michigan Eagles",
+        "de": "Eastern Michigan Eagles"
+      },
+      "aliases": [
+        "Eastern Michigan Eagles"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Appalachian State Mountaineers": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Appalachian State Mountaineers",
+        "tr": "Appalachian State Mountaineers",
+        "de": "Appalachian State Mountaineers"
+      },
+      "aliases": [
+        "Appalachian State Mountaineers"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Idaho State Bengals": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Idaho State Bengals",
+        "tr": "Idaho State Bengals",
+        "de": "Idaho State Bengals"
+      },
+      "aliases": [
+        "Idaho State Bengals"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Temple Owls": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Temple Owls",
+        "tr": "Temple Owls",
+        "de": "Temple Owls"
+      },
+      "aliases": [
+        "Temple Owls"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Oklahoma Sooners": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Oklahoma Sooners",
+        "tr": "Oklahoma Sooners",
+        "de": "Oklahoma Sooners"
+      },
+      "aliases": [
+        "Oklahoma Sooners"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Arkansas State Red Wolves": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Arkansas State Red Wolves",
+        "tr": "Arkansas State Red Wolves",
+        "de": "Arkansas State Red Wolves"
+      },
+      "aliases": [
+        "Arkansas State Red Wolves"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Iowa State Cyclones": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Iowa State Cyclones",
+        "tr": "Iowa State Cyclones",
+        "de": "Iowa State Cyclones"
+      },
+      "aliases": [
+        "Iowa State Cyclones"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Youngstown St Penguins": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Youngstown St Penguins",
+        "tr": "Youngstown St Penguins",
+        "de": "Youngstown St Penguins"
+      },
+      "aliases": [
+        "Youngstown St Penguins"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Navy Midshipmen": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Navy Midshipmen",
+        "tr": "Navy Midshipmen",
+        "de": "Navy Midshipmen"
+      },
+      "aliases": [
+        "Navy Midshipmen"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "South Dakota State Jackrabbits": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "South Dakota State Jackrabbits",
+        "tr": "South Dakota State Jackrabbits",
+        "de": "South Dakota State Jackrabbits"
+      },
+      "aliases": [
+        "South Dakota State Jackrabbits"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "LSU Tigers": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "LSU Tigers",
+        "tr": "LSU Tigers",
+        "de": "LSU Tigers"
+      },
+      "aliases": [
+        "LSU Tigers"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Buffalo Bulls": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Buffalo Bulls",
+        "tr": "Buffalo Bulls",
+        "de": "Buffalo Bulls"
+      },
+      "aliases": [
+        "Buffalo Bulls"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Texas Tech Red Raiders": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Texas Tech Red Raiders",
+        "tr": "Texas Tech Red Raiders",
+        "de": "Texas Tech Red Raiders"
+      },
+      "aliases": [
+        "Texas Tech Red Raiders"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Stanford Cardinal": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Stanford Cardinal",
+        "tr": "Stanford Cardinal",
+        "de": "Stanford Cardinal"
+      },
+      "aliases": [
+        "Stanford Cardinal"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "UConn Huskies": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "UConn Huskies",
+        "tr": "UConn Huskies",
+        "de": "UConn Huskies"
+      },
+      "aliases": [
+        "UConn Huskies"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "NC State Wolfpack": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "NC State Wolfpack",
+        "tr": "NC State Wolfpack",
+        "de": "NC State Wolfpack"
+      },
+      "aliases": [
+        "NC State Wolfpack"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "South Dakota Coyotes": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "South Dakota Coyotes",
+        "tr": "South Dakota Coyotes",
+        "de": "South Dakota Coyotes"
+      },
+      "aliases": [
+        "South Dakota Coyotes"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Sam Houston State Bearkats": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Sam Houston State Bearkats",
+        "tr": "Sam Houston State Bearkats",
+        "de": "Sam Houston State Bearkats"
+      },
+      "aliases": [
+        "Sam Houston State Bearkats"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Jacksonville State Gamecocks": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Jacksonville State Gamecocks",
+        "tr": "Jacksonville State Gamecocks",
+        "de": "Jacksonville State Gamecocks"
+      },
+      "aliases": [
+        "Jacksonville State Gamecocks"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Notre Dame Fighting Irish": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Notre Dame Fighting Irish",
+        "tr": "Notre Dame Fighting Irish",
+        "de": "Notre Dame Fighting Irish"
+      },
+      "aliases": [
+        "Notre Dame Fighting Irish"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Northwestern Wildcats": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Northwestern Wildcats",
+        "tr": "Northwestern Wildcats",
+        "de": "Northwestern Wildcats"
+      },
+      "aliases": [
+        "Northwestern Wildcats"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Central Arkansas Bears": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Central Arkansas Bears",
+        "tr": "Central Arkansas Bears",
+        "de": "Central Arkansas Bears"
+      },
+      "aliases": [
+        "Central Arkansas Bears"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Middle Tennessee Blue Raiders": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Middle Tennessee Blue Raiders",
+        "tr": "Middle Tennessee Blue Raiders",
+        "de": "Middle Tennessee Blue Raiders"
+      },
+      "aliases": [
+        "Middle Tennessee Blue Raiders"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Houston Cougars": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Houston Cougars",
+        "tr": "Houston Cougars",
+        "de": "Houston Cougars"
+      },
+      "aliases": [
+        "Houston Cougars"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Norfolk State Spartans": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Norfolk State Spartans",
+        "tr": "Norfolk State Spartans",
+        "de": "Norfolk State Spartans"
+      },
+      "aliases": [
+        "Norfolk State Spartans"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Air Force Falcons": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Air Force Falcons",
+        "tr": "Air Force Falcons",
+        "de": "Air Force Falcons"
+      },
+      "aliases": [
+        "Air Force Falcons"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Oregon Ducks": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Oregon Ducks",
+        "tr": "Oregon Ducks",
+        "de": "Oregon Ducks"
+      },
+      "aliases": [
+        "Oregon Ducks"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Michigan State Spartans": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Michigan State Spartans",
+        "tr": "Michigan State Spartans",
+        "de": "Michigan State Spartans"
+      },
+      "aliases": [
+        "Michigan State Spartans"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Toledo Rockets": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Toledo Rockets",
+        "tr": "Toledo Rockets",
+        "de": "Toledo Rockets"
+      },
+      "aliases": [
+        "Toledo Rockets"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Utah State Aggies": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Utah State Aggies",
+        "tr": "Utah State Aggies",
+        "de": "Utah State Aggies"
+      },
+      "aliases": [
+        "Utah State Aggies"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "UNLV Rebels": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "UNLV Rebels",
+        "tr": "UNLV Rebels",
+        "de": "UNLV Rebels"
+      },
+      "aliases": [
+        "UNLV Rebels"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Incarnate Word Cardinals": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Incarnate Word Cardinals",
+        "tr": "Incarnate Word Cardinals",
+        "de": "Incarnate Word Cardinals"
+      },
+      "aliases": [
+        "Incarnate Word Cardinals"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Georgia Southern Eagles": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Georgia Southern Eagles",
+        "tr": "Georgia Southern Eagles",
+        "de": "Georgia Southern Eagles"
+      },
+      "aliases": [
+        "Georgia Southern Eagles"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Stony Brook Seawolves": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Stony Brook Seawolves",
+        "tr": "Stony Brook Seawolves",
+        "de": "Stony Brook Seawolves"
+      },
+      "aliases": [
+        "Stony Brook Seawolves"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Purdue Boilermakers": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Purdue Boilermakers",
+        "tr": "Purdue Boilermakers",
+        "de": "Purdue Boilermakers"
+      },
+      "aliases": [
+        "Purdue Boilermakers"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Fresno State Bulldogs": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Fresno State Bulldogs",
+        "tr": "Fresno State Bulldogs",
+        "de": "Fresno State Bulldogs"
+      },
+      "aliases": [
+        "Fresno State Bulldogs"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Miami (OH) RedHawks": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Miami (OH) RedHawks",
+        "tr": "Miami (OH) RedHawks",
+        "de": "Miami (OH) RedHawks"
+      },
+      "aliases": [
+        "Miami (OH) RedHawks"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Idaho Vandals": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Idaho Vandals",
+        "tr": "Idaho Vandals",
+        "de": "Idaho Vandals"
+      },
+      "aliases": [
+        "Idaho Vandals"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Utah Utes": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Utah Utes",
+        "tr": "Utah Utes",
+        "de": "Utah Utes"
+      },
+      "aliases": [
+        "Utah Utes"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Missouri Tigers": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Missouri Tigers",
+        "tr": "Missouri Tigers",
+        "de": "Missouri Tigers"
+      },
+      "aliases": [
+        "Missouri Tigers"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "West Virginia Mountaineers": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "West Virginia Mountaineers",
+        "tr": "West Virginia Mountaineers",
+        "de": "West Virginia Mountaineers"
+      },
+      "aliases": [
+        "West Virginia Mountaineers"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Eastern Washington Eagles": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Eastern Washington Eagles",
+        "tr": "Eastern Washington Eagles",
+        "de": "Eastern Washington Eagles"
+      },
+      "aliases": [
+        "Eastern Washington Eagles"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Ohio State Buckeyes": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Ohio State Buckeyes",
+        "tr": "Ohio State Buckeyes",
+        "de": "Ohio State Buckeyes"
+      },
+      "aliases": [
+        "Ohio State Buckeyes"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Minnesota Golden Gophers": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Minnesota Golden Gophers",
+        "tr": "Minnesota Golden Gophers",
+        "de": "Minnesota Golden Gophers"
+      },
+      "aliases": [
+        "Minnesota Golden Gophers"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Missouri State Bears": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Missouri State Bears",
+        "tr": "Missouri State Bears",
+        "de": "Missouri State Bears"
+      },
+      "aliases": [
+        "Missouri State Bears"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Central Connecticut Blue Devils": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Central Connecticut Blue Devils",
+        "tr": "Central Connecticut Blue Devils",
+        "de": "Central Connecticut Blue Devils"
+      },
+      "aliases": [
+        "Central Connecticut Blue Devils"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Louisiana Ragin Cajuns": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Louisiana Ragin Cajuns",
+        "tr": "Louisiana Ragin Cajuns",
+        "de": "Louisiana Ragin Cajuns"
+      },
+      "aliases": [
+        "Louisiana Ragin Cajuns"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "South Alabama Jaguars": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "South Alabama Jaguars",
+        "tr": "South Alabama Jaguars",
+        "de": "South Alabama Jaguars"
+      },
+      "aliases": [
+        "South Alabama Jaguars"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Southeastern Louisiana Lions": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Southeastern Louisiana Lions",
+        "tr": "Southeastern Louisiana Lions",
+        "de": "Southeastern Louisiana Lions"
+      },
+      "aliases": [
+        "Southeastern Louisiana Lions"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Western Illinois Leathernecks": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Western Illinois Leathernecks",
+        "tr": "Western Illinois Leathernecks",
+        "de": "Western Illinois Leathernecks"
+      },
+      "aliases": [
+        "Western Illinois Leathernecks"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Liberty Flames": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Liberty Flames",
+        "tr": "Liberty Flames",
+        "de": "Liberty Flames"
+      },
+      "aliases": [
+        "Liberty Flames"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Florida State Seminoles": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Florida State Seminoles",
+        "tr": "Florida State Seminoles",
+        "de": "Florida State Seminoles"
+      },
+      "aliases": [
+        "Florida State Seminoles"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Illinois Fighting Illini": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Illinois Fighting Illini",
+        "tr": "Illinois Fighting Illini",
+        "de": "Illinois Fighting Illini"
+      },
+      "aliases": [
+        "Illinois Fighting Illini"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Jackson State Tigers": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Jackson State Tigers",
+        "tr": "Jackson State Tigers",
+        "de": "Jackson State Tigers"
+      },
+      "aliases": [
+        "Jackson State Tigers"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Richmond Spiders": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Richmond Spiders",
+        "tr": "Richmond Spiders",
+        "de": "Richmond Spiders"
+      },
+      "aliases": [
+        "Richmond Spiders"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Marshall Thundering Herd": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Marshall Thundering Herd",
+        "tr": "Marshall Thundering Herd",
+        "de": "Marshall Thundering Herd"
+      },
+      "aliases": [
+        "Marshall Thundering Herd"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "UMass Minutemen": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "UMass Minutemen",
+        "tr": "UMass Minutemen",
+        "de": "UMass Minutemen"
+      },
+      "aliases": [
+        "UMass Minutemen"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Hawaii Rainbow Warriors": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Hawaii Rainbow Warriors",
+        "tr": "Hawaii Rainbow Warriors",
+        "de": "Hawaii Rainbow Warriors"
+      },
+      "aliases": [
+        "Hawaii Rainbow Warriors"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Virginia Tech Hokies": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Virginia Tech Hokies",
+        "tr": "Virginia Tech Hokies",
+        "de": "Virginia Tech Hokies"
+      },
+      "aliases": [
+        "Virginia Tech Hokies"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Clemson Tigers": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Clemson Tigers",
+        "tr": "Clemson Tigers",
+        "de": "Clemson Tigers"
+      },
+      "aliases": [
+        "Clemson Tigers"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "James Madison Dukes": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "James Madison Dukes",
+        "tr": "James Madison Dukes",
+        "de": "James Madison Dukes"
+      },
+      "aliases": [
+        "James Madison Dukes"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Eastern Kentucky Colonels": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Eastern Kentucky Colonels",
+        "tr": "Eastern Kentucky Colonels",
+        "de": "Eastern Kentucky Colonels"
+      },
+      "aliases": [
+        "Eastern Kentucky Colonels"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Florida Gators": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Florida Gators",
+        "tr": "Florida Gators",
+        "de": "Florida Gators"
+      },
+      "aliases": [
+        "Florida Gators"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Texas State Bobcats": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Texas State Bobcats",
+        "tr": "Texas State Bobcats",
+        "de": "Texas State Bobcats"
+      },
+      "aliases": [
+        "Texas State Bobcats"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Ohio Bobcats": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Ohio Bobcats",
+        "tr": "Ohio Bobcats",
+        "de": "Ohio Bobcats"
+      },
+      "aliases": [
+        "Ohio Bobcats"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Washington Huskies": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Washington Huskies",
+        "tr": "Washington Huskies",
+        "de": "Washington Huskies"
+      },
+      "aliases": [
+        "Washington Huskies"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Florida Atlantic Owls": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Florida Atlantic Owls",
+        "tr": "Florida Atlantic Owls",
+        "de": "Florida Atlantic Owls"
+      },
+      "aliases": [
+        "Florida Atlantic Owls"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Ball State Cardinals": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Ball State Cardinals",
+        "tr": "Ball State Cardinals",
+        "de": "Ball State Cardinals"
+      },
+      "aliases": [
+        "Ball State Cardinals"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Florida International Panthers": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Florida International Panthers",
+        "tr": "Florida International Panthers",
+        "de": "Florida International Panthers"
+      },
+      "aliases": [
+        "Florida International Panthers"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Mississippi State Bulldogs": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Mississippi State Bulldogs",
+        "tr": "Mississippi State Bulldogs",
+        "de": "Mississippi State Bulldogs"
+      },
+      "aliases": [
+        "Mississippi State Bulldogs"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Louisville Cardinals": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Louisville Cardinals",
+        "tr": "Louisville Cardinals",
+        "de": "Louisville Cardinals"
+      },
+      "aliases": [
+        "Louisville Cardinals"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Kansas Jayhawks": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Kansas Jayhawks",
+        "tr": "Kansas Jayhawks",
+        "de": "Kansas Jayhawks"
+      },
+      "aliases": [
+        "Kansas Jayhawks"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "New Mexico Lobos": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "New Mexico Lobos",
+        "tr": "New Mexico Lobos",
+        "de": "New Mexico Lobos"
+      },
+      "aliases": [
+        "New Mexico Lobos"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Georgia Tech Yellow Jackets": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Georgia Tech Yellow Jackets",
+        "tr": "Georgia Tech Yellow Jackets",
+        "de": "Georgia Tech Yellow Jackets"
+      },
+      "aliases": [
+        "Georgia Tech Yellow Jackets"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Indiana Hoosiers": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Indiana Hoosiers",
+        "tr": "Indiana Hoosiers",
+        "de": "Indiana Hoosiers"
+      },
+      "aliases": [
+        "Indiana Hoosiers"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Syracuse Orange": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Syracuse Orange",
+        "tr": "Syracuse Orange",
+        "de": "Syracuse Orange"
+      },
+      "aliases": [
+        "Syracuse Orange"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "San Diego State Aztecs": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "San Diego State Aztecs",
+        "tr": "San Diego State Aztecs",
+        "de": "San Diego State Aztecs"
+      },
+      "aliases": [
+        "San Diego State Aztecs"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "SMU Mustangs": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "SMU Mustangs",
+        "tr": "SMU Mustangs",
+        "de": "SMU Mustangs"
+      },
+      "aliases": [
+        "SMU Mustangs"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Northern Illinois Huskies": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Northern Illinois Huskies",
+        "tr": "Northern Illinois Huskies",
+        "de": "Northern Illinois Huskies"
+      },
+      "aliases": [
+        "Northern Illinois Huskies"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Memphis Tigers": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Memphis Tigers",
+        "tr": "Memphis Tigers",
+        "de": "Memphis Tigers"
+      },
+      "aliases": [
+        "Memphis Tigers"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Tennessee Volunteers": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Tennessee Volunteers",
+        "tr": "Tennessee Volunteers",
+        "de": "Tennessee Volunteers"
+      },
+      "aliases": [
+        "Tennessee Volunteers"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Nebraska Cornhuskers": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Nebraska Cornhuskers",
+        "tr": "Nebraska Cornhuskers",
+        "de": "Nebraska Cornhuskers"
+      },
+      "aliases": [
+        "Nebraska Cornhuskers"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "South Carolina Gamecocks": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "South Carolina Gamecocks",
+        "tr": "South Carolina Gamecocks",
+        "de": "South Carolina Gamecocks"
+      },
+      "aliases": [
+        "South Carolina Gamecocks"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Texas Southern Tigers": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Texas Southern Tigers",
+        "tr": "Texas Southern Tigers",
+        "de": "Texas Southern Tigers"
+      },
+      "aliases": [
+        "Texas Southern Tigers"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Maryland Terrapins": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Maryland Terrapins",
+        "tr": "Maryland Terrapins",
+        "de": "Maryland Terrapins"
+      },
+      "aliases": [
+        "Maryland Terrapins"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Iowa Hawkeyes": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Iowa Hawkeyes",
+        "tr": "Iowa Hawkeyes",
+        "de": "Iowa Hawkeyes"
+      },
+      "aliases": [
+        "Iowa Hawkeyes"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Central Michigan Chippewas": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Central Michigan Chippewas",
+        "tr": "Central Michigan Chippewas",
+        "de": "Central Michigan Chippewas"
+      },
+      "aliases": [
+        "Central Michigan Chippewas"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "TCU Horned Frogs": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "TCU Horned Frogs",
+        "tr": "TCU Horned Frogs",
+        "de": "TCU Horned Frogs"
+      },
+      "aliases": [
+        "TCU Horned Frogs"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "North Carolina Tar Heels": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "North Carolina Tar Heels",
+        "tr": "North Carolina Tar Heels",
+        "de": "North Carolina Tar Heels"
+      },
+      "aliases": [
+        "North Carolina Tar Heels"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Miami Hurricanes": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Miami Hurricanes",
+        "tr": "Miami Hurricanes",
+        "de": "Miami Hurricanes"
+      },
+      "aliases": [
+        "Miami Hurricanes"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Wyoming Cowboys": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Wyoming Cowboys",
+        "tr": "Wyoming Cowboys",
+        "de": "Wyoming Cowboys"
+      },
+      "aliases": [
+        "Wyoming Cowboys"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Delaware Blue Hens": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Delaware Blue Hens",
+        "tr": "Delaware Blue Hens",
+        "de": "Delaware Blue Hens"
+      },
+      "aliases": [
+        "Delaware Blue Hens"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Western Carolina Catamounts": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Western Carolina Catamounts",
+        "tr": "Western Carolina Catamounts",
+        "de": "Western Carolina Catamounts"
+      },
+      "aliases": [
+        "Western Carolina Catamounts"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "New Mexico State Aggies": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "New Mexico State Aggies",
+        "tr": "New Mexico State Aggies",
+        "de": "New Mexico State Aggies"
+      },
+      "aliases": [
+        "New Mexico State Aggies"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Bowling Green Falcons": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Bowling Green Falcons",
+        "tr": "Bowling Green Falcons",
+        "de": "Bowling Green Falcons"
+      },
+      "aliases": [
+        "Bowling Green Falcons"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Northern Iowa Panthers": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Northern Iowa Panthers",
+        "tr": "Northern Iowa Panthers",
+        "de": "Northern Iowa Panthers"
+      },
+      "aliases": [
+        "Northern Iowa Panthers"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Southern Mississippi Golden Eagles": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Southern Mississippi Golden Eagles",
+        "tr": "Southern Mississippi Golden Eagles",
+        "de": "Southern Mississippi Golden Eagles"
+      },
+      "aliases": [
+        "Southern Mississippi Golden Eagles"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "UTSA Roadrunners": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "UTSA Roadrunners",
+        "tr": "UTSA Roadrunners",
+        "de": "UTSA Roadrunners"
+      },
+      "aliases": [
+        "UTSA Roadrunners"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Duquesne Dukes": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Duquesne Dukes",
+        "tr": "Duquesne Dukes",
+        "de": "Duquesne Dukes"
+      },
+      "aliases": [
+        "Duquesne Dukes"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Penn State Nittany Lions": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Penn State Nittany Lions",
+        "tr": "Penn State Nittany Lions",
+        "de": "Penn State Nittany Lions"
+      },
+      "aliases": [
+        "Penn State Nittany Lions"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Coastal Carolina Chanticleers": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Coastal Carolina Chanticleers",
+        "tr": "Coastal Carolina Chanticleers",
+        "de": "Coastal Carolina Chanticleers"
+      },
+      "aliases": [
+        "Coastal Carolina Chanticleers"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Oregon State Beavers": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Oregon State Beavers",
+        "tr": "Oregon State Beavers",
+        "de": "Oregon State Beavers"
+      },
+      "aliases": [
+        "Oregon State Beavers"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Pittsburgh Panthers": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Pittsburgh Panthers",
+        "tr": "Pittsburgh Panthers",
+        "de": "Pittsburgh Panthers"
+      },
+      "aliases": [
+        "Pittsburgh Panthers"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Nicholls State Colonels": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Nicholls State Colonels",
+        "tr": "Nicholls State Colonels",
+        "de": "Nicholls State Colonels"
+      },
+      "aliases": [
+        "Nicholls State Colonels"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Wake Forest Demon Deacons": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Wake Forest Demon Deacons",
+        "tr": "Wake Forest Demon Deacons",
+        "de": "Wake Forest Demon Deacons"
+      },
+      "aliases": [
+        "Wake Forest Demon Deacons"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Tennessee Tech Golden Eagles": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Tennessee Tech Golden Eagles",
+        "tr": "Tennessee Tech Golden Eagles",
+        "de": "Tennessee Tech Golden Eagles"
+      },
+      "aliases": [
+        "Tennessee Tech Golden Eagles"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Kansas State Wildcats": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Kansas State Wildcats",
+        "tr": "Kansas State Wildcats",
+        "de": "Kansas State Wildcats"
+      },
+      "aliases": [
+        "Kansas State Wildcats"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Washington State Cougars": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Washington State Cougars",
+        "tr": "Washington State Cougars",
+        "de": "Washington State Cougars"
+      },
+      "aliases": [
+        "Washington State Cougars"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Texas A&M Aggies": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Texas A&M Aggies",
+        "tr": "Texas A&M Aggies",
+        "de": "Texas A&M Aggies"
+      },
+      "aliases": [
+        "Texas A&M Aggies"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Baylor Bears": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Baylor Bears",
+        "tr": "Baylor Bears",
+        "de": "Baylor Bears"
+      },
+      "aliases": [
+        "Baylor Bears"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Texas Longhorns": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Texas Longhorns",
+        "tr": "Texas Longhorns",
+        "de": "Texas Longhorns"
+      },
+      "aliases": [
+        "Texas Longhorns"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "UCF Knights": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "UCF Knights",
+        "tr": "UCF Knights",
+        "de": "UCF Knights"
+      },
+      "aliases": [
+        "UCF Knights"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Louisiana Tech Bulldogs": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Louisiana Tech Bulldogs",
+        "tr": "Louisiana Tech Bulldogs",
+        "de": "Louisiana Tech Bulldogs"
+      },
+      "aliases": [
+        "Louisiana Tech Bulldogs"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Akron Zips": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Akron Zips",
+        "tr": "Akron Zips",
+        "de": "Akron Zips"
+      },
+      "aliases": [
+        "Akron Zips"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Wisconsin Badgers": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Wisconsin Badgers",
+        "tr": "Wisconsin Badgers",
+        "de": "Wisconsin Badgers"
+      },
+      "aliases": [
+        "Wisconsin Badgers"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Ole Miss Rebels": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Ole Miss Rebels",
+        "tr": "Ole Miss Rebels",
+        "de": "Ole Miss Rebels"
+      },
+      "aliases": [
+        "Ole Miss Rebels"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Kentucky Wildcats": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Kentucky Wildcats",
+        "tr": "Kentucky Wildcats",
+        "de": "Kentucky Wildcats"
+      },
+      "aliases": [
+        "Kentucky Wildcats"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "New Hampshire Wildcats": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "New Hampshire Wildcats",
+        "tr": "New Hampshire Wildcats",
+        "de": "New Hampshire Wildcats"
+      },
+      "aliases": [
+        "New Hampshire Wildcats"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Duke Blue Devils": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Duke Blue Devils",
+        "tr": "Duke Blue Devils",
+        "de": "Duke Blue Devils"
+      },
+      "aliases": [
+        "Duke Blue Devils"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Southern Utah Thunderbirds": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Southern Utah Thunderbirds",
+        "tr": "Southern Utah Thunderbirds",
+        "de": "Southern Utah Thunderbirds"
+      },
+      "aliases": [
+        "Southern Utah Thunderbirds"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Oklahoma State Cowboys": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Oklahoma State Cowboys",
+        "tr": "Oklahoma State Cowboys",
+        "de": "Oklahoma State Cowboys"
+      },
+      "aliases": [
+        "Oklahoma State Cowboys"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Boston College Eagles": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Boston College Eagles",
+        "tr": "Boston College Eagles",
+        "de": "Boston College Eagles"
+      },
+      "aliases": [
+        "Boston College Eagles"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Virginia Cavaliers": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Virginia Cavaliers",
+        "tr": "Virginia Cavaliers",
+        "de": "Virginia Cavaliers"
+      },
+      "aliases": [
+        "Virginia Cavaliers"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Nevada Wolf Pack": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Nevada Wolf Pack",
+        "tr": "Nevada Wolf Pack",
+        "de": "Nevada Wolf Pack"
+      },
+      "aliases": [
+        "Nevada Wolf Pack"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Boise State Broncos": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Boise State Broncos",
+        "tr": "Boise State Broncos",
+        "de": "Boise State Broncos"
+      },
+      "aliases": [
+        "Boise State Broncos"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Florida A&M Rattlers": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Florida A&M Rattlers",
+        "tr": "Florida A&M Rattlers",
+        "de": "Florida A&M Rattlers"
+      },
+      "aliases": [
+        "Florida A&M Rattlers"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "UL Monroe Warhawks": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "UL Monroe Warhawks",
+        "tr": "UL Monroe Warhawks",
+        "de": "UL Monroe Warhawks"
+      },
+      "aliases": [
+        "UL Monroe Warhawks"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Georgia State Panthers": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Georgia State Panthers",
+        "tr": "Georgia State Panthers",
+        "de": "Georgia State Panthers"
+      },
+      "aliases": [
+        "Georgia State Panthers"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    }
+  },
+  "nfl": {
+    "Denver Broncos": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Denver Broncos",
+        "tr": "Denver Broncos",
+        "de": "Denver Broncos"
+      },
+      "aliases": [
+        "Denver Broncos"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Green Bay Packers": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Green Bay Packers",
+        "tr": "Green Bay Packers",
+        "de": "Green Bay Packers"
+      },
+      "aliases": [
+        "Green Bay Packers"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Kansas City Chiefs": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Kansas City Chiefs",
+        "tr": "Kansas City Chiefs",
+        "de": "Kansas City Chiefs"
+      },
+      "aliases": [
+        "Kansas City Chiefs"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Tennessee Titans": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Tennessee Titans",
+        "tr": "Tennessee Titans",
+        "de": "Tennessee Titans"
+      },
+      "aliases": [
+        "Tennessee Titans"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Cleveland Browns": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Cleveland Browns",
+        "tr": "Cleveland Browns",
+        "de": "Cleveland Browns"
+      },
+      "aliases": [
+        "Cleveland Browns"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Detroit Lions": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Detroit Lions",
+        "tr": "Detroit Lions",
+        "de": "Detroit Lions"
+      },
+      "aliases": [
+        "Detroit Lions"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "New Orleans Saints": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "New Orleans Saints",
+        "tr": "New Orleans Saints",
+        "de": "New Orleans Saints"
+      },
+      "aliases": [
+        "New Orleans Saints"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Las Vegas Raiders": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Las Vegas Raiders",
+        "tr": "Las Vegas Raiders",
+        "de": "Las Vegas Raiders"
+      },
+      "aliases": [
+        "Las Vegas Raiders"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Indianapolis Colts": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Indianapolis Colts",
+        "tr": "Indianapolis Colts",
+        "de": "Indianapolis Colts"
+      },
+      "aliases": [
+        "Indianapolis Colts"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "New York Jets": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "New York Jets",
+        "tr": "New York Jets",
+        "de": "New York Jets"
+      },
+      "aliases": [
+        "New York Jets"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Minnesota Vikings": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Minnesota Vikings",
+        "tr": "Minnesota Vikings",
+        "de": "Minnesota Vikings"
+      },
+      "aliases": [
+        "Minnesota Vikings"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "New England Patriots": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "New England Patriots",
+        "tr": "New England Patriots",
+        "de": "New England Patriots"
+      },
+      "aliases": [
+        "New England Patriots"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Tampa Bay Buccaneers": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Tampa Bay Buccaneers",
+        "tr": "Tampa Bay Buccaneers",
+        "de": "Tampa Bay Buccaneers"
+      },
+      "aliases": [
+        "Tampa Bay Buccaneers"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "New York Giants": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "New York Giants",
+        "tr": "New York Giants",
+        "de": "New York Giants"
+      },
+      "aliases": [
+        "New York Giants"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Los Angeles Rams": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Los Angeles Rams",
+        "tr": "Los Angeles Rams",
+        "de": "Los Angeles Rams"
+      },
+      "aliases": [
+        "Los Angeles Rams"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Dallas Cowboys": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Dallas Cowboys",
+        "tr": "Dallas Cowboys",
+        "de": "Dallas Cowboys"
+      },
+      "aliases": [
+        "Dallas Cowboys"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Houston Texans": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Houston Texans",
+        "tr": "Houston Texans",
+        "de": "Houston Texans"
+      },
+      "aliases": [
+        "Houston Texans"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Baltimore Ravens": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Baltimore Ravens",
+        "tr": "Baltimore Ravens",
+        "de": "Baltimore Ravens"
+      },
+      "aliases": [
+        "Baltimore Ravens"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Carolina Panthers": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Carolina Panthers",
+        "tr": "Carolina Panthers",
+        "de": "Carolina Panthers"
+      },
+      "aliases": [
+        "Carolina Panthers"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Jacksonville Jaguars": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Jacksonville Jaguars",
+        "tr": "Jacksonville Jaguars",
+        "de": "Jacksonville Jaguars"
+      },
+      "aliases": [
+        "Jacksonville Jaguars"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Cincinnati Bengals": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Cincinnati Bengals",
+        "tr": "Cincinnati Bengals",
+        "de": "Cincinnati Bengals"
+      },
+      "aliases": [
+        "Cincinnati Bengals"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Atlanta Falcons": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Atlanta Falcons",
+        "tr": "Atlanta Falcons",
+        "de": "Atlanta Falcons"
+      },
+      "aliases": [
+        "Atlanta Falcons"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Chicago Bears": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Chicago Bears",
+        "tr": "Chicago Bears",
+        "de": "Chicago Bears"
+      },
+      "aliases": [
+        "Chicago Bears"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Seattle Seahawks": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Seattle Seahawks",
+        "tr": "Seattle Seahawks",
+        "de": "Seattle Seahawks"
+      },
+      "aliases": [
+        "Seattle Seahawks"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Buffalo Bills": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Buffalo Bills",
+        "tr": "Buffalo Bills",
+        "de": "Buffalo Bills"
+      },
+      "aliases": [
+        "Buffalo Bills"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Pittsburgh Steelers": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Pittsburgh Steelers",
+        "tr": "Pittsburgh Steelers",
+        "de": "Pittsburgh Steelers"
+      },
+      "aliases": [
+        "Pittsburgh Steelers"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "San Francisco 49ers": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "San Francisco 49ers",
+        "tr": "San Francisco 49ers",
+        "de": "San Francisco 49ers"
+      },
+      "aliases": [
+        "San Francisco 49ers"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Philadelphia Eagles": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Philadelphia Eagles",
+        "tr": "Philadelphia Eagles",
+        "de": "Philadelphia Eagles"
+      },
+      "aliases": [
+        "Philadelphia Eagles"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Washington Football Team": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Washington Football Team",
+        "tr": "Washington Football Team",
+        "de": "Washington Football Team"
+      },
+      "aliases": [
+        "Washington Football Team"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Arizona Cardinals": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Arizona Cardinals",
+        "tr": "Arizona Cardinals",
+        "de": "Arizona Cardinals"
+      },
+      "aliases": [
+        "Arizona Cardinals"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Miami Dolphins": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Miami Dolphins",
+        "tr": "Miami Dolphins",
+        "de": "Miami Dolphins"
+      },
+      "aliases": [
+        "Miami Dolphins"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Los Angeles Chargers": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Los Angeles Chargers",
+        "tr": "Los Angeles Chargers",
+        "de": "Los Angeles Chargers"
+      },
+      "aliases": [
+        "Los Angeles Chargers"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Washington Commanders": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Washington Commanders",
+        "tr": "Washington Commanders",
+        "de": "Washington Commanders"
+      },
+      "aliases": [
+        "Washington Commanders"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    }
+  },
+  "nhl": {
+    "Vancouver Canucks": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Vancouver Canucks",
+        "tr": "Vancouver Canucks",
+        "de": "Vancouver Canucks"
+      },
+      "aliases": [
+        "Vancouver Canucks"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "New York Islanders": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "New York Islanders",
+        "tr": "New York Islanders",
+        "de": "New York Islanders"
+      },
+      "aliases": [
+        "New York Islanders"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Seattle Kraken": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Seattle Kraken",
+        "tr": "Seattle Kraken",
+        "de": "Seattle Kraken"
+      },
+      "aliases": [
+        "Seattle Kraken"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Philadelphia Flyers": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Philadelphia Flyers",
+        "tr": "Philadelphia Flyers",
+        "de": "Philadelphia Flyers"
+      },
+      "aliases": [
+        "Philadelphia Flyers"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "San Jose Sharks": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "San Jose Sharks",
+        "tr": "San Jose Sharks",
+        "de": "San Jose Sharks"
+      },
+      "aliases": [
+        "San Jose Sharks"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Ottawa Senators": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Ottawa Senators",
+        "tr": "Ottawa Senators",
+        "de": "Ottawa Senators"
+      },
+      "aliases": [
+        "Ottawa Senators"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Dallas Stars": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Dallas Stars",
+        "tr": "Dallas Stars",
+        "de": "Dallas Stars"
+      },
+      "aliases": [
+        "Dallas Stars"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "New York Rangers": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "New York Rangers",
+        "tr": "New York Rangers",
+        "de": "New York Rangers"
+      },
+      "aliases": [
+        "New York Rangers"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Arizona Coyotes": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Arizona Coyotes",
+        "tr": "Arizona Coyotes",
+        "de": "Arizona Coyotes"
+      },
+      "aliases": [
+        "Arizona Coyotes"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Chicago Blackhawks": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Chicago Blackhawks",
+        "tr": "Chicago Blackhawks",
+        "de": "Chicago Blackhawks"
+      },
+      "aliases": [
+        "Chicago Blackhawks"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Winnipeg Jets": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Winnipeg Jets",
+        "tr": "Winnipeg Jets",
+        "de": "Winnipeg Jets"
+      },
+      "aliases": [
+        "Winnipeg Jets"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Detroit Red Wings": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Detroit Red Wings",
+        "tr": "Detroit Red Wings",
+        "de": "Detroit Red Wings"
+      },
+      "aliases": [
+        "Detroit Red Wings"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Utah Hockey Club": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Utah Hockey Club",
+        "tr": "Utah Hockey Club",
+        "de": "Utah Hockey Club"
+      },
+      "aliases": [
+        "Utah Hockey Club"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Boston Bruins": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Boston Bruins",
+        "tr": "Boston Bruins",
+        "de": "Boston Bruins"
+      },
+      "aliases": [
+        "Boston Bruins"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Los Angeles Kings": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Los Angeles Kings",
+        "tr": "Los Angeles Kings",
+        "de": "Los Angeles Kings"
+      },
+      "aliases": [
+        "Los Angeles Kings"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Carolina Hurricanes": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Carolina Hurricanes",
+        "tr": "Carolina Hurricanes",
+        "de": "Carolina Hurricanes"
+      },
+      "aliases": [
+        "Carolina Hurricanes"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Edmonton Oilers": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Edmonton Oilers",
+        "tr": "Edmonton Oilers",
+        "de": "Edmonton Oilers"
+      },
+      "aliases": [
+        "Edmonton Oilers"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Nashville Predators": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Nashville Predators",
+        "tr": "Nashville Predators",
+        "de": "Nashville Predators"
+      },
+      "aliases": [
+        "Nashville Predators"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Minnesota Wild": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Minnesota Wild",
+        "tr": "Minnesota Wild",
+        "de": "Minnesota Wild"
+      },
+      "aliases": [
+        "Minnesota Wild"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Tampa Bay Lightning": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Tampa Bay Lightning",
+        "tr": "Tampa Bay Lightning",
+        "de": "Tampa Bay Lightning"
+      },
+      "aliases": [
+        "Tampa Bay Lightning"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Columbus Blue Jackets": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Columbus Blue Jackets",
+        "tr": "Columbus Blue Jackets",
+        "de": "Columbus Blue Jackets"
+      },
+      "aliases": [
+        "Columbus Blue Jackets"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Pittsburgh Penguins": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Pittsburgh Penguins",
+        "tr": "Pittsburgh Penguins",
+        "de": "Pittsburgh Penguins"
+      },
+      "aliases": [
+        "Pittsburgh Penguins"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Toronto Maple Leafs": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Toronto Maple Leafs",
+        "tr": "Toronto Maple Leafs",
+        "de": "Toronto Maple Leafs"
+      },
+      "aliases": [
+        "Toronto Maple Leafs"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Utah Mammoth": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Utah Mammoth",
+        "tr": "Utah Mammoth",
+        "de": "Utah Mammoth"
+      },
+      "aliases": [
+        "Utah Mammoth"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Buffalo Sabres": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Buffalo Sabres",
+        "tr": "Buffalo Sabres",
+        "de": "Buffalo Sabres"
+      },
+      "aliases": [
+        "Buffalo Sabres"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Calgary Flames": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Calgary Flames",
+        "tr": "Calgary Flames",
+        "de": "Calgary Flames"
+      },
+      "aliases": [
+        "Calgary Flames"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Washington Capitals": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Washington Capitals",
+        "tr": "Washington Capitals",
+        "de": "Washington Capitals"
+      },
+      "aliases": [
+        "Washington Capitals"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "St Louis Blues": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "St Louis Blues",
+        "tr": "St Louis Blues",
+        "de": "St Louis Blues"
+      },
+      "aliases": [
+        "St Louis Blues"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Vegas Golden Knights": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Vegas Golden Knights",
+        "tr": "Vegas Golden Knights",
+        "de": "Vegas Golden Knights"
+      },
+      "aliases": [
+        "Vegas Golden Knights"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Colorado Avalanche": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Colorado Avalanche",
+        "tr": "Colorado Avalanche",
+        "de": "Colorado Avalanche"
+      },
+      "aliases": [
+        "Colorado Avalanche"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "New Jersey Devils": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "New Jersey Devils",
+        "tr": "New Jersey Devils",
+        "de": "New Jersey Devils"
+      },
+      "aliases": [
+        "New Jersey Devils"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Montréal Canadiens": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Montréal Canadiens",
+        "tr": "Montréal Canadiens",
+        "de": "Montréal Canadiens"
+      },
+      "aliases": [
+        "Montréal Canadiens"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Florida Panthers": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Florida Panthers",
+        "tr": "Florida Panthers",
+        "de": "Florida Panthers"
+      },
+      "aliases": [
+        "Florida Panthers"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "Anaheim Ducks": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "Anaheim Ducks",
+        "tr": "Anaheim Ducks",
+        "de": "Anaheim Ducks"
+      },
+      "aliases": [
+        "Anaheim Ducks"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    }
+  },
+  "serie_a": {
+    "ac milan": {
+      "transfermarkt_id": "5",
+      "display_names": {
+        "en": "ac milan",
+        "tr": "ac milan",
+        "de": "ac milan"
+      },
+      "aliases": [
+        "ac milan"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "as roma": {
+      "transfermarkt_id": "12",
+      "display_names": {
+        "en": "as roma",
+        "tr": "as roma",
+        "de": "as roma"
+      },
+      "aliases": [
+        "as roma"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "atalanta bc": {
+      "transfermarkt_id": "18",
+      "display_names": {
+        "en": "atalanta bc",
+        "tr": "atalanta bc",
+        "de": "atalanta bc"
+      },
+      "aliases": [
+        "atalanta bc"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "benevento": {
+      "transfermarkt_id": "47",
+      "display_names": {
+        "en": "benevento",
+        "tr": "benevento",
+        "de": "benevento"
+      },
+      "aliases": [
+        "benevento"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "bologna": {
+      "transfermarkt_id": "40",
+      "display_names": {
+        "en": "bologna",
+        "tr": "bologna",
+        "de": "bologna"
+      },
+      "aliases": [
+        "bologna"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "cagliari": {
+      "transfermarkt_id": "110",
+      "display_names": {
+        "en": "cagliari",
+        "tr": "cagliari",
+        "de": "cagliari"
+      },
+      "aliases": [
+        "cagliari"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "como": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "como",
+        "tr": "como",
+        "de": "como"
+      },
+      "aliases": [
+        "como"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "cremonese": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "cremonese",
+        "tr": "cremonese",
+        "de": "cremonese"
+      },
+      "aliases": [
+        "cremonese"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "crotone": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "crotone",
+        "tr": "crotone",
+        "de": "crotone"
+      },
+      "aliases": [
+        "crotone"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "empoli": {
+      "transfermarkt_id": "201",
+      "display_names": {
+        "en": "empoli",
+        "tr": "empoli",
+        "de": "empoli"
+      },
+      "aliases": [
+        "empoli"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "fc internazionale": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "fc internazionale",
+        "tr": "fc internazionale",
+        "de": "fc internazionale"
+      },
+      "aliases": [
+        "fc internazionale"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "fiorentina": {
+      "transfermarkt_id": "65",
+      "display_names": {
+        "en": "fiorentina",
+        "tr": "fiorentina",
+        "de": "fiorentina"
+      },
+      "aliases": [
+        "fiorentina"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "frosinone": {
+      "transfermarkt_id": "1826",
+      "display_names": {
+        "en": "frosinone",
+        "tr": "frosinone",
+        "de": "frosinone"
+      },
+      "aliases": [
+        "frosinone"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "genoa": {
+      "transfermarkt_id": "95",
+      "display_names": {
+        "en": "genoa",
+        "tr": "genoa",
+        "de": "genoa"
+      },
+      "aliases": [
+        "genoa"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "hellas verona": {
+      "transfermarkt_id": "540",
+      "display_names": {
+        "en": "hellas verona",
+        "tr": "hellas verona",
+        "de": "hellas verona"
+      },
+      "aliases": [
+        "hellas verona"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "hellas verona fc": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "hellas verona fc",
+        "tr": "hellas verona fc",
+        "de": "hellas verona fc"
+      },
+      "aliases": [
+        "hellas verona fc"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "inter milan": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "inter milan",
+        "tr": "inter milan",
+        "de": "inter milan"
+      },
+      "aliases": [
+        "inter milan"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "juventus": {
+      "transfermarkt_id": "506",
+      "display_names": {
+        "en": "juventus",
+        "tr": "juventus",
+        "de": "juventus"
+      },
+      "aliases": [
+        "juventus"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "lazio": {
+      "transfermarkt_id": "181",
+      "display_names": {
+        "en": "lazio",
+        "tr": "lazio",
+        "de": "lazio"
+      },
+      "aliases": [
+        "lazio"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "lecce": {
+      "transfermarkt_id": "2145",
+      "display_names": {
+        "en": "lecce",
+        "tr": "lecce",
+        "de": "lecce"
+      },
+      "aliases": [
+        "lecce"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "monza": {
+      "transfermarkt_id": "2192",
+      "display_names": {
+        "en": "monza",
+        "tr": "monza",
+        "de": "monza"
+      },
+      "aliases": [
+        "monza"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "napoli": {
+      "transfermarkt_id": "39",
+      "display_names": {
+        "en": "napoli",
+        "tr": "napoli",
+        "de": "napoli"
+      },
+      "aliases": [
+        "napoli"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "parma": {
+      "transfermarkt_id": "366",
+      "display_names": {
+        "en": "parma",
+        "tr": "parma",
+        "de": "parma"
+      },
+      "aliases": [
+        "parma"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "pisa": {
+      "transfermarkt_id": "2318",
+      "display_names": {
+        "en": "pisa",
+        "tr": "pisa",
+        "de": "pisa"
+      },
+      "aliases": [
+        "pisa"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "salernitana": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "salernitana",
+        "tr": "salernitana",
+        "de": "salernitana"
+      },
+      "aliases": [
+        "salernitana"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "sampdoria": {
+      "transfermarkt_id": "451",
+      "display_names": {
+        "en": "sampdoria",
+        "tr": "sampdoria",
+        "de": "sampdoria"
+      },
+      "aliases": [
+        "sampdoria"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "sassuolo": {
+      "transfermarkt_id": "448",
+      "display_names": {
+        "en": "sassuolo",
+        "tr": "sassuolo",
+        "de": "sassuolo"
+      },
+      "aliases": [
+        "sassuolo"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "spezia": {
+      "transfermarkt_id": "2390",
+      "display_names": {
+        "en": "spezia",
+        "tr": "spezia",
+        "de": "spezia"
+      },
+      "aliases": [
+        "spezia"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "torino": {
+      "transfermarkt_id": "485",
+      "display_names": {
+        "en": "torino",
+        "tr": "torino",
+        "de": "torino"
+      },
+      "aliases": [
+        "torino"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "udinese": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "udinese",
+        "tr": "udinese",
+        "de": "udinese"
+      },
+      "aliases": [
+        "udinese"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "venezia": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "venezia",
+        "tr": "venezia",
+        "de": "venezia"
+      },
+      "aliases": [
+        "venezia"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    }
+  },
+  "turkiye": {
+    "adana demirspor": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "adana demirspor",
+        "tr": "adana demirspor",
+        "de": "adana demirspor"
+      },
+      "aliases": [
+        "adana demirspor"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "alanyaspor": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "alanyaspor",
+        "tr": "alanyaspor",
+        "de": "alanyaspor"
+      },
+      "aliases": [
+        "alanyaspor"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "altay izmir": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "altay izmir",
+        "tr": "altay izmir",
+        "de": "altay izmir"
+      },
+      "aliases": [
+        "altay izmir"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "ankaragücü": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "ankaragücü",
+        "tr": "ankaragücü",
+        "de": "ankaragücü"
+      },
+      "aliases": [
+        "ankaragücü"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "antalyaspor": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "antalyaspor",
+        "tr": "antalyaspor",
+        "de": "antalyaspor"
+      },
+      "aliases": [
+        "antalyaspor"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "basaksehir": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "basaksehir",
+        "tr": "basaksehir",
+        "de": "basaksehir"
+      },
+      "aliases": [
+        "basaksehir"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "besiktas jk": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "besiktas jk",
+        "tr": "besiktas jk",
+        "de": "besiktas jk"
+      },
+      "aliases": [
+        "besiktas jk"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "bodrum fk": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "bodrum fk",
+        "tr": "bodrum fk",
+        "de": "bodrum fk"
+      },
+      "aliases": [
+        "bodrum fk"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "denizlispor": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "denizlispor",
+        "tr": "denizlispor",
+        "de": "denizlispor"
+      },
+      "aliases": [
+        "denizlispor"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "erzurum bb": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "erzurum bb",
+        "tr": "erzurum bb",
+        "de": "erzurum bb"
+      },
+      "aliases": [
+        "erzurum bb"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "eyüpspor": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "eyüpspor",
+        "tr": "eyüpspor",
+        "de": "eyüpspor"
+      },
+      "aliases": [
+        "eyüpspor"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "fatih karagümrük": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "fatih karagümrük",
+        "tr": "fatih karagümrük",
+        "de": "fatih karagümrük"
+      },
+      "aliases": [
+        "fatih karagümrük"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "fenerbahce": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "fenerbahce",
+        "tr": "fenerbahce",
+        "de": "fenerbahce"
+      },
+      "aliases": [
+        "fenerbahce"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "galatasaray": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "galatasaray",
+        "tr": "galatasaray",
+        "de": "galatasaray"
+      },
+      "aliases": [
+        "galatasaray"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "gazişehir gaziantep": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "gazişehir gaziantep",
+        "tr": "gazişehir gaziantep",
+        "de": "gazişehir gaziantep"
+      },
+      "aliases": [
+        "gazişehir gaziantep"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "genclerbirligi sk": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "genclerbirligi sk",
+        "tr": "genclerbirligi sk",
+        "de": "genclerbirligi sk"
+      },
+      "aliases": [
+        "genclerbirligi sk"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "giresunspor": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "giresunspor",
+        "tr": "giresunspor",
+        "de": "giresunspor"
+      },
+      "aliases": [
+        "giresunspor"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "goztepe": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "goztepe",
+        "tr": "goztepe",
+        "de": "goztepe"
+      },
+      "aliases": [
+        "goztepe"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "hatayspor": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "hatayspor",
+        "tr": "hatayspor",
+        "de": "hatayspor"
+      },
+      "aliases": [
+        "hatayspor"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "istanbulspor": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "istanbulspor",
+        "tr": "istanbulspor",
+        "de": "istanbulspor"
+      },
+      "aliases": [
+        "istanbulspor"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "kasimpasa sk": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "kasimpasa sk",
+        "tr": "kasimpasa sk",
+        "de": "kasimpasa sk"
+      },
+      "aliases": [
+        "kasimpasa sk"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "kayserispor": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "kayserispor",
+        "tr": "kayserispor",
+        "de": "kayserispor"
+      },
+      "aliases": [
+        "kayserispor"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "kocaelispor": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "kocaelispor",
+        "tr": "kocaelispor",
+        "de": "kocaelispor"
+      },
+      "aliases": [
+        "kocaelispor"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "pendikspor": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "pendikspor",
+        "tr": "pendikspor",
+        "de": "pendikspor"
+      },
+      "aliases": [
+        "pendikspor"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "samsunspor": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "samsunspor",
+        "tr": "samsunspor",
+        "de": "samsunspor"
+      },
+      "aliases": [
+        "samsunspor"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "sivasspor": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "sivasspor",
+        "tr": "sivasspor",
+        "de": "sivasspor"
+      },
+      "aliases": [
+        "sivasspor"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "torku konyaspor": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "torku konyaspor",
+        "tr": "torku konyaspor",
+        "de": "torku konyaspor"
+      },
+      "aliases": [
+        "torku konyaspor"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "trabzonspor": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "trabzonspor",
+        "tr": "trabzonspor",
+        "de": "trabzonspor"
+      },
+      "aliases": [
+        "trabzonspor"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "yeni malatyaspor": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "yeni malatyaspor",
+        "tr": "yeni malatyaspor",
+        "de": "yeni malatyaspor"
+      },
+      "aliases": [
+        "yeni malatyaspor"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "çaykur rizespor": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "çaykur rizespor",
+        "tr": "çaykur rizespor",
+        "de": "çaykur rizespor"
+      },
+      "aliases": [
+        "çaykur rizespor"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    },
+    "ümraniyespor": {
+      "transfermarkt_id": "TBD",
+      "display_names": {
+        "en": "ümraniyespor",
+        "tr": "ümraniyespor",
+        "de": "ümraniyespor"
+      },
+      "aliases": [
+        "ümraniyespor"
+      ],
+      "sources": {
+        "hafiza": "ümraniyespor"
+      }
+    }
   }
 }
