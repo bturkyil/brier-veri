@@ -360,7 +360,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A81 (PWA)</div>
+      <div class="by">brier · by BT · build A82 (PWA)</div>
     </footer>
   </div>
 
@@ -386,7 +386,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A81 (PWA)</div>
+      <div class="by">brier · by BT · build A82 (PWA)</div>
     </footer>
   </div>
 </div>
@@ -719,7 +719,10 @@ async function findTeamByName(teamName, league = 'belcika'){
 // Team name normalization - matches worker names to GKARNE names
 function normalizeTeamName(name){
   if(!name)return '';
-  return String(name).toLowerCase().replace(/[üö]/g,u=>u==='ü'?'u':'o').replace(/\s+/g,' ').trim();
+  // Turkce dotless-i once (NFD bunlari cozmez), sonra tum aksanlari katla (TR/ES/PT: s,c,g,o,u,a,e,n...)
+  let s=String(name).toLowerCase().replace(/ı/g,'i').replace(/İ/g,'i');
+  s=s.normalize('NFD').replace(/[̀-ͯ]/g,'');
+  return s.replace(/\s+/g,' ').trim();
 }
 
 // Levenshtein distance for fuzzy matching (fallback only)
@@ -818,16 +821,25 @@ function findBestTeamMatchFuzzy(workerTeam, gkarneTeams, threshold = 85) {
   return bestMatch;
 }
 
-// RECORD kartlari icin: takim objesini normalize ederek bul (fuzzy matching ile)
+// Worker takim adi -> golkarne adi: fuzzy'nin yakalayamadigi dil/kisaltma varyantlari (anahtarlar normalize edilmis)
+const TEAM_ALIAS = {
+  'rapid wien':'Rapid Vienna','austria wien':'Austria Vienna','rb salzburg':'Red Bull Salzburg',
+  'rheindorf altach':'SCR Altach','wsg tirol':'WSG Wattens',
+  'athletic bilbao':'Athletic Club','queens park rangers':'QPR','gazisehir gaziantep':'Gaziantep FK'
+};
+// RECORD kartlari icin: takim objesini normalize ederek bul (alias -> fuzzy -> fallback)
 function tkGet(tk, ad){
   if(!tk||!ad)return undefined;
   if(tk[ad])return tk[ad];  // once direkt (hizli)
+
+  // Alias: dil/kisaltma varyantlari (fuzzy'nin ustunde, onu sokmeden)
+  const al=TEAM_ALIAS[normalizeTeamName(ad)];
+  if(al && tk[al])return tk[al];
 
   // Fuzzy matching with 85% threshold
   const gkarneKeys = Object.keys(tk);
   const fuzzyMatch = findBestTeamMatchFuzzy(ad, gkarneKeys, 85);
   if(fuzzyMatch && fuzzyMatch.similarity >= 85){
-    console.log(`🔍 Fuzzy match: "${ad}" → "${fuzzyMatch.name}" (${fuzzyMatch.similarity}%)`);
     return tk[fuzzyMatch.name];
   }
 
