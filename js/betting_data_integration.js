@@ -16,13 +16,21 @@ class BettingDataManager {
 
   /**
    * Get betting lines for a specific match
+   * Supports matching by:
+   * 1. Match ID (if available from betting data)
+   * 2. Team names + commence time (fallback for Brier matches)
+   *
    * @param {string} sport - Sport identifier (e.g., 'baseball')
    * @param {string} league - League name (e.g., 'MLB')
-   * @param {string} matchId - Match ID
+   * @param {string|object} matchIdOrData - Match ID string, or {home, away, commenceTime} object
    * @returns {Promise<Array>} Array of betting lines from different bookmakers
    */
-  async getMatchBettingLines(sport, league, matchId) {
-    const cacheKey = `${sport}:${league}:${matchId}`;
+  async getMatchBettingLines(sport, league, matchIdOrData) {
+    // Support both old and new calling conventions
+    const isObject = typeof matchIdOrData === 'object' && matchIdOrData !== null;
+    const cacheKey = isObject
+      ? `${sport}:${league}:${matchIdOrData.home}:${matchIdOrData.away}:${matchIdOrData.commenceTime || ''}`
+      : `${sport}:${league}:${matchIdOrData}`;
 
     // Check cache first
     if (this.cache.has(cacheKey)) {
@@ -38,9 +46,25 @@ class BettingDataManager {
     const loadPromise = this._loadLeagueData(sport, league)
       .then(data => {
         const matches = data.matches || [];
-        const matchData = matches.find(m =>
-          m.id === matchId || m.id.includes(matchId)
-        );
+        let matchData;
+
+        if (isObject) {
+          // Match by team names and time
+          const { home, away, commenceTime } = matchIdOrData;
+          matchData = matches.find(m => {
+            const homeMatch = m.home?.toLowerCase() === home?.toLowerCase();
+            const awayMatch = m.away?.toLowerCase() === away?.toLowerCase();
+            const timeMatch = !commenceTime ||
+              this._timesClose(m.commence_time, commenceTime, 3600); // 1 hour tolerance
+            return homeMatch && awayMatch && timeMatch;
+          });
+        } else {
+          // Match by ID (with loose matching)
+          matchData = matches.find(m =>
+            m.id === matchIdOrData || m.id?.includes?.(matchIdOrData)
+          );
+        }
+
         return matchData?.betting_lines || [];
       })
       .catch(err => {
@@ -55,6 +79,22 @@ class BettingDataManager {
     this.loadingPromises.delete(cacheKey);
 
     return result;
+  }
+
+  /**
+   * Check if two ISO time strings are within a tolerance (in seconds)
+   * @private
+   */
+  _timesClose(time1, time2, toleranceSeconds = 3600) {
+    if (!time1 || !time2) return true; // Accept if either is missing
+    try {
+      const date1 = new Date(time1).getTime();
+      const date2 = new Date(time2).getTime();
+      const diffSeconds = Math.abs(date1 - date2) / 1000;
+      return diffSeconds <= toleranceSeconds;
+    } catch (e) {
+      return false;
+    }
   }
 
   /**
@@ -247,22 +287,38 @@ class BettingLinesComponent {
 
   /**
    * Render betting lines for a match
+   * @param {string} sport - Sport identifier
+   * @param {string} league - League name
+   * @param {string|object} matchIdOrData - Match ID or {id, home, away, commenceTime} object
+   * @param {object} matchInfo - Match info {home, away}
+   * @param {string} leagueCode - League code for stats lookup
    */
-  async render(sport, league, matchId, matchInfo, leagueCode) {
+  async render(sport, league, matchIdOrData, matchInfo, leagueCode) {
     try {
-      const lines = await this.manager.getMatchBettingLines(sport, league, matchId);
-      const stats = leagueCode ? await this.manager.getMatchStats(leagueCode, matchId) : null;
+      // Support both string ID and object data
+      let matchDataForOdds = matchIdOrData;
+      let matchIdForStats = matchIdOrData;
+
+      if (typeof matchIdOrData === 'object' && matchIdOrData !== null) {
+        matchDataForOdds = matchIdOrData;
+        matchIdForStats = matchIdOrData.id;
+      }
+
+      const lines = await this.manager.getMatchBettingLines(sport, league, matchDataForOdds);
+      const stats = leagueCode && matchIdForStats ? await this.manager.getMatchStats(leagueCode, matchIdForStats) : null;
 
       if (lines.length === 0 && !stats) {
-        this.container.innerHTML = '<p class="betting-no-data">Bahis verisi yok</p>';
+        // Silently skip if no data - don't show "Bahis verisi yok" message
         return;
       }
 
       const grouped = this.manager.groupLinesByMarket(lines);
-      this.container.innerHTML = this._buildHTML(grouped, matchInfo, stats);
+      if (lines.length > 0 || stats) {
+        this.container.innerHTML = this._buildHTML(grouped, matchInfo, stats);
+      }
     } catch (err) {
       console.error('Error rendering betting lines:', err);
-      this.container.innerHTML = '<p class="betting-error">Bahis verisi yüklenemedi</p>';
+      // Silently fail - don't show error messages
     }
   }
 

@@ -2047,10 +2047,19 @@ async function showDetail(i){
       [sport, leagueForOdds] = mapping;
     }
 
-    if (sport && leagueForOdds && m.id) {
-      await component.render(sport, leagueForOdds, m.id, {home: m.h, away: m.a}, lig);
+    // Maç verisini hazırla (takım adları ve saat ile eşleştirme için)
+    const matchData = {
+      id: m.id,
+      home: m.h,
+      away: m.a,
+      commenceTime: m.t ? new Date(m.t).toISOString() : null
+    };
+
+    if (sport && leagueForOdds && (m.id || (m.h && m.a))) {
+      // Maç ID'si veya takım adları + saat ile eşleştirmeyi dene
+      await component.render(sport, leagueForOdds, matchData, {home: m.h, away: m.a}, lig);
     } else {
-      console.warn('[Betting] Insufficient data for odds:', {key, sport, leagueForOdds, matchId: m.id});
+      console.warn('[Betting] Insufficient data for odds:', {key, sport, leagueForOdds, matchId: m.id, home: m.h, away: m.a});
     }
   } catch(e) {
     console.warn('[Betting] Error loading odds:', e);

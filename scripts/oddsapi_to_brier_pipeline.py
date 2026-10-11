@@ -45,12 +45,29 @@ class OddsAPIClient:
             url += f"?apiKey={self.api_key}&regions={regions}&markets={markets}&oddsFormat=decimal"
 
             with urllib.request.urlopen(url) as response:
-                data = json.loads(response.read().decode())
+                raw_data = response.read().decode()
                 self.session_count += 1
 
-                # Debug: log response type and first item
+                # Try to parse JSON
+                try:
+                    data = json.loads(raw_data)
+                except json.JSONDecodeError as je:
+                    print(f"  ⚠️  Invalid JSON for {sport_key}: {je}")
+                    print(f"      Response preview: {raw_data[:200]}")
+                    return []
+
+                # Handle different response formats
                 if isinstance(data, dict):
-                    return data.get('events', [])
+                    # Check for 'events' key
+                    if 'events' in data:
+                        events = data['events']
+                        if not isinstance(events, list):
+                            print(f"  ⚠️  'events' field is not a list for {sport_key}: {type(events)}")
+                            return []
+                        return events
+                    else:
+                        print(f"  ⚠️  No 'events' key in response for {sport_key}")
+                        return []
                 elif isinstance(data, list):
                     # API returns array directly
                     return data
@@ -60,11 +77,15 @@ class OddsAPIClient:
         except urllib.error.HTTPError as e:
             if e.code == 404:
                 print(f"Sport {sport_key} not found")
+            elif e.code == 422:
+                print(f"Sport {sport_key}: Unprocessable (may not support requested markets)")
             else:
-                print(f"Error fetching odds for {sport_key}: {e}")
+                print(f"HTTP Error {e.code} for {sport_key}: {e}")
             return []
         except Exception as e:
             print(f"Error fetching odds for {sport_key}: {e}")
+            import traceback
+            print(f"  Traceback: {traceback.format_exc()}")
             return []
 
     def sessions_remaining(self):
@@ -165,42 +186,79 @@ class BrierDataBuilder:
         count = 0
 
         for event in events:
-            match_id = event['id']
-            home_team = event['home_team']
-            away_team = event['away_team']
+            try:
+                # Validate event is a dict
+                if not isinstance(event, dict):
+                    print(f"  ⚠️  Event is not a dict: {type(event)}")
+                    continue
 
-            betting_lines = []
+                match_id = event.get('id')
+                home_team = event.get('home_team')
+                away_team = event.get('away_team')
 
-            # Process each bookmaker
-            for bookmaker in event.get('bookmakers', []):
-                bookmaker_name = bookmaker['key']
+                if not match_id or not home_team or not away_team:
+                    continue
 
-                for market in bookmaker.get('markets', []):
-                    market_name = market['key']
+                betting_lines = []
 
-                    for outcome in market.get('outcomes', []):
-                        line_obj = {
-                            'bookmaker': bookmaker_name,
-                            'market': market_name,
-                            'selection': outcome['name'],
-                            'line': outcome.get('point'),
-                            'odds': outcome.get('price'),
-                            'snapshot_time': datetime.utcnow().isoformat() + 'Z'
-                        }
-                        betting_lines.append(line_obj)
+                # Process each bookmaker
+                bookmakers = event.get('bookmakers', [])
+                if not isinstance(bookmakers, list):
+                    continue
 
-            if betting_lines:
-                match = {
-                    'id': match_id,
-                    'home': home_team,
-                    'away': away_team,
-                    'commence_time': event.get('commence_time'),
-                    'betting_lines': betting_lines,
-                    'line_count': len(betting_lines),
-                    'bookmakers': list(set(bl['bookmaker'] for bl in betting_lines))
-                }
-                self.data[sport_family][league_name].append(match)
-                count += 1
+                for bookmaker in bookmakers:
+                    if not isinstance(bookmaker, dict):
+                        continue
+
+                    bookmaker_name = bookmaker.get('key')
+                    if not bookmaker_name:
+                        continue
+
+                    markets = bookmaker.get('markets', [])
+                    if not isinstance(markets, list):
+                        continue
+
+                    for market in markets:
+                        if not isinstance(market, dict):
+                            continue
+
+                        market_name = market.get('key')
+                        if not market_name:
+                            continue
+
+                        outcomes = market.get('outcomes', [])
+                        if not isinstance(outcomes, list):
+                            continue
+
+                        for outcome in outcomes:
+                            if not isinstance(outcome, dict):
+                                continue
+
+                            line_obj = {
+                                'bookmaker': bookmaker_name,
+                                'market': market_name,
+                                'selection': outcome.get('name', 'Unknown'),
+                                'line': outcome.get('point'),
+                                'odds': outcome.get('price'),
+                                'snapshot_time': datetime.utcnow().isoformat() + 'Z'
+                            }
+                            betting_lines.append(line_obj)
+
+                if betting_lines:
+                    match = {
+                        'id': match_id,
+                        'home': home_team,
+                        'away': away_team,
+                        'commence_time': event.get('commence_time'),
+                        'betting_lines': betting_lines,
+                        'line_count': len(betting_lines),
+                        'bookmakers': list(set(bl['bookmaker'] for bl in betting_lines))
+                    }
+                    self.data[sport_family][league_name].append(match)
+                    count += 1
+            except Exception as e:
+                print(f"  ⚠️  Error processing event: {e}")
+                continue
 
         return count
 
