@@ -1,0 +1,51 @@
+name: Daily Odds Snapshot
+
+on:
+  schedule:
+    # Her gün 02:00 UTC (Sabah 5 AM Istanbul)
+    - cron: '0 2 * * *'
+
+  # El ile trigger için (test)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  capture-odds:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Create snapshot script
+        run: mkdir -p scripts
+
+      - name: Run odds snapshot
+        env:
+          RAILWAY_URL: ${{ secrets.RAILWAY_URL || 'https://worker-production-a1ba.up.railway.app' }}
+        run: python3 scripts/capture_odds_snapshot.py
+
+      - name: Configure git
+        run: |
+          git config user.email "bot@brier.dev"
+          git config user.name "Brier Odds Bot"
+
+      - name: Commit snapshot
+        run: |
+          git add odds_history/
+          if ! git diff --cached --quiet; then
+            git commit -m "📊 Odds snapshot - $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
+          fi
+
+      - name: Push changes
+        run: |
+          git push origin main || true

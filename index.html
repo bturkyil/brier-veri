@@ -322,6 +322,20 @@
   .hareket .hd{font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:600;margin-top:4px}
   .hareket .hd.up{color:var(--teal)} .hareket .hd.down{color:var(--red)}
   .hpar{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--grey);margin-top:8px;padding-top:8px;border-top:1px solid var(--rule)}
+  /* Previous Meeting - Odds Movement */
+  .pm-score{font-size:18px;font-weight:700;text-align:center;margin:10px 0;letter-spacing:.3px}
+  .pm-date{text-align:center;font-size:11px;color:var(--grey);font-family:'IBM Plex Mono',monospace;margin-bottom:12px}
+  .pm-odds{margin:12px 0}
+  .pm-row{display:grid;grid-template-columns:60px 50px 30px 50px 1fr;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--rule);font-size:13px}
+  .pm-row:last-child{border-bottom:none}
+  .pm-team{font-weight:600;color:var(--ink)}
+  .pm-odds-open,.pm-odds-close{font-family:'IBM Plex Mono',monospace;font-weight:600;text-align:center;color:var(--ink)}
+  .pm-arrow{text-align:center;font-weight:700;font-size:14px}
+  .pm-arrow.warmup{color:#D4722B}
+  .pm-arrow.cooldown{color:var(--red)}
+  .pm-arrow.stable{color:var(--grey)}
+  .pm-change{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;text-align:right;color:var(--grey)}
+  .pm-note{text-align:center;font-size:11px;color:var(--grey);margin-top:8px;font-style:italic}
   .hidden{display:none}
 </style>
 </head>
@@ -2096,6 +2110,93 @@ async function showDetail(i){
     }
   } catch(e) {
     console.warn('[Betting] Error loading odds:', e);
+  }
+
+  // --- önceki karşılaşma odds hareketi ---
+  try {
+    if (H && H.h2h) {
+      const matchup_key = `${m.h}|${m.a}`;
+      const prevMatches = H.h2h[matchup_key] || [];
+
+      if (prevMatches.length > 0) {
+        const lastMatch = prevMatches[prevMatches.length - 1];
+        const lastDate = lastMatch.t;
+
+        // Odds history dosyasından oku
+        let oddsSnapshot = null;
+        try {
+          const oddsUrl = `./odds_history/${lig}/${lastDate}.json`;
+          const oddsResp = await fetch(oddsUrl, {cache: 'no-store'});
+          if (oddsResp.ok) {
+            const oddsHistory = await oddsResp.json();
+            const ligOranları = oddsHistory.lig_oranları || {};
+
+            // Lig klasörünü bul
+            for (const [klasor, maclar] of Object.entries(ligOranları)) {
+              const macBulundu = maclar.find(mac =>
+                mac.h === m.h && mac.a === m.a && mac.t === lastDate
+              );
+              if (macBulundu) {
+                oddsSnapshot = macBulundu;
+                break;
+              }
+            }
+          }
+        } catch (e) {
+          // Odds history bulunamadı, devam et
+        }
+
+        let pmHtml = `<div class="card"><div class="head"><span class="t">Previous Meeting</span><span class="k">${gun(lastDate)} · Odds Movement</span></div>`;
+
+        const sonuc = lastMatch.skor || '−';
+        const tarih_str = `${gun(lastDate)} ${saat(lastDate)}`;
+        pmHtml += `<div class="pm-score">${esc(m.h)} ${sonuc} ${esc(m.a)}</div>`;
+        pmHtml += `<div class="pm-date">${tarih_str}</div>`;
+
+        if (oddsSnapshot) {
+          const openH = oddsSnapshot.open?.h || null;
+          const openA = oddsSnapshot.open?.a || null;
+          const closeH = oddsSnapshot.close?.h || null;
+          const closeA = oddsSnapshot.close?.a || null;
+          const changeH = oddsSnapshot.change?.h || 0;
+          const changeA = oddsSnapshot.change?.a || 0;
+
+          pmHtml += `<div class="pm-odds">`;
+
+          if (openH && closeH) {
+            const arrowH = changeH > 0 ? '↑' : (changeH < 0 ? '↓' : '→');
+            const colorH = changeH > 0 ? 'warmup' : (changeH < 0 ? 'cooldown' : 'stable');
+            pmHtml += `<div class="pm-row">
+              <span class="pm-team">${esc(ilkKelime(m.h))}</span>
+              <span class="pm-odds-open">${openH.toFixed(2)}</span>
+              <span class="pm-arrow ${colorH}">${arrowH}</span>
+              <span class="pm-odds-close">${closeH.toFixed(2)}</span>
+              <span class="pm-change">${changeH > 0 ? '+' : ''}${changeH.toFixed(1)}%</span>
+            </div>`;
+          }
+
+          if (openA && closeA) {
+            const arrowA = changeA > 0 ? '↑' : (changeA < 0 ? '↓' : '→');
+            const colorA = changeA > 0 ? 'warmup' : (changeA < 0 ? 'cooldown' : 'stable');
+            pmHtml += `<div class="pm-row">
+              <span class="pm-team">${esc(ilkKelime(m.a))}</span>
+              <span class="pm-odds-open">${openA.toFixed(2)}</span>
+              <span class="pm-arrow ${colorA}">${arrowA}</span>
+              <span class="pm-odds-close">${closeA.toFixed(2)}</span>
+              <span class="pm-change">${changeA > 0 ? '+' : ''}${changeA.toFixed(1)}%</span>
+            </div>`;
+          }
+
+          pmHtml += `</div>`;
+          pmHtml += `<div class="pm-note">Market moved ${Math.abs(Math.max(changeH, changeA)).toFixed(1)}% from open to close</div>`;
+        }
+
+        pmHtml += `</div>`;
+        html += pmHtml;
+      }
+    }
+  } catch (e) {
+    // Hata sessizce yoksay
   }
 
   // --- league x-ray ---
