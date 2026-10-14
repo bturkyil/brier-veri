@@ -322,20 +322,6 @@
   .hareket .hd{font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:600;margin-top:4px}
   .hareket .hd.up{color:var(--teal)} .hareket .hd.down{color:var(--red)}
   .hpar{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--grey);margin-top:8px;padding-top:8px;border-top:1px solid var(--rule)}
-  /* Previous Meeting - Odds Movement */
-  .pm-score{font-size:18px;font-weight:700;text-align:center;margin:10px 0;letter-spacing:.3px}
-  .pm-date{text-align:center;font-size:11px;color:var(--grey);font-family:'IBM Plex Mono',monospace;margin-bottom:12px}
-  .pm-odds{margin:12px 0}
-  .pm-row{display:grid;grid-template-columns:60px 50px 30px 50px 1fr;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--rule);font-size:13px}
-  .pm-row:last-child{border-bottom:none}
-  .pm-team{font-weight:600;color:var(--ink)}
-  .pm-odds-open,.pm-odds-close{font-family:'IBM Plex Mono',monospace;font-weight:600;text-align:center;color:var(--ink)}
-  .pm-arrow{text-align:center;font-weight:700;font-size:14px}
-  .pm-arrow.warmup{color:#D4722B}
-  .pm-arrow.cooldown{color:var(--red)}
-  .pm-arrow.stable{color:var(--grey)}
-  .pm-change{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;text-align:right;color:var(--grey)}
-  .pm-note{text-align:center;font-size:11px;color:var(--grey);margin-top:8px;font-style:italic}
   .hidden{display:none}
 </style>
 </head>
@@ -384,7 +370,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A83 (PWA)</div>
+      <div class="by">brier · by BT · build A84 (PWA)</div>
     </footer>
   </div>
 
@@ -410,7 +396,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A83 (PWA)</div>
+      <div class="by">brier · by BT · build A84 (PWA)</div>
     </footer>
   </div>
 </div>
@@ -1567,6 +1553,17 @@ async function golkarneGetir(){
   }catch(e){GKARNE={};}
   return GKARNE;
 }
+// Acilis->kapanis arsivi (odds_history/<lig>.json, dun.json'dan gunluk arsivlenir). Lig basina tembel yukleme + onbellek.
+const ODDS_HIST={};
+async function oddsHistGetir(lig){
+  if(!lig)return null;
+  if(lig in ODDS_HIST)return ODDS_HIST[lig];
+  try{
+    const r=await fetch(MEMORY+'odds_history/'+lig+'.json',{cache:'no-store'});
+    ODDS_HIST[lig]=r.ok?await r.json():null;
+  }catch(e){ODDS_HIST[lig]=null;}
+  return ODDS_HIST[lig];
+}
 async function hafizaGetir(lig){
   if(!lig)return null;
   if(HAFIZA[lig]!==undefined)return HAFIZA[lig];
@@ -1965,6 +1962,52 @@ async function showDetail(i){
     }catch(e){}
   }
 
+  // --- LAST MEETING: ayni iki takimin son karsilasmasi, acilis -> kapanis. TAKIM ADIYLA gosterilir; ev/dep sirasi
+  //     o gunku maca gore okunur (bugunkunden bagimsiz) — anahtar sirali+kucuk-harf, ters fikstur ayrica belirtilir ---
+  try{
+    const lgL=ligBul(m.key);
+    const anahL=[String(evAd).toLowerCase(),String(depAd).toLowerCase()].sort().join('|');
+    const fair=(p)=>(p!=null&&p>0)?(1/p).toFixed(2):null;
+    let son=null, kaynak='';
+    const OH=await oddsHistGetir(lgL);
+    const liste=OH&&OH.maclar&&OH.maclar[anahL];
+    if(liste&&liste.length){ son=liste.slice().sort((x,y)=>String(y.t||'').localeCompare(String(x.t||'')))[0]; kaynak='hist'; }
+    if(!son){ // geri dus: hafiza h2h (sadece kapanis, favori tarafi)
+      const HtL=await hafizaGetir(lgL); const gec=HtL&&HtL.h2h&&HtL.h2h[anahL];
+      if(gec&&gec.length){ son=gec[0]; kaynak='h2h'; }
+    }
+    if(son){
+      const sonEv=son.h||son.ev||null, sonDep=son.a||son.dep||null;
+      const ters=!!(sonEv&&String(sonEv).toLowerCase()!==String(evAd).toLowerCase());
+      let satir='', ins='';
+      if(kaynak==='hist'&&son.kap){
+        const parts=[]; let buyuk=null;
+        [[sonEv,'h'],[sonDep,'a']].forEach(([ad,slot])=>{
+          if(!ad)return;
+          const ac=(son.ac&&son.ac[slot]!=null)?son.ac[slot]:null, kp=son.kap[slot];
+          if(kp==null)return;
+          const mv=ac!=null?Math.round((kp-ac)*100):null;
+          if(mv!=null&&(buyuk==null||Math.abs(mv)>Math.abs(buyuk.mv)))buyuk={ad,mv};
+          const cls=mv==null?'':(mv>0?'kartArti':(mv<0?'kartEksi':''));
+          parts.push(`<b>${esc(ilkKelime(ad))}</b> ${ac!=null?`opened <b>${fair(ac)}</b> → `:''}closed <span class="${cls}"><b>${fair(kp)}</b></span>${mv!=null?` (${mv>0?'+':''}${mv} pts)`:''}`);
+        });
+        satir=parts.join(' · ');
+        if(buyuk&&buyuk.mv!==0)ins=`<div class="rins">↑ Money moved <span class="rnum">${Math.abs(buyuk.mv)} pts ${buyuk.mv>0?'toward':'away from'} ${esc(ilkKelime(buyuk.ad))}</span> before kickoff last time.</div>`;
+        else if(buyuk)ins=`<div class="rins">↑ The line barely moved last time — <span class="rnum">open ≈ close</span>.</div>`;
+        else ins=`<div class="rins">↑ Closing prices only — the opening wasn't captured for that meeting.</div>`;
+      }else{
+        const favAd=son.fav||'?', ima=(son.ima!=null)?Number(son.ima):null;
+        satir=`<b>${esc(ilkKelime(favAd))}</b> closed as favourite at <b>${ima!=null?fair(ima/100):'?'}</b>${ima!=null?` (${Math.round(ima)}%)`:''}`;
+        ins=`<div class="rins">↑ Closing price only for this meeting — <span class="rnum">open→close</span> builds from today's archive onward.</div>`;
+      }
+      let when=''; try{ const d=new Date(son.t); when=isNaN(d)?String(son.t||'').slice(0,10):d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}); }catch(e){ when=String(son.t||'').slice(0,10); }
+      const venue=sonEv?` · at ${esc(ilkKelime(sonEv))}${ters?' <span style="color:var(--grey)">(reverse fixture)</span>':''}`:'';
+      const skor=(kaynak==='hist'&&son.skor)?` · <b>${esc(son.skor)}</b>`:'';
+      if(satir)REC.push({tab:'LAST MEETING',html:`<div class="tgol"><div class="th">LAST MEETING${when?' · '+esc(when):''}</div>
+        <div class="ts">${satir}${venue}${skor}</div>${ins}</div>`});
+    }
+  }catch(e){ console.log('LAST MEETING error:', e.message); }
+
   // --- RECORD SEKMELERI: toplanan RECORD kartlari macin EN USTUNDE, sekme sekme (basligin hemen altina) ---
   if(REC.length){
     const rtabs=REC.map((r,i)=>`<button class="rtab${i===0?' on':''}" data-i="${i}" type="button">${r.tab}</button>`).join('');
@@ -2112,92 +2155,6 @@ async function showDetail(i){
     console.warn('[Betting] Error loading odds:', e);
   }
 
-  // --- önceki karşılaşma odds hareketi ---
-  try {
-    if (H && H.h2h) {
-      const matchup_key = `${m.h}|${m.a}`;
-      const prevMatches = H.h2h[matchup_key] || [];
-
-      if (prevMatches.length > 0) {
-        const lastMatch = prevMatches[prevMatches.length - 1];
-        const lastDate = lastMatch.t;
-
-        // Odds history dosyasından oku
-        let oddsSnapshot = null;
-        try {
-          const oddsUrl = `./odds_history/${lig}/${lastDate}.json`;
-          const oddsResp = await fetch(oddsUrl, {cache: 'no-store'});
-          if (oddsResp.ok) {
-            const oddsHistory = await oddsResp.json();
-            const ligOranları = oddsHistory.lig_oranları || {};
-
-            // Lig klasörünü bul
-            for (const [klasor, maclar] of Object.entries(ligOranları)) {
-              const macBulundu = maclar.find(mac =>
-                mac.h === m.h && mac.a === m.a && mac.t === lastDate
-              );
-              if (macBulundu) {
-                oddsSnapshot = macBulundu;
-                break;
-              }
-            }
-          }
-        } catch (e) {
-          // Odds history bulunamadı, devam et
-        }
-
-        let pmHtml = `<div class="card"><div class="head"><span class="t">Previous Meeting</span><span class="k">${gun(lastDate)} · Odds Movement</span></div>`;
-
-        const sonuc = lastMatch.skor || '−';
-        const tarih_str = `${gun(lastDate)} ${saat(lastDate)}`;
-        pmHtml += `<div class="pm-score">${esc(m.h)} ${sonuc} ${esc(m.a)}</div>`;
-        pmHtml += `<div class="pm-date">${tarih_str}</div>`;
-
-        if (oddsSnapshot) {
-          const openH = oddsSnapshot.open?.h || null;
-          const openA = oddsSnapshot.open?.a || null;
-          const closeH = oddsSnapshot.close?.h || null;
-          const closeA = oddsSnapshot.close?.a || null;
-          const changeH = oddsSnapshot.change?.h || 0;
-          const changeA = oddsSnapshot.change?.a || 0;
-
-          pmHtml += `<div class="pm-odds">`;
-
-          if (openH && closeH) {
-            const arrowH = changeH > 0 ? '↑' : (changeH < 0 ? '↓' : '→');
-            const colorH = changeH > 0 ? 'warmup' : (changeH < 0 ? 'cooldown' : 'stable');
-            pmHtml += `<div class="pm-row">
-              <span class="pm-team">${esc(ilkKelime(m.h))}</span>
-              <span class="pm-odds-open">${openH.toFixed(2)}</span>
-              <span class="pm-arrow ${colorH}">${arrowH}</span>
-              <span class="pm-odds-close">${closeH.toFixed(2)}</span>
-              <span class="pm-change">${changeH > 0 ? '+' : ''}${changeH.toFixed(1)}%</span>
-            </div>`;
-          }
-
-          if (openA && closeA) {
-            const arrowA = changeA > 0 ? '↑' : (changeA < 0 ? '↓' : '→');
-            const colorA = changeA > 0 ? 'warmup' : (changeA < 0 ? 'cooldown' : 'stable');
-            pmHtml += `<div class="pm-row">
-              <span class="pm-team">${esc(ilkKelime(m.a))}</span>
-              <span class="pm-odds-open">${openA.toFixed(2)}</span>
-              <span class="pm-arrow ${colorA}">${arrowA}</span>
-              <span class="pm-odds-close">${closeA.toFixed(2)}</span>
-              <span class="pm-change">${changeA > 0 ? '+' : ''}${changeA.toFixed(1)}%</span>
-            </div>`;
-          }
-
-          pmHtml += `</div>`;
-          pmHtml += `<div class="pm-note">Market moved ${Math.abs(Math.max(changeH, changeA)).toFixed(1)}% from open to close</div>`;
-        }
-
-        pmHtml += `</div>`;
-        html += pmHtml;
-      }
-    }
-  } catch (e) {
-    // Hata sessizce yoksay
-  }
 
   // --- league x-ray ---
   let x='';
