@@ -370,7 +370,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A84 (PWA)</div>
+      <div class="by">brier · by BT · build A85 (PWA)</div>
     </footer>
   </div>
 
@@ -396,7 +396,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A84 (PWA)</div>
+      <div class="by">brier · by BT · build A85 (PWA)</div>
     </footer>
   </div>
 </div>
@@ -1981,18 +1981,22 @@ async function showDetail(i){
       const ters=!!(sonEv&&String(sonEv).toLowerCase()!==String(evAd).toLowerCase());
       let satir='', ins='';
       if(kaynak==='hist'&&son.kap){
-        const parts=[]; let buyuk=null;
-        [[sonEv,'h'],[sonDep,'a']].forEach(([ad,slot])=>{
-          if(!ad)return;
+        // Tam piyasa tahtasi: O GUNKU ev takimi / Draw (3-yollu ise) / o gunku deplasman — her satir acilis -> kapanis
+        const rows=[]; let buyuk=null;
+        const outs=[];
+        if(sonEv)outs.push([slotAd=>`${esc(ilkKelime(sonEv))} <span style="color:var(--grey)">home</span>`, 'h', ilkKelime(sonEv)]);
+        if(son.kap.d!=null||(son.ac&&son.ac.d!=null))outs.push([()=>'Draw','d','the draw']);
+        if(sonDep)outs.push([()=>`${esc(ilkKelime(sonDep))} <span style="color:var(--grey)">away</span>`, 'a', ilkKelime(sonDep)]);
+        outs.forEach(([labelFn,slot,adGoster])=>{
           const ac=(son.ac&&son.ac[slot]!=null)?son.ac[slot]:null, kp=son.kap[slot];
           if(kp==null)return;
           const mv=ac!=null?Math.round((kp-ac)*100):null;
-          if(mv!=null&&(buyuk==null||Math.abs(mv)>Math.abs(buyuk.mv)))buyuk={ad,mv};
+          if(mv!=null&&(buyuk==null||Math.abs(mv)>Math.abs(buyuk.mv)))buyuk={ad:adGoster,mv};
           const cls=mv==null?'':(mv>0?'kartArti':(mv<0?'kartEksi':''));
-          parts.push(`<b>${esc(ilkKelime(ad))}</b> ${ac!=null?`opened <b>${fair(ac)}</b> → `:''}closed <span class="${cls}"><b>${fair(kp)}</b></span>${mv!=null?` (${mv>0?'+':''}${mv} pts)`:''}`);
+          rows.push(`<b>${labelFn()}</b> &nbsp;${ac!=null?`<b>${fair(ac)}</b> → `:''}<span class="${cls}"><b>${fair(kp)}</b></span>${mv!=null?` <span style="color:var(--grey)">(${mv>0?'+':''}${mv} pts)</span>`:''}`);
         });
-        satir=parts.join(' · ');
-        if(buyuk&&buyuk.mv!==0)ins=`<div class="rins">↑ Money moved <span class="rnum">${Math.abs(buyuk.mv)} pts ${buyuk.mv>0?'toward':'away from'} ${esc(ilkKelime(buyuk.ad))}</span> before kickoff last time.</div>`;
+        satir=rows.join('<br>');
+        if(buyuk&&buyuk.mv!==0)ins=`<div class="rins">↑ Money moved <span class="rnum">${Math.abs(buyuk.mv)} pts ${buyuk.mv>0?'toward':'away from'} ${esc(buyuk.ad)}</span> before kickoff last time.</div>`;
         else if(buyuk)ins=`<div class="rins">↑ The line barely moved last time — <span class="rnum">open ≈ close</span>.</div>`;
         else ins=`<div class="rins">↑ Closing prices only — the opening wasn't captured for that meeting.</div>`;
       }else{
@@ -2001,10 +2005,16 @@ async function showDetail(i){
         ins=`<div class="rins">↑ Closing price only for this meeting — <span class="rnum">open→close</span> builds from today's archive onward.</div>`;
       }
       let when=''; try{ const d=new Date(son.t); when=isNaN(d)?String(son.t||'').slice(0,10):d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}); }catch(e){ when=String(son.t||'').slice(0,10); }
-      const venue=sonEv?` · at ${esc(ilkKelime(sonEv))}${ters?' <span style="color:var(--grey)">(reverse fixture)</span>':''}`:'';
-      const skor=(kaynak==='hist'&&son.skor)?` · <b>${esc(son.skor)}</b>`:'';
+      let meta='';
+      if(kaynak==='hist'){
+        const m1=[]; if(son.skor)m1.push(`<b>${esc(son.skor)}</b>`);
+        if(sonEv)m1.push(ters?`reverse fixture — last time at ${esc(ilkKelime(sonEv))}`:`at ${esc(ilkKelime(sonEv))}`);
+        meta=m1.length?`<div class="tf">${m1.join(' · ')}</div>`:'';
+      }else if(sonEv){
+        satir+=` · at ${esc(ilkKelime(sonEv))}${ters?' <span style="color:var(--grey)">(reverse fixture)</span>':''}`;
+      }
       if(satir)REC.push({tab:'LAST MEETING',html:`<div class="tgol"><div class="th">LAST MEETING${when?' · '+esc(when):''}</div>
-        <div class="ts">${satir}${venue}${skor}</div>${ins}</div>`});
+        <div class="ts"${kaynak==='hist'?' style="line-height:1.9"':''}>${satir}</div>${ins}${meta}</div>`});
     }
   }catch(e){ console.log('LAST MEETING error:', e.message); }
 
