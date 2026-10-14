@@ -305,6 +305,16 @@
   .tgol .ts{font-size:13px;line-height:1.55;margin-top:5px;color:var(--ink)}
   .tgol .ts b{font-weight:600}
   .tgol .tf{font-size:10.5px;color:var(--grey);margin-top:7px;padding-top:7px;border-top:1px solid var(--rule);font-family:'IBM Plex Mono',monospace}
+  /* RECORD sekmeleri — macin en ustunde; gorunum .chip ile ayni dil */
+  .rec{margin:14px 20px 0}
+  .rtabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+  .rtab{border:1px solid var(--rule-dark);background:#fff;border-radius:2px;padding:6px 11px;font-size:10.5px;font-weight:700;letter-spacing:.5px;color:var(--grey);cursor:pointer;font-family:inherit;white-space:nowrap}
+  .rtab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .rpane{display:none} .rpane.on{display:block}
+  .rec .tgol{margin:0}
+  /* tek satir verisel yorum: mesaj gri, rakam mono/koyu */
+  .rins{color:var(--grey);font-size:.82em;margin-top:6px;line-height:1.5}
+  .rnum{font-family:'IBM Plex Mono',monospace;color:var(--ink);font-weight:600;margin-left:4px}
   .hareket{margin:14px 20px 0;background:#fff;border:1px solid var(--rule-dark);padding:12px 16px}
   .hareket .hh{font-size:11px;font-weight:700;letter-spacing:.6px;color:var(--grey)}
   .hareket .hs{font-size:12.5px;line-height:1.55;margin-top:6px;color:var(--ink)}
@@ -360,7 +370,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A82 (PWA)</div>
+      <div class="by">brier · by BT · build A83 (PWA)</div>
     </footer>
   </div>
 
@@ -386,7 +396,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A82 (PWA)</div>
+      <div class="by">brier · by BT · build A83 (PWA)</div>
     </footer>
   </div>
 </div>
@@ -424,10 +434,19 @@ const LIG_ESLE = {
 };
 function ligBul(k){return LIG_ESLE[k]||(String(k).indexOf('tennis_')===0?'tenis':null);}
 
+// Takim adinin ilk kelimesi — GLOBAL (recordInsight global kapsamda bunu cagirir;
+// A75-A82 arasi sadece showDetail icinde tanimliydi -> ReferenceError, try/catch yutuyordu, yorumlar hic cikmadi)
+function ilkKelime(s){return String(s||'').split(' ')[0]||'';}
+
+// Her RECORD kartinin altina tek satir, VERISEL (rakamli) yorum: mesaj + "(+N% vs league)"
 function recordInsight(evAd, depAd, evVal, depVal, ligVal, tur){
   if(evVal==null||depVal==null||ligVal==null)return '';
   const e=ilkKelime(evAd), d=ilkKelime(depAd);
   const evUst=evVal>ligVal, depUst=depVal>ligVal;
+  // verisel ek: mac ortalamasi vs lig (% sapma) — her yorum bir rakam tasisin
+  const macOrt=(Number(evVal)+Number(depVal))/2;
+  const yuz=ligVal>0?Math.round((macOrt-ligVal)/ligVal*100):0;
+  const rakam=(yuz>0?'+':'')+yuz+'% vs league';
   let msg='';
   if(evUst&&depUst){
     if(tur==='card')msg='Both run hot — a card-heavy pairing.';
@@ -436,6 +455,7 @@ function recordInsight(evAd, depAd, evVal, depVal, ligVal, tur){
     else if(tur==='shot')msg='Both fire often — a high-volume game.';
     else if(tur==='hits')msg='Both bats are live — hits should come.';
     else if(tur==='yards')msg='Both move the ball — a high-yardage game.';
+    else if(tur==='score')msg='Both score above the league — a high-scoring pairing.';
     else msg='Both sit above the league line.';
   } else if(!evUst&&!depUst){
     if(tur==='card')msg='A clean pairing — cards run low.';
@@ -444,6 +464,7 @@ function recordInsight(evAd, depAd, evVal, depVal, ligVal, tur){
     else if(tur==='shot')msg='Both are shot-shy — a low-volume game.';
     else if(tur==='hits')msg='Both offences run quiet.';
     else if(tur==='yards')msg='Both grind it out — low yardage.';
+    else if(tur==='score')msg='Both run quiet — a low-scoring pairing.';
     else msg='Both sit below the league line.';
   } else {
     const lider = evUst?e:d;
@@ -454,10 +475,20 @@ function recordInsight(evAd, depAd, evVal, depVal, ligVal, tur){
     else if(tur==='hits')msg=lider+' has the livelier bats.';
     else if(tur==='yards')msg=lider+' moves the ball better.';
     else if(tur==='era')msg=lider+' shuts it down better.';
+    else if(tur==='score')msg=lider+' carries the scoring.';
     else msg=lider+' leads here.';
   }
-  return '<div style="color:var(--grey);font-size:.82em;margin-top:4px">↑ '+msg+'</div>';
+  return '<div class="rins">↑ '+msg+' <span class="rnum">'+rakam+'</span></div>';
 }
+
+// RECORD sekme tiklama — detay dinamik basildigi icin document uzerinde delegasyon
+document.addEventListener('click',function(ev){
+  const b=ev.target&&ev.target.closest?ev.target.closest('.rtab'):null; if(!b)return;
+  const rec=b.closest('.rec'); if(!rec)return;
+  const i=b.getAttribute('data-i');
+  rec.querySelectorAll('.rtab').forEach(x=>x.classList.toggle('on',x.getAttribute('data-i')===i));
+  rec.querySelectorAll('.rpane').forEach(x=>x.classList.toggle('on',x.getAttribute('data-i')===i));
+});
 
 let ARAMA='';
 let LIVE=null, INDEX=null, HAFIZA={}, GKARNE=null, grup='ALL', ligSec=null, gunSec=null, mercek=false, splens=false, bulens=false, movlens=false, tumGun=false, cekGrup=null;
@@ -1626,6 +1657,7 @@ async function showDetail(i){
     <div class="teams">${esc(evAd)} — ${esc(depAd)}</div>
     <div class="when">${gun(m.t)}${saat(m.t)} · ${m.kitap||'?'} books tracked</div></div>
     <div id="karneSlot"></div>`;
+  const REC=[]; // RECORD kartlari burada toplanir; macin EN USTUNDE sekme sekme basilir
 
   // --- best prices ---
   html+=`<div class="card"><div class="head"><span class="t">Best prices</span><span class="k">${m.sonuc3?'match result':'moneyline'}</span></div>`;
@@ -1711,9 +1743,10 @@ async function showDetail(i){
             const h2hOrt=(topSum/gecmis.length).toFixed(1);
             h2hCumle=` Their last <b>${gecmis.length}</b> meeting${gecmis.length>1?'s':''} averaged <b>${h2hOrt}</b>.`;
           }
-          html+=`<div class="tgol"><div class="th">SCORING RECORD · ${birim.toUpperCase()}</div>
+          const insS=recordInsight(evAd,depAd,evO,depO,ligO,'score');
+          REC.push({tab:'SCORING',html:`<div class="tgol"><div class="th">SCORING RECORD · ${birim.toUpperCase()}</div>
             <div class="tbaslik ${sinif}">${esc(baslik)}</div>
-            <div class="ts"><b>${esc(ilkKelime(evAd))}</b> home <b>${evO}</b> · <b>${esc(ilkKelime(depAd))}</b> away <b>${depO}</b> · league <b>${ligO}</b> · line ${tc.cizgi}</div></div>`;
+            <div class="ts"><b>${esc(ilkKelime(evAd))}</b> home <b>${evO}</b> · <b>${esc(ilkKelime(depAd))}</b> away <b>${depO}</b> · league <b>${ligO}</b> · line ${tc.cizgi}</div>${insS}</div>`});
         }
       }
       // --- BASKETBALL BOX (ribaund/ucluk/asist - sadece basketbol, tek kart) ---
@@ -1742,8 +1775,8 @@ async function showDetail(i){
           if(satirlar.length){
             const rk=gb.takim_ribaund||{};
             const ins=recordInsight(evAd,depAd,(tkGet(rk,evAd)||{}).ev_ort,(tkGet(rk,depAd)||{}).dep_ort,gb.lig_ribaund_ort,'rebound');
-            html+=`<div class="tgol"><div class="th">BOX SCORE · PER GAME</div>
-              <div class="ts" style="line-height:1.9">${satirlar.join('<br>')}</div>${ins}</div>`;
+            REC.push({tab:'BOX',html:`<div class="tgol"><div class="th">BOX SCORE · PER GAME</div>
+              <div class="ts" style="line-height:1.9">${satirlar.join('<br>')}</div>${ins}</div>`});
           }
         }
       }catch(e){}
@@ -1772,8 +1805,8 @@ async function showDetail(i){
           if(satirlar.length){
             const yk=gn.takim_yards||{};
             const ins=recordInsight(evAd,depAd,(tkGet(yk,evAd)||{}).ev_ort,(tkGet(yk,depAd)||{}).dep_ort,gn.lig_yards_ort,'yards');
-            html+=`<div class="tgol"><div class="th">TEAM RECORD · PER GAME</div>
-              <div class="ts" style="line-height:1.9">${satirlar.join('<br>')}</div>${ins}</div>`;
+            REC.push({tab:'TEAM',html:`<div class="tgol"><div class="th">TEAM RECORD · PER GAME</div>
+              <div class="ts" style="line-height:1.9">${satirlar.join('<br>')}</div>${ins}</div>`});
           }
         }
       }catch(e){}
@@ -1804,8 +1837,8 @@ async function showDetail(i){
           if(satirlar.length){
             const hk=gm.takim_hits||{};
             const ins=recordInsight(evAd,depAd,(tkGet(hk,evAd)||{}).ev_ort,(tkGet(hk,depAd)||{}).dep_ort,gm.lig_hits_ort,'hits');
-            html+=`<div class="tgol"><div class="th">TEAM RECORD · PER GAME</div>
-              <div class="ts" style="line-height:1.9">${satirlar.join('<br>')}</div>${ins}</div>`;
+            REC.push({tab:'TEAM',html:`<div class="tgol"><div class="th">TEAM RECORD · PER GAME</div>
+              <div class="ts" style="line-height:1.9">${satirlar.join('<br>')}</div>${ins}</div>`});
           }
         }
       }catch(e){}
@@ -1823,8 +1856,8 @@ async function showDetail(i){
             const macM=(ev+dp)/2, fark=macM-ligM, yuz=ligM>0?(fark/ligM*100):0;
             const renk=yuz>=8?'kartArti':(yuz<=-8?'kartEksi':'');
             const ins=recordInsight(evAd,depAd,ev,dp,ligM,'shot');
-            html+=`<div class="tgol"><div class="th">TEAM RECORD · PER GAME</div>
-              <div class="ts" style="line-height:1.9"><span class="${renk}"><b>${esc(ilkKelime(evAd))}</b> ${ev} · <b>${esc(ilkKelime(depAd))}</b> ${dp}</span> shots on goal <span style="color:var(--grey)">(league ${ligM})</span></div>${ins}</div>`;
+            REC.push({tab:'TEAM',html:`<div class="tgol"><div class="th">TEAM RECORD · PER GAME</div>
+              <div class="ts" style="line-height:1.9"><span class="${renk}"><b>${esc(ilkKelime(evAd))}</b> ${ev} · <b>${esc(ilkKelime(depAd))}</b> ${dp}</span> shots on goal <span style="color:var(--grey)">(league ${ligM})</span></div>${ins}</div>`});
           }
         }
       }catch(e){}
@@ -1845,9 +1878,10 @@ async function showDetail(i){
             if(yuzK>=10){sinifK='hot';baslikK='Above the league average';}
             else if(yuzK<=-10){sinifK='cold';baslikK='Below the league average';}
             else{sinifK='';baslikK='Around the league average';}
-            html+=`<div class="tgol"><div class="th">CORNER RECORD</div>
+            const insK=recordInsight(evAd,depAd,evK,depK,ligK,'corner');
+            REC.push({tab:'CORNERS',html:`<div class="tgol"><div class="th">CORNER RECORD</div>
               <div class="tbaslik ${sinifK}">${esc(baslikK)}</div>
-              <div class="ts"><b>${esc(ilkKelime(evAd))}</b> home <b>${evK}</b> · <b>${esc(ilkKelime(depAd))}</b> away <b>${depK}</b> · league <b>${ligK}</b> corners</div></div>`;
+              <div class="ts"><b>${esc(ilkKelime(evAd))}</b> home <b>${evK}</b> · <b>${esc(ilkKelime(depAd))}</b> away <b>${depK}</b> · league <b>${ligK}</b> corners</div>${insK}</div>`});
           }
         }
       }catch(e){
@@ -1870,9 +1904,10 @@ async function showDetail(i){
             if(yuzKart>=10){sinifKt='hot';baslikKt='Above the league average';}
             else if(yuzKart<=-10){sinifKt='cold';baslikKt='Below the league average';}
             else{sinifKt='';baslikKt='Around the league average';}
-            html+=`<div class="tgol"><div class="th">CARD RECORD</div>
+            const insKt=recordInsight(evAd,depAd,evKart,depKart,ligKart,'card');
+            REC.push({tab:'CARDS',html:`<div class="tgol"><div class="th">CARD RECORD</div>
               <div class="tbaslik ${sinifKt}">${esc(baslikKt)}</div>
-              <div class="ts"><b>${esc(ilkKelime(evAd))}</b> home <b>${evKart}</b> · <b>${esc(ilkKelime(depAd))}</b> away <b>${depKart}</b> · league <b>${ligKart}</b> cards</div></div>`;
+              <div class="ts"><b>${esc(ilkKelime(evAd))}</b> home <b>${evKart}</b> · <b>${esc(ilkKelime(depAd))}</b> away <b>${depKart}</b> · league <b>${ligKart}</b> cards</div>${insKt}</div>`});
           }
         }
       }catch(e){
@@ -1906,13 +1941,22 @@ async function showDetail(i){
               // fair oran: bugun 1/bugP (Best prices ile ayni, ara yuvarlama yok); gecmis %'den
               const gecOran=(100/gecmisOrt).toFixed(2), bugOran=(1/bugP).toFixed(2);
               const pyon=farkP<0?'kirmizi':'teal';
-              html+=`<div class="tgol"><div class="th">PRICE RECORD</div>
-                <div class="ts"><b>${esc(ilkKelime(evAd))}</b> fair was <b>${gecOran}</b> (${gecmisOrt}%), now <span class="${pyon=="teal"?"kartArti":"kartEksi"}"><b>${bugOran}</b> (${evBugun}%)</span> · market <b>${yon=='less'?'cooler':'warmer'}</b> on them · last ${sayi}</div></div>`;
+              const insP=`<div class="rins">↑ Market has ${yon=='less'?'cooled':'warmed'} on ${esc(ilkKelime(evAd))} <span class="rnum">${farkP>0?'+':''}${farkP} pts vs their last ${sayi}</span></div>`;
+              REC.push({tab:'PRICE',html:`<div class="tgol"><div class="th">PRICE RECORD</div>
+                <div class="ts"><b>${esc(ilkKelime(evAd))}</b> fair was <b>${gecOran}</b> (${gecmisOrt}%), now <span class="${pyon=="teal"?"kartArti":"kartEksi"}"><b>${bugOran}</b> (${evBugun}%)</span> · market <b>${yon=='less'?'cooler':'warmer'}</b> on them · last ${sayi}</div>${insP}</div>`});
             }
           }
         }
       }
     }catch(e){}
+  }
+
+  // --- RECORD SEKMELERI: toplanan RECORD kartlari macin EN USTUNDE, sekme sekme (basligin hemen altina) ---
+  if(REC.length){
+    const rtabs=REC.map((r,i)=>`<button class="rtab${i===0?' on':''}" data-i="${i}" type="button">${r.tab}</button>`).join('');
+    const rpanes=REC.map((r,i)=>`<div class="rpane${i===0?' on':''}" data-i="${i}">${r.html}</div>`).join('');
+    const recHtml=`<div class="rec"><div class="rtabs">${rtabs}</div><div class="rpanes">${rpanes}</div></div>`;
+    html=html.replace('<div id="karneSlot"></div>','<div id="karneSlot"></div>'+recHtml);
   }
 
   // --- spread karti ---
