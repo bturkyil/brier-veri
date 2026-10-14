@@ -130,24 +130,79 @@ def yukle(path):
     return {'lig': path.stem, 'guncelleme': None, 'maclar': {}}
 
 
+BEKLEYEN_DOSYA = OUT_DIR / '_acilis_bekleyen.json'
+BEKLEYEN_GUN = 21   # bu kadar gunden eski bekleyen acilislar temizlenir
+
+
+def mac_id(t, h, a):
+    return f"{t}|{h}|{a}"
+
+
+def bekleyen_yukle():
+    if BEKLEYEN_DOSYA.exists():
+        try:
+            return json.loads(BEKLEYEN_DOSYA.read_text(encoding='utf-8'))
+        except Exception:
+            pass
+    return {}
+
+
+def bekleyen_topla(bekleyen):
+    """bugun.json'daki yaklasan maclarin ACILIS (ac) degerini bekleyen havuza yazar.
+    dun.json acilisi tasimadigi icin (worker kopyalamiyor) acilisi burada yakaliyoruz."""
+    try:
+        bugun = fetch_json(f"{RAILWAY_URL}/bugun.json")
+    except Exception as ex:
+        print(f"⚠️  bugun.json alinamadi (acilis toplanamadi): {ex}")
+        return 0
+    yeni = 0
+    for blk in (bugun.get('ligler') or {}).values():
+        for m in (blk or {}).get('maclar') or []:
+            ac = m.get('ac')
+            if not (isinstance(ac, dict) and ac.get('h') is not None):
+                continue
+            mid = mac_id(m.get('t'), m.get('h'), m.get('a'))
+            if mid not in bekleyen:          # ilk gorulen acilis korunur (gercek acilisa en yakin)
+                bekleyen[mid] = {'ac': ac, 'g': datetime.now(timezone.utc).strftime('%Y-%m-%d')}
+                yeni += 1
+    return yeni
+
+
+def bekleyen_temizle(bekleyen):
+    sinir = datetime.now(timezone.utc).timestamp() - BEKLEYEN_GUN * 86400
+    sil = [k for k, v in bekleyen.items()
+           if datetime.strptime(v.get('g', '1970-01-01'), '%Y-%m-%d').replace(tzinfo=timezone.utc).timestamp() < sinir]
+    for k in sil:
+        del bekleyen[k]
+    return len(sil)
+
+
 def main():
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
+
+    # 0) Acilislari topla (bugun.json -> bekleyen havuz)
+    bekleyen = bekleyen_yukle()
+    yeni_ac = bekleyen_topla(bekleyen)
+    print(f"📥 bekleyen acilis: +{yeni_ac} yeni, toplam {len(bekleyen)}")
+
     url = f"{RAILWAY_URL}/dun.json"
     print(f"🔗 {url}")
     try:
         dun = fetch_json(url)
     except (urllib.error.URLError, urllib.error.HTTPError, ValueError) as ex:
         print(f"❌ dun.json alinamadi: {ex}")
+        BEKLEYEN_DOSYA.write_text(json.dumps(bekleyen, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
         return 1
 
     gunler = dun.get('gunler') or {}
     if not gunler:
         print("⚠️  dun.json'da 'gunler' yok/bos — yapi degismis olabilir. Ust anahtarlar:", list(dun.keys())[:10])
+        BEKLEYEN_DOSYA.write_text(json.dumps(bekleyen, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
         return 1
 
-    OUT_DIR.mkdir(parents=True, exist_ok=True)
     bugun = datetime.now(timezone.utc).strftime('%Y-%m-%d')
     dokunulan = {}   # lig -> dosya objesi
-    eklenen = 0; atlanan = 0; ac_var = 0
+    eklenen = 0; atlanan = 0; ac_var = 0; ac_birlesen = 0
 
     for gun, entries in gunler.items():
         if not isinstance(entries, list):
@@ -157,6 +212,12 @@ def main():
             if rec is None:
                 atlanan += 1
                 continue
+            # dun acilisi tasimiyorsa bekleyen havuzdan birlestir
+            if rec['ac'] is None:
+                b = bekleyen.get(mac_id(rec['t'], rec['h'], rec['a']))
+                if b and isinstance(b.get('ac'), dict):
+                    rec['ac'] = b['ac']
+                    ac_birlesen += 1
             lig = lig_bul(e)
             if lig not in dokunulan:
                 dokunulan[lig] = yukle(OUT_DIR / f"{lig}.json")
@@ -178,9 +239,12 @@ def main():
         d['guncelleme'] = bugun
         (OUT_DIR / f"{lig}.json").write_text(json.dumps(d, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
 
-    print(f"✅ eklenen: {eklenen}  (acilis 'ac' tasiyan: {ac_var})  atlanan: {atlanan}  lig dosyasi: {len(dokunulan)}")
+    silinen = bekleyen_temizle(bekleyen)
+    BEKLEYEN_DOSYA.write_text(json.dumps(bekleyen, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
+
+    print(f"✅ eklenen: {eklenen}  (acilis tasiyan: {ac_var}, bunun {ac_birlesen}'i bekleyen havuzdan)  atlanan: {atlanan}  lig dosyasi: {len(dokunulan)}  bekleyen temizlenen: {silinen}")
     if eklenen and ac_var == 0:
-        print("⚠️  Hic 'ac' (acilis) gelmedi — dun.json acilisi tasimiyor olabilir; PWA 'closing only' gosterir. Worker'da ac'nin dun'a kopyalandigini dogrula.")
+        print("ℹ️  Bu calismada acilis yok: bekleyen havuz yeni doluyor. Yarinki calismadan itibaren dun'a dusen maclar acilisla gelir.")
     return 0
 
 
