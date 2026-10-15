@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Brier Terminal — NBA</title>
+<meta name="description" content="The record of an NBA matchup — rest, availability, home/away, last meeting. Not a tip.">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F2F5F4; --ink:#16211F; --rule:#D7DEDC; --rule-dark:#B9C4C1;
+    --teal:#0E7C6B; --teal-soft:#E3EFEC; --gold:#9A751F; --grey:#5C6B68; --red:#A33A2E;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:'Archivo',sans-serif;font-size:14px;line-height:1.5}
+  header{background:var(--ink);color:#fff;padding:16px 20px;display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+  header h1{margin:0;font-size:18px;letter-spacing:1.5px;font-weight:800}
+  header .tag{font-family:'IBM Plex Mono',monospace;font-size:11px;opacity:.75}
+  header .motto{margin-left:auto;font-size:11px;opacity:.75;letter-spacing:.4px}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 16px 40px}
+  .sec{font-size:11px;font-weight:700;letter-spacing:.6px;color:var(--grey);margin:18px 0 8px;text-transform:uppercase}
+  .list{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px}
+  .mrow{background:#fff;border:1px solid var(--rule-dark);border-radius:2px;padding:10px 12px;cursor:pointer;text-align:left;font-family:inherit;color:var(--ink)}
+  .mrow:hover{background:var(--teal-soft)} .mrow.on{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+  .mrow .t{font-weight:700;font-size:13.5px} .mrow .w{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--grey);margin-top:3px}
+  .pick{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
+  select{font-family:inherit;font-size:13px;padding:7px 10px;border:1px solid var(--rule-dark);border-radius:2px;background:#fff;color:var(--ink)}
+  .btn{font-family:inherit;font-size:11px;font-weight:700;letter-spacing:.5px;padding:8px 12px;border:1px solid var(--ink);background:var(--ink);color:#fff;border-radius:2px;cursor:pointer}
+  .dhead{margin:22px 0 6px} .dhead .teams{font-size:20px;font-weight:800;letter-spacing:.2px} .dhead .when{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--grey);margin-top:3px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px;margin-top:12px}
+  .tgol{background:#fff;border:1px solid var(--rule-dark);padding:12px 16px;border-radius:2px}
+  .tgol .th{font-size:11px;font-weight:700;letter-spacing:.6px;color:var(--grey)}
+  .tgol .tbaslik{font-size:15px;font-weight:600;margin-top:6px;color:var(--ink)}
+  .tgol .ts{font-size:13px;line-height:1.7;margin-top:6px;color:var(--ink)} .tgol .ts b{font-weight:600}
+  .tgol .tf{font-size:10.5px;color:var(--grey);margin-top:8px;padding-top:7px;border-top:1px solid var(--rule);font-family:'IBM Plex Mono',monospace}
+  .rins{color:var(--grey);font-size:.84em;margin-top:8px;line-height:1.5}
+  .rnum{font-family:'IBM Plex Mono',monospace;color:var(--ink);font-weight:600;margin-left:4px}
+  .kartArti{color:var(--teal);font-weight:600} .kartEksi{color:var(--red);font-weight:600}
+  .mono{font-family:'IBM Plex Mono',monospace}
+  table.box{width:100%;border-collapse:collapse;font-size:12px;margin-top:6px}
+  table.box th{font-size:10px;letter-spacing:.5px;color:var(--grey);text-align:right;font-weight:700;padding:3px 4px;border-bottom:1px solid var(--rule)}
+  table.box th:first-child,table.box td:first-child{text-align:left}
+  table.box td{padding:3px 4px;text-align:right;font-family:'IBM Plex Mono',monospace;border-bottom:1px solid var(--rule)}
+  table.box td:first-child{font-family:'Archivo',sans-serif}
+  table.box tr.st td:first-child{font-weight:600}
+  .dnp{font-size:11.5px;color:var(--grey);margin-top:6px} .dnp b{color:var(--ink);font-weight:600}
+  .empty{padding:18px;color:var(--grey);text-align:center;font-size:12.5px}
+  .note{font-size:11px;color:var(--grey);line-height:1.55;margin-top:14px}
+  .err{color:var(--red);font-size:12px}
+  @media (max-width:600px){ .dhead .teams{font-size:17px} .grid{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+<header>
+  <h1>BRIER</h1><span class="tag">terminal · nba · build T1</span>
+  <span class="motto">the record, not the tip</span>
+</header>
+<div class="wrap">
+  <div class="sec">Tonight</div>
+  <div id="list" class="list"><div class="empty">Loading tonight's games…</div></div>
+  <div class="sec">Or pick any two teams</div>
+  <div class="pick">
+    <select id="selH"></select><span class="mono" style="color:var(--grey)">vs</span><select id="selA"></select>
+    <button class="btn" id="goBtn" type="button">OPEN THE RECORD</button>
+  </div>
+  <div id="detail"></div>
+  <div class="note">Five NBA seasons of box scores (ESPN), every player every night. "Sat" = listed on the roster with no minutes — injury, rest or coach's decision, not separated. Odds history builds daily from the archive. Direction, not advice.</div>
+</div>
+
+<script>
+const HOST='https://worker-production-a1ba.up.railway.app';
+const DATA='nba/';                 // terminal/nba/index.json, terminal/nba/teams/<slug>.json
+const ODDS_HIST='../odds_history/nba.json';
+let IDX=null, LEAGUE=null, TEAMS=[], TCACHE={}, OH=null, TONIGHT=[];
+
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+const pct=(w,n)=>n>0?Math.round(1000*w/n)/10:null;
+const fair=(p)=>(p!=null&&p>0)?(1/p).toFixed(2):null;
+const usDate=(iso)=>{try{return new Date(iso).toLocaleDateString('en-CA',{timeZone:'America/New_York'});}catch(e){return String(iso||'').slice(0,10);}};
+const niceDate=(ymd)=>{try{const d=new Date(ymd+'T12:00:00Z');return d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});}catch(e){return ymd;}};
+const daysBetween=(a,b)=>Math.round((new Date(b+'T12:00:00Z')-new Date(a+'T12:00:00Z'))/86400000);
+
+// ---- takim esleme: The Odds API adi -> ESPN takimi (tam ad -> lakap(son kelime) -> alias) ----
+const ALIAS={'la clippers':'los angeles clippers','los angeles clippers':'la clippers'};
+function findTeam(name){
+  if(!name||!TEAMS.length)return null;
+  const n=String(name).toLowerCase().trim();
+  let t=TEAMS.find(x=>x.ad.toLowerCase()===n); if(t)return t;
+  if(ALIAS[n]){t=TEAMS.find(x=>x.ad.toLowerCase()===ALIAS[n]); if(t)return t;}
+  const nick=n.split(' ').pop();
+  const c=TEAMS.filter(x=>x.ad.toLowerCase().split(' ').pop()===nick);
+  if(c.length===1)return c[0];
+  if(c.length>1){const c2=c.filter(x=>n.includes(x.ad.toLowerCase().split(' ')[0]));if(c2.length===1)return c2[0];}
+  return null;
+}
+async function teamFile(t){
+  if(TCACHE[t.slug])return TCACHE[t.slug];
+  const r=await fetch(DATA+'teams/'+t.slug+'.json',{cache:'no-store'});
+  TCACHE[t.slug]=r.ok?await r.json():null; return TCACHE[t.slug];
+}
+async function oddsHist(){ if(OH!==null)return OH; try{const r=await fetch(ODDS_HIST,{cache:'no-store'});OH=r.ok?await r.json():false;}catch(e){OH=false;} return OH; }
+
+// ---- saf hesaplar (test edilebilir) ----
+function restBefore(games,ymd){           // mac gununden onceki son mac -> dinlenme gunu (0 = arka arkaya)
+  let last=null; for(const g of games){ if(g.t<ymd)last=g; else break; }
+  if(!last)return null; return {rest:daysBetween(last.t,ymd)-1,last};
+}
+function lastMeeting(games,oppAd,beforeYmd){
+  let m=null; for(const g of games){ if(g.opp===oppAd&&(!beforeYmd||g.t<beforeYmd))m=g; } return m;
+}
+function starsLast10(games,stars,beforeYmd){
+  const recent=games.filter(g=>!beforeYmd||g.t<beforeYmd).slice(-10);
+  // sadece son 10 macta kadroda GORUNEN yildizlar (oynadi ya da oturdu) — takimdan ayrilanlar dusur
+  return stars.map(s=>{
+    const seen=recent.filter(g=>(g.box.p||[]).some(p=>p[0]===s.ad)||(g.box.dnp||[]).includes(s.ad)).length;
+    return {ad:s.ad,ppg:s.ppg,sat:recent.filter(g=>(g.box.dnp||[]).includes(s.ad)).length,n:recent.length,seen};
+  }).filter(s=>s.seen>0);
+}
+const short=(t)=>t.kisa||t.ad;
+
+// ---- kartlar ----
+function cardB2B(h,a,hR,aR){
+  const lb=LEAGUE.b2b, lr=LEAGUE.rest; const lbp=pct(lb.w,lb.gp), lrp=pct(lr.w,lr.gp);
+  const line=(t,r)=>{ if(!r)return `<b>${esc(short(t))}</b> — no earlier game in the record`;
+    const own=pct(t.b2b[1],t.b2b[0]);
+    const tag=r.rest===0?`<span class="kartEksi">played last night</span> (0 days rest)`:(r.rest>=20?`<b>${r.rest}</b> days since their last game in the record`:`<b>${r.rest}</b> day${r.rest===1?'':'s'} rest`);
+    return `<b>${esc(short(t))}</b> · ${tag} · their back-to-back record <b>${t.b2b[1]}-${t.b2b[0]-t.b2b[1]}</b>${own!=null?` (${own}%)`:''}`; };
+  const onB2B=[hR&&hR.rest===0?h:null,aR&&aR.rest===0?a:null].filter(Boolean);
+  let ins;
+  if(onB2B.length===2)ins=`↑ Both on the second night — <span class="rnum">no rest edge</span> either way.`;
+  else if(onB2B.length===1)ins=`↑ ${esc(short(onB2B[0]))} on the second night — such teams win <span class="rnum">${lbp}% vs ${lrp}%</span> rested, across ${lb.gp.toLocaleString('en-US')} games.`;
+  else ins=`↑ Both rested — <span class="rnum">no back-to-back factor</span> tonight.`;
+  return `<div class="tgol"><div class="th">B2B RECORD</div><div class="ts">${line(h,hR)}<br>${line(a,aR)}</div>
+    <div class="rins">${ins}</div><div class="tf">league: second night ${lbp}% · rested ${lrp}% · five seasons</div></div>`;
+}
+function cardAvail(h,a,hS,aS){
+  const row=(t,S)=>S.slice(0,4).map(s=>`<b>${esc(s.ad)}</b> <span class="mono" style="color:var(--grey)">${s.ppg} ppg</span> · sat <b class="${s.sat>=3?'kartEksi':''}">${s.sat}</b> of ${s.n}`).join('<br>');
+  const all=[...hS.map(s=>({...s,team:h})),...aS.map(s=>({...s,team:a}))].sort((x,y)=>y.sat-x.sat);
+  const top=all[0];
+  const ins=top&&top.sat>0?`↑ <span class="rnum">${esc(top.ad)}</span> sat ${top.sat} of the last ${top.n} — availability is a record of its own.`:`↑ Full strength lately — <span class="rnum">stars missed 0</span> of the last 10.`;
+  return `<div class="tgol"><div class="th">AVAILABILITY · LAST 10</div>
+    <div class="ts"><span style="color:var(--grey)">${esc(short(h))}</span><br>${row(h,hS)}<br><span style="color:var(--grey)">${esc(short(a))}</span><br>${row(a,aS)}</div>
+    <div class="rins">${ins}</div><div class="tf">top scorers by ppg · "sat" = on roster, no minutes</div></div>`;
+}
+function cardHomeAway(h,a){
+  const hp=pct(h.home[1],h.home[0]), ap=pct(a.away[1],a.away[0]);
+  const ins=`↑ ${esc(short(h))} wins <span class="rnum">${hp}%</span> at home · ${esc(short(a))} wins <span class="rnum">${ap}%</span> on the road · league home side ${LEAGUE.home_win_pct}%.`;
+  return `<div class="tgol"><div class="th">HOME / AWAY RECORD</div>
+    <div class="ts"><b>${esc(short(h))}</b> at home <b>${h.home[1]}-${h.home[0]-h.home[1]}</b> · <b>${h.home[2]}</b> pts/game<br><b>${esc(short(a))}</b> on the road <b>${a.away[1]}-${a.away[0]-a.away[1]}</b> · <b>${a.away[2]}</b> pts/game</div>
+    <div class="rins">${ins}</div><div class="tf">five seasons, all games in the record</div></div>`;
+}
+function boxTable(box,limit){
+  const rows=(box.p||[]).slice(0,limit).map(p=>`<tr class="${p[1]?'st':''}"><td>${esc(p[0])}</td><td>${p[2]??''}</td><td>${p[3]??''}</td><td>${p[4]??''}</td><td>${p[5]??''}</td><td>${p[6]==null?'':(p[6]>0?'+'+p[6]:p[6])}</td></tr>`).join('');
+  return `<table class="box"><tr><th>player</th><th>min</th><th>pts</th><th>reb</th><th>ast</th><th>+/-</th></tr>${rows}</table>`;
+}
+function cardLastMeeting(h,a,g,oh){
+  if(!g)return `<div class="tgol"><div class="th">LAST MEETING</div><div class="empty">These two haven't met in the record.</div></div>`;
+  // g: ev takimi dosyasindan alinan mac (g.home => h evdeydi)
+  const homeThen=g.home?h:a, awayThen=g.home?a:h;
+  const hs=g.home?g.pts:g.opp_pts, as=g.home?g.opp_pts:g.pts;
+  const winner=hs>as?homeThen:awayThen, margin=Math.abs(hs-as);
+  const ters=!g.home;
+  const myBox=g.box, oppBox=g.opp_box;
+  const hBox=g.home?myBox:oppBox, aBox=g.home?oppBox:myBox;
+  const satH=(hBox.dnp||[]), satA=(aBox.dnp||[]);
+  // acilis -> kapanis (arsiv)
+  let odds='';
+  if(oh&&oh.maclar){
+    const key=[h.ad.toLowerCase(),a.ad.toLowerCase()].sort().join('|');
+    const list=oh.maclar[key]||[];
+    const rec=list.find(x=>String(x.t||'').slice(0,10)===g.t)||null;
+    if(rec&&rec.kap){
+      const rows=[];
+      [[rec.h,'h','home'],[rec.a,'a','away']].forEach(([ad,slot,lab])=>{
+        const ac=rec.ac&&rec.ac[slot]!=null?rec.ac[slot]:null, kp=rec.kap[slot]; if(kp==null)return;
+        const mv=ac!=null?Math.round((kp-ac)*100):null; const cls=mv==null?'':(mv>0?'kartArti':(mv<0?'kartEksi':''));
+        rows.push(`<b>${esc(String(ad).split(' ').pop())}</b> <span style="color:var(--grey)">${lab}</span> &nbsp;${ac!=null?`<b>${fair(ac)}</b> → `:''}<span class="${cls}"><b>${fair(kp)}</b></span>${mv!=null?` <span style="color:var(--grey)">(${mv>0?'+':''}${mv} pts)</span>`:''}`);
+      });
+      if(rows.length)odds=`<div class="ts" style="margin-top:10px"><span style="color:var(--grey)">market, open → close</span><br>${rows.join('<br>')}</div>`;
+    }
+  }
+  const ins=`↑ <span class="rnum">${esc(short(winner))} by ${margin}</span>${satH.length+satA.length?` · ${satH.length+satA.length} rostered player${satH.length+satA.length>1?'s':''} didn't play`:''} — ${niceDate(g.t)}.`;
+  return `<div class="tgol" style="grid-column:1/-1"><div class="th">LAST MEETING · ${esc(niceDate(g.t))}</div>
+    <div class="tbaslik">${esc(short(homeThen))} <span class="mono">${hs}</span> — <span class="mono">${as}</span> ${esc(short(awayThen))} <span style="color:var(--grey);font-weight:400;font-size:12px">· at ${esc(short(homeThen))}${ters?' · reverse fixture':''}</span></div>
+    <div class="grid" style="margin-top:8px">
+      <div><div class="th">${esc(short(homeThen))}</div>${boxTable(hBox,8)}${satH.length?`<div class="dnp">sat: <b>${esc(satH.join(', '))}</b></div>`:''}</div>
+      <div><div class="th">${esc(short(awayThen))}</div>${boxTable(aBox,8)}${satA.length?`<div class="dnp">sat: <b>${esc(satA.join(', '))}</b></div>`:''}</div>
+    </div>${odds}<div class="rins">${ins}</div></div>`;
+}
+
+// ---- akis ----
+async function openRecord(hName,aName,whenIso){
+  const det=document.getElementById('detail');
+  const h=findTeam(hName), a=findTeam(aName);
+  if(!h||!a){det.innerHTML=`<div class="empty err">Couldn't match ${!h?esc(hName):esc(aName)} to the record.</div>`;return;}
+  det.innerHTML=`<div class="empty">Opening the record…</div>`;
+  const ymd=whenIso?usDate(whenIso):new Date().toLocaleDateString('en-CA',{timeZone:'America/New_York'});
+  const [hf,af,oh]=await Promise.all([teamFile(h),teamFile(a),oddsHist()]);
+  if(!hf||!af){det.innerHTML=`<div class="empty err">Team file missing.</div>`;return;}
+  const hR=restBefore(hf.games,ymd), aR=restBefore(af.games,ymd);
+  const hS=starsLast10(hf.games,h.stars||[],ymd), aS=starsLast10(af.games,a.stars||[],ymd);
+  const lm=lastMeeting(hf.games,a.ad,ymd);
+  const when=whenIso?new Date(whenIso).toLocaleString('en-GB',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'any date';
+  det.innerHTML=`<div class="dhead"><div class="teams">${esc(h.ad)} — ${esc(a.ad)}</div><div class="when">${esc(when)} · record as of ${esc(ymd)}</div></div>
+    <div class="grid">${cardB2B(h,a,hR,aR)}${cardHomeAway(h,a)}${cardAvail(h,a,hS,aS)}${cardLastMeeting(h,a,lm,oh)}</div>`;
+  window.scrollTo({top:det.offsetTop-10,behavior:'smooth'});
+}
+async function loadTonight(){
+  const box=document.getElementById('list');
+  try{
+    const r=await fetch(HOST+'/bugun.json',{cache:'no-store'}); const b=await r.json();
+    const blocks=Object.values(b.ligler||{}).filter(x=>/^basketball_nba/.test(x.key||''));
+    TONIGHT=blocks.flatMap(x=>(x.maclar||[]).map(m=>({h:m.h,a:m.a,t:m.t,p:m.p,key:x.key})));
+    TONIGHT.sort((x,y)=>String(x.t).localeCompare(String(y.t)));
+    if(!TONIGHT.length){box.innerHTML=`<div class="empty">No NBA games in the feed right now — pick two teams below.</div>`;return;}
+    box.innerHTML=TONIGHT.map((m,i)=>{const fav=m.p&&m.p.h!=null&&m.p.a!=null?(m.p.h>=m.p.a?`${esc(m.h.split(' ').pop())} ${Math.round(m.p.h*100)}%`:`${esc(m.a.split(' ').pop())} ${Math.round(m.p.a*100)}%`):'';
+      return `<button class="mrow" type="button" data-i="${i}"><div class="t">${esc(m.h)} — ${esc(m.a)}</div><div class="w">${new Date(m.t).toLocaleString('en-GB',{weekday:'short',hour:'2-digit',minute:'2-digit'})}${m.key.includes('preseason')?' · preseason':''}${fav?' · market '+fav:''}</div></button>`;}).join('');
+    box.querySelectorAll('.mrow').forEach(b=>b.addEventListener('click',()=>{box.querySelectorAll('.mrow').forEach(x=>x.classList.remove('on'));b.classList.add('on');const m=TONIGHT[+b.dataset.i];openRecord(m.h,m.a,m.t);}));
+  }catch(e){box.innerHTML=`<div class="empty">Tonight's feed unreachable — pick two teams below.</div>`;}
+}
+async function boot(){
+  try{
+    const r=await fetch(DATA+'index.json',{cache:'no-store'}); IDX=await r.json();
+    TEAMS=IDX.teams||[]; LEAGUE=IDX.league||{};
+    const opts=TEAMS.slice().sort((x,y)=>x.ad.localeCompare(y.ad)).map(t=>`<option value="${esc(t.ad)}">${esc(t.ad)}</option>`).join('');
+    document.getElementById('selH').innerHTML=opts; document.getElementById('selA').innerHTML=opts;
+    document.getElementById('selA').selectedIndex=Math.min(1,TEAMS.length-1);
+    document.getElementById('goBtn').addEventListener('click',()=>openRecord(document.getElementById('selH').value,document.getElementById('selA').value,null));
+    loadTonight();
+  }catch(e){document.getElementById('list').innerHTML=`<div class="empty err">Record index not found (nba/index.json). Upload terminal/nba first.</div>`;}
+}
+boot();
+</script>
+</body>
+</html>
