@@ -370,7 +370,7 @@
     <div id="listBody"><div class="empty">Loading today's games…</div></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A85 (PWA)</div>
+      <div class="by">brier · by BT · build A86 (PWA)</div>
     </footer>
   </div>
 
@@ -396,7 +396,7 @@
     <div id="detailBody"></div>
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
-      <div class="by">brier · by BT · build A85 (PWA)</div>
+      <div class="by">brier · by BT · build A86 (PWA)</div>
     </footer>
   </div>
 </div>
@@ -411,7 +411,7 @@ const LIG_ESLE = {
   soccer_germany_bundesliga:'bundesliga', soccer_germany_bundesliga2:'bundes2',
   soccer_france_ligue_one:'ligue1', soccer_france_ligue_two:'ligue2',
   soccer_turkey_super_league:'turkiye', soccer_portugal_primeira_liga:'portekiz',
-  soccer_netherlands_eredivisie:'eredivisie', soccer_belgium_first_div:'belcika',
+  soccer_netherlands_eredivisie:'eredivisie', soccer_belgium_first_div:'belcika', soccer_belgium_first_division:'belcika', soccer_belgium_first_devision:'belcika', soccer_belgium_pro_league:'belcika',
   soccer_spl:'iskocya', soccer_greece_super_league:'yunanistan',
   soccer_austria_bundesliga:'avusturya', soccer_switzerland_superleague:'isvicre',
   soccer_denmark_superliga:'danimarka', soccer_sweden_allsvenskan:'isvec',
@@ -879,44 +879,33 @@ function tkGet(tk, ad){
   return tk[g];
 }
 
-async function injectBelgiumData(){
-  // Fallback: If worker didn't return Belgium football, inject from golkarne
-  if(!LIVE.ligler) LIVE.ligler={};
-  if(!LIVE.ligler['soccer_belgium_first_div']){
-    try{
-      const gk=await golkarneGetir();
-      if(!gk||!gk.belcika||!gk.belcika.takim_korner) return;
-      // Use golkarne team names to ensure CORNER lookup will succeed
-      const teams=Object.keys(gk.belcika.takim_korner).sort();
-      if(teams.length<2) return;
-      // Create mock matches for today/tomorrow using team pairs
-      const now=new Date();
-      const matches=[];
-      for(let i=0;i<teams.length-1;i+=2){
-        const h=teams[i], a=teams[i+1];
-        const matchTime=new Date(now.getTime()+(i/2)*3600000); // Stagger by hours
-        // Default probabilities (home advantage ~55%)
-        matches.push({
-          t:matchTime.toISOString(),
-          h:h,
-          a:a,
-          p:{h:0.52,d:0.28,a:0.20},
-          best:{h:[{o:'1.92'}],d:[{o:'3.40'}],a:[{o:'4.20'}]},
-          sonuc3:true,
-          key:'soccer_belgium_first_div'
-        });
+// Worker'dan gelen lig bloklarini NORMALIZE et (worker'a dokunmadan dayaniklilik):
+//  - bilinen anahtar varyantlarini kanonik anahtara cevir (varsa maclari birlestir, t|h|a ile tekrarsiz)
+//  - grup yoksa anahtar onekinden tuüret (soccer_ -> Soccer, basketball_ -> Basketball ...)
+//  - ad ham anahtarsa okunur hale getir
+const KEY_ALIAS={'soccer_belgium_first_division':'soccer_belgium_first_div','soccer_belgium_first_devision':'soccer_belgium_first_div','soccer_belgium_pro_league':'soccer_belgium_first_div'};
+const KEY_AD={'soccer_belgium_first_div':'Belgium First Div'};
+const ONEK_GRUP=[['soccer_','Soccer'],['basketball_','Basketball'],['americanfootball_','American Football'],['baseball_','Baseball'],['icehockey_','Ice Hockey'],['tennis_','Tennis'],['mma_','Mixed Martial Arts'],['boxing_','Boxing'],['cricket_','Cricket'],['aussierules_','Aussie Rules'],['rugby','Rugby']];
+function normalizeLive(L){
+  try{
+    if(!L||!L.ligler)return;
+    const out={};
+    for(const [ad,ld] of Object.entries(L.ligler)){
+      if(!ld||typeof ld!=='object')continue;
+      let key=ld.key||'', isim=ad;
+      if(KEY_ALIAS[key]){key=KEY_ALIAS[key]; ld.key=key;}
+      if(!ld.grup||ld.grup==='Other'){const g=ONEK_GRUP.find(([pf])=>key.startsWith(pf)); if(g)ld.grup=g[1];}
+      if(KEY_AD[key])isim=KEY_AD[key];
+      else if(isim===key||/^[a-z0-9_]+$/.test(isim)){ // ham anahtar -> okunur
+        isim=key.replace(/^(soccer|basketball|americanfootball|baseball|icehockey|tennis|mma|boxing|cricket|aussierules|rugby[a-z]*)_/,'').replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
       }
-      LIVE.ligler['soccer_belgium_first_div']={
-        grup:'Soccer',
-        ad:'Belgium First Div',
-        key:'soccer_belgium_first_div',
-        maclar:matches
-      };
-      document.getElementById('feedline').textContent+=' · Belgium football added from archive';
-    }catch(e){
-      // Silent fail - Belgium data optional
+      if(out[isim]){ // ayni lige iki blok geldiyse birlestir
+        const seen=new Set((out[isim].maclar||[]).map(m=>`${m.t}|${m.h}|${m.a}`));
+        (ld.maclar||[]).forEach(m=>{const k=`${m.t}|${m.h}|${m.a}`; if(!seen.has(k)){out[isim].maclar.push(m);seen.add(k);}});
+      }else out[isim]=ld;
     }
-  }
+    L.ligler=out;
+  }catch(e){ console.log('normalizeLive error:', e.message); }
 }
 
 async function boot(){
@@ -926,6 +915,7 @@ async function boot(){
     const r=await fetch(HOST+'/bugun.json',{cache:'no-store'});
     if(!r.ok) throw 0;
     LIVE=await r.json();
+    normalizeLive(LIVE);
     fl.textContent='live · snapshot '+(LIVE.cekim||'').replace('T',' ')+' UTC · updates every 10 min';
   }catch(e){
     fl.textContent='live feed unreachable — check your connection and reload';
@@ -941,7 +931,6 @@ async function boot(){
   // Load master team mapping at startup
   await loadTeamMasterMapping();
 
-  await injectBelgiumData();
   renderList();
   manifestoAc();
   recordOfTheDay();
