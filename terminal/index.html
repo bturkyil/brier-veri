@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Brier Terminal — NBA</title>
-<meta name="description" content="The record of an NBA matchup — rest, availability, home/away, last meeting. Not a tip.">
+<title>Brier Terminal</title>
+<meta name="description" content="The record of a matchup — rest, availability, home/away, conditions, last meeting. NBA · WNBA · NFL · NCAAF · MLB. Not a tip.">
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
   :root{
@@ -17,6 +17,9 @@
   header h1{margin:0;font-size:18px;letter-spacing:1.5px;font-weight:800}
   header .tag{font-family:'IBM Plex Mono',monospace;font-size:11px;opacity:.75}
   header .motto{margin-left:auto;font-size:11px;opacity:.75;letter-spacing:.4px}
+  .ligbar{display:flex;gap:6px;flex-wrap:wrap;padding:10px 20px;background:#fff;border-bottom:1px solid var(--rule-dark)}
+  .ligbar button{font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:600;letter-spacing:.5px;padding:6px 12px;border:1px solid var(--rule-dark);background:#fff;color:var(--ink);border-radius:2px;cursor:pointer}
+  .ligbar button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
   .wrap{max-width:1080px;margin:0 auto;padding:0 16px 40px}
   .sec{font-size:11px;font-weight:700;letter-spacing:.6px;color:var(--grey);margin:18px 0 8px;text-transform:uppercase}
   .list{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px}
@@ -24,9 +27,11 @@
   .mrow:hover{background:var(--teal-soft)} .mrow.on{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
   .mrow .t{font-weight:700;font-size:13.5px} .mrow .w{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--grey);margin-top:3px}
   .pick{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
-  select{font-family:inherit;font-size:13px;padding:7px 10px;border:1px solid var(--rule-dark);border-radius:2px;background:#fff;color:var(--ink)}
+  select{font-family:inherit;font-size:13px;padding:7px 10px;border:1px solid var(--rule-dark);border-radius:2px;background:#fff;color:var(--ink);max-width:46vw}
   .btn{font-family:inherit;font-size:11px;font-weight:700;letter-spacing:.5px;padding:8px 12px;border:1px solid var(--ink);background:var(--ink);color:#fff;border-radius:2px;cursor:pointer}
-  .dhead{margin:22px 0 6px} .dhead .teams{font-size:20px;font-weight:800;letter-spacing:.2px} .dhead .when{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--grey);margin-top:3px}
+  .btn.ghost{background:#fff;color:var(--ink)}
+  .dhead{margin:22px 0 6px;display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap} .dhead .teams{font-size:20px;font-weight:800;letter-spacing:.2px} .dhead .when{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--grey);margin-top:3px}
+  .dhead .share{margin-left:auto}
   .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px;margin-top:12px}
   .tgol{background:#fff;border:1px solid var(--rule-dark);padding:12px 16px;border-radius:2px}
   .tgol .th{font-size:11px;font-weight:700;letter-spacing:.6px;color:var(--grey)}
@@ -52,11 +57,12 @@
 </head>
 <body>
 <header>
-  <h1>BRIER</h1><span class="tag">terminal · nba · build T3</span>
+  <h1>BRIER</h1><span class="tag" id="tag">terminal · build T5</span>
   <span class="motto">the record, not the tip</span>
 </header>
+<div class="ligbar" id="ligbar"></div>
 <div class="wrap">
-  <div class="sec">Tonight</div>
+  <div class="sec" id="secTonight">Tonight</div>
   <div id="list" class="list"><div class="empty">Loading tonight's games…</div></div>
   <div class="sec">Or pick any two teams</div>
   <div class="pick">
@@ -64,14 +70,23 @@
     <button class="btn" id="goBtn" type="button">OPEN THE RECORD</button>
   </div>
   <div id="detail"></div>
-  <div class="note">Five NBA seasons of box scores (ESPN), every player every night. "Sat" = listed on the roster with no minutes — injury, rest or coach's decision, not separated. Odds history builds daily from the archive. Direction, not advice.</div>
+  <div class="note" id="note"></div>
 </div>
 
 <script>
 const HOST='https://worker-production-a1ba.up.railway.app';
-const DATA='nba/';                 // terminal/nba/index.json, terminal/nba/teams/<slug>.json
-const ODDS_HIST='../odds_history/nba.json';
+const LIGS={
+  nba:  {ad:'NBA',  spor:'basketball',feed:/^basketball_nba/,      note:'Five NBA seasons of box scores (ESPN), every player every night. "Sat" = on the roster with no minutes — injury, rest or coach\'s decision, not separated.'},
+  wnba: {ad:'WNBA', spor:'basketball',feed:/^basketball_wnba/,     note:'Six WNBA seasons of box scores (ESPN), 2021–2026, every player every night. "Sat" = on the roster with no minutes.'},
+  nfl:  {ad:'NFL',  spor:'football',  feed:/^americanfootball_nfl/, note:'Six NFL seasons of box scores (ESPN), 2021–2026, every game including playoffs. Rest counts calendar days between kickoffs.'},
+  ncaaf:{ad:'NCAAF',spor:'football',  feed:/^americanfootball_ncaaf/,note:'Six FBS seasons of box scores (ESPN), 2021–2026. Profiles use the top and bottom third of FBS that season; FCS opponents appear in the record but carry no profile.'},
+  mlb:  {ad:'MLB',  spor:'baseball',  feed:/^baseball_mlb/,        note:'Six MLB seasons of box scores (ESPN), 2021–2026, every game including the postseason. Lineup and pitching lines are from the box, not projections.'}
+};
+const Q=new URLSearchParams(location.search);
+let LIG=LIGS[Q.get('lig')]?Q.get('lig'):'nba';
+let DATA=LIG+'/', ODDS_HIST='../odds_history/'+LIG+'.json';
 let IDX=null, LEAGUE=null, TEAMS=[], TCACHE={}, OH=null, TONIGHT=[];
+const SPOR=()=>LIGS[LIG].spor, NEW=()=>!!(IDX&&IDX.spor);
 
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 const pct=(w,n)=>n>0?Math.round(1000*w/n)/10:null;
@@ -79,9 +94,30 @@ const fair=(p)=>(p!=null&&p>0)?(1/p).toFixed(2):null;
 const usDate=(iso)=>{try{return new Date(iso).toLocaleDateString('en-CA',{timeZone:'America/New_York'});}catch(e){return String(iso||'').slice(0,10);}};
 const niceDate=(ymd)=>{try{const d=new Date(ymd+'T12:00:00Z');return d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});}catch(e){return ymd;}};
 const daysBetween=(a,b)=>Math.round((new Date(b+'T12:00:00Z')-new Date(a+'T12:00:00Z'))/86400000);
+const avg=(arr)=>arr.length?arr.reduce((a,b)=>a+b,0)/arr.length:null;
+const f1=(x)=>x==null?'—':(Math.round(x*10)/10).toFixed(1);
+const sd=(d)=>{const v=Math.round(d*10)/10;return (v>0?'+':'')+v.toFixed(1);};
+// ESPN ham degerleri: "4-8" -> 4 ; "12/19" -> 12 ; "+4" -> 4 ; "--" -> null
+function num(s){ if(s==null)return null; if(typeof s==='number')return s; s=String(s).trim(); if(s===''||s==='--'||s==='-')return null;
+  if(/^[+-]?\d+(\.\d+)?$/.test(s))return parseFloat(s); const m=s.match(/^(\d+(\.\d+)?)/); return m?parseFloat(m[1]):null; }
+function num2(s){ const m=String(s==null?'':s).match(/^\d+(\.\d+)?[-\/](\d+(\.\d+)?)/); return m?parseFloat(m[2]):null; }
 
-// ---- takim esleme: The Odds API adi -> ESPN takimi (tam ad -> lakap(son kelime) -> alias) ----
-const ALIAS={'la clippers':'los angeles clippers','los angeles clippers':'la clippers'};
+// ---- spor konfigurasyonu ----
+const CFG={
+  basketball:{unit:'pts',unitLong:'pts/game',xray:[['pts','points'],['reb','rebounds'],['tpm','threes'],['ast','assists']],
+              cond:[['pts','points'],['reb','rebounds'],['ast','assists'],['tpm','threes'],['pf','fouls']],ptsLead:2},
+  football:  {unit:'pts',unitLong:'pts/game',xray:[['pts','points'],['pass_yds','pass yds'],['rush_yds','rush yds'],['to','turnovers']],
+              cond:[['pts','points'],['pass_yds','pass yds'],['rush_yds','rush yds'],['to','turnovers'],['sacks','sacks']],ptsLead:2},
+  baseball:  {unit:'runs',unitLong:'runs/game',xray:[['pts','runs'],['h','hits'],['hr','homers'],['k','strikeouts']],
+              cond:[['pts','runs'],['h','hits'],['hr','homers'],['k','strikeouts'],['bb','walks']],ptsLead:0.4}
+};
+const SZ_OF=(ymd)=>{const y=+ymd.slice(0,4), m=+ymd.slice(5,7);
+  if(LIG==='nba')return m>=9?`${y}-${String(y+1).slice(2)}`:`${y-1}-${String(y).slice(2)}`;
+  if(SPOR()==='football')return String(m>=8?y:y-1); return String(y);};
+const MIN_N=15;
+
+// ---- takim esleme: The Odds API adi -> ESPN takimi (tam ad -> alias -> lakap(son kelime)) ----
+const ALIAS={'la clippers':'los angeles clippers','los angeles clippers':'la clippers','oakland athletics':'athletics','cleveland indians':'cleveland guardians','washington football team':'washington commanders'};
 function findTeam(name){
   if(!name||!TEAMS.length)return null;
   const n=String(name).toLowerCase().trim();
@@ -91,50 +127,99 @@ function findTeam(name){
   const c=TEAMS.filter(x=>x.ad.toLowerCase().split(' ').pop()===nick);
   if(c.length===1)return c[0];
   if(c.length>1){const c2=c.filter(x=>n.includes(x.ad.toLowerCase().split(' ')[0]));if(c2.length===1)return c2[0];}
+  const c3=TEAMS.filter(x=>n.includes(x.ad.toLowerCase())||x.ad.toLowerCase().includes(n)); if(c3.length===1)return c3[0];
   return null;
 }
+const KISA={'boston red sox':'Red Sox','chicago white sox':'White Sox','toronto blue jays':'Blue Jays','portland trail blazers':'Trail Blazers'};
+const short=(t)=>t.kisa||t.ad;
+const poss=(s)=>/s$/i.test(s)?s+"'":s+"'s";
 async function teamFile(t){
   if(TCACHE[t.slug])return TCACHE[t.slug];
   const r=await fetch(DATA+'teams/'+t.slug+'.json',{cache:'no-store'});
-  TCACHE[t.slug]=r.ok?await r.json():null; return TCACHE[t.slug];
+  const f=r.ok?await r.json():null; if(f)enrich(t,f); TCACHE[t.slug]=f; return f;
 }
 async function oddsHist(){ if(OH!==null)return OH; try{const r=await fetch(ODDS_HIST,{cache:'no-store'});OH=r.ok?await r.json():false;}catch(e){OH=false;} return OH; }
 
-// ---- saf hesaplar (test edilebilir) ----
-function restBefore(games,ymd){           // mac gununden onceki son mac -> dinlenme gunu (0 = arka arkaya)
+// ---- veri erisimi: NBA (eski sema: box.p / opp_box) ve yeni sema (box.<grup> / m / om) ayni arayuzden ----
+function gStats(g){ if(NEW())return g.m||{}; let pts=0,reb=0,ast=0,tpm=0,pf=0,to=0,hasT=false,hasF=false;
+  for(const p of (g.box&&g.box.p)||[]){pts+=p[3]||0;reb+=p[4]||0;ast+=p[5]||0;
+    if(p.length>7&&p[7]!=null){tpm+=p[7];hasT=true;} if(p.length>12&&p[12]!=null){pf+=p[12];hasF=true;} if(p.length>11&&p[11]!=null)to+=p[11];}
+  return {pts,reb,ast,tpm:hasT?tpm:null,pf:hasF?pf:null,to:hasF?to:null}; }
+function bRows(g){  // basketbol oyuncu satirlari, normalize
+  if(!NEW())return ((g.box&&g.box.p)||[]).map(p=>({ad:p[0],st:p[1],min:p[2],pts:p[3],reb:p[4],ast:p[5],pm:p[6],tpm:p[7],pf:p[12],to:p[11]}));
+  const L=(IDX.labels&&IDX.labels.stats)||[]; const I=k=>L.indexOf(k)+2;
+  return ((g.box&&g.box.stats)||[]).map(r=>({ad:r[0],st:r[1],min:num(r[I('MIN')]),pts:num(r[I('PTS')]),reb:num(r[I('REB')]),ast:num(r[I('AST')]),pm:num(r[I('+/-')]),tpm:num(r[I('3PT')]),pf:num(r[I('PF')]),to:num(r[I('TO')])}));
+}
+function gRows(g,grp){ // futbol/beyzbol grup satirlari -> {ad,st,v:{label:raw}}
+  const L=(IDX.labels&&IDX.labels[grp])||[]; return ((g.box&&g.box[grp])||[]).map(r=>{const v={}; L.forEach((k,i)=>v[k]=r[i+2]); return {ad:r[0],st:r[1],v};});
+}
+const dnpOf=(g)=>(g.box&&g.box.dnp)||[];
+function oppBoxGame(g,oppFile){ if(!NEW())return g.opp_box?{box:g.opp_box}:null; return (oppFile&&oppFile.games||[]).find(x=>x.t===g.t)||null; }
+
+// yeni semada takim ozeti dosyadan hesaplanir (NBA index'te hazir gelir)
+function enrich(t,f){
+  if(t.home)return; const gs=f.games||[];
+  const H=gs.filter(g=>g.home), A=gs.filter(g=>!g.home);
+  t.home=[H.length,H.filter(g=>g.won).length,Math.round(10*(avg(H.map(g=>g.pts))||0))/10];
+  t.away=[A.length,A.filter(g=>g.won).length,Math.round(10*(avg(A.map(g=>g.pts))||0))/10];
+  const B=gs.filter(g=>g.b2b); t.b2b=[B.length,B.filter(g=>g.won).length];
+  t.last=gs.length?gs[gs.length-1].t:null;
+  if(SPOR()==='basketball'){ // yildizlar: son iki sezon, >=15 mac, ppg
+    const szs=[...new Set(gs.map(g=>g.sz))].sort().slice(-2); const P={};
+    gs.filter(g=>szs.includes(g.sz)).forEach(g=>{bRows(g).forEach(r=>{if(r.min==null||r.min<=0)return;const o=P[r.ad]||(P[r.ad]={gp:0,pts:0});o.gp++;o.pts+=r.pts||0;});});
+    t.stars=Object.entries(P).filter(([_,o])=>o.gp>=15).map(([ad,o])=>({ad,gp:o.gp,ppg:Math.round(10*o.pts/o.gp)/10})).sort((x,y)=>y.ppg-x.ppg).slice(0,8);
+  }
+}
+
+// ---- saf hesaplar ----
+function liveDatesFor(teamAd,oh){
+  const out=[]; if(!oh||!oh.maclar)return out;
+  const n=String(teamAd).toLowerCase();
+  for(const [k,list] of Object.entries(oh.maclar)){ if(!k.split('|').includes(n))continue;
+    for(const r of list){ if(r.t)out.push(usDate(r.t)); } }
+  return out;
+}
+function restBefore(games,ymd,oh,teamAd){
   let last=null; for(const g of games){ if(g.t<ymd)last=g; else break; }
-  if(!last)return null; return {rest:daysBetween(last.t,ymd)-1,last};
+  let lastT=last?last.t:null, src='archive';
+  for(const d of liveDatesFor(teamAd,oh)){ if(d<ymd&&(!lastT||d>lastT)){lastT=d;src='daily';} }
+  if(!lastT)return null; return {rest:daysBetween(lastT,ymd)-1,lastT,src};
 }
-function lastMeeting(games,oppAd,beforeYmd){
-  let m=null; for(const g of games){ if(g.opp===oppAd&&(!beforeYmd||g.t<beforeYmd))m=g; } return m;
-}
+function lastMeeting(games,oppAd,beforeYmd){ let m=null; for(const g of games){ if(g.opp===oppAd&&(!beforeYmd||g.t<beforeYmd))m=g; } return m; }
 function starsLast10(games,stars,beforeYmd){
   const recent=games.filter(g=>!beforeYmd||g.t<beforeYmd).slice(-10);
-  // sadece son 10 macta kadroda GORUNEN yildizlar (oynadi ya da oturdu) — takimdan ayrilanlar dusur
   return stars.map(s=>{
-    const seen=recent.filter(g=>(g.box.p||[]).some(p=>p[0]===s.ad)||(g.box.dnp||[]).includes(s.ad)).length;
-    return {ad:s.ad,ppg:s.ppg,sat:recent.filter(g=>(g.box.dnp||[]).includes(s.ad)).length,n:recent.length,seen};
+    const seen=recent.filter(g=>bRows(g).some(p=>p.ad===s.ad)||dnpOf(g).includes(s.ad)).length;
+    return {ad:s.ad,ppg:s.ppg,sat:recent.filter(g=>dnpOf(g).includes(s.ad)).length,n:recent.length,seen};
   }).filter(s=>s.seen>0);
 }
-const short=(t)=>t.kisa||t.ad;
+const before=(games,ymd)=>games.filter(g=>!ymd||g.t<ymd);
 
-// ---- kartlar ----
+// ---- ortak kartlar ----
+function cardHomeAway(h,a){
+  const C=CFG[SPOR()]; const hp=pct(h.home[1],h.home[0]), ap=pct(a.away[1],a.away[0]);
+  const ins=`↑ ${esc(short(h))} wins <span class="rnum">${hp}%</span> at home · ${esc(short(a))} wins <span class="rnum">${ap}%</span> on the road · league home side ${LEAGUE.home_win_pct}%.`;
+  return `<div class="tgol"><div class="th">HOME / AWAY RECORD</div>
+    <div class="ts"><b>${esc(short(h))}</b> at home <b>${h.home[1]}-${h.home[0]-h.home[1]}</b> · <b>${h.home[2]}</b> ${C.unitLong}<br><b>${esc(short(a))}</b> on the road <b>${a.away[1]}-${a.away[0]-a.away[1]}</b> · <b>${a.away[2]}</b> ${C.unitLong}</div>
+    <div class="rins">${ins}</div><div class="tf">all games in the record</div></div>`;
+}
 function cardB2B(h,a,hR,aR){
-  const lb=LEAGUE.b2b, lr=LEAGUE.rest; const lbp=pct(lb.w,lb.gp), lrp=pct(lr.w,lr.gp);
+  const lb=LEAGUE.b2b||{gp:0,w:0}, lr=LEAGUE.rest||{gp:0,w:0}; const lbp=pct(lb.w,lb.gp), lrp=pct(lr.w,lr.gp);
   const line=(t,r)=>{ if(!r)return `<b>${esc(short(t))}</b> — no earlier game in the record`;
     const own=pct(t.b2b[1],t.b2b[0]);
-    const tag=r.rest===0?`<span class="kartEksi">played last night</span> (0 days rest)`:(r.rest>=20?`<b>${r.rest}</b> days since their last game in the record`:`<b>${r.rest}</b> day${r.rest===1?'':'s'} rest`);
+    const tag=r.rest===0?`<span class="kartEksi">played last night</span> (0 days rest)`:(r.rest>=20?`no game in the record for <b>${r.rest}</b> days <span style="color:var(--grey)">(daily archive fills in as the season runs)</span>`:`<b>${r.rest}</b> day${r.rest===1?'':'s'} rest`);
     return `<b>${esc(short(t))}</b> · ${tag} · their back-to-back record <b>${t.b2b[1]}-${t.b2b[0]-t.b2b[1]}</b>${own!=null?` (${own}%)`:''}`; };
   const onB2B=[hR&&hR.rest===0?h:null,aR&&aR.rest===0?a:null].filter(Boolean);
   let ins;
   if(onB2B.length===2)ins=`↑ Both on the second night — <span class="rnum">no rest edge</span> either way.`;
   else if(onB2B.length===1)ins=`↑ ${esc(short(onB2B[0]))} on the second night — such teams win <span class="rnum">${lbp}% vs ${lrp}%</span> rested, across ${lb.gp.toLocaleString('en-US')} games.`;
+  else if((hR&&hR.rest>=20)||(aR&&aR.rest>=20))ins=`↑ Rest can't be read yet — <span class="rnum">recent games missing</span> from the record; this fills in daily once the season is underway.`;
   else ins=`↑ Both rested — <span class="rnum">no back-to-back factor</span> tonight.`;
   return `<div class="tgol"><div class="th">B2B RECORD</div><div class="ts">${line(h,hR)}<br>${line(a,aR)}</div>
-    <div class="rins">${ins}</div><div class="tf">league: second night ${lbp}% · rested ${lrp}% · five seasons</div></div>`;
+    <div class="rins">${ins}</div><div class="tf">league: second night ${lbp}% · rested ${lrp}% · all seasons</div></div>`;
 }
 function cardAvail(h,a,hS,aS){
-  const row=(t,S)=>S.slice(0,4).map(s=>`<b>${esc(s.ad)}</b> <span class="mono" style="color:var(--grey)">${s.ppg} ppg</span> · sat <b class="${s.sat>=3?'kartEksi':''}">${s.sat}</b> of ${s.n}`).join('<br>');
+  const row=(t,S)=>S.length?S.slice(0,4).map(s=>`<b>${esc(s.ad)}</b> <span class="mono" style="color:var(--grey)">${s.ppg} ppg</span> · sat <b class="${s.sat>=3?'kartEksi':''}">${s.sat}</b> of ${s.n}`).join('<br>'):'<span style="color:var(--grey)">no regulars seen in the last 10</span>';
   const all=[...hS.map(s=>({...s,team:h})),...aS.map(s=>({...s,team:a}))].sort((x,y)=>y.sat-x.sat);
   const top=all[0];
   const ins=top&&top.sat>0?`↑ <span class="rnum">${esc(top.ad)}</span> sat ${top.sat} of the last ${top.n} — availability is a record of its own.`:`↑ Full strength lately — <span class="rnum">stars missed 0</span> of the last 10.`;
@@ -142,74 +227,85 @@ function cardAvail(h,a,hS,aS){
     <div class="ts"><span style="color:var(--grey)">${esc(short(h))}</span><br>${row(h,hS)}<br><span style="color:var(--grey)">${esc(short(a))}</span><br>${row(a,aS)}</div>
     <div class="rins">${ins}</div><div class="tf">top scorers by ppg · "sat" = on roster, no minutes</div></div>`;
 }
-function cardHomeAway(h,a){
-  const hp=pct(h.home[1],h.home[0]), ap=pct(a.away[1],a.away[0]);
-  const ins=`↑ ${esc(short(h))} wins <span class="rnum">${hp}%</span> at home · ${esc(short(a))} wins <span class="rnum">${ap}%</span> on the road · league home side ${LEAGUE.home_win_pct}%.`;
-  return `<div class="tgol"><div class="th">HOME / AWAY RECORD</div>
-    <div class="ts"><b>${esc(short(h))}</b> at home <b>${h.home[1]}-${h.home[0]-h.home[1]}</b> · <b>${h.home[2]}</b> pts/game<br><b>${esc(short(a))}</b> on the road <b>${a.away[1]}-${a.away[0]-a.away[1]}</b> · <b>${a.away[2]}</b> pts/game</div>
-    <div class="rins">${ins}</div><div class="tf">five seasons, all games in the record</div></div>`;
+
+// ---- futbol kartlari ----
+function cardRestFB(h,a,hR,aR,hf,af){
+  const longRest=(f)=>{const L=f.games.filter(g=>g.rest!=null&&g.rest>=10); return [L.length,L.filter(g=>g.won).length];};
+  const line=(t,r,f)=>{ if(!r)return `<b>${esc(short(t))}</b> — no earlier game in the record`;
+    const lr=longRest(f); const tag=r.rest>=12?`<span class="kartArti">off a bye</span> (${r.rest} days)`:(r.rest<=4?`<span class="kartEksi">short week</span> (${r.rest} days)`:`<b>${r.rest}</b> days since last game`);
+    return `<b>${esc(short(t))}</b> · ${tag} · after 10+ days rest <b>${lr[1]}-${lr[0]-lr[1]}</b>${lr[0]?` (${pct(lr[1],lr[0])}%)`:''}`; };
+  const bye=[hR&&hR.rest>=12?h:null,aR&&aR.rest>=12?a:null].filter(Boolean), shortW=[hR&&hR.rest<=4?h:null,aR&&aR.rest<=4?a:null].filter(Boolean);
+  let ins;
+  if(bye.length===1&&!shortW.length)ins=`↑ ${esc(short(bye[0]))} off the bye against a side on a normal week — <span class="rnum">rest edge ${esc(short(bye[0]))}</span>.`;
+  else if(shortW.length===1&&!bye.length)ins=`↑ ${esc(short(shortW[0]))} on a short week — <span class="rnum">rest edge ${esc(short(shortW[0]===h?a:h))}</span>.`;
+  else if(bye.length===2)ins=`↑ Both off a bye — <span class="rnum">no rest edge</span>.`;
+  else if((hR&&hR.rest>=30)||(aR&&aR.rest>=30))ins=`↑ Rest can't be read yet — <span class="rnum">recent games missing</span>; fills in daily.`;
+  else ins=`↑ Normal week for both — <span class="rnum">no rest factor</span>.`;
+  return `<div class="tgol"><div class="th">REST RECORD</div><div class="ts">${line(h,hR,hf)}<br>${line(a,aR,af)}</div><div class="rins">${ins}</div><div class="tf">bye = 12+ days · short week = 4 or fewer</div></div>`;
 }
-function boxTable(box,limit){
-  const rows=(box.p||[]).slice(0,limit).map(p=>`<tr class="${p[1]?'st':''}"><td>${esc(p[0])}</td><td>${p[2]??''}</td><td>${p[3]??''}</td><td>${p[4]??''}</td><td>${p[5]??''}</td><td>${p[6]==null?'':(p[6]>0?'+'+p[6]:p[6])}</td></tr>`).join('');
-  return `<table class="box"><tr><th>player</th><th>min</th><th>pts</th><th>reb</th><th>ast</th><th>+/-</th></tr>${rows}</table>`;
+function fbLeaders(games,n){  // son n mac: lider pasor / kosucu / alici (toplam yarda)
+  const G=games.slice(-n); const acc=(grp,key)=>{const P={};G.forEach(g=>gRows(g,grp).forEach(r=>{const o=P[r.ad]||(P[r.ad]={ad:r.ad,gp:0,yds:0,td:0,int:0,rec:0,att:0,cmp:0,car:0});o.gp++;o.yds+=num(r.v.YDS)||0;o.td+=num(r.v.TD)||0;
+      if(grp==='passing'){o.int+=num(r.v.INT)||0;o.cmp+=num(r.v['C/ATT'])||0;o.att+=num2(r.v['C/ATT'])||0;} if(grp==='receiving')o.rec+=num(r.v.REC)||0; if(grp==='rushing')o.car+=num(r.v.CAR)||0;}));
+    return Object.values(P).sort((x,y)=>y.yds-x.yds)[0]||null;};
+  return {n:G.length,qb:acc('passing'),rb:acc('rushing'),wr:acc('receiving')};
 }
-function cardLastMeeting(h,a,g,oh){
-  if(!g)return `<div class="tgol"><div class="th">LAST MEETING</div><div class="empty">These two haven't met in the record.</div></div>`;
-  // g: ev takimi dosyasindan alinan mac (g.home => h evdeydi)
-  const homeThen=g.home?h:a, awayThen=g.home?a:h;
-  const hs=g.home?g.pts:g.opp_pts, as=g.home?g.opp_pts:g.pts;
-  const winner=hs>as?homeThen:awayThen, margin=Math.abs(hs-as);
-  const ters=!g.home;
-  const myBox=g.box, oppBox=g.opp_box;
-  const hBox=g.home?myBox:oppBox, aBox=g.home?oppBox:myBox;
-  const satH=(hBox.dnp||[]), satA=(aBox.dnp||[]);
-  // acilis -> kapanis (arsiv)
-  let odds='';
-  if(oh&&oh.maclar){
-    const key=[h.ad.toLowerCase(),a.ad.toLowerCase()].sort().join('|');
-    const list=oh.maclar[key]||[];
-    const rec=list.find(x=>String(x.t||'').slice(0,10)===g.t)||null;
-    if(rec&&rec.kap){
-      const rows=[];
-      [[rec.h,'h','home'],[rec.a,'a','away']].forEach(([ad,slot,lab])=>{
-        const ac=rec.ac&&rec.ac[slot]!=null?rec.ac[slot]:null, kp=rec.kap[slot]; if(kp==null)return;
-        const mv=ac!=null?Math.round((kp-ac)*100):null; const cls=mv==null?'':(mv>0?'kartArti':(mv<0?'kartEksi':''));
-        rows.push(`<b>${esc(String(ad).split(' ').pop())}</b> <span style="color:var(--grey)">${lab}</span> &nbsp;${ac!=null?`<b>${fair(ac)}</b> → `:''}<span class="${cls}"><b>${fair(kp)}</b></span>${mv!=null?` <span style="color:var(--grey)">(${mv>0?'+':''}${mv} pts)</span>`:''}`);
-      });
-      if(rows.length)odds=`<div class="ts" style="margin-top:10px"><span style="color:var(--grey)">market, open → close</span><br>${rows.join('<br>')}</div>`;
-    }
-  }
-  const ins=`↑ <span class="rnum">${esc(short(winner))} by ${margin}</span>${satH.length+satA.length?` · ${satH.length+satA.length} rostered player${satH.length+satA.length>1?'s':''} didn't play`:''} — ${niceDate(g.t)}.`;
-  return `<div class="tgol" style="grid-column:1/-1"><div class="th">LAST MEETING · ${esc(niceDate(g.t))}</div>
-    <div class="tbaslik">${esc(short(homeThen))} <span class="mono">${hs}</span> — <span class="mono">${as}</span> ${esc(short(awayThen))} <span style="color:var(--grey);font-weight:400;font-size:12px">· at ${esc(short(homeThen))}${ters?' · reverse fixture':''}</span></div>
-    <div class="grid" style="margin-top:8px">
-      <div><div class="th">${esc(short(homeThen))}</div>${boxTable(hBox,8)}${satH.length?`<div class="dnp">sat: <b>${esc(satH.join(', '))}</b></div>`:''}</div>
-      <div><div class="th">${esc(short(awayThen))}</div>${boxTable(aBox,8)}${satA.length?`<div class="dnp">sat: <b>${esc(satA.join(', '))}</b></div>`:''}</div>
-    </div>${odds}<div class="rins">${ins}</div></div>`;
+function cardLeadersFB(h,a,hf,af,ymd){
+  const H=fbLeaders(before(hf.games,ymd),5), A=fbLeaders(before(af.games,ymd),5);
+  const blk=(t,L)=>{ if(!L.n)return `<span style="color:var(--grey)">${esc(short(t))} — no games in the record</span>`;
+    const q=L.qb?`<b>${esc(L.qb.ad)}</b> <span class="mono" style="color:var(--grey)">${f1(L.qb.yds/L.qb.gp)} pass yds/g · ${L.qb.td} td · ${L.qb.int} int · ${L.qb.att?Math.round(100*L.qb.cmp/L.qb.att):0}%</span>`:'';
+    const r=L.rb?`<b>${esc(L.rb.ad)}</b> <span class="mono" style="color:var(--grey)">${f1(L.rb.yds/L.rb.gp)} rush yds/g · ${L.rb.td} td</span>`:'';
+    const w=L.wr?`<b>${esc(L.wr.ad)}</b> <span class="mono" style="color:var(--grey)">${f1(L.wr.yds/L.wr.gp)} rec yds/g · ${L.wr.rec} rec</span>`:'';
+    return `<span style="color:var(--grey)">${esc(short(t))} · last ${L.n}</span><br>${[q,r,w].filter(Boolean).join('<br>')}`; };
+  const hp=H.qb?H.qb.yds/H.qb.gp:0, ap=A.qb?A.qb.yds/A.qb.gp:0; const lead=hp>=ap?[h,H]:[a,A];
+  const ins=lead[1].qb?`↑ <span class="rnum">${esc(lead[1].qb.ad)}</span> at ${f1(lead[1].qb.yds/lead[1].qb.gp)} passing yards a game over the last ${lead[1].n} — ${esc(poss(short(lead[0])))} offence runs through the arm${lead[1].qb.int>=3?`, with ${lead[1].qb.int} picks in that span`:''}.`:'';
+  return `<div class="tgol"><div class="th">LEADERS · LAST 5</div><div class="ts">${blk(h,H)}<br>${blk(a,A)}</div><div class="rins">${ins}</div><div class="tf">leading passer / rusher / receiver by total yards in the span</div></div>`;
 }
 
-// ---- MATCHUP X-RAY: takim vs rakip ve oyuncu vs rakip splitleri. KURAL: n < MIN_N -> gosterme, not yaz ----
-const MIN_N=15;
-const avg=(arr)=>arr.length?arr.reduce((a,b)=>a+b,0)/arr.length:null;
-function teamGameStats(g){ let pts=0,reb=0,ast=0,tpm=0,pf=0,to=0,hasT=false,hasF=false;
-  for(const p of (g.box&&g.box.p)||[]){pts+=p[3]||0;reb+=p[4]||0;ast+=p[5]||0;
-    if(p.length>7&&p[7]!=null){tpm+=p[7];hasT=true;} if(p.length>12&&p[12]!=null){pf+=p[12];hasF=true;} if(p.length>11&&p[11]!=null)to+=p[11];}
-  return {pts,reb,ast,tpm:hasT?tpm:null,pf:hasF?pf:null,to:hasF?to:null}; }
+// ---- beyzbol kartlari ----
+function cardFormBB(h,a,hf,af,ymd){
+  const form=(f)=>{const G=before(f.games,ymd); const L=G.slice(-10); const sz=L.length?L[L.length-1].sz:null; const S=G.filter(g=>g.sz===sz);
+    return {n:L.length,w:L.filter(g=>g.won).length,rf:avg(L.map(g=>g.pts)),ra:avg(L.map(g=>g.opp_pts)),srf:avg(S.map(g=>g.pts)),sra:avg(S.map(g=>g.opp_pts)),sz};};
+  const H=form(hf), A=form(af);
+  const line=(t,F)=>F.n?`<b>${esc(short(t))}</b> · last ${F.n}: <b>${F.w}-${F.n-F.w}</b> · scoring <b>${f1(F.rf)}</b> <span style="color:var(--grey)">(season ${f1(F.srf)})</span> · allowing <b>${f1(F.ra)}</b> <span style="color:var(--grey)">(season ${f1(F.sra)})</span>`:`<b>${esc(short(t))}</b> — no games in the record`;
+  const cand=[{t:h,d:H.rf-H.srf,k:'scoring'},{t:a,d:A.rf-A.srf,k:'scoring'},{t:h,d:-(H.ra-H.sra),k:'allowing'},{t:a,d:-(A.ra-A.sra),k:'allowing'}].filter(x=>!isNaN(x.d)).sort((x,y)=>Math.abs(y.d)-Math.abs(x.d))[0];
+  const ins=cand&&Math.abs(cand.d)>=0.5?`↑ ${esc(short(cand.t))} ${cand.k} <span class="rnum">${Math.abs(cand.d).toFixed(1)} ${(cand.k==='scoring'?cand.d>0:cand.d<0)?'more':'fewer'} runs</span> a game than their season rate over the last 10${cand.k==='allowing'&&cand.d>0?' — the arms are the story':''}.`:`↑ Both near their season rates — <span class="rnum">no form swing</span> in the last 10.`;
+  return `<div class="tgol"><div class="th">FORM · LAST 10</div><div class="ts">${line(h,H)}<br>${line(a,A)}</div><div class="rins">${ins}</div><div class="tf">season = ${esc(H.sz||'')} games before this date</div></div>`;
+}
+function bbBats(games){  // son 10 mac: duzenli vurucular (en cok AB), son10 AVG vs sezon AVG, sezon HR
+  const L=games.slice(-10), sz=L.length?L[L.length-1].sz:null, S=games.filter(g=>g.sz===sz); const P={};
+  const add=(g,key)=>gRows(g,'batting').forEach(r=>{const o=P[r.ad]||(P[r.ad]={ad:r.ad,ab10:0,h10:0,abS:0,hS:0,hrS:0,kS:0,gp10:0});o[key==='L'?'ab10':'abS']+=num(r.v.AB)||0;o[key==='L'?'h10':'hS']+=num(r.v.H)||0;if(key==='S'){o.hrS+=num(r.v.HR)||0;o.kS+=num(r.v.K)||0;}else o.gp10++;});
+  L.forEach(g=>add(g,'L')); S.forEach(g=>add(g,'S'));
+  return Object.values(P).filter(p=>p.ab10>=15).sort((x,y)=>y.ab10-x.ab10).slice(0,5).map(p=>({...p,avg10:p.ab10?p.h10/p.ab10:0,avgS:p.abS?p.hS/p.abS:0}));
+}
+function bbArms(games){ const L=games.slice(-10), sz=L.length?L[L.length-1].sz:null, S=games.filter(g=>g.sz===sz);
+  const er=(G)=>avg(G.map(g=>(g.m||{}).p_er)), k=(G)=>avg(G.map(g=>(g.m||{}).p_k)); return {er10:er(L),erS:er(S),k10:k(L),kS:k(S)}; }
+function cardBatsBB(h,a,hf,af,ymd){
+  const a3=(x)=>x.toFixed(3).replace(/^0/,'');
+  const blk=(t,f)=>{const G=before(f.games,ymd); const B=bbBats(G), R=bbArms(G);
+    const rows=B.map(p=>`<b>${esc(p.ad)}</b> <span class="mono" style="color:var(--grey)">${a3(p.avg10)} last 10 · ${a3(p.avgS)} season · ${p.hrS} hr</span>`).join('<br>');
+    const arms=`<span style="color:var(--grey)">staff</span> <span class="mono">${f1(R.er10)} er/g <span style="color:var(--grey)">(season ${f1(R.erS)})</span> · ${f1(R.k10)} k/g <span style="color:var(--grey)">(${f1(R.kS)})</span></span>`;
+    return {html:`<span style="color:var(--grey)">${esc(short(t))}</span><br>${rows||'<span style="color:var(--grey)">no regular bats in the last 10</span>'}<br>${arms}`,B,R};};
+  const H=blk(h,hf), A=blk(a,af);
+  const hot=[...H.B.map(p=>({...p,t:h})),...A.B.map(p=>({...p,t:a}))].map(p=>({...p,d:p.avg10-p.avgS})).sort((x,y)=>Math.abs(y.d)-Math.abs(x.d))[0];
+  const ins=hot?`↑ <span class="rnum">${esc(hot.ad)}</span> hitting ${a3(hot.avg10)} over the last 10 against a ${a3(hot.avgS)} season mark — the widest swing in either lineup.`:'';
+  return `<div class="tgol"><div class="th">LINEUP & ARMS · LAST 10</div><div class="ts">${H.html}<br>${A.html}</div><div class="rins">${ins}</div><div class="tf">regulars = 15+ at-bats in the last 10 · staff lines are team totals from the box</div></div>`;
+}
+
+// ---- MATCHUP X-RAY: takim vs rakip (+ basketbolda oyuncu vs rakip). KURAL: n < MIN_N -> gosterme, not yaz ----
 function matchupSplit(games,oppAd){
-  const vs=games.filter(g=>g.opp===oppAd); const vsS=vs.map(teamGameStats), allS=games.map(teamGameStats);
-  const mets=[['pts','points'],['reb','rebounds'],['tpm','threes'],['ast','assists']];
-  const rows=mets.map(([k,label])=>{const v=vsS.map(x=>x[k]).filter(x=>x!=null), a=allS.map(x=>x[k]).filter(x=>x!=null);
+  const vs=games.filter(g=>g.opp===oppAd); const vsS=vs.map(gStats), allS=games.map(gStats);
+  const rows=CFG[SPOR()].xray.map(([k,label])=>{const v=vsS.map(x=>x[k]).filter(x=>x!=null), a=allS.map(x=>x[k]).filter(x=>x!=null);
     if(v.length<MIN_N||!a.length)return null; const mv=avg(v),ma=avg(a); return {k,label,vs:mv,norm:ma,d:mv-ma,pct:ma?(mv-ma)/ma*100:0};}).filter(Boolean);
   return {n:vs.length,seasons:[...new Set(vs.map(g=>g.sz))].sort(),rows};
 }
 function playerSplits(games,oppAd,stars){
   return (stars||[]).map(s=>{
-    const row=g=>((g.box&&g.box.p)||[]).find(p=>p[0]===s.ad);
+    const row=g=>bRows(g).find(p=>p.ad===s.ad&&p.min>0);
     const vs=games.filter(g=>g.opp===oppAd).map(row).filter(Boolean), all=games.map(row).filter(Boolean);
     if(vs.length<MIN_N||!all.length)return {ad:s.ad,n:vs.length,shown:false};
-    const m=(rows,i)=>{const v=rows.map(r=>r[i]).filter(x=>x!=null);return v.length?avg(v):null;};
-    const out={ad:s.ad,n:vs.length,shown:true,pts:[m(vs,3),m(all,3)],reb:[m(vs,4),m(all,4)]};
-    const t=m(vs,7), tn=m(all,7); if(t!=null&&tn!=null)out.tpm=[t,tn];
+    const m=(rows,k)=>{const v=rows.map(r=>r[k]).filter(x=>x!=null);return v.length?avg(v):null;};
+    const out={ad:s.ad,n:vs.length,shown:true,pts:[m(vs,'pts'),m(all,'pts')],reb:[m(vs,'reb'),m(all,'reb')]};
+    const t=m(vs,'tpm'), tn=m(all,'tpm'); if(t!=null&&tn!=null)out.tpm=[t,tn];
     return out;
   });
 }
@@ -217,13 +313,16 @@ function cardXray(h,a,hf,af,hS,aS){
   const hm=matchupSplit(hf.games,a.ad), am=matchupSplit(af.games,h.ad); const n=hm.n;
   if(n<MIN_N)return `<div class="tgol" style="grid-column:1/-1"><div class="th">MATCHUP X-RAY</div>
     <div class="ts" style="color:var(--grey)">Not shown. These two sides have met <b>${n}</b> time${n===1?'':'s'} in the record — fewer than the <b>${MIN_N}</b> needed for a mathematically meaningful split. The numbers exist; they just wouldn't mean anything yet.</div></div>`;
-  const fmt=(r)=>`<b>${r.label}</b> ${r.vs.toFixed(1)} <span style="color:var(--grey)">vs their norm ${r.norm.toFixed(1)}</span> <span class="${r.d>0.05?'kartArti':(r.d<-0.05?'kartEksi':'')}">${r.d>0?'+':''}${r.d.toFixed(1)} (${r.pct>0?'+':''}${r.pct.toFixed(0)}%)</span>`;
+  const fmt=(r)=>`<b>${r.label}</b> ${r.vs.toFixed(1)} <span style="color:var(--grey)">vs their norm ${r.norm.toFixed(1)}</span> <span class="${r.d>0.05?'kartArti':(r.d<-0.05?'kartEksi':'')}">${sd(r.d)} (${r.pct>0?'+':''}${r.pct.toFixed(0)}%)</span>`;
   const side=(t,o,m)=>`<div><div class="th">${esc(short(t))} vs ${esc(short(o))}</div><div class="ts">${m.rows.map(fmt).join('<br>')}</div></div>`;
-  const hp=playerSplits(hf.games,a.ad,hS), ap=playerSplits(af.games,h.ad,aS);
-  const shownP=[...hp,...ap].filter(p=>p.shown), hidP=[...hp,...ap].filter(p=>!p.shown);
-  const prow=p=>`<b>${esc(p.ad)}</b> · pts ${p.pts[0].toFixed(1)} <span style="color:var(--grey)">(norm ${p.pts[1].toFixed(1)})</span> · reb ${p.reb[0].toFixed(1)} <span style="color:var(--grey)">(${p.reb[1].toFixed(1)})</span>${p.tpm?` · 3pm ${p.tpm[0].toFixed(1)} <span style="color:var(--grey)">(${p.tpm[1].toFixed(1)})</span>`:''} <span class="mono" style="color:var(--grey)">n=${p.n}</span>`;
-  const players=shownP.length?`<div class="ts" style="margin-top:10px"><span style="color:var(--grey)">current players vs this opponent</span><br>${shownP.map(prow).join('<br>')}</div>`:'';
-  const hid=hidP.length?`<div class="tf">${hidP.length} current player${hidP.length>1?'s':''} not shown — fewer than ${MIN_N} games against this opponent.</div>`:'';
+  let players='',hid='';
+  if(SPOR()==='basketball'){
+    const hp=playerSplits(hf.games,a.ad,hS), ap=playerSplits(af.games,h.ad,aS);
+    const shownP=[...hp,...ap].filter(p=>p.shown), hidP=[...hp,...ap].filter(p=>!p.shown);
+    const prow=p=>`<b>${esc(p.ad)}</b> · pts ${p.pts[0].toFixed(1)} <span style="color:var(--grey)">(norm ${p.pts[1].toFixed(1)})</span> · reb ${p.reb[0].toFixed(1)} <span style="color:var(--grey)">(${p.reb[1].toFixed(1)})</span>${p.tpm?` · 3pm ${p.tpm[0].toFixed(1)} <span style="color:var(--grey)">(${p.tpm[1].toFixed(1)})</span>`:''} <span class="mono" style="color:var(--grey)">n=${p.n}</span>`;
+    players=shownP.length?`<div class="ts" style="margin-top:10px"><span style="color:var(--grey)">current players vs this opponent</span><br>${shownP.map(prow).join('<br>')}</div>`:'';
+    hid=hidP.length?`<div class="tf">${hidP.length} current player${hidP.length>1?'s':''} not shown — fewer than ${MIN_N} games against this opponent.</div>`:'';
+  }
   const allRows=[...hm.rows.map(r=>({...r,t:h,o:a})),...am.rows.map(r=>({...r,t:a,o:h}))].sort((x,y)=>Math.abs(y.pct)-Math.abs(x.pct)); const b=allRows[0];
   const ins=b?`↑ ${esc(short(b.t))} put up <span class="rnum">${Math.abs(b.d).toFixed(1)} ${b.d<0?'fewer':'more'} ${b.label}</span> against ${esc(short(b.o))} than their norm — the widest gap in this matchup (n=${n}).`:'';
   return `<div class="tgol" style="grid-column:1/-1"><div class="th">MATCHUP X-RAY · ${n} MEETINGS · ${esc(hm.seasons[0])}–${esc(hm.seasons[hm.seasons.length-1])}</div>
@@ -232,96 +331,180 @@ function cardXray(h,a,hf,af,hS,aS){
 }
 
 // ---- CONDITIONS X-RAY: rakibi ISMIYLE degil PROFILIYLE tanimla (lig icinde ust/alt ucluk), o profile karsi sicil ----
-const SZ_OF=(ymd)=>{const y=+ymd.slice(0,4), m=+ymd.slice(5,7); return m>=9?`${y}-${String(y+1).slice(2)}`:`${y-1}-${String(y).slice(2)}`;};
-const COND_MET=[['pts','points'],['reb','rebounds'],['ast','assists'],['tpm','threes'],['pf','fouls']];
-function oppProfile(teamAd,ymd){      // bu sezon yeterli mac yoksa (<15) son dolu sezona dus; hangi sezon oldugunu soyle
+function oppProfile(teamAd,ymd){
   const P=(IDX&&IDX.profiles&&IDX.profiles[teamAd])||null; if(!P)return null;
-  const cur=SZ_OF(ymd); const szs=Object.keys(P).sort();
+  const cur=SZ_OF(ymd); const szs=Object.keys(P).sort(); const minGp=IDX.min_gp||MIN_N;
   let use=cur, early=false;
-  if(!P[cur]||(P[cur].gp||0)<MIN_N){ const prev=szs.filter(z=>z<cur).pop(); if(!prev)return null; use=prev; early=true; }
+  if(!P[cur]||(P[cur].gp||0)<minGp){ const prev=szs.filter(z=>z<cur).pop(); if(!prev)return null; use=prev; early=true; }
   return {season:use,early,curGp:P[cur]?P[cur].gp:0,prof:P[use]};
 }
-function condSplits(games,metric,tier){   // X'in, o sezonda rakibin tier[metric]==tier oldugu maclardaki sicili vs normali
+function condSplits(games,metric,tier){
   const PR=(IDX&&IDX.profiles)||{};
   const vs=games.filter(g=>{const p=PR[g.opp]&&PR[g.opp][g.sz]; return p&&p.tiers&&p.tiers[metric]===tier;});
   if(vs.length<MIN_N)return {n:vs.length,rows:[]};
-  const vsS=vs.map(teamGameStats), allS=games.map(teamGameStats);
-  const rows=COND_MET.map(([k,label])=>{const v=vsS.map(x=>x[k]).filter(x=>x!=null), a=allS.map(x=>x[k]).filter(x=>x!=null);
+  const vsS=vs.map(gStats), allS=games.map(gStats);
+  const rows=CFG[SPOR()].cond.map(([k,label])=>{const v=vsS.map(x=>x[k]).filter(x=>x!=null), a=allS.map(x=>x[k]).filter(x=>x!=null);
     if(v.length<MIN_N||!a.length)return null; const mv=avg(v),ma=avg(a); return {k,label,vs:mv,norm:ma,d:mv-ma,pct:ma?(mv-ma)/ma*100:0};}).filter(Boolean);
   return {n:vs.length,rows};
 }
 function cardConditions(h,a,hf,af,ymd){
-  const L=(IDX&&IDX.tier_labels)||{};
+  const L=(IDX&&IDX.tier_labels)||{}; const C=CFG[SPOR()];
   const label=(m,t)=>(L[m]||[m,m])[t==='high'?0:1];
   const sideBlock=(X,O,Xf)=>{
     const op=oppProfile(O.ad,ymd);
     if(!op)return {html:`<div><div class="th">${esc(short(X))} vs teams like ${esc(short(O))}</div><div class="ts" style="color:var(--grey)">No profile for ${esc(short(O))} in the record.</div></div>`,best:null,bestPts:null};
-    const conds=Object.entries(op.prof.tiers||{}).filter(([m,t])=>t!=='mid');
+    const conds=Object.entries(op.prof.tiers||{}).filter(([m,t])=>t==='high'||t==='low');
     const warn=`<div class="ts" style="color:var(--grey);margin-top:4px">${esc(short(O))} profile${op.early?` (${op.season} — only ${op.curGp} games this season, so last full season shown)`:` (${op.season})`}: ${conds.length?conds.map(([m,t])=>`<b>${esc(label(m,t))}</b>`).join(' · '):'average on every measure'}</div>`;
     const lines=[]; let best=null, bestPts=null, hidden=0;
     conds.forEach(([m,t])=>{
       const r=condSplits(Xf.games,m,t);
       if(!r.rows.length){hidden++;return;}
-      const cells=r.rows.map(x=>`${x.label} <span class="${Math.abs(x.pct)>=5?(x.d>0?'kartArti':'kartEksi'):''}">${x.d>0?'+':''}${x.d.toFixed(1)}</span>`).join(' · ');
+      const cells=r.rows.map(x=>`${x.label} <span class="${Math.abs(x.pct)>=5?(x.d>0?'kartArti':'kartEksi'):''}">${sd(x.d)}</span>`).join(' · ');
       lines.push(`<b>vs ${esc(label(m,t))}</b> <span class="mono" style="color:var(--grey)">n=${r.n}</span><br><span style="padding-left:10px">${cells}</span>`);
       r.rows.forEach(x=>{ if(best==null||Math.abs(x.pct)>Math.abs(best.pct))best={...x,cond:label(m,t),n:r.n,X};
         if(x.k==='pts'&&(bestPts==null||Math.abs(x.d)>Math.abs(bestPts.d)))bestPts={...x,cond:label(m,t),n:r.n,X}; });
     });
-    const body=lines.length?`<div class="ts" style="line-height:1.8">${lines.join('<br>')}</div>`:`<div class="ts" style="color:var(--grey)">Not shown — ${esc(short(X))} hasn't met ${MIN_N}+ opponents with ${esc(short(O))}'s profile in the record.</div>`;
+    const body=lines.length?`<div class="ts" style="line-height:1.8">${lines.join('<br>')}</div>`:`<div class="ts" style="color:var(--grey)">Not shown — ${esc(short(X))} hasn't met ${MIN_N}+ opponents with ${esc(poss(short(O)))} profile in the record.</div>`;
     const hid=hidden?`<div class="tf">${hidden} condition${hidden>1?'s':''} not shown — fewer than ${MIN_N} games.</div>`:'';
     return {html:`<div><div class="th">${esc(short(X))} vs teams like ${esc(short(O))}</div>${warn}${body}${hid}</div>`,best,bestPts};
   };
   const A=sideBlock(h,a,hf), B=sideBlock(a,h,af);
-  // yorum secimi: sayi farki >=2 ise sayi one (piyasa dili), yoksa en buyuk % sapma
   const cands=[A.best,B.best,A.bestPts,B.bestPts].filter(Boolean);
-  const ptsLead=cands.filter(x=>x.k==='pts'&&Math.abs(x.d)>=2).sort((x,y)=>Math.abs(y.d)-Math.abs(x.d))[0];
+  const ptsLead=cands.filter(x=>x.k==='pts'&&Math.abs(x.d)>=C.ptsLead).sort((x,y)=>Math.abs(y.d)-Math.abs(x.d))[0];
   const b=ptsLead||cands.sort((x,y)=>Math.abs(y.pct)-Math.abs(x.pct))[0];
-  const ins=b?`↑ ${esc(short(b.X))} ${b.d<0?'put up':'put up'} <span class="rnum">${Math.abs(b.d).toFixed(1)} ${b.d<0?'fewer':'more'} ${b.label}</span> against ${esc(b.cond)} teams than their norm (n=${b.n}) — the strongest conditional lean tonight.`:'';
+  const ins=b?`↑ ${esc(short(b.X))} put up <span class="rnum">${Math.abs(b.d).toFixed(1)} ${b.d<0?'fewer':'more'} ${b.label}</span> against ${esc(b.cond)} teams than their norm (n=${b.n}) — the strongest conditional lean tonight.`:'';
   return `<div class="tgol" style="grid-column:1/-1"><div class="th">CONDITIONS X-RAY · WHAT THE OPPONENT IS LIKE, AND THE RECORD AGAINST TEAMS LIKE THAT</div>
     <div class="grid" style="margin-top:8px">${A.html}${B.html}</div>${ins?`<div class="rins">${ins}</div>`:''}
     <div class="tf">profile = top/bottom third of the league that season · deltas vs that side's own average · shown only at ${MIN_N}+ games · colour at ±5%</div></div>`;
 }
 
+// ---- LAST MEETING (spora gore kutu) ----
+function boxBasket(g){
+  const rows=bRows(g).slice(0,8).map(p=>`<tr class="${p.st?'st':''}"><td>${esc(p.ad)}</td><td>${p.min??''}</td><td>${p.pts??''}</td><td>${p.reb??''}</td><td>${p.ast??''}</td><td>${p.pm==null?'':(p.pm>0?'+'+p.pm:p.pm)}</td></tr>`).join('');
+  const sat=dnpOf(g);
+  return `<table class="box"><tr><th>player</th><th>min</th><th>pts</th><th>reb</th><th>ast</th><th>+/-</th></tr>${rows}</table>${sat.length?`<div class="dnp">sat: <b>${esc(sat.join(', '))}</b></div>`:''}`;
+}
+function boxFootball(g){
+  const P=gRows(g,'passing').slice(0,2).map(r=>`<tr><td>${esc(r.ad)} <span style="color:var(--grey)">pass</span></td><td>${esc(r.v['C/ATT']||'')}</td><td>${esc(r.v.YDS||'')}</td><td>${esc(r.v.TD||'')}</td><td>${esc(r.v.INT||'')}</td></tr>`);
+  const R=gRows(g,'rushing').sort((x,y)=>(num(y.v.YDS)||0)-(num(x.v.YDS)||0)).slice(0,2).map(r=>`<tr><td>${esc(r.ad)} <span style="color:var(--grey)">rush</span></td><td>${esc(r.v.CAR||'')}</td><td>${esc(r.v.YDS||'')}</td><td>${esc(r.v.TD||'')}</td><td></td></tr>`);
+  const W=gRows(g,'receiving').sort((x,y)=>(num(y.v.YDS)||0)-(num(x.v.YDS)||0)).slice(0,2).map(r=>`<tr><td>${esc(r.ad)} <span style="color:var(--grey)">rec</span></td><td>${esc(r.v.REC||'')}</td><td>${esc(r.v.YDS||'')}</td><td>${esc(r.v.TD||'')}</td><td></td></tr>`);
+  const m=g.m||{};
+  return `<table class="box"><tr><th>player</th><th>att</th><th>yds</th><th>td</th><th>int</th></tr>${[...P,...R,...W].join('')}</table><div class="dnp">team: <b>${m.pass_yds??'—'}</b> pass · <b>${m.rush_yds??'—'}</b> rush · <b>${m.to??'—'}</b> turnovers</div>`;
+}
+function boxBaseball(g){
+  const B=gRows(g,'batting').slice(0,6).map(r=>`<tr class="${r.st?'st':''}"><td>${esc(r.ad)}</td><td>${esc(r.v.AB||'')}</td><td>${esc(r.v.R||'')}</td><td>${esc(r.v.H||'')}</td><td>${esc(r.v.RBI||'')}</td><td>${esc(r.v.HR||'')}</td></tr>`).join('');
+  const P=gRows(g,'pitching').slice(0,4).map(r=>`<tr class="${r.st?'st':''}"><td>${esc(r.ad)}</td><td>${esc(r.v.IP||'')}</td><td>${esc(r.v.H||'')}</td><td>${esc(r.v.ER||'')}</td><td>${esc(r.v.K||'')}</td><td>${esc(r.v.BB||'')}</td></tr>`).join('');
+  return `<table class="box"><tr><th>batter</th><th>ab</th><th>r</th><th>h</th><th>rbi</th><th>hr</th></tr>${B}</table><table class="box"><tr><th>pitcher</th><th>ip</th><th>h</th><th>er</th><th>k</th><th>bb</th></tr>${P}</table>`;
+}
+function cardLastMeeting(h,a,g,oh,hf,af){
+  if(!g)return `<div class="tgol"><div class="th">LAST MEETING</div><div class="empty">These two haven't met in the record.</div></div>`;
+  const homeThen=g.home?h:a, awayThen=g.home?a:h;
+  const hs=g.home?g.pts:g.opp_pts, as=g.home?g.opp_pts:g.pts;
+  const winner=hs>as?homeThen:awayThen, margin=Math.abs(hs-as);
+  const og=oppBoxGame(g,af);                       // g: ev takimi (h) dosyasindan; rakip kutusu a dosyasindan
+  const hG=g.home?g:og, aG=g.home?og:g;
+  const boxer=SPOR()==='basketball'?boxBasket:(SPOR()==='football'?boxFootball:boxBaseball);
+  const side=(t,G)=>`<div><div class="th">${esc(short(t))}</div>${G?boxer(G):'<div class="empty">box not in the record</div>'}</div>`;
+  let odds='';
+  if(oh&&oh.maclar){
+    const key=[h.ad.toLowerCase(),a.ad.toLowerCase()].sort().join('|');
+    const list=oh.maclar[key]||[];
+    const rec=list.find(x=>usDate(x.t)===g.t)||null;
+    if(rec&&rec.kap){
+      const rows=[];
+      [[rec.h,'h','home'],[rec.a,'a','away']].forEach(([ad,slot,lab])=>{
+        const ac=rec.ac&&rec.ac[slot]!=null?rec.ac[slot]:null, kp=rec.kap[slot]; if(kp==null)return;
+        const mv=ac!=null?Math.round((kp-ac)*100):null; const cls=mv==null?'':(mv>0?'kartArti':(mv<0?'kartEksi':''));
+        rows.push(`<b>${esc(String(ad).split(' ').pop())}</b> <span style="color:var(--grey)">${lab}</span> &nbsp;${ac!=null?`<b>${fair(ac)}</b> → `:''}<span class="${cls}"><b>${fair(kp)}</b></span>${mv!=null?` <span style="color:var(--grey)">(${mv>0?'+':''}${mv} pts)</span>`:''}`);
+      });
+      if(rec.kap_tot&&rec.kap_tot.cizgi!=null)rows.push(`<b>total</b> <span style="color:var(--grey)">closed</span> &nbsp;<b>${rec.kap_tot.cizgi}</b>${rec.kap_spr&&rec.kap_spr.cizgi!=null?` · <b>spread</b> <b>${rec.kap_spr.cizgi}</b>`:''}`);
+      if(rows.length)odds=`<div class="ts" style="margin-top:10px"><span style="color:var(--grey)">market, open → close</span><br>${rows.join('<br>')}</div>`;
+    }
+  }
+  const satN=SPOR()==='basketball'?dnpOf(hG||{}).length+dnpOf(aG||{}).length:0;
+  const ins=`↑ <span class="rnum">${esc(short(winner))} by ${margin}</span>${satN?` · ${satN} rostered player${satN>1?'s':''} didn't play`:''} — ${niceDate(g.t)}.`;
+  return `<div class="tgol" style="grid-column:1/-1"><div class="th">LAST MEETING · ${esc(niceDate(g.t))}</div>
+    <div class="tbaslik">${esc(short(homeThen))} <span class="mono">${hs}</span> — <span class="mono">${as}</span> ${esc(short(awayThen))} <span style="color:var(--grey);font-weight:400;font-size:12px">· at ${esc(short(homeThen))}${!g.home?' · reverse fixture':''}</span></div>
+    <div class="grid" style="margin-top:8px">${side(homeThen,hG)}${side(awayThen,aG)}</div>${odds}<div class="rins">${ins}</div></div>`;
+}
+
 // ---- akis ----
+function deepLink(h,a){ const u=new URL(location.href); u.searchParams.set('lig',LIG); u.searchParams.set('h',h.ad); u.searchParams.set('a',a.ad); return u.toString(); }
 async function openRecord(hName,aName,whenIso){
   const det=document.getElementById('detail');
   const h=findTeam(hName), a=findTeam(aName);
   if(!h||!a){det.innerHTML=`<div class="empty err">Couldn't match ${!h?esc(hName):esc(aName)} to the record.</div>`;return;}
+  if(h===a){det.innerHTML=`<div class="empty err">Pick two different teams.</div>`;return;}
   det.innerHTML=`<div class="empty">Opening the record…</div>`;
   const ymd=whenIso?usDate(whenIso):new Date().toLocaleDateString('en-CA',{timeZone:'America/New_York'});
   const [hf,af,oh]=await Promise.all([teamFile(h),teamFile(a),oddsHist()]);
   if(!hf||!af){det.innerHTML=`<div class="empty err">Team file missing.</div>`;return;}
-  const hR=restBefore(hf.games,ymd), aR=restBefore(af.games,ymd);
-  const hS=starsLast10(hf.games,h.stars||[],ymd), aS=starsLast10(af.games,a.stars||[],ymd);
+  const hR=restBefore(hf.games,ymd,oh,h.ad), aR=restBefore(af.games,ymd,oh,a.ad);
   const lm=lastMeeting(hf.games,a.ad,ymd);
+  let cards=[];
+  if(SPOR()==='basketball'){
+    const hS=starsLast10(hf.games,h.stars||[],ymd), aS=starsLast10(af.games,a.stars||[],ymd);
+    cards=[cardB2B(h,a,hR,aR),cardHomeAway(h,a),cardAvail(h,a,hS,aS),cardConditions(h,a,hf,af,ymd),cardXray(h,a,hf,af,hS,aS),cardLastMeeting(h,a,lm,oh,hf,af)];
+  }else if(SPOR()==='football'){
+    cards=[cardRestFB(h,a,hR,aR,hf,af),cardHomeAway(h,a),cardLeadersFB(h,a,hf,af,ymd),cardConditions(h,a,hf,af,ymd),cardXray(h,a,hf,af,[],[]),cardLastMeeting(h,a,lm,oh,hf,af)];
+  }else{
+    cards=[cardFormBB(h,a,hf,af,ymd),cardHomeAway(h,a),cardBatsBB(h,a,hf,af,ymd),cardConditions(h,a,hf,af,ymd),cardXray(h,a,hf,af,[],[]),cardLastMeeting(h,a,lm,oh,hf,af)];
+  }
   const when=whenIso?new Date(whenIso).toLocaleString('en-GB',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'any date';
-  det.innerHTML=`<div class="dhead"><div class="teams">${esc(h.ad)} — ${esc(a.ad)}</div><div class="when">${esc(when)} · record as of ${esc(ymd)}</div></div>
-    <div class="grid">${cardB2B(h,a,hR,aR)}${cardHomeAway(h,a)}${cardAvail(h,a,hS,aS)}${cardConditions(h,a,hf,af,ymd)}${cardXray(h,a,hf,af,hS,aS)}${cardLastMeeting(h,a,lm,oh)}</div>`;
+  const link=deepLink(h,a);
+  det.innerHTML=`<div class="dhead"><div><div class="teams">${esc(h.ad)} — ${esc(a.ad)}</div><div class="when">${esc(LIGS[LIG].ad)} · ${esc(when)} · record as of ${esc(ymd)}</div></div>
+    <button class="btn ghost share" type="button" id="shareBtn" data-link="${esc(link)}">COPY LINK</button></div>
+    <div class="grid">${cards.join('')}</div>`;
+  try{history.replaceState(null,'',link);}catch(e){}
+  const sb=document.getElementById('shareBtn'); if(sb)sb.addEventListener('click',()=>{try{navigator.clipboard.writeText(sb.dataset.link);sb.textContent='COPIED';setTimeout(()=>sb.textContent='COPY LINK',1500);}catch(e){}});
   window.scrollTo({top:det.offsetTop-10,behavior:'smooth'});
 }
 async function loadTonight(){
   const box=document.getElementById('list');
   try{
     const r=await fetch(HOST+'/bugun.json',{cache:'no-store'}); const b=await r.json();
-    const blocks=Object.values(b.ligler||{}).filter(x=>/^basketball_nba/.test(x.key||''));
+    const blocks=Object.values(b.ligler||{}).filter(x=>LIGS[LIG].feed.test(x.key||''));
     TONIGHT=blocks.flatMap(x=>(x.maclar||[]).map(m=>({h:m.h,a:m.a,t:m.t,p:m.p,key:x.key})));
     TONIGHT.sort((x,y)=>String(x.t).localeCompare(String(y.t)));
-    if(!TONIGHT.length){box.innerHTML=`<div class="empty">No NBA games in the feed right now — pick two teams below.</div>`;return;}
+    if(!TONIGHT.length){box.innerHTML=`<div class="empty">No ${esc(LIGS[LIG].ad)} games in the feed right now — pick two teams below.</div>`;return;}
     box.innerHTML=TONIGHT.map((m,i)=>{const fav=m.p&&m.p.h!=null&&m.p.a!=null?(m.p.h>=m.p.a?`${esc(m.h.split(' ').pop())} ${Math.round(m.p.h*100)}%`:`${esc(m.a.split(' ').pop())} ${Math.round(m.p.a*100)}%`):'';
       return `<button class="mrow" type="button" data-i="${i}"><div class="t">${esc(m.h)} — ${esc(m.a)}</div><div class="w">${new Date(m.t).toLocaleString('en-GB',{weekday:'short',hour:'2-digit',minute:'2-digit'})}${m.key.includes('preseason')?' · preseason':''}${fav?' · market '+fav:''}</div></button>`;}).join('');
     box.querySelectorAll('.mrow').forEach(b=>b.addEventListener('click',()=>{box.querySelectorAll('.mrow').forEach(x=>x.classList.remove('on'));b.classList.add('on');const m=TONIGHT[+b.dataset.i];openRecord(m.h,m.a,m.t);}));
   }catch(e){box.innerHTML=`<div class="empty">Tonight's feed unreachable — pick two teams below.</div>`;}
 }
+// yeni sema index'i NBA semasina normalize et: tier etiketi -> high/low/mid ; esik yoksa mid
+function normalizeIdx(I){
+  if(!I.spor)return;
+  const TL=I.tier_labels||{};
+  for(const t of Object.values(I.profiles||{}))for(const [sz,p] of Object.entries(t)){
+    const thr=(I.tier_thr||{})[sz]||{}; const out={};
+    for(const [m,v] of Object.entries(p.tiers||{})){ const q=thr[m]; const L=TL[m]||[];
+      out[m]=(!q||q[0]===q[1])?'mid':(v===L[0]?'high':(v===L[1]?'low':'mid')); }
+    p.tiers=out;
+  }
+  const junk=/all-star|^afc$|^nfc$|^team |^brazil$|^national$|^american$/i;
+  I.teams=(I.teams||[]).filter(t=>!junk.test(t.ad)).map(t=>({...t,kisa:LIG==='ncaaf'?t.ad:(KISA[t.ad.toLowerCase()]||t.ad.split(' ').pop())}));
+}
+function renderLigbar(){
+  document.getElementById('ligbar').innerHTML=Object.entries(LIGS).map(([k,v])=>`<button type="button" data-lig="${k}" class="${k===LIG?'on':''}">${v.ad}</button>`).join('');
+  document.querySelectorAll('#ligbar button').forEach(b=>b.addEventListener('click',()=>{const u=new URL(location.href);u.search='';u.searchParams.set('lig',b.dataset.lig);location.href=u.toString();}));
+}
 async function boot(){
+  renderLigbar();
+  document.getElementById('tag').textContent=`terminal · ${LIGS[LIG].ad.toLowerCase()} · build T5`;
+  document.getElementById('note').textContent=LIGS[LIG].note+' Odds history builds daily from the archive. Direction, not advice.';
+  document.title=`Brier Terminal — ${LIGS[LIG].ad}`;
   try{
-    const r=await fetch(DATA+'index.json',{cache:'no-store'}); IDX=await r.json();
+    const r=await fetch(DATA+'index.json',{cache:'no-store'}); IDX=await r.json(); normalizeIdx(IDX);
     TEAMS=IDX.teams||[]; LEAGUE=IDX.league||{};
-    const opts=TEAMS.slice().sort((x,y)=>x.ad.localeCompare(y.ad)).map(t=>`<option value="${esc(t.ad)}">${esc(t.ad)}</option>`).join('');
+    const sel=TEAMS.filter(t=>(t.gp||0)>=10).slice().sort((x,y)=>x.ad.localeCompare(y.ad));
+    const opts=sel.map(t=>`<option value="${esc(t.ad)}">${esc(t.ad)}</option>`).join('');
     document.getElementById('selH').innerHTML=opts; document.getElementById('selA').innerHTML=opts;
-    document.getElementById('selA').selectedIndex=Math.min(1,TEAMS.length-1);
+    document.getElementById('selA').selectedIndex=Math.min(1,sel.length-1);
     document.getElementById('goBtn').addEventListener('click',()=>openRecord(document.getElementById('selH').value,document.getElementById('selA').value,null));
     loadTonight();
-  }catch(e){document.getElementById('list').innerHTML=`<div class="empty err">Record index not found (nba/index.json). Upload terminal/nba first.</div>`;}
+    if(Q.get('h')&&Q.get('a')){ openRecord(Q.get('h'),Q.get('a'),null); }
+  }catch(e){document.getElementById('list').innerHTML=`<div class="empty err">Record index not found (${esc(DATA)}index.json). Upload terminal/${esc(LIG)} first.</div>`;}
 }
 boot();
 </script>
