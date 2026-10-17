@@ -52,12 +52,13 @@
   .empty{padding:18px;color:var(--grey);text-align:center;font-size:12.5px}
   .note{font-size:11px;color:var(--grey);line-height:1.55;margin-top:14px}
   .err{color:var(--red);font-size:12px}
+  .tgol.says{background:var(--ink);color:#fff;border-color:var(--ink)} .tgol.says .th{color:#9fb3ae} .tgol.says .ts{color:#fff} .tgol.says .tf{color:#9fb3ae;border-color:#2c3a37} .tgol.says .rnum{color:#fff;background:rgba(255,255,255,.12);padding:0 5px;border-radius:2px} .tgol.says .kartArti{color:#7fd1bf} .tgol.says .kartEksi{color:#f0a090}
   @media (max-width:600px){ .dhead .teams{font-size:17px} .grid{grid-template-columns:1fr} }
 </style>
 </head>
 <body>
 <header>
-  <h1>BRIER</h1><span class="tag" id="tag">terminal · build T5</span>
+  <h1>BRIER</h1><span class="tag" id="tag">terminal · build T6</span>
   <span class="motto">the record, not the tip</span>
 </header>
 <div class="ligbar" id="ligbar"></div>
@@ -354,7 +355,7 @@ function cardConditions(h,a,hf,af,ymd){
     const op=oppProfile(O.ad,ymd);
     if(!op)return {html:`<div><div class="th">${esc(short(X))} vs teams like ${esc(short(O))}</div><div class="ts" style="color:var(--grey)">No profile for ${esc(short(O))} in the record.</div></div>`,best:null,bestPts:null};
     const conds=Object.entries(op.prof.tiers||{}).filter(([m,t])=>t==='high'||t==='low');
-    const warn=`<div class="ts" style="color:var(--grey);margin-top:4px">${esc(short(O))} profile${op.early?` (${op.season} — only ${op.curGp} games this season, so last full season shown)`:` (${op.season})`}: ${conds.length?conds.map(([m,t])=>`<b>${esc(label(m,t))}</b>`).join(' · '):'average on every measure'}</div>`;
+    const warn=`<div class="ts" style="color:var(--grey);margin-top:4px">${esc(short(O))} profile${op.early?` (${op.season} — only ${op.curGp} games this season, so last full season shown)`:` (${op.season})`}: ${conds.length?conds.map(([m,t])=>`<b>${esc(label(m,t))}</b>`).join(' · '):'average on every measure'}.${oppQuality(X,O,Xf,ymd)}</div>`;
     const lines=[]; let best=null, bestPts=null, hidden=0;
     conds.forEach(([m,t])=>{
       const r=condSplits(Xf.games,m,t);
@@ -428,16 +429,127 @@ function cardLastMeeting(h,a,g,oh,hf,af){
     <div class="grid" style="margin-top:8px">${side(homeThen,hG)}${side(awayThen,aG)}</div>${odds}<div class="rins">${ins}</div></div>`;
 }
 
+// ---- LIG CAPINDA MAC LISTESI (games.json): ikizler, oyun senaryosu, ATS ----
+let GL=null, ZS=null, TOTQ=null, PAV={};
+async function gamesList(){ if(GL!==null)return GL;
+  try{const r=await fetch(DATA+'games.json',{cache:'no-store'}); const j=r.ok?await r.json():null;
+    GL=j?j.games.map(r=>({t:r[0],h:r[1],a:r[2],hs:r[3],as:r[4],sz:r[5],rh:r[6],ra:r[7],hh:r[8],ah:r[9],spd:r[10],ou:r[11]})):false;}catch(e){GL=false;}
+  return GL; }
+const METS=()=>NEW()?(IDX.metrics||[]):['pts','pa','reb','ast','tpm','pf','to'];
+const avgOf=(p)=>p?(NEW()?p.avg:p):null;
+function profAvg(team,sz){ const k=team+'|'+sz; if(k in PAV)return PAV[k];
+  const p=IDX.profiles&&IDX.profiles[team]&&IDX.profiles[team][sz]; const src=avgOf(p); let o=null;
+  if(src&&(p.gp||0)>=(IDX.min_gp||MIN_N)){ o={}; for(const m of METS()){ if(src[m]==null){o=null;break;} o[m]=src[m]; } }
+  PAV[k]=o; return o; }
+function zstats(){ if(ZS)return ZS; ZS={}; const minGp=IDX.min_gp||MIN_N;
+  for(const S of Object.values(IDX.profiles||{}))for(const [sz,p] of Object.entries(S)){ if((p.gp||0)<minGp)continue; const src=avgOf(p); const z=ZS[sz]||(ZS[sz]={});
+    for(const m of METS()){ if(src[m]==null)continue; const a=z[m]||(z[m]={n:0,s:0,s2:0}); a.n++; a.s+=src[m]; a.s2+=src[m]*src[m]; } }
+  for(const z of Object.values(ZS))for(const a of Object.values(z)){ a.mean=a.s/a.n; a.sd=Math.sqrt(Math.max(0,a.s2/a.n-a.mean*a.mean))||1; }
+  return ZS; }
+function zvec(prof,sz){ const z=zstats()[sz]; if(!z||!prof)return null; return METS().map(m=>z[m]?(prof[m]-z[m].mean)/z[m].sd:0); }
+function restB(r){ if(r==null)return 1; if(SPOR()==='football')return r<=4?0:(r<=9?1:2); return r<=0?0:(r===1?1:(r<=3?2:3)); }
+function feat(hp,ap,sz,rh,ra){ const zh=zvec(hp,sz), za=zvec(ap,sz); if(!zh||!za)return null; return [...zh,...za,restB(rh)*0.6,restB(ra)*0.6]; }
+function totQ(){ if(TOTQ)return TOTQ; TOTQ={}; const by={}; for(const g of GL){ (by[g.sz]||(by[g.sz]=[])).push(g.hs+g.as); }
+  for(const [sz,v] of Object.entries(by)){ v.sort((x,y)=>x-y); TOTQ[sz]=[v[Math.floor(v.length/3)],v[Math.floor(2*v.length/3)]]; } return TOTQ; }
+const CLOSE={basketball:5,football:7,baseball:1};
+const DNA_LAB={basketball:['defensive battle','middle band','shootout'],football:['low-scoring','middle band','shootout'],baseball:["pitchers' duel",'middle band','slugfest']};
+const DNA_PH={'defensive battle':'a defensive battle','middle band':'in the middle band','shootout':'a shootout','low-scoring':'low-scoring',"pitchers' duel":"a pitchers' duel",'slugfest':'a slugfest'};
+function twins(h,a,ymd,hR,aR){
+  if(!GL||!GL.length)return null;
+  const hp=oppProfile(h.ad,ymd), ap=oppProfile(a.ad,ymd); if(!hp||!ap)return null;
+  const hz=zvec(avgOf(hp.prof),hp.season), az=zvec(avgOf(ap.prof),ap.season); if(!hz||!az)return null;
+  const f0=[...hz,...az,restB(hR?hR.rest:null)*0.6,restB(aR?aR.rest:null)*0.6];
+  const scored=[];
+  for(const g of GL){ if(g.t>=ymd)continue; const f=feat(profAvg(g.h,g.sz),profAvg(g.a,g.sz),g.sz,g.rh,g.ra); if(!f)continue;
+    let d=0; for(let i=0;i<f.length;i++){const e=f[i]-f0[i]; d+=e*e;} scored.push({g,d:Math.sqrt(d)}); }
+  if(scored.length<MIN_N)return {n:scored.length,shown:false};
+  scored.sort((x,y)=>x.d-y.d); const dMed=scored[Math.floor(scored.length/2)].d; const K=Math.min(40,scored.length); const top=scored.slice(0,K);
+  const sim=(d)=>Math.max(0,Math.round(100*(1-(d/dMed)*(d/dMed))));   // 100 = ayni profil, 0 = lig medyani kadar uzak
+  const Q=totQ(); let hw=0,hs=0,as=0,close=0,dna=[0,0,0],ov=0,nOu=0,hc=0,nSp=0;
+  for(const {g} of top){ if(g.hs>g.as)hw++; hs+=g.hs; as+=g.as; if(Math.abs(g.hs-g.as)<=CLOSE[SPOR()])close++;
+    const q=Q[g.sz]||[0,0]; const t=g.hs+g.as; dna[t<q[0]?0:(t>=q[1]?2:1)]++;
+    if(g.ou!=null){nOu++; if(t>g.ou)ov++;} if(g.spd!=null){const c=g.hs-g.as+g.spd; if(c!==0){nSp++; if(c>0)hc++;}} }
+  return {n:K,shown:true,list:top.slice(0,3).map(x=>({...x.g,sim:sim(x.d)})),homeW:pct(hw,K),avgH:hs/K,avgA:as/K,avgTot:(hs+as)/K,closePct:pct(close,K),
+    dna:dna.map(x=>Math.round(100*x/K)),overPct:nOu>=MIN_N?pct(ov,nOu):null,nOu,homeCover:nSp>=MIN_N?pct(hc,nSp):null,nSp,avgSim:Math.round(top.reduce((s,x)=>s+sim(x.d),0)/K),early:hp.early||ap.early,pool:scored.length};
+}
+function cardTwins(h,a,T){
+  const C=CFG[SPOR()];
+  if(!T||!T.shown)return `<div class="tgol" style="grid-column:1/-1"><div class="th">GAMES LIKE THIS</div><div class="ts" style="color:var(--grey)">${T?`Not shown — only ${T.n} comparable games in the record, fewer than ${MIN_N}.`:'Not shown — no profile for one of these sides yet.'}</div></div>`;
+  const row=(g)=>`<b>${esc(g.h.split(' ').pop())}</b> ${g.hs}–${g.as} <b>${esc(g.a.split(' ').pop())}</b> <span style="color:var(--grey)">· ${niceDate(g.t)}</span> <span class="mono" style="color:var(--grey)">${g.sim}%</span>`;
+  const dnaL=DNA_LAB[SPOR()]; const top=T.dna.indexOf(Math.max(...T.dna));
+  const dnaTxt=T.dna.map((v,i)=>`<b class="${i===top?'':''}">${v}%</b> ${dnaL[i]}`).join(' · ');
+  const extra=[T.overPct!=null?`over the total <b>${T.overPct}%</b> <span style="color:var(--grey)">(n=${T.nOu})</span>`:null, T.homeCover!=null?`home side covered <b>${T.homeCover}%</b> <span style="color:var(--grey)">(n=${T.nSp})</span>`:null].filter(Boolean).join(' · ');
+  const ins=`↑ In the <span class="rnum">${T.n} closest spots</span> the home side won ${T.homeW}% and the game was ${DNA_PH[dnaL[top]]} ${T.dna[top]}% of the time — average score ${f1(T.avgH)}–${f1(T.avgA)}.`;
+  return `<div class="tgol" style="grid-column:1/-1"><div class="th">GAMES LIKE THIS · ${T.n} CLOSEST SPOTS OF ${T.pool.toLocaleString('en-US')}</div>
+    <div class="grid" style="margin-top:8px">
+      <div><div class="th">what usually happens</div><div class="ts">home wins <b>${T.homeW}%</b> · away wins <b>${(100-T.homeW).toFixed(1)}%</b><br>average score <b>${f1(T.avgH)}</b> – <b>${f1(T.avgA)}</b> · total <b>${f1(T.avgTot)}</b><br>decided by ${CLOSE[SPOR()]} or fewer: <b>${T.closePct}%</b>${extra?`<br>${extra}`:''}</div></div>
+      <div><div class="th">matchup dna</div><div class="ts">${dnaTxt}</div><div class="th" style="margin-top:10px">closest three</div><div class="ts">${T.list.map(row).join('<br>')}</div></div>
+    </div><div class="rins">${ins}</div>
+    <div class="tf">similarity = both sides' season profiles (${METS().join(', ')}) + rest, against every game in the record${T.early?' · one side on last season\'s profile (too few games yet)':''} · similarity 100 = identical profiles, 0 = as far apart as a typical pair · average here ${T.avgSim}% · not a prediction, a neighbourhood</div></div>`;
+}
+function scriptRec(team,ymd){ let tw=0,tn=0,lw=0,ln=0;
+  for(const g of GL){ if(g.t>=ymd||g.hh==null||g.ah==null)continue; const home=g.h===team; if(!home&&g.a!==team)continue;
+    const my=home?g.hh:g.ah, op=home?g.ah:g.hh, won=home?g.hs>g.as:g.as>g.hs; if(my<op){tn++;if(won)tw++;} else if(my>op){ln++;if(won)lw++;} }
+  return {tw,tn,lw,ln}; }
+function leagueScript(){ let w=0,n=0; for(const g of GL){ if(g.hh==null||g.ah==null||g.hh===g.ah)continue; n++; const trailHome=g.hh<g.ah; if(trailHome?g.hs>g.as:g.as>g.hs)w++; } return pct(w,n); }
+function cardScript(h,a,ymd){
+  const half=SPOR()==='baseball'?'after five innings':'at the half'; const L=leagueScript();
+  const line=(t)=>{const r=scriptRec(t.ad,ymd); if(r.tn<MIN_N)return {html:`<b>${esc(short(t))}</b> — fewer than ${MIN_N} games trailing ${half} in the record`,p:null,r};
+    const p=pct(r.tw,r.tn); return {html:`<b>${esc(short(t))}</b> · trailing ${half}: <b>${r.tw}-${r.tn-r.tw}</b> (${p}%) · leading: <b>${r.lw}-${r.ln-r.lw}</b> (${pct(r.lw,r.ln)}%)`,p,r,t};};
+  const H=line(h), A=line(a); const c=[H,A].filter(x=>x.p!=null).sort((x,y)=>Math.abs(y.p-L)-Math.abs(x.p-L))[0];
+  const ins=c?`↑ ${esc(short(c.t))} comes back when trailing ${half} <span class="rnum">${c.p}% of the time</span> against a league rate of ${L}% — ${c.p>L+5?'they stay in games':(c.p<L-5?'an early deficit tends to stick':'about par')}.`:`↑ Not enough halftime data for either side yet.`;
+  return `<div class="tgol"><div class="th">GAME SCRIPT</div><div class="ts">${H.html}<br>${A.html}</div><div class="rins">${ins}</div><div class="tf">league: side trailing ${half} wins ${L}% · all seasons in the record</div></div>`;
+}
+function atsRec(team,ymd){ const r={fav:[0,0],dog:[0,0],homeFav:[0,0],homeDog:[0,0],awayFav:[0,0],awayDog:[0,0]};
+  for(const g of GL){ if(g.t>=ymd||g.spd==null)continue; const home=g.h===team; if(!home&&g.a!==team)continue;
+    const my=home?g.spd:-g.spd, margin=home?g.hs-g.as:g.as-g.hs, c=margin+my; if(c===0||my===0)continue;
+    const role=my<0?'fav':'dog'; const keys=[role,(home?'home':'away')+role[0].toUpperCase()+role.slice(1)];
+    for(const k of keys){ r[k][0]++; if(c>0)r[k][1]++; } }
+  return r; }
+function cardATS(h,a,ymd,market){
+  const lab={fav:'as favourite',dog:'as underdog',homeFav:'home favourite',homeDog:'home underdog',awayFav:'away favourite',awayDog:'away underdog'};
+  const hFav=market&&market.h!=null&&market.a!=null?market.h>=market.a:null;
+  const side=(t,isHome,fav)=>{const r=atsRec(t.ad,ymd); const keys=fav==null?['fav','dog']:[(isHome?'home':'away')+(fav?'Fav':'Dog'),fav?'fav':'dog'];
+    const rows=keys.map(k=>r[k][0]>=MIN_N?{k,n:r[k][0],w:r[k][1],p:pct(r[k][1],r[k][0])}:null).filter(Boolean);
+    const html=rows.length?rows.map(x=>`<b>${esc(lab[x.k])}</b> covered <b>${x.w}-${x.n-x.w}</b> (${x.p}%)`).join(' · '):`<span style="color:var(--grey)">fewer than ${MIN_N} lined games in this role</span>`;
+    return {html:`<b>${esc(short(t))}</b> · ${html}`,best:rows.sort((x,y)=>Math.abs(y.p-50)-Math.abs(x.p-50))[0],t};};
+  const H=side(h,true,hFav), A=side(a,false,hFav==null?null:!hFav);
+  const b=[H,A].filter(x=>x.best).sort((x,y)=>Math.abs(y.best.p-50)-Math.abs(x.best.p-50))[0];
+  const verdict=SPOR()==='baseball'?'on the run line — the price, not the cover rate, decides whether that was value':(b&&b.best.p>=58?'the market has underrated them in this role':(b&&b.best.p<=42?'the market has overrated them in this role':'the market has them about right'));
+  const ins=b?`↑ ${esc(short(b.t))} covers <span class="rnum">${b.best.p}%</span> of the time ${lab[b.best.k]} (n=${b.best.n}) — ${verdict}.`:`↑ Not enough lined games for either side yet.`;
+  const role=hFav==null?'market role unknown for tonight — both roles shown':`tonight's market: ${esc(short(hFav?h:a))} favourite`;
+  return `<div class="tgol"><div class="th">AGAINST THE SPREAD</div><div class="ts">${H.html}<br>${A.html}</div><div class="rins">${ins}</div><div class="tf">${role} · ${SPOR()==='baseball'?'run line ±1.5':'closing spread'} where ESPN kept it (roughly the last three seasons) · push excluded</div></div>`;
+}
+function cardRecordSays(h,a,cards){
+  const pri=['GAMES LIKE THIS','CONDITIONS X-RAY','AGAINST THE SPREAD','GAME SCRIPT','REST RECORD','B2B RECORD','FORM','LEADERS','LINEUP','AVAILABILITY','HOME / AWAY','MATCHUP X-RAY','LAST MEETING'];
+  const lines=[];
+  for(const p of pri){ const c=cards.find(x=>x.includes(`<div class="th">${p}`)); if(!c)continue; const m=c.match(/<div class="rins">([\s\S]*?)<\/div>/); if(!m)continue;
+    const txt=m[1].replace(/^↑\s*/,''); if(/Not enough|can't be read|not shown/i.test(txt))continue; lines.push(txt); if(lines.length===4)break; }
+  if(!lines.length)return '';
+  return `<div class="tgol says" style="grid-column:1/-1"><div class="th">THE RECORD SAYS</div><div class="ts" style="font-size:14.5px;line-height:1.85">${lines.map(l=>`<div>${l}</div>`).join('')}</div><div class="tf">four lines, each one a number from a card below · ${esc(short(h))} — ${esc(short(a))}</div></div>`;
+}
+// rakip kalitesi: O, X'in bu sezon karsilastigi rakipler icinde kacinci (hucum = pts, savunma = pa)
+function oppQuality(X,O,Xf,ymd){
+  const sz=SZ_OF(ymd); const opps=[...new Set(Xf.games.filter(g=>g.sz===sz&&g.t<ymd).map(g=>g.opp))]; if(opps.length<3)return '';
+  const P=(t)=>{const p=IDX.profiles&&IDX.profiles[t]&&IDX.profiles[t][sz]; return avgOf(p);};
+  const po=P(O.ad); if(!po)return '';
+  const rank=(m,desc)=>{const vals=opps.map(P).filter(Boolean).map(p=>p[m]).filter(x=>x!=null); if(vals.length<3)return null; const n=vals.filter(v=>desc?v>po[m]:v<po[m]).length; return {r:n+1,n:vals.length+1};};
+  const ro=rank('pts',true), rd=rank('pa',true); const out=[];
+  if(ro&&ro.r===1)out.push(`the strongest offence ${esc(short(X))} has faced this season`); else if(ro&&ro.r===ro.n)out.push(`the weakest offence ${esc(short(X))} has faced this season`);
+  if(rd&&rd.r===1)out.push(`the leakiest defence ${esc(short(X))} has faced this season`); else if(rd&&rd.r===rd.n)out.push(`the stingiest defence ${esc(short(X))} has faced this season`);
+  return out.length?` <b style="color:var(--ink)">${out.join('; ')}</b> (of ${ro?ro.n:rd.n}).`:'';
+}
+
 // ---- akis ----
 function deepLink(h,a){ const u=new URL(location.href); u.searchParams.set('lig',LIG); u.searchParams.set('h',h.ad); u.searchParams.set('a',a.ad); return u.toString(); }
-async function openRecord(hName,aName,whenIso){
+async function openRecord(hName,aName,whenIso,market){
   const det=document.getElementById('detail');
   const h=findTeam(hName), a=findTeam(aName);
   if(!h||!a){det.innerHTML=`<div class="empty err">Couldn't match ${!h?esc(hName):esc(aName)} to the record.</div>`;return;}
   if(h===a){det.innerHTML=`<div class="empty err">Pick two different teams.</div>`;return;}
   det.innerHTML=`<div class="empty">Opening the record…</div>`;
   const ymd=whenIso?usDate(whenIso):new Date().toLocaleDateString('en-CA',{timeZone:'America/New_York'});
-  const [hf,af,oh]=await Promise.all([teamFile(h),teamFile(a),oddsHist()]);
+  const [hf,af,oh]=await Promise.all([teamFile(h),teamFile(a),oddsHist(),gamesList()]);
   if(!hf||!af){det.innerHTML=`<div class="empty err">Team file missing.</div>`;return;}
   const hR=restBefore(hf.games,ymd,oh,h.ad), aR=restBefore(af.games,ymd,oh,a.ad);
   const lm=lastMeeting(hf.games,a.ad,ymd);
@@ -450,6 +562,8 @@ async function openRecord(hName,aName,whenIso){
   }else{
     cards=[cardFormBB(h,a,hf,af,ymd),cardHomeAway(h,a),cardBatsBB(h,a,hf,af,ymd),cardConditions(h,a,hf,af,ymd),cardXray(h,a,hf,af,[],[]),cardLastMeeting(h,a,lm,oh,hf,af)];
   }
+  if(GL&&GL.length){ const T=twins(h,a,ymd,hR,aR); cards.splice(0,0,cardTwins(h,a,T)); cards.splice(4,0,cardScript(h,a,ymd),cardATS(h,a,ymd,market)); }
+  const says=cardRecordSays(h,a,cards); if(says)cards.unshift(says);
   const when=whenIso?new Date(whenIso).toLocaleString('en-GB',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'any date';
   const link=deepLink(h,a);
   det.innerHTML=`<div class="dhead"><div><div class="teams">${esc(h.ad)} — ${esc(a.ad)}</div><div class="when">${esc(LIGS[LIG].ad)} · ${esc(when)} · record as of ${esc(ymd)}</div></div>
@@ -469,7 +583,7 @@ async function loadTonight(){
     if(!TONIGHT.length){box.innerHTML=`<div class="empty">No ${esc(LIGS[LIG].ad)} games in the feed right now — pick two teams below.</div>`;return;}
     box.innerHTML=TONIGHT.map((m,i)=>{const fav=m.p&&m.p.h!=null&&m.p.a!=null?(m.p.h>=m.p.a?`${esc(m.h.split(' ').pop())} ${Math.round(m.p.h*100)}%`:`${esc(m.a.split(' ').pop())} ${Math.round(m.p.a*100)}%`):'';
       return `<button class="mrow" type="button" data-i="${i}"><div class="t">${esc(m.h)} — ${esc(m.a)}</div><div class="w">${new Date(m.t).toLocaleString('en-GB',{weekday:'short',hour:'2-digit',minute:'2-digit'})}${m.key.includes('preseason')?' · preseason':''}${fav?' · market '+fav:''}</div></button>`;}).join('');
-    box.querySelectorAll('.mrow').forEach(b=>b.addEventListener('click',()=>{box.querySelectorAll('.mrow').forEach(x=>x.classList.remove('on'));b.classList.add('on');const m=TONIGHT[+b.dataset.i];openRecord(m.h,m.a,m.t);}));
+    box.querySelectorAll('.mrow').forEach(b=>b.addEventListener('click',()=>{box.querySelectorAll('.mrow').forEach(x=>x.classList.remove('on'));b.classList.add('on');const m=TONIGHT[+b.dataset.i];openRecord(m.h,m.a,m.t,m.p);}));
   }catch(e){box.innerHTML=`<div class="empty">Tonight's feed unreachable — pick two teams below.</div>`;}
 }
 // yeni sema index'i NBA semasina normalize et: tier etiketi -> high/low/mid ; esik yoksa mid
@@ -491,7 +605,7 @@ function renderLigbar(){
 }
 async function boot(){
   renderLigbar();
-  document.getElementById('tag').textContent=`terminal · ${LIGS[LIG].ad.toLowerCase()} · build T5`;
+  document.getElementById('tag').textContent=`terminal · ${LIGS[LIG].ad.toLowerCase()} · build T6`;
   document.getElementById('note').textContent=LIGS[LIG].note+' Odds history builds daily from the archive. Direction, not advice.';
   document.title=`Brier Terminal — ${LIGS[LIG].ad}`;
   try{
