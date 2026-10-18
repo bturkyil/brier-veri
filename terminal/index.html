@@ -8,7 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --paper:#EEF2F1; --card:#FFFFFF; --ink:#16211F; --ink2:#3A4745; --grey:#6B7876; --rule:#D9E0DE; --rule-dark:#B9C4C1;
+    --paper:#EEF2F1; --card:#FFFFFF; --ink:#16211F; --dark:#16211F; --ink2:#3A4745; --grey:#6B7876; --rule:#D9E0DE; --rule-dark:#B9C4C1;
     --rec:#0E7C6B; --rec-soft:#DCEFEA; --mkt:#9A6A12; --mkt-soft:#F3E8CF; --red:#A33A2E; --red-soft:#F3DDD9;
     --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace; --sans:'Archivo',system-ui,sans-serif;
   }
@@ -19,7 +19,7 @@
   b{font-weight:600}
   .mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
   /* ust cubuk */
-  .top{background:var(--ink);color:#fff}
+  .top{background:var(--dark);color:#fff}
   .top .in{max-width:1120px;margin:0 auto;padding:0 16px;display:flex;align-items:center;gap:18px;height:52px}
   .top .brand{font-weight:800;letter-spacing:1.6px;font-size:16px;text-decoration:none;color:#fff}
   .top .brand span{font-weight:400;letter-spacing:.2px;opacity:.7;margin-left:8px;font-size:13px}
@@ -112,7 +112,7 @@
   .dbar::after{content:'';position:absolute;left:50%;top:-2px;width:1px;height:10px;background:var(--ink2)}
   .wl{font-family:var(--mono);font-size:11px;letter-spacing:1px} .wl .w{color:var(--rec)} .wl .l{color:var(--red)}
   /* the record says */
-  .tgol.says{background:var(--ink);color:#fff;border-color:var(--ink);padding:18px 20px}
+  .tgol.says{background:var(--dark);color:#fff;border-color:var(--dark);padding:18px 20px}
   .tgol.says .th{color:#fff;font-size:15px} .tgol.says .ts{color:#fff;font-size:15px;line-height:1.75}
   .tgol.says .ts div{padding:6px 0;border-top:1px solid rgba(255,255,255,.12)} .tgol.says .ts div:first-child{border-top:0}
   .tgol.says .tf{color:rgba(255,255,255,.6);border-color:rgba(255,255,255,.15)}
