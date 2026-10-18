@@ -27,7 +27,26 @@
   .top nav button{font-family:var(--sans);font-size:12.5px;font-weight:600;padding:7px 11px;border:0;background:transparent;color:#fff;opacity:.6;border-radius:3px;cursor:pointer;white-space:nowrap}
   .top nav button.on{opacity:1;background:rgba(255,255,255,.14)} .top nav button:hover{opacity:1}
   .top .motto{margin-left:auto;font-size:12px;opacity:.6;white-space:nowrap}
-  .wrap{max-width:1120px;margin:0 auto;padding:0 16px 56px}
+  .wrap{max-width:1360px;margin:0 auto;padding:0 16px 56px}
+  .layout{display:grid;grid-template-columns:380px minmax(0,1fr);gap:18px;align-items:start;padding-top:14px}
+  .left{position:sticky;top:0;max-height:100vh;overflow:auto;padding-right:2px;scrollbar-width:thin}
+  .right{min-width:0}
+  .daynav{display:flex;align-items:center;gap:4px;margin:4px 0 8px}
+  .daynav button{font-family:var(--sans);font-size:14px;font-weight:600;padding:8px 12px;border:1px solid var(--rule-dark);background:var(--card);color:var(--ink);border-radius:3px;cursor:pointer}
+  .daynav .lab{flex:1;text-align:center} .daynav .lab small{display:block;font-weight:400;font-size:11.5px;color:var(--grey)}
+  .daynav button:disabled{opacity:.35;cursor:default}
+  .top nav .sp{position:relative} .top nav .sp>button{font-family:var(--sans);font-size:12.5px;font-weight:600;padding:7px 11px;border:0;background:transparent;color:#fff;opacity:.6;border-radius:3px;cursor:pointer;white-space:nowrap}
+  .top nav .sp.on>button{opacity:1;background:rgba(255,255,255,.14)} .top nav .sp:hover>button,.top nav .sp:focus-within>button{opacity:1}
+  .top nav .sp .dd{display:none;position:absolute;left:0;top:100%;background:var(--card);border:1px solid var(--rule-dark);border-radius:3px;min-width:160px;padding:6px;z-index:20;box-shadow:0 12px 30px -14px rgba(0,0,0,.5)}
+  .top nav .sp:hover .dd,.top nav .sp:focus-within .dd{display:block}
+  .top nav .dd a,.top nav .dd button{display:block;width:100%;text-align:left;font-family:var(--sans);font-size:13px;font-weight:600;padding:8px 10px;border:0;background:transparent;color:var(--ink);border-radius:3px;cursor:pointer;text-decoration:none}
+  .top nav .dd a:hover,.top nav .dd button:hover{background:var(--paper)} .top nav .dd .cur{color:var(--rec)}
+  .tabs{display:flex;gap:2px;margin:14px 0 10px;border-bottom:1px solid var(--rule-dark);overflow-x:auto;scrollbar-width:none}
+  .tabs button{font-family:var(--sans);font-size:13.5px;font-weight:600;padding:10px 14px;border:0;border-bottom:2px solid transparent;background:transparent;color:var(--grey);cursor:pointer;white-space:nowrap;margin-bottom:-1px}
+  .tabs button.on{color:var(--ink);border-bottom-color:var(--ink)}
+  .pane{display:none} .pane.on{display:block}
+  .empty.tall{padding:80px 20px;font-size:14px}
+  .back{display:none;font-family:var(--sans);font-size:13px;font-weight:600;padding:8px 0;border:0;background:transparent;color:var(--rec);cursor:pointer}
   /* gun seridi + cipler */
   .days{display:flex;gap:4px;margin:18px 0 10px;overflow-x:auto;scrollbar-width:none}
   .days button{font-family:var(--sans);font-size:13px;font-weight:600;padding:8px 12px;border:1px solid var(--rule-dark);background:var(--card);color:var(--ink);border-radius:3px;cursor:pointer;white-space:nowrap}
@@ -38,10 +57,11 @@
   .chip.on{background:var(--rec-soft);border-color:var(--rec);color:var(--rec)} .chip .n{opacity:.6;margin-left:4px;font-weight:400}
   /* skorboard */
   .board{background:var(--card);border:1px solid var(--rule-dark);border-radius:4px;overflow:hidden}
-  .row{display:grid;grid-template-columns:54px 1fr 150px 1fr auto;gap:10px;align-items:center;padding:10px 12px;border-top:1px solid var(--rule);cursor:pointer;text-align:left;background:transparent;color:inherit;font:inherit;width:100%}
+  .row{display:grid;grid-template-columns:44px 1fr auto;grid-template-areas:"t h b" "t a b" "t m m";row-gap:2px;gap:8px;align-items:center;padding:9px 10px;border-top:1px solid var(--rule);cursor:pointer;text-align:left;background:transparent;color:inherit;font:inherit;width:100%}
   .row:first-child{border-top:0} .row:hover{background:var(--paper)} .row.on{box-shadow:inset 3px 0 0 var(--rec)}
-  .row .time{font-family:var(--mono);font-size:12px;color:var(--grey)}
-  .row .tm{font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis} .row .tm.r{text-align:right}
+  .row .time{font-family:var(--mono);font-size:11.5px;color:var(--grey);grid-area:t}
+  .row .tm{grid-area:h} .row .tm.r{grid-area:a} .row .mk{grid-area:m;max-width:220px} .row .badges{grid-area:b;max-width:110px;align-self:start}
+  .row .tm{font-weight:600;font-size:13.5px;line-height:1.25} .row .tm.r{text-align:left}
   .row .mk{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:12px}
   .row .badges{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;max-width:220px}
   .bd{font-size:10.5px;font-weight:600;padding:2px 7px;border-radius:999px;background:var(--paper);color:var(--ink2);border:1px solid var(--rule);white-space:nowrap}
@@ -103,10 +123,12 @@
   .err{color:var(--red)}
   .sec{font-size:12.5px;font-weight:600;color:var(--grey);margin:20px 0 8px}
   :focus-visible{outline:2px solid var(--rec);outline-offset:2px}
+  @media (max-width:900px){
+    .layout{grid-template-columns:1fr;gap:0} .left{position:static;max-height:none}
+    .layout.open .left{display:none} .layout:not(.open) .right{display:none} .back{display:inline-block}
+  }
   @media (max-width:720px){
     .grid{grid-template-columns:1fr}
-    .row{grid-template-columns:44px 1fr auto;grid-template-areas:"t h b" "t a b";row-gap:2px}
-    .row .time{grid-area:t} .row .tm{grid-area:h} .row .tm.r{grid-area:a;text-align:left} .row .mk{display:none} .row .badges{grid-area:b;max-width:120px}
     .mhead .tn{font-size:18px} .top .motto{display:none}
   }
   @media (prefers-reduced-motion:reduce){ *{scroll-behavior:auto!important;transition:none!important} }
@@ -115,20 +137,24 @@
 <body>
 <div class="top"><div class="in">
   <a class="brand" href="../">BRIER<span>Terminal</span></a>
-  <nav id="ligbar" aria-label="League"></nav>
+  <nav id="ligbar" aria-label="Sport and league"></nav>
   <div class="motto">the record, not the tip</div>
 </div></div>
-<div class="wrap">
-  <div class="days" id="days"></div>
-  <div class="chips" id="chips"></div>
-  <div id="list" class="board"><div class="empty">Loading the slate…</div></div>
-  <div class="pick">
-    <label for="selH">Or open any two teams</label>
-    <select id="selH"></select><span class="mono" style="color:var(--grey)">vs</span><select id="selA"></select>
-    <button class="btn" id="goBtn" type="button">Open the record</button>
-  </div>
-  <div id="detail"></div>
-  <div class="note" id="note"></div>
+<div class="wrap layout" id="layout">
+  <aside class="left">
+    <div class="daynav"><button type="button" id="dayPrev" aria-label="Previous day">‹</button><button type="button" id="dayLab" class="lab"></button><button type="button" id="dayNext" aria-label="Next day">›</button></div>
+    <div class="chips" id="chips"></div>
+    <div id="list" class="board"><div class="empty">Loading the slate…</div></div>
+    <div class="pick">
+      <label for="selH">Or open any two teams</label>
+      <select id="selH"></select><span class="mono" style="color:var(--grey)">vs</span><select id="selA"></select>
+      <button class="btn" id="goBtn" type="button">Open the record</button>
+    </div>
+    <div class="note" id="note"></div>
+  </aside>
+  <main class="right" id="right">
+    <div id="detail"><div class="empty tall">Pick a game on the left, or open any two teams. The record opens here.</div></div>
+  </main>
 </div>
 
 <script>
@@ -675,26 +701,38 @@ async function openRecord(hName,aName,whenIso,market,m){
   }
   if(GL&&GL.length){ const T=twins(h,a,ymd,hR,aR); cards.splice(0,0,cardTwins(h,a,T),cardMarket(h,a,ymd)); cards.splice(5,0,cardScript(h,a,ymd),cardATS(h,a,ymd,market)); }
   cards=cards.filter(Boolean);
-  const says=cardRecordSays(h,a,cards); if(says)cards.unshift(says);
-  const when=whenIso?new Date(whenIso).toLocaleString('en-GB',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'any date';
+  const says=cardRecordSays(h,a,cards);
+  const pick=(...names)=>cards.filter(c=>names.some(nm=>c.includes(`<div class="th">${nm}`)));
+  const TABS=[['overview','Overview',pick('Games like this','Market record')],['conditions','Conditions',pick('Conditions x-ray','Matchup x-ray')],
+              ['form','Form',pick('Rest','Back-to-back','Form','Leaders','Lineup','Availability','Home and away','Game script','Against the spread')],['last','Last meeting',pick('Last meeting')]].filter(t=>t[2].length);
+  const tab0=TABS.some(t=>t[0]===Q.get('tab'))?Q.get('tab'):TABS[0][0];
+  const when=whenIso?new Date(whenIso).toLocaleString('en-US',{timeZone:'America/New_York',weekday:'short',day:'numeric',month:'short',hour:'numeric',minute:'2-digit'})+' ET':'any date';
   const link=deepLink(h,a);
   const ph=market&&market.h!=null?Math.round(market.h*100):null, pa=market&&market.a!=null?Math.round(market.a*100):null;
   const mline=ph!=null?`<div class="mline"><b>${ph}%</b><div class="pbar"><i style="width:${ph}%"></i></div><b>${pa}%</b><span style="color:var(--grey)">market, consensus</span></div>`:'';
   const badges=m?badgesFor(m).map(b=>`<span class="bd ${b.cls}">${b.txt}</span>`).join(' '):'';
-  det.innerHTML=`<div class="mhead"><div class="teams"><div class="tn">${esc(h.ad)}<small>home</small></div><div class="vs">vs</div><div class="tn r">${esc(a.ad)}<small>away</small></div></div>${mline}
+  det.innerHTML=`<button class="back" type="button" id="backBtn">‹ All games</button><div class="mhead"><div class="teams"><div class="tn">${esc(h.ad)}<small>home</small></div><div class="vs">vs</div><div class="tn r">${esc(a.ad)}<small>away</small></div></div>${mline}
     <div class="meta"><span>${esc(LIGS[LIG].ad)}</span><span>${esc(when)}</span><span>record as of ${esc(ymd)}</span>${badges?`<span>${badges}</span>`:''}<button class="btn ghost share" type="button" id="shareBtn" data-link="${esc(link)}">Copy link</button></div></div>
-    <div class="grid">${cards.join('')}</div>`;
-  try{history.replaceState(null,'',link);}catch(e){}
+    ${says?`<div class="grid">${says}</div>`:''}
+    <div class="tabs" role="tablist">${TABS.map(t=>`<button type="button" role="tab" data-tab="${t[0]}" class="${t[0]===tab0?'on':''}">${t[1]}</button>`).join('')}</div>
+    ${TABS.map(t=>`<div class="pane ${t[0]===tab0?'on':''}" data-pane="${t[0]}"><div class="grid">${t[2].join('')}</div></div>`).join('')}`;
+  det.querySelectorAll('.tabs button').forEach(b=>b.addEventListener('click',()=>{det.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('on',x===b));det.querySelectorAll('.pane').forEach(p=>p.classList.toggle('on',p.dataset.pane===b.dataset.tab));try{const u=new URL(location.href);u.searchParams.set('tab',b.dataset.tab);history.replaceState(null,'',u.toString());}catch(e){}}));
+  document.getElementById('layout').classList.add('open');
+  const bk=document.getElementById('backBtn'); if(bk)bk.addEventListener('click',()=>{document.getElementById('layout').classList.remove('open');window.scrollTo({top:0});});
+  try{const u=new URL(link);u.searchParams.set('tab',tab0);history.replaceState(null,'',u.toString());}catch(e){}
   const sb=document.getElementById('shareBtn'); if(sb)sb.addEventListener('click',()=>{try{navigator.clipboard.writeText(sb.dataset.link);sb.textContent='Copied';setTimeout(()=>sb.textContent='Copy link',1500);}catch(e){}});
-  window.scrollTo({top:det.offsetTop-10,behavior:'smooth'});
+  if(window.innerWidth<=900)window.scrollTo({top:0});
 }
 const dayLabel=(ymd)=>{ const today=new Date().toLocaleDateString('en-CA',{timeZone:'America/New_York'}); const d=daysBetween(today,ymd);
   const txt=new Date(ymd+'T12:00:00Z').toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'}); return d===0?`Today<small>${txt}</small>`:(d===1?`Tomorrow<small>${txt}</small>`:txt); };
 function renderBoard(){
-  const box=document.getElementById('list'), daysEl=document.getElementById('days'), chipsEl=document.getElementById('chips');
+  const box=document.getElementById('list'), chipsEl=document.getElementById('chips');
   const days=[...new Set(TONIGHT.map(m=>m.day))].sort(); if(!days.includes(DAY))DAY=days[0];
-  daysEl.innerHTML=days.map(d=>`<button type="button" data-d="${d}" class="${d===DAY?'on':''}">${dayLabel(d)}</button>`).join('');
-  daysEl.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{DAY=b.dataset.d;renderBoard();}));
+  const i=days.indexOf(DAY);
+  document.getElementById('dayLab').innerHTML=dayLabel(DAY);
+  const prev=document.getElementById('dayPrev'), next=document.getElementById('dayNext'); prev.disabled=i<=0; next.disabled=i>=days.length-1;
+  prev.onclick=()=>{if(i>0){DAY=days[i-1];renderBoard();}}; next.onclick=()=>{if(i<days.length-1){DAY=days[i+1];renderBoard();}};
+  document.getElementById('dayLab').onclick=()=>{const t=new Date().toLocaleDateString('en-CA',{timeZone:'America/New_York'}); if(days.includes(t)){DAY=t;renderBoard();}};
   const dayGames=TONIGHT.filter(m=>m.day===DAY);
   const counts={}; dayGames.forEach(m=>m.badges.forEach(b=>{counts[b.k]=(counts[b.k]||0)+1;}));
   chipsEl.innerHTML=Object.entries(CHIP_LAB).filter(([k])=>counts[k]).map(([k,l])=>`<button type="button" class="chip ${CHIP===k?'on':''}" data-k="${k}">${l}<span class="n">${counts[k]}</span></button>`).join('');
@@ -704,7 +742,7 @@ function renderBoard(){
   box.innerHTML=rows.map(m=>{const ph=m.p&&m.p.h!=null?Math.round(m.p.h*100):null, pa=m.p&&m.p.a!=null?Math.round(m.p.a*100):null;
     const mk=ph!=null?`<div class="mk"><span>${ph}</span><div class="pbar"><i style="width:${ph}%"></i></div><span>${pa}</span></div>`:'<div class="mk"></div>';
     const bd=m.badges.map(b=>`<span class="bd ${b.cls}">${b.txt}</span>`).join('');
-    return `<button class="row" type="button" data-i="${m.i}"><span class="time">${new Date(m.t).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})}${m.key.includes('preseason')?'<br>pre':''}</span><span class="tm">${esc(m.h)}</span>${mk}<span class="tm r">${esc(m.a)}</span><span class="badges">${bd}</span></button>`;}).join('');
+    return `<button class="row" type="button" data-i="${m.i}"><span class="time">${new Date(m.t).toLocaleTimeString('en-US',{timeZone:'America/New_York',hour:'numeric',minute:'2-digit'}).replace(' ','')}${m.key.includes('preseason')?'<br>pre':''}</span><span class="tm">${esc(m.h)}</span>${mk}<span class="tm r">${esc(m.a)}</span><span class="badges">${bd}</span></button>`;}).join('');
   box.querySelectorAll('.row').forEach(b=>b.addEventListener('click',()=>{box.querySelectorAll('.row').forEach(x=>x.classList.remove('on'));b.classList.add('on');const m=TONIGHT[+b.dataset.i];openRecord(m.h,m.a,m.t,m.p,m);}));
 }
 async function loadTonight(){
@@ -714,10 +752,11 @@ async function loadTonight(){
     const blocks=Object.values(b.ligler||{}).filter(x=>LIGS[LIG].feed.test(x.key||''));
     TONIGHT=blocks.flatMap(x=>(x.maclar||[]).map(m=>({...m,key:x.key,day:usDate(m.t)})));
     TONIGHT.sort((x,y)=>String(x.t).localeCompare(String(y.t))); TONIGHT.forEach((m,i)=>{m.i=i;m.badges=[];});
-    if(!TONIGHT.length){box.innerHTML=`<div class="empty">No ${esc(LIGS[LIG].ad)} games in the feed right now — open any two teams below.</div>`;document.getElementById('days').innerHTML='';return;}
+    if(!TONIGHT.length){box.innerHTML=`<div class="empty">No ${esc(LIGS[LIG].ad)} games in the feed right now — open any two teams below.</div>`;document.getElementById('dayLab').textContent='No games';return;}
     renderBoard();
     await Promise.all([gamesList(),oddsHist()]);
     TONIGHT.forEach(m=>{ try{m.badges=badgesFor(m);}catch(e){m.badges=[];} }); renderBoard();
+    if(window.innerWidth>900&&!Q.get('h')){ const first=TONIGHT.find(m=>m.day===DAY); if(first){const r=document.querySelector('.row'); if(r)r.classList.add('on'); openRecord(first.h,first.a,first.t,first.p,first);} }   // masaustunde ilk mac acik gelsin
   }catch(e){box.innerHTML=`<div class="empty">The slate feed is unreachable — open any two teams below.</div>`;}
 }
 // yeni sema index'i NBA semasina normalize et: tier etiketi -> high/low/mid ; esik yoksa mid
@@ -733,13 +772,18 @@ function normalizeIdx(I){
   const junk=/all-star|^afc$|^nfc$|^team |^brazil$|^national$|^american$/i;
   I.teams=(I.teams||[]).filter(t=>!junk.test(t.ad)).map(t=>({...t,kisa:LIG==='ncaaf'?t.ad:(KISA[t.ad.toLowerCase()]||t.ad.split(' ').pop())}));
 }
+const SPORTS=[['Basketball',['nba','wnba']],['Football',['nfl','ncaaf']],['Baseball',['mlb']],['Soccer',null]];
 function renderLigbar(){
-  document.getElementById('ligbar').innerHTML=Object.entries(LIGS).map(([k,v])=>`<button type="button" data-lig="${k}" class="${k===LIG?'on':''}">${v.ad}</button>`).join('');
-  document.querySelectorAll('#ligbar button').forEach(b=>b.addEventListener('click',()=>{const u=new URL(location.href);u.search='';u.searchParams.set('lig',b.dataset.lig);location.href=u.toString();}));
+  document.getElementById('ligbar').innerHTML=SPORTS.map(([ad,ligs])=>{
+    const on=ligs&&ligs.includes(LIG);
+    const dd=ligs?ligs.map(k=>`<button type="button" data-lig="${k}" class="${k===LIG?'cur':''}">${LIGS[k].ad}</button>`).join(''):`<a href="../app/">35 leagues — open the app</a>`;
+    return `<div class="sp ${on?'on':''}"><button type="button">${ad}${on?' · '+LIGS[LIG].ad:''}</button><div class="dd">${dd}</div></div>`;}).join('');
+  document.querySelectorAll('#ligbar .dd button').forEach(b=>b.addEventListener('click',()=>{const u=new URL(location.href);u.search='';u.searchParams.set('lig',b.dataset.lig);location.href=u.toString();}));
+  document.querySelectorAll('#ligbar .sp>button').forEach(b=>b.addEventListener('click',()=>{const first=b.parentElement.querySelector('.dd button'); if(first&&!b.parentElement.classList.contains('on'))first.click();}));
 }
 async function boot(){
   renderLigbar();
-  document.getElementById('note').textContent=LIGS[LIG].note+' Odds history builds daily from the archive. Direction, not advice. Build T7.';
+  document.getElementById('note').textContent=LIGS[LIG].note+' Odds history builds daily from the archive. Direction, not advice. Build T8.';
   document.title=`Brier Terminal — ${LIGS[LIG].ad}`;
   try{
     const r=await fetch(DATA+'index.json',{cache:'no-store'}); IDX=await r.json(); normalizeIdx(IDX);
