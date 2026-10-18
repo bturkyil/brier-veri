@@ -1,0 +1,20 @@
+name: Daily tweet drafts
+on:
+  schedule:
+    - cron: '0 11 * * *'   # 11:00 UTC = 14:00 Istanbul, gunun slate'i olustuktan sonra
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  draft:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - name: Draft tweets from the terminal engine
+        run: node scripts/tweets.js
+      - name: Commit
+        run: |
+          git config user.name "brier-bot"; git config user.email "bot@brierrecord.com"
+          git add tweets/ && (git commit -m "tweets: $(date -u +%F)" && git push) || echo "nothing to commit"
