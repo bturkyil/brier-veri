@@ -1,1 +1,2284 @@
-x
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brier — the record, not the tip</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0E7C6B">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Brier">
+<link rel="apple-touch-icon" href="../icon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="../icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F2F5F4; --ink:#16211F; --rule:#D7DEDC; --rule-dark:#B9C4C1;
+    --teal:#0E7C6B; --teal-soft:#E3EFEC; --gold:#9A751F; --grey:#5C6B68;
+    --red:#A6432E; --red-soft:#F4E6E2;
+  }
+  *{box-sizing:border-box}
+  @media (prefers-reduced-motion: reduce){ *{transition:none!important} }
+  body{margin:0;background:var(--paper);color:var(--ink);
+       font-family:'Archivo',sans-serif;-webkit-font-smoothing:antialiased}
+  .mono{font-family:'IBM Plex Mono',monospace;font-variant-numeric:tabular-nums}
+  button{font-family:inherit;cursor:pointer;color:inherit;-webkit-appearance:none;appearance:none}
+  :focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+  .wrap{max-width:640px;margin:0 auto;min-height:100vh}
+
+  header{background:var(--ink);color:#fff;padding:16px 20px;
+         display:flex;align-items:baseline;justify-content:space-between}
+  header h1{margin:0;font-size:17px;font-weight:800;letter-spacing:.4px}
+  header .sub{font-size:10px;color:#9fb4b0;font-family:'IBM Plex Mono',monospace;letter-spacing:.5px}
+  .aramaKutu{position:relative;margin:0 20px 10px;display:flex;align-items:center}
+  .aramaIkon{position:absolute;left:12px;font-size:16px;color:var(--grey);pointer-events:none}
+  .aramaInput{width:100%;padding:10px 34px 10px 34px;font-size:14px;font-family:inherit;
+    border:1px solid var(--rule-dark);border-radius:6px;background:#fff;color:var(--ink)}
+  .aramaInput:focus{outline:none;border-color:var(--teal)}
+  .aramaInput::placeholder{color:var(--grey)}
+  .aramaTemizle{position:absolute;right:8px;width:24px;height:24px;border:0;background:none;
+    font-size:18px;color:var(--grey);cursor:pointer;padding:0;line-height:1}
+  .feedline{background:#fff;border-bottom:1px solid var(--rule);padding:6px 20px;
+            font-size:10px;color:var(--grey);font-family:'IBM Plex Mono',monospace}
+  .feedline.err{background:var(--red-soft);color:var(--red)}
+
+  .selrow{display:flex;gap:8px;padding:12px 20px 4px}
+  .selwrap{position:relative;flex:0 1 auto}
+  .selwrap::after{content:'▾';position:absolute;right:10px;top:50%;transform:translateY(-50%);
+    pointer-events:none;color:var(--grey);font-size:11px}
+  select.sel{appearance:none;-webkit-appearance:none;border:1px solid var(--rule-dark);
+    background:#fff;border-radius:2px;padding:9px 28px 9px 12px;font-size:12px;font-weight:700;
+    color:var(--ink);font-family:'Archivo',sans-serif;max-width:52vw}
+  /* chips */
+  .chips{display:flex;gap:8px;overflow-x:auto;padding:12px 20px 4px;scrollbar-width:none}
+  .chips::-webkit-scrollbar{display:none}
+  .chip{border:1px solid var(--rule-dark);background:#fff;border-radius:2px;
+        padding:6px 12px;font-size:11px;font-weight:700;color:var(--grey);white-space:nowrap}
+  .chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .chip .n{margin-left:5px;opacity:.5;font-weight:600;font-size:10px}
+
+  .list-head{padding:12px 20px 4px;display:flex;justify-content:space-between;align-items:baseline}
+  .list-head .t{font-size:13px;font-weight:800;letter-spacing:.5px;text-transform:uppercase}
+  .list-head .d{font-size:11px;color:var(--grey);font-family:'IBM Plex Mono',monospace}
+  .list-note{padding:0 20px 10px;font-size:11px;color:var(--grey);line-height:1.5}
+
+  .hour{padding:7px 20px;font-size:10px;color:var(--grey);
+        font-family:'IBM Plex Mono',monospace;letter-spacing:1px;border-bottom:1px solid var(--rule)}
+  .mrow{width:100%;text-align:left;background:#fff;border:0;border-bottom:1px solid var(--rule);
+        padding:13px 20px;display:flex;align-items:center;gap:14px;transition:background .12s}
+  .mrow:hover{background:var(--teal-soft)}
+  .mrow{color:var(--ink)}
+  .mrow .time{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;min-width:46px}
+  .mrow .mid{flex:1;min-width:0}
+  .mrow .comp{font-size:10px;color:var(--grey);text-transform:uppercase;letter-spacing:.7px;font-weight:600}
+  .mrow .teams{font-size:15px;font-weight:700;margin-top:2px;display:block}
+  .mrow .arr{color:var(--rule-dark);font-size:16px}
+  .ligsec{width:100%;display:flex;justify-content:space-between;align-items:center;
+    padding:13px 20px;background:#fff;border:0;border-bottom:1px solid var(--rule);
+    font-weight:800;font-size:13px;letter-spacing:.2px;color:var(--ink)}
+  .ligsec .cnt{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--grey);font-weight:600}
+  .ligsec .cev{margin-left:6px;color:var(--rule-dark)}
+  .mrow .odds{display:block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;
+    color:var(--grey);margin-top:3px;letter-spacing:.3px}
+  .mrow .odds b{color:var(--ink);font-weight:600}
+  .ligkarne{padding:10px 20px;font-size:11.5px;color:var(--grey);line-height:1.55;
+    border-bottom:1px solid var(--rule);background:#FBFCFC}
+  .ligkarne b{color:var(--ink)}
+  .lens{display:inline-block;margin:10px 20px 0;padding:5px 12px;font-size:11px;font-weight:600;
+    letter-spacing:.4px;color:var(--grey);background:none;border:1px solid var(--rule-dark);
+    border-radius:14px;cursor:pointer}
+  .lens.on{color:var(--teal);border-color:var(--teal)}
+  .splitTag{font-family:'IBM Plex Mono',monospace;font-size:9.5px;font-weight:600;color:var(--gold);
+    border:1px solid var(--gold);border-radius:8px;padding:1px 5px;margin-left:6px;
+    letter-spacing:.4px;vertical-align:1px;white-space:nowrap}
+  .bolgeRozet{margin-left:10px;flex:none;background:none;border:1px solid rgba(255,255,255,.35);
+    color:#fff;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.6px;padding:4px 8px;border-radius:2px;cursor:pointer}
+  .ham{background:none;border:0;color:#fff;font-size:19px;padding:0 12px 0 0;cursor:pointer;line-height:1}
+  .perde{position:fixed;inset:0;background:rgba(22,33,31,.45);z-index:40}
+  .cekmece{position:fixed;top:0;left:0;bottom:0;width:78%;max-width:320px;background:var(--paper);
+    z-index:41;overflow-y:auto;border-right:1px solid var(--rule-dark);padding-bottom:30px}
+  .cek-baslik{padding:18px 16px 10px;font-size:11px;font-weight:700;letter-spacing:.6px;color:var(--grey)}
+  .cek-grup{display:block;width:100%;text-align:left;padding:12px 16px;background:none;border:0;
+    border-top:1px solid var(--rule);font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;color:var(--ink)}
+  .cek-lig{display:block;width:100%;text-align:left;padding:10px 16px 10px 28px;background:none;border:0;
+    font-size:12.5px;cursor:pointer;font-family:inherit;color:var(--ink)}
+  .cek-lig .ark{color:var(--teal);font-size:11px;margin-left:6px}
+  .cek-lig .n{color:var(--grey);font-family:'IBM Plex Mono',monospace;font-size:10px;margin-left:6px}
+  .gunbas{padding:14px 20px 6px;font-size:10.5px;font-weight:700;letter-spacing:.6px;color:var(--grey);
+    font-family:'IBM Plex Mono',monospace;border-bottom:1px solid var(--rule)}
+  .rotd{background:var(--ink);color:#fff;margin:12px 16px 2px;padding:14px 16px;border-radius:2px}
+  .rotd .lbl{font-size:9px;letter-spacing:1.5px;color:#8fa8a3;font-family:'IBM Plex Mono',monospace;text-transform:uppercase}
+  .rotd .txt{font-size:14.5px;line-height:1.5;margin-top:6px;font-weight:600}
+  .rotd .txt b{color:#7FD1C1;font-weight:800}
+  .rotd .sig{font-size:9.5px;color:#8fa8a3;font-family:'IBM Plex Mono',monospace;margin-top:8px;letter-spacing:.5px}
+  .manifesto{background:var(--teal-soft);border:1px solid var(--rule);margin:10px 16px 2px;
+    padding:12px 36px 12px 14px;font-size:12px;line-height:1.55;position:relative;border-radius:2px}
+  .manifesto b{font-weight:800}
+  .manifesto .mx{position:absolute;top:4px;right:6px;border:0;background:none;font-size:18px;
+    color:var(--grey);padding:4px 8px}
+  .morehint,.empty{padding:18px 20px;font-size:12px;color:var(--grey);text-align:center;line-height:1.5}
+
+  .back{background:none;border:0;color:var(--teal);font-size:12px;font-weight:700;
+        padding:14px 20px 0;letter-spacing:.3px}
+  .dhead{padding:10px 20px 16px;border-bottom:1px solid var(--rule)}
+  .dhead .comp{font-size:10px;color:var(--grey);text-transform:uppercase;letter-spacing:.8px;font-weight:600}
+  .dhead .teams{font-size:21px;font-weight:800;margin-top:4px;line-height:1.25}
+  .dhead .when{font-size:12px;color:var(--grey);margin-top:4px;font-family:'IBM Plex Mono',monospace}
+
+  .card{background:#fff;border:1px solid var(--rule);border-radius:2px;margin:14px 16px;overflow:hidden}
+  .card .head{padding:11px 16px;border-bottom:1px solid var(--rule);
+              display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+  .card .head .t{font-size:13px;font-weight:800}
+  .card .head .k{font-size:9px;color:var(--grey);text-transform:uppercase;letter-spacing:.8px;
+                 font-family:'IBM Plex Mono',monospace;text-align:right}
+  .card .foot{padding:9px 16px;border-top:1px solid var(--rule);
+              font-size:10.5px;color:var(--grey);line-height:1.5;background:#FBFCFC}
+  .arsiv .foot{padding:9px 16px;border-top:1px solid var(--rule);
+              font-size:10.5px;color:var(--grey);line-height:1.5;background:#FBFCFC}
+
+  .orow{display:flex;align-items:center;padding:12px 16px;border-bottom:1px solid var(--rule)}
+  .orow:last-of-type{border-bottom:0}
+  .orow .sel{flex:1;font-size:14px;font-weight:600}
+  .orow .sel .tag{font-size:9px;color:var(--grey);font-weight:600;letter-spacing:.5px;
+                  text-transform:uppercase;display:block;margin-top:1px}
+  .orow .odd{font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:600}
+  .orow .book{font-size:9px;font-family:'IBM Plex Mono',monospace;letter-spacing:.5px;
+              min-width:72px;text-align:right;margin-left:12px;color:#9AA8A5;text-transform:lowercase}
+  details.more{border-top:1px solid var(--rule)}
+  details.more summary{padding:10px 16px;font-size:11px;color:var(--teal);font-weight:700;
+                       cursor:pointer;list-style:none;letter-spacing:.3px}
+  details.more summary::-webkit-details-marker{display:none}
+  details.more summary::before{content:"▸ "}
+  details.more[open] summary::before{content:"▾ "}
+  .minirow{display:flex;justify-content:space-between;padding:6px 16px;font-size:11px;
+           font-family:'IBM Plex Mono',monospace;color:var(--grey)}
+  .minirow .o{color:var(--ink);font-weight:600}
+  .minirow{align-items:center}
+  .mbtn{width:22px;height:22px;border-radius:11px;border:1px solid var(--rule-dark);background:#fff;color:var(--teal);
+    font-size:14px;line-height:20px;text-align:center;cursor:pointer;margin-left:8px;padding:0;flex:none;font-family:inherit}
+  .mbtn.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+  .mbtn:disabled{opacity:.35;cursor:default}
+  .secrow .skitapsec{font-size:10px;color:var(--teal);font-family:'IBM Plex Mono',monospace;margin-top:2px}
+
+  .xrow{display:flex;align-items:center;gap:10px;padding:8px 16px}
+  .xrow:first-of-type{padding-top:13px}
+  .xrow:last-of-type{padding-bottom:13px}
+  .xrow .bk{font-family:'IBM Plex Mono',monospace;font-size:11px;min-width:88px;text-transform:lowercase;
+            overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .xrow .bar{flex:1;height:8px;background:var(--teal-soft);border-radius:1px;overflow:hidden}
+  .xrow .bar i{display:block;height:100%;background:var(--teal)}
+  .xrow.widest .bar i{background:var(--red)}
+  .xrow.widest .bar{background:var(--red-soft)}
+  .xrow .pct{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;min-width:44px;text-align:right}
+  .xrow.leanest .pct{color:var(--teal)}
+  .xrow.widest .pct{color:var(--red)}
+  .xread{padding:11px 16px;border-top:1px solid var(--rule);font-size:12.5px;line-height:1.55}
+  .kartArti{color:var(--teal);font-weight:600}
+  .kartEksi{color:var(--red);font-weight:600}
+
+  .memrow{display:flex;align-items:center;padding:10px 16px;border-bottom:1px solid var(--rule);gap:10px}
+  .memrow:last-of-type{border-bottom:0}
+  .memrow .dt{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--grey);min-width:62px}
+  .memrow .fav{flex:1;font-size:12.5px}
+  .memrow .fav .pc{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--grey);display:block;margin-top:2px}
+  .memrow .tm{font-weight:600}
+  .memrow .tm.f{color:var(--teal);font-weight:700}
+  .memrow .imapct{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--teal);font-weight:600}
+  .memrow .sc{font-family:'IBM Plex Mono',monospace;font-weight:600;padding:0 3px}
+  .memrow .res{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;min-width:38px;text-align:center}
+  .memrow .hit{font-size:11px;min-width:20px;text-align:right}
+  .memrow .hit.y{color:var(--teal)} .memrow .hit.n{color:var(--red)}
+  .memempty{padding:20px 16px;font-size:12px;color:var(--grey);text-align:center;line-height:1.6}
+
+  footer{padding:26px 20px 34px;text-align:center}
+  footer .creed{font-size:12px;font-weight:700;letter-spacing:.4px}
+  footer .by{margin-top:6px;font-size:10px;color:var(--grey);font-family:'IBM Plex Mono',monospace}
+  .ledsek{display:flex;margin:12px 20px 0;border-bottom:1px solid var(--rule-dark)}
+  .ledsek button{flex:1;padding:10px 0;background:none;border:0;border-bottom:2px solid transparent;font-size:11px;
+    font-weight:700;letter-spacing:.7px;color:var(--grey);cursor:pointer;font-family:inherit}
+  .ledsek button.on{color:var(--ink);border-bottom-color:var(--ink)}
+  .ygun{padding:14px 20px 6px;font-size:11px;font-weight:700;letter-spacing:.6px;color:var(--grey);font-family:'IBM Plex Mono',monospace;border-bottom:1px solid var(--rule)}
+  .yozet{background:var(--ink);color:#fff;margin:0;padding:16px 20px}
+  .yozet .yb{font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:600}
+  .yozet .yl{font-size:9px;letter-spacing:.6px;color:#9AA8A5;font-weight:600;margin-top:8px}
+  .yozet .ys{font-size:13px;line-height:1.55;margin-top:4px}
+  .yozet .ys b{color:#fff}
+  .ykova{display:flex;gap:12px;padding:11px 20px;border-bottom:1px solid var(--rule);font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--grey)}
+  .ykova .yk{min-width:70px;font-weight:600;color:var(--ink)}
+  .ykova b{color:var(--ink)}
+  .ykova .yf{margin-left:auto;font-weight:600}
+  .ykova .yf.u{color:var(--teal)} .ykova .yf.o{color:var(--red)}
+  .yiska{padding:11px 20px;border-bottom:1px solid var(--rule);font-size:12px;color:var(--ink)}
+  .yiska b{font-weight:600}
+  .bulguF{display:flex;gap:6px;padding:10px 20px 4px;flex-wrap:wrap}
+  .bulguF button{padding:6px 12px;font-size:10.5px;font-weight:700;letter-spacing:.5px;border:1px solid var(--rule-dark);
+    background:#fff;color:var(--grey);border-radius:14px;cursor:pointer;font-family:inherit}
+  .bulguF button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .bulguNot{padding:2px 20px 8px;font-size:10.5px;color:var(--grey);font-family:'IBM Plex Mono',monospace;letter-spacing:.3px}
+  .arsiv{margin:14px 20px;background:#fff;border:1px solid var(--rule-dark)}
+  .arsiv .ah{padding:11px 16px;border-bottom:1px solid var(--rule);font-size:11px;font-weight:700;letter-spacing:.6px;color:var(--grey)}
+  .arsiv .ar{display:flex;align-items:baseline;gap:10px;padding:9px 16px;border-bottom:1px solid var(--rule);font-size:12px}
+  .arsiv .ar:last-of-type{border-bottom:0}
+  .arsiv .af{font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:600;min-width:52px}
+  .arsiv .af.under{color:var(--teal)} .arsiv .af.over{color:var(--red)}
+  .arsiv .ae{flex:1;font-weight:600}
+  .arsiv .ae small{display:block;font-weight:400;color:var(--grey);font-family:'IBM Plex Mono',monospace;font-size:10px;margin-top:2px}
+  .bk{display:flex;align-items:baseline;gap:12px}
+  .bk .bf{font-family:'IBM Plex Mono',monospace;font-size:26px;font-weight:600;white-space:nowrap}
+  .bk .bf.under{color:var(--teal)} .bk .bf.over{color:var(--red)}
+  .bk .be{flex:1;font-size:13px;font-weight:700}
+  .bk .bg{font-size:9px;font-family:'IBM Plex Mono',monospace;letter-spacing:.5px;padding:2px 7px;border-radius:9px;border:1px solid var(--rule-dark);color:var(--grey)}
+  .bk .bg.strong{color:var(--ink);border-color:var(--ink)}
+  .bs{display:flex;gap:14px;flex-wrap:wrap;margin-top:7px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--grey)}
+  .bs b{color:var(--ink);font-weight:600}
+  .bulgu .bm.kucuk{font-size:11.5px;color:var(--grey);margin-top:7px}
+  .bulgu{background:#fff;border-bottom:1px solid var(--rule);padding:13px 20px}
+  .bulgu .bm{font-size:14px;line-height:1.5;color:var(--ink)}
+  .bulgu .bm b{font-weight:600}
+  .bulgu .bt{font-size:10px;font-family:'IBM Plex Mono',monospace;color:var(--grey);margin-top:5px;letter-spacing:.4px}
+  .ledrow{width:100%;text-align:left;background:#fff;border:0;border-bottom:1px solid var(--rule);
+    padding:13px 20px;display:flex;align-items:baseline;gap:10px;cursor:pointer;font-family:inherit;color:var(--ink)}
+  .ledrow .lad{flex:1;font-size:14px;font-weight:700}
+  .ledrow .lyil{font-size:10px;color:var(--grey);font-family:'IBM Plex Mono',monospace;display:block;margin-top:2px;font-weight:400}
+  .lyld{font-size:16px;color:var(--rule-dark);padding-right:4px;line-height:1}
+  .lyld.on{color:var(--gold)}
+  .ledrow .lkar{font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600;white-space:nowrap}
+  .leddet{background:#fff;border-bottom:1px solid var(--rule);padding:4px 20px 12px}
+  .leddet table{width:100%;border-collapse:collapse;font-family:'IBM Plex Mono',monospace;font-size:10.5px}
+  .leddet th{text-align:left;color:var(--grey);font-weight:600;padding:5px 6px 3px 0;letter-spacing:.4px}
+  .leddet td{padding:3px 6px 3px 0;border-top:1px solid var(--rule)}
+  .leddet tr.yilbasi td{border-top:2px solid var(--rule-dark);padding-top:6px}
+  .ledok{color:var(--rule-dark);font-size:12px;padding-left:6px}
+  .ledgernot{font-size:11px;color:var(--grey);line-height:1.55;padding:10px 4px 2px;border-top:1px solid var(--rule);margin-top:6px}
+  .ledgernot b{color:var(--ink);font-weight:600}
+  .ledipucu{padding:10px 20px 4px;font-size:10.5px;color:var(--grey);font-family:'IBM Plex Mono',monospace;letter-spacing:.4px}
+  .foot b{color:var(--ink);font-weight:600}
+  .pill{display:flex;align-items:baseline;padding:9px 16px;border-bottom:1px solid var(--rule);font-size:13px}
+  .pill:last-of-type{border-bottom:0}
+  .pill .pad{flex:1;font-weight:600;color:var(--ink)}
+  .pill .pv{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--grey);white-space:nowrap}
+  .pill .pv b{color:var(--ink);font-weight:600}
+  .secbtn{width:26px;height:26px;border-radius:13px;border:1px solid var(--rule-dark);background:#fff;
+    color:var(--teal);font-size:16px;line-height:24px;text-align:center;cursor:pointer;margin-left:10px;
+    font-family:inherit;padding:0;flex:none}
+  .secbtn.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+  .secbtn:disabled{opacity:.35;cursor:default}
+  .serit{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--ink);color:#fff;
+    padding:12px 20px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;
+    font-size:13px;box-shadow:0 -4px 16px rgba(22,33,31,.25)}
+  .serit .sn{font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600}
+  .serit .sok{color:var(--teal);font-weight:700}
+  .secrow{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--rule);background:#fff}
+  .secrow .smid{flex:1;min-width:0}
+  .secrow .sad{font-size:14px;font-weight:700}
+  .secrow .smac{font-size:11px;color:var(--grey);margin-top:2px}
+  .secrow .sfiyat{font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:600;white-space:nowrap}
+  .secrow .skitap{font-size:9px;font-family:'IBM Plex Mono',monospace;color:var(--grey);text-align:right}
+  .secrow .sil{background:none;border:0;color:var(--grey);font-size:18px;cursor:pointer;padding:0 4px}
+  .secozet{background:var(--teal-soft);border:1px solid var(--rule-dark);margin:14px 20px;padding:14px 16px}
+  .secozet .buyuk{font-family:'IBM Plex Mono',monospace;font-size:30px;font-weight:600;color:var(--ink)}
+  .secozet .kucuk{font-size:12px;color:var(--grey);margin-top:6px;line-height:1.5}
+  .secozet .kucuk b{color:var(--ink)}
+  .ayna{background:var(--ink);color:#fff;margin:14px 20px 0;padding:14px 16px}
+  .ayna .ab{font-size:10px;letter-spacing:.7px;color:#9AA8A5;font-weight:600}
+  .ayna .as{font-size:14px;line-height:1.55;margin-top:6px}
+  .ayna .as b{color:#fff}
+  .ayna .an{font-size:11px;color:#9AA8A5;margin-top:8px}
+  .secrow.gecmis{opacity:.85}
+  .secrow .sdurum{font-family:'IBM Plex Mono',monospace;font-size:11px;margin-top:3px}
+  .secrow .sdurum b{font-weight:600}
+  .secrow .kaz{color:var(--teal)} .secrow .kayip{color:var(--red)} .secrow .bekle{color:var(--grey)}
+  .uzak{display:block;font-size:9px;font-family:'IBM Plex Mono',monospace;color:var(--gold);margin-top:2px;white-space:nowrap}
+  .bolge{display:flex;gap:6px;padding:8px 16px 12px;border-top:1px solid var(--rule)}
+  .bolge button{flex:1;padding:7px 0;font-size:11px;font-weight:600;letter-spacing:.4px;border:1px solid var(--rule-dark);
+    background:#fff;color:var(--grey);border-radius:2px;cursor:pointer;font-family:inherit}
+  .bolge button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .bolgebas{padding:12px 16px 2px;font-size:10px;letter-spacing:.6px;color:var(--grey);font-weight:700}
+  .secuyari.kirmizi{border-left-color:var(--red)}
+  .secuyari{margin:0 20px 10px;padding:10px 14px;border-left:3px solid var(--gold);background:#fff;font-size:12px;color:var(--ink);line-height:1.5}
+  .tgol{margin:14px 20px 0;background:#fff;border:1px solid var(--rule-dark);padding:12px 16px}
+  .tgol .th{font-size:11px;font-weight:700;letter-spacing:.6px;color:var(--grey)}
+  .tgol .tbaslik{font-size:15px;font-weight:600;margin-top:6px;color:var(--ink)}
+  .tgol .tbaslik.hot{color:var(--red)} .tgol .tbaslik.cold{color:var(--teal)}
+  .tgol .ts{font-size:13px;line-height:1.55;margin-top:5px;color:var(--ink)}
+  .tgol .ts b{font-weight:600}
+  .tgol .tf{font-size:10.5px;color:var(--grey);margin-top:7px;padding-top:7px;border-top:1px solid var(--rule);font-family:'IBM Plex Mono',monospace}
+  /* RECORD sekmeleri — macin en ustunde; gorunum .chip ile ayni dil */
+  .rec{margin:14px 20px 0}
+  .rtabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+  .rtab{border:1px solid var(--rule-dark);background:#fff;border-radius:2px;padding:6px 11px;font-size:10.5px;font-weight:700;letter-spacing:.5px;color:var(--grey);cursor:pointer;font-family:inherit;white-space:nowrap}
+  .rtab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .rpane{display:none} .rpane.on{display:block}
+  .rec .tgol{margin:0}
+  /* tek satir verisel yorum: mesaj gri, rakam mono/koyu */
+  .rins{color:var(--grey);font-size:.82em;margin-top:6px;line-height:1.5}
+  .rnum{font-family:'IBM Plex Mono',monospace;color:var(--ink);font-weight:600;margin-left:4px}
+  .hareket{margin:14px 20px 0;background:#fff;border:1px solid var(--rule-dark);padding:12px 16px}
+  .hareket .hh{font-size:11px;font-weight:700;letter-spacing:.6px;color:var(--grey)}
+  .hareket .hs{font-size:12.5px;line-height:1.55;margin-top:6px;color:var(--ink)}
+  .hareket .hs b{font-weight:600}
+  .hareket .hd{font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:600;margin-top:4px}
+  .hareket .hd.up{color:var(--teal)} .hareket .hd.down{color:var(--red)}
+  .hpar{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--grey);margin-top:8px;padding-top:8px;border-top:1px solid var(--rule)}
+  .hidden{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <button class="ham" onclick="menuAc()" aria-label="menu">☰</button>
+    <h1>BRIER</h1>
+    <span class="sub">the record, not the tip</span>
+    <button id="bolgeRozet" class="bolgeRozet" onclick="bolgeDondur()" title="my region">ALL</button>
+  </header>
+  <div id="feedline" class="feedline">connecting to live feed…</div>
+  <div class="aramaKutu">
+    <span class="aramaIkon">⌕</span>
+    <input id="aramaInput" class="aramaInput" type="text" placeholder="search a team or league" oninput="aramaGir(this.value)" autocomplete="off">
+    <button id="aramaTemizle" class="aramaTemizle" onclick="aramaTemizleAll()" style="display:none">×</button>
+  </div>
+
+  <div id="secSerit" class="serit hidden" onclick="showSecimler()"></div>
+  <div id="perde" class="perde hidden" onclick="menuKapat()"></div>
+  <nav id="cekmece" class="cekmece hidden">
+    <div class="cek-baslik">SPORTS &amp; LEAGUES</div>
+    <div id="cekIc"></div>
+  </nav>
+
+  <div id="view-list">
+    <div class="selrow">
+      <span class="selwrap"><select class="sel" id="gunSel" onchange="gunSecim(this.value)"></select></span>
+      <span class="selwrap"><select class="sel" id="sporSel" onchange="sporSecim(this.value)"></select></span>
+    </div>
+    <button id="mercek" class="lens" onclick="mercekTgl()">70%+ favourites</button>
+    <button id="splens" class="lens" onclick="splitTgl()">◇ books disagree</button>
+    <button id="bulens" class="lens" onclick="bulguTgl()">◆ the record</button>
+    <button id="movlens" class="lens" onclick="movTgl()">◈ line moved</button>
+    <div id="rotd" class="rotd hidden"></div>
+    <div id="manifesto" class="manifesto hidden">
+      <button class="mx" onclick="kapatManifesto()" aria-label="close">×</button>
+      <b>Brier doesn't pick winners.</b> It strips the bookmaker's margin out of every price,
+      shows the market's true probabilities — and keeps the record of how often the market got it right.
+    </div>
+    <div class="list-head">
+      <span class="t" id="gunBaslik">Today</span>
+      <span class="d mono" id="today"></span>
+    </div>
+    <p class="list-note">Leagues A–Z, games by kickoff time — never ordered by odds, probability, or commission.</p>
+    <div id="listBody"><div class="empty">Loading today's games…</div></div>
+    <footer>
+      <div class="creed">No picks. No tips. Just the record.</div>
+      <div class="by">brier · by BT · build A87 (PWA)</div>
+    </footer>
+  </div>
+
+  <div id="view-sec" class="hidden">
+    <button class="back" onclick="showList()">‹ Back</button>
+    <div class="dhead"><div class="dlig">MY SELECTIONS</div>
+      <div class="dteams">Line shopping</div></div>
+    <div id="secBody"></div>
+  </div>
+
+  <div id="view-ledger" class="hidden">
+    <button class="back" onclick="showList()">‹ Back</button>
+    <div class="dhead"><div class="dlig">SEASON RECORDS</div>
+      <div class="dteams">The Ledger</div></div>
+    <div class="ledsek"><button id="sekL" class="on" onclick="ledSekme('l')">LEAGUES</button><button id="sekF" onclick="ledSekme('f')">THE RECORD</button><button id="sekY" onclick="ledSekme('y')">YESTERDAY</button></div>
+    <div id="ledgerNot" class="ligkarne">Flat $100 on the consensus favourite, settled at the best closing price.
+      What each season actually paid — not a plan for the next one.</div>
+    <div id="ledgerBody"></div>
+  </div>
+
+  <div id="view-detail" class="hidden">
+    <button class="back" onclick="showList()">‹ Back</button>
+    <div id="detailBody"></div>
+    <footer>
+      <div class="creed">No picks. No tips. Just the record.</div>
+      <div class="by">brier · by BT · build A87 (PWA)</div>
+    </footer>
+  </div>
+</div>
+
+<script>
+const HOST   = 'https://worker-production-a1ba.up.railway.app';
+const MEMORY = '../';   // app/ altinda: veri dosyalari kok dizinde
+
+// live sport key -> memory file league name
+const LIG_ESLE = {
+  soccer_epl:'epl', soccer_spain_la_liga:'laliga', soccer_italy_serie_a:'seriea',
+  soccer_germany_bundesliga:'bundesliga', soccer_germany_bundesliga2:'bundes2',
+  soccer_france_ligue_one:'ligue1', soccer_france_ligue_two:'ligue2',
+  soccer_turkey_super_league:'turkiye', soccer_portugal_primeira_liga:'portekiz',
+  soccer_netherlands_eredivisie:'eredivisie', soccer_belgium_first_div:'belcika', soccer_belgium_first_division:'belcika', soccer_belgium_first_devision:'belcika', soccer_belgium_pro_league:'belcika',
+  soccer_spl:'iskocya', soccer_greece_super_league:'yunanistan',
+  soccer_austria_bundesliga:'avusturya', soccer_switzerland_superleague:'isvicre',
+  soccer_denmark_superliga:'danimarka', soccer_sweden_allsvenskan:'isvec',
+  soccer_norway_eliteserien:'norvec', soccer_japan_j_league:'japonya',
+  soccer_brazil_campeonato:'brezilya',
+  soccer_brazil_serie_b:'brezilya2', soccer_china_superleague:'superleague', soccer_argentina_primera_division:'arjantin',
+  soccer_mexico_ligamx:'meksika', soccer_usa_mls:'mls', soccer_australia_aleague:'aleague',
+  soccer_efl_champ:'champ', soccer_england_league1:'efl1', soccer_england_league2:'efl2',
+  soccer_spain_segunda_division:'segunda', soccer_italy_serie_b:'serieb',
+  soccer_uefa_champs_league:'ucl', soccer_uefa_europa_league:'uel',
+  soccer_conmebol_copa_libertadores:'libertadores', soccer_conmebol_copa_sudamericana:'sudamericana',
+  americanfootball_nfl:'nfl', americanfootball_ncaaf:'ncaaf',
+  basketball_nba:'nba', basketball_nba_preseason:'nba', basketball_wnba:'wnba', basketball_ncaab:'ncaab',
+  baseball_mlb:'mlb', icehockey_nhl:'nhl', aussierules_afl:'afl',
+  basketball_euroleague:'euroleague', americanfootball_cfl:'cfl',
+  soccer_finland_veikkausliiga:'veikkausliiga', soccer_poland_ekstraklasa:'ekstraklasa',
+  soccer_league_of_ireland:'ireland', soccer_korea_kleague1:'kleague1',
+  soccer_sweden_superettan:'superettan',
+  soccer_ireland_premier_division:'ireland', soccer_germany_liga3:'liga3',
+};
+function ligBul(k){return LIG_ESLE[k]||(String(k).indexOf('tennis_')===0?'tenis':null);}
+
+// Takim adinin ilk kelimesi — GLOBAL (recordInsight global kapsamda bunu cagirir;
+// A75-A82 arasi sadece showDetail icinde tanimliydi -> ReferenceError, try/catch yutuyordu, yorumlar hic cikmadi)
+function ilkKelime(s){return String(s||'').split(' ')[0]||'';}
+
+// Her RECORD kartinin altina tek satir, VERISEL (rakamli) yorum: mesaj + "(+N% vs league)"
+function recordInsight(evAd, depAd, evVal, depVal, ligVal, tur){
+  if(evVal==null||depVal==null||ligVal==null)return '';
+  const e=ilkKelime(evAd), d=ilkKelime(depAd);
+  const evUst=evVal>ligVal, depUst=depVal>ligVal;
+  // verisel ek: mac ortalamasi vs lig (% sapma) — her yorum bir rakam tasisin
+  const macOrt=(Number(evVal)+Number(depVal))/2;
+  const yuz=ligVal>0?Math.round((macOrt-ligVal)/ligVal*100):0;
+  const rakam=(yuz>0?'+':'')+yuz+'% vs league';
+  let msg='';
+  if(evUst&&depUst){
+    if(tur==='card')msg='Both run hot — a card-heavy pairing.';
+    else if(tur==='corner')msg='Both above the line — a corner-heavy matchup.';
+    else if(tur==='rebound')msg='Both crash the glass — rebounds pile up here.';
+    else if(tur==='shot')msg='Both fire often — a high-volume game.';
+    else if(tur==='hits')msg='Both bats are live — hits should come.';
+    else if(tur==='yards')msg='Both move the ball — a high-yardage game.';
+    else if(tur==='score')msg='Both score above the league — a high-scoring pairing.';
+    else msg='Both sit above the league line.';
+  } else if(!evUst&&!depUst){
+    if(tur==='card')msg='A clean pairing — cards run low.';
+    else if(tur==='corner')msg='Both below the line — corners stay scarce.';
+    else if(tur==='rebound')msg='Neither dominates the glass.';
+    else if(tur==='shot')msg='Both are shot-shy — a low-volume game.';
+    else if(tur==='hits')msg='Both offences run quiet.';
+    else if(tur==='yards')msg='Both grind it out — low yardage.';
+    else if(tur==='score')msg='Both run quiet — a low-scoring pairing.';
+    else msg='Both sit below the league line.';
+  } else {
+    const lider = evUst?e:d;
+    if(tur==='card')msg=lider+' plays it rougher.';
+    else if(tur==='corner')msg=lider+' wins the corner battle on paper.';
+    else if(tur==='rebound')msg=lider+' controls the glass.';
+    else if(tur==='shot')msg=lider+' drives the shot count.';
+    else if(tur==='hits')msg=lider+' has the livelier bats.';
+    else if(tur==='yards')msg=lider+' moves the ball better.';
+    else if(tur==='era')msg=lider+' shuts it down better.';
+    else if(tur==='score')msg=lider+' carries the scoring.';
+    else msg=lider+' leads here.';
+  }
+  return '<div class="rins">↑ '+msg+' <span class="rnum">'+rakam+'</span></div>';
+}
+
+// RECORD sekme tiklama — detay dinamik basildigi icin document uzerinde delegasyon
+document.addEventListener('click',function(ev){
+  const b=ev.target&&ev.target.closest?ev.target.closest('.rtab'):null; if(!b)return;
+  const rec=b.closest('.rec'); if(!rec)return;
+  const i=b.getAttribute('data-i');
+  rec.querySelectorAll('.rtab').forEach(x=>x.classList.toggle('on',x.getAttribute('data-i')===i));
+  rec.querySelectorAll('.rpane').forEach(x=>x.classList.toggle('on',x.getAttribute('data-i')===i));
+});
+
+let ARAMA='';
+let LIVE=null, INDEX=null, HAFIZA={}, GKARNE=null, grup='ALL', ligSec=null, gunSec=null, mercek=false, splens=false, bulens=false, movlens=false, tumGun=false, cekGrup=null;
+
+function kapatManifesto(){
+  document.getElementById('manifesto').classList.add('hidden');
+  try{localStorage.setItem('brier_m1','1')}catch(e){}
+}
+function manifestoAc(){
+  try{ if(localStorage.getItem('brier_m1')) return; }catch(e){}
+  document.getElementById('manifesto').classList.remove('hidden');
+}
+function gunTohum(){
+  const d=new Date(); return d.getFullYear()*1000 + (d.getMonth()*31+d.getDate());
+}
+function ligAdiDuzgun(l){
+  const m={epl:'Premier League',laliga:'La Liga',seriea:'Serie A',bundesliga:'Bundesliga',
+    ligue1:'Ligue 1',turkiye:'Turkish Super League',ekstraklasa:'Ekstraklasa',kleague1:'K League 1',veikkausliiga:'Veikkausliiga',superettan:'Superettan',ireland:'League of Ireland',brezilya2:'Brazil Série B',superleague:'Chinese Super League',nba:'NBA',nfl:'NFL',mlb:'MLB',nhl:'NHL',
+    ncaab:'NCAA basketball',ncaaf:'NCAA football',mls:'MLS',eredivisie:'Eredivisie',
+    euroleague:'EuroLeague',portekiz:'Primeira Liga',champ:'Championship',
+    wnba:'WNBA',brezilya:'Brazil Série A',arjantin:'Primera División',japonya:'J-League',
+    seriea:'Serie A',ligue2:'Ligue 2',segunda:'Segunda División',serieb:'Serie B'};
+  return m[l]||l;
+}
+let INSIGHT=null;
+async function insightGetir(){
+  if(INSIGHT===null){
+    try{const r=await fetch(MEMORY+'brier_insight_havuz.json',{cache:'no-store'});
+        INSIGHT=r.ok?await r.json():{};}catch(e){INSIGHT={};}
+  }
+  return INSIGHT;
+}
+function ligKodu(ad){
+  const ld=(LIVE&&LIVE.ligler&&LIVE.ligler[ad])||null;
+  return ld?ligBul(ld.key):null;
+}
+function vurgula(t){
+  // sayilari ve % kaliplarini teal yap (b ile)
+  return t.replace(/(\d[\d,]*%?)/g,'<b>$1</b>');
+}
+function metinDuzelt(t){
+  // insight havuzunda kalmis ham lig kodlarini okunur ada cevir
+  const d={'aleague':'the A-League','ncaab':'NCAA basketball','ncaaf':'NCAA football',
+    'wnba':'the WNBA','cfl':'the CFL','euroleague':'the EuroLeague'};
+  Object.keys(d).forEach(k=>{ t=t.replace(new RegExp('\\b'+k+'\\b','g'),d[k]); });
+  return t;
+}
+async function recordOfTheDay(){
+  const el=document.getElementById('rotd');
+  const I=await insightGetir();
+  const oc=(I&&I.one_cikan)||[];
+  const hav=(I&&I.havuz)||[];
+  if(!oc.length&&!hav.length){ el.classList.add('hidden'); return; }
+  let etiket='The record of the day';
+  // LIG secili: o ligin en guclu kaydi
+  if(ligSec!==null){
+    const kod=ligKodu(ligSec);
+    const oncelik={calibration:3,home:2,sharpness:2,draw:1};
+    const ait=hav.filter(h=>h.lig===kod)
+      .sort((a,b)=>(oncelik[b.tur]||0)-(oncelik[a.tur]||0)||(b.onem||0)-(a.onem||0));
+    if(ait.length){
+      etiket='The record · '+ligSec;
+      el.innerHTML=`<div class="lbl">${esc(etiket)}</div>`+
+        `<div class="txt">${vurgula(metinDuzelt(ait[0].metin))}</div>`+
+        `<div class="sig">Not a tip. The record.</div>`;
+      el.classList.remove('hidden'); return;
+    }
+    el.classList.add('hidden'); return;
+  }
+  // SPOR secili: sadece o sporun liglerinden kayitlar
+  if(grup!=='ALL'){
+    const kods=new Set(Object.values((LIVE&&LIVE.ligler)||{})
+      .filter(ld=>(ld.grup||'Other')===grup)
+      .map(ld=>ligBul(ld.key)).filter(Boolean));
+    const ait=oc.filter(h=>h.lig&&kods.has(h.lig));
+    if(!ait.length){ el.classList.add('hidden'); return; }
+    const secili=ait[gunTohum()%ait.length].metin;
+    el.innerHTML=`<div class="lbl">The record of the day</div>`+
+      `<div class="txt">${vurgula(metinDuzelt(secili))}</div>`+
+      `<div class="sig">Not a tip. The record.</div>`;
+    el.classList.remove('hidden'); return;
+  }
+  // "6 ligde kusursuz" mansetini uret: near-perfect sharpness'lari birlestir
+  const kusursuz=oc.filter(h=>h.tur==='sharpness'&&/near-perfectly/.test(h.metin))
+                   .map(h=>{const m=h.metin.match(/In (the )?([^,]+?),/);return m?m[2]:null;})
+                   .filter(Boolean);
+  // gosterim havuzu: upset, calibration, book, la liga sharpness + kusursuz manset
+  const kartlar=[];
+  oc.forEach(h=>{
+    if(h.tur==='upset'||h.tur==='calibration'||h.tur==='book') kartlar.push(h.metin);
+    else if(h.tur==='sharpness'&&!/near-perfectly/.test(h.metin)) kartlar.push(h.metin);
+  });
+  if(kusursuz.length>=4){
+    const ilk=kusursuz.slice(0,6);
+    kartlar.push(`Across 30,000 matches, the market's price matched reality within a point in ${ilk.slice(0,-1).join(', ')} and ${ilk.slice(-1)}. The market is remarkably good at its job.`);
+  }
+  if(!kartlar.length){el.classList.add('hidden');return;}
+  const secili=kartlar[gunTohum()%kartlar.length];
+  el.innerHTML=`<div class="lbl">The record of the day</div>`+
+    `<div class="txt">${vurgula(metinDuzelt(secili))}</div>`+
+    `<div class="sig">Not a tip. The record.</div>`;
+  el.classList.remove('hidden');
+}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function hareketHesap(m){
+  if(!m.ac||!m.p)return null;
+  const favEv=m.p.h>=m.p.a, guncelP=favEv?m.p.h:m.p.a;
+  let acP=null, acH=null, acD=null, acA=null;
+  if(m.ac.h!=null){
+    // yeni format: tam dagilim (h/d/a)
+    acH=m.ac.h; acA=m.ac.a; acD=m.ac.d;
+    acP=favEv?acH:acA;
+  }else if(m.ac.favP!=null){
+    // eski format: sadece favP (taraf degisimi 3-yollu macta hatali olabilir, sadece ayni tarafta guven)
+    if(m.ac.favEv!==favEv)return null;  // taraf degistiyse eski formatla hesaplama, yanlis cikar
+    acP=m.ac.favP;
+  }else return null;
+  if(acP==null)return null;
+  const farkP=(guncelP-acP)*100;
+  if(Math.abs(farkP)<1.5)return null;
+  return {favEv:favEv, guncelP:guncelP, acP:acP, farkP:farkP,
+          acH:acH, acD:acD, acA:acA, gH:m.p.h, gD:m.p.d, gA:m.p.a};
+}
+function ayrismaHesap(m,s3){
+  const p=m.p||{}, best=m.best||{};
+  if(p.h==null||p.a==null)return null;
+  const favEv=p.h>=p.a, favP=favEv?p.h:p.a;
+  const kt={};
+  (best.h||[]).forEach(x=>{(kt[x.k]=kt[x.k]||{}).h=x.o;});
+  (best.a||[]).forEach(x=>{(kt[x.k]=kt[x.k]||{}).a=x.o;});
+  if(s3)(best.d||[]).forEach(x=>{(kt[x.k]=kt[x.k]||{}).d=x.o;});
+  let enB=null,enF=0,n=0;
+  Object.entries(kt).forEach(([k,o])=>{
+    if(!o.h||!o.a||(s3&&!o.d))return;
+    const ih=1/o.h, ia=1/o.a, idr=s3?1/o.d:0, top=ih+ia+idr;
+    if(top<0.97||top>1.15)return; // likiditesiz borsa tahtasi / sakat fiyat elenir
+    const pb=(favEv?ih:ia)/top; n++;
+    const f=pb-favP;
+    if(Math.abs(f)>Math.abs(enF)){enF=f;enB=k;}
+  });
+  return (enB&&n>=4&&Math.abs(enF)>=0.04)?{b:enB,f:enF,n:n,favEv:favEv,favP:favP}:null;
+}
+function macBulgular(m){
+  const I=INSIGHT&&INSIGHT.havuz?INSIGHT.havuz:[];
+  const lig=ligBul(m.key), p=m.p||{};
+  if(!I.length||!lig||p.h==null||p.a==null)return [];
+  const favEv=p.h>=p.a, favP=favEv?p.h:p.a, favAd=favEv?m.h:m.a;
+  const kova=favP<0.6?'50-60%':(favP<0.7?'60-70%':(favP<0.8?'70-80%':'80%+'));
+  return I.filter(x=>x.lig===lig&&x.imp!=null).filter(x=>{
+    const e=String(x.etiket||'');
+    if(x.tur==='sharpness')return true;
+    if(x.tur==='calibration')return e.includes(kova);
+    if(x.tur==='homeaway')return e.startsWith(favEv?'home':'away');
+    if(x.tur==='club')return e.startsWith(favAd+' ');
+    if(x.tur==='draw')return !!m.sonuc3;
+    return false;
+  }).sort((a,b)=>Math.abs(b.fark)-Math.abs(a.fark));
+}
+function macBulguGuclu(m){return macBulgular(m).filter(x=>x.guven==='strong'||x.guven==='lean');}
+function menuAc(){document.getElementById('perde').classList.remove('hidden');
+  document.getElementById('cekmece').classList.remove('hidden');cekmeceCiz();}
+function menuKapat(){document.getElementById('perde').classList.add('hidden');
+  document.getElementById('cekmece').classList.add('hidden');}
+function arsivliLigler(){
+  const s=new Set();
+  if(INDEX&&INDEX.ligler)INDEX.ligler.forEach(l=>{if(l.kalibrasyon)s.add(l.lig);});
+  return s;
+}
+function cekmeceCiz(){
+  const ark=arsivliLigler();
+  const gr={};
+  Object.entries((LIVE&&LIVE.ligler)||{}).forEach(([ad,ld])=>{
+    const g=ld.grup||'Other';(gr[g]=gr[g]||[]).push([ad,(ld.maclar||[]).length]);});
+  const gAd=Object.keys(gr).sort();window._cekG=gAd;window._cekL=[];
+  let h='<button class="cek-grup" onclick="showLedger()">The Ledger<span style="float:right;color:var(--grey)">›</span></button>';
+  gAd.forEach((g,gi)=>{
+    const acik=cekGrup===g;
+    h+=`<button class="cek-grup" onclick="cekGrupSec(${gi})">${esc(grupGoster(g))}<span style="float:right;color:var(--grey)">${acik?'▾':'▸'}</span></button>`;
+    if(acik)gr[g].sort((a,b)=>a[0].localeCompare(b[0])).forEach(([ad,n])=>{
+      const li=window._cekL.length;window._cekL.push(ad);
+      const ldk=(LIVE.ligler[ad]||{}).key, lg=ldk?ligBul(ldk):null;
+      const nis=(lg&&ark.has(lg))?'<span class="ark" title="historical archive">\u25C6</span>':'';
+      h+=`<button class="cek-lig" onclick="ligAc(${li})">${esc(ad)}${nis}<span class="n">${n}</span></button>`;});
+  });
+  const b=bolge();
+  h+=`<div class="bolgebas">MY REGION · books on my shelf first</div><div class="bolge">`+
+     [['all','ALL'],['us','US'],['uk','UK'],['eu','EU']].map(([v,t])=>`<button class="${b===v?'on':''}" onclick="bolgeSec('${v}')">${t}</button>`).join('')+`</div>`;
+  document.getElementById('cekIc').innerHTML=h;
+}
+function cekGrupSec(gi){const g=(window._cekG||[])[gi];cekGrup=(cekGrup===g?null:g);cekmeceCiz();}
+function ligAc(li){const ad=(window._cekL||[])[li];if(ad===undefined)return;
+  ligSec=ad;tumGun=true;gunSec=null;grup='ALL';menuKapat();showList();renderList();window.scrollTo(0,0);}
+function ligKapat(){ligSec=null;tumGun=false;renderList();window.scrollTo(0,0);}
+function anahtar(a,b){const x=[String(a).trim().toLowerCase(),String(b).trim().toLowerCase()].sort();return x[0]+'|'+x[1];}
+function saat(t){const d=new Date(t);return d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}
+function gun(t){const d=new Date(t);const bugun=new Date();
+  return d.toDateString()===bugun.toDateString()?'':d.toLocaleDateString('en-GB',{weekday:'short'})+' · ';}
+
+// ============================================================================
+// MASTER TEAM MAPPING SYSTEM - Wikidata IDs for universal team identification
+// ============================================================================
+
+let TEAM_MASTER_MAPPING = null;
+
+// Load master mapping on startup
+async function loadTeamMasterMapping(){
+  if(TEAM_MASTER_MAPPING) return TEAM_MASTER_MAPPING;
+  try{
+    const resp = await fetch('../team_master_mapping.json');
+    if(!resp.ok) throw new Error('Mapping not found');
+    TEAM_MASTER_MAPPING = await resp.json();
+    console.log('✓ Team master mapping loaded');
+    return TEAM_MASTER_MAPPING;
+  }catch(e){
+    console.warn('⚠ Team master mapping not available:', e.message);
+    return null;
+  }
+}
+
+// Find team by any name (Worker API, Golkarne, or alias)
+async function findTeamByName(teamName, league = 'belcika'){
+  const mapping = await loadTeamMasterMapping();
+  if(!mapping || !mapping[league]) return null;
+
+  const normalized = normalizeTeamName(teamName);
+
+  // Try to find in league mapping
+  for(const [displayName, teamData] of Object.entries(mapping[league])){
+    // Check exact match in aliases
+    if(teamData.aliases){
+      for(const alias of teamData.aliases){
+        if(normalizeTeamName(alias) === normalized){
+          return {
+            wikidata_id: teamData.wikidata_id,
+            transfermarkt_id: teamData.transfermarkt_id,
+            display_name: displayName,
+            golkarne_name: teamData.sources.golkarne,
+            hafiza_name: teamData.sources.hafiza
+          };
+        }
+      }
+    }
+
+    // Check display name
+    if(normalizeTeamName(displayName) === normalized){
+      return {
+        wikidata_id: teamData.wikidata_id,
+        transfermarkt_id: teamData.transfermarkt_id,
+        display_name: displayName,
+        golkarne_name: teamData.sources.golkarne,
+        hafiza_name: teamData.sources.hafiza
+      };
+    }
+  }
+
+  return null;
+}
+
+// Team name normalization - matches worker names to GKARNE names
+function normalizeTeamName(name){
+  if(!name)return '';
+  // Turkce dotless-i once (NFD bunlari cozmez), sonra tum aksanlari katla (TR/ES/PT: s,c,g,o,u,a,e,n...)
+  let s=String(name).toLowerCase().replace(/ı/g,'i').replace(/İ/g,'i');
+  s=s.normalize('NFD').replace(/[̀-ͯ]/g,'');
+  return s.replace(/\s+/g,' ').trim();
+}
+
+// Levenshtein distance for fuzzy matching (fallback only)
+function levenshteinDistance(a,b){
+  const matrix=[];
+  for(let i=0;i<=b.length;i++)matrix[i]=[i];
+  for(let j=0;j<=a.length;j++)matrix[0][j]=j;
+  for(let i=1;i<=b.length;i++){
+    for(let j=1;j<=a.length;j++){
+      if(b.charAt(i-1)===a.charAt(j-1)){
+        matrix[i][j]=matrix[i-1][j-1];
+      }else{
+        matrix[i][j]=Math.min(matrix[i-1][j-1]+1,matrix[i][j-1]+1,matrix[i-1][j]+1);
+      }
+    }
+  }
+  return matrix[b.length][a.length];
+}
+
+// Calculate similarity percentage (0-100)
+function calculateSimilarity(a,b){
+  const distance=levenshteinDistance(a,b);
+  const maxLen=Math.max(a.length,b.length);
+  return maxLen>0?((maxLen-distance)/maxLen)*100:0;
+}
+
+function mapTeamNameToGkarne(workerName,gkarneTeams){
+  if(!gkarneTeams)return workerName;
+  const norm=normalizeTeamName(workerName);
+
+  // 1. Exact normalized match
+  let m=gkarneTeams.find(c=>normalizeTeamName(c)===norm);
+  if(m)return m;
+
+  // 2. Substring match
+  m=gkarneTeams.find(c=>normalizeTeamName(c).includes(norm)||norm.includes(normalizeTeamName(c)));
+  if(m)return m;
+
+  // 3. Fuzzy match with 80% similarity threshold
+  let bestMatch=null, bestScore=0;
+  for(const team of gkarneTeams){
+    const normTeam=normalizeTeamName(team);
+    const sim=calculateSimilarity(norm,normTeam);
+    if(sim>=80&&sim>bestScore){
+      bestScore=sim;
+      bestMatch=team;
+    }
+  }
+  if(bestMatch)return bestMatch;
+
+  // 4. No match found - return original name (will fail quietly in CORNER/CARD blocks)
+  return null;
+}
+// FUZZY MATCHING FONKSIYONLARI (85% similarity threshold)
+function levenshteinDistance(s1, s2) {
+  const costs = [];
+  for (let i = 0; i <= s1.length; i++) {
+    let lastValue = i;
+    for (let j = 0; j <= s2.length; j++) {
+      if (i === 0) {
+        costs[j] = j;
+      } else if (j > 0) {
+        let newValue = costs[j - 1];
+        if (s1.charAt(i - 1) !== s2.charAt(j - 1)) {
+          newValue = Math.min(Math.min(newValue, lastValue), costs[j]) + 1;
+        }
+        costs[j - 1] = lastValue;
+        lastValue = newValue;
+      }
+    }
+    if (i > 0) costs[s2.length] = lastValue;
+  }
+  return costs[s2.length];
+}
+
+function calculateTeamSimilarity(team1, team2) {
+  const norm1 = normalizeTeamName(team1);
+  const norm2 = normalizeTeamName(team2);
+  if (norm1 === norm2) return 100;
+  if (norm1.length === 0 || norm2.length === 0) return 0;
+  const distance = levenshteinDistance(norm1, norm2);
+  const maxLen = Math.max(norm1.length, norm2.length);
+  return Math.round(((maxLen - distance) / maxLen) * 100);
+}
+
+function findBestTeamMatchFuzzy(workerTeam, gkarneTeams, threshold = 85) {
+  let bestMatch = null;
+  let bestSimilarity = threshold - 1;
+  for (const gkarneTeam of gkarneTeams) {
+    const similarity = calculateTeamSimilarity(workerTeam, gkarneTeam);
+    if (similarity > bestSimilarity) {
+      bestSimilarity = similarity;
+      bestMatch = { name: gkarneTeam, similarity };
+    }
+  }
+  return bestMatch;
+}
+
+// Worker takim adi -> golkarne adi: fuzzy'nin yakalayamadigi dil/kisaltma varyantlari (anahtarlar normalize edilmis)
+const TEAM_ALIAS = {
+  'rapid wien':'Rapid Vienna','austria wien':'Austria Vienna','rb salzburg':'Red Bull Salzburg',
+  'rheindorf altach':'SCR Altach','wsg tirol':'WSG Wattens',
+  'athletic bilbao':'Athletic Club','queens park rangers':'QPR','gazisehir gaziantep':'Gaziantep FK'
+};
+// RECORD kartlari icin: takim objesini normalize ederek bul (alias -> fuzzy -> fallback)
+function tkGet(tk, ad){
+  if(!tk||!ad)return undefined;
+  if(tk[ad])return tk[ad];  // once direkt (hizli)
+
+  // Alias: dil/kisaltma varyantlari (fuzzy'nin ustunde, onu sokmeden)
+  const al=TEAM_ALIAS[normalizeTeamName(ad)];
+  if(al && tk[al])return tk[al];
+
+  // Fuzzy matching with 85% threshold
+  const gkarneKeys = Object.keys(tk);
+  const fuzzyMatch = findBestTeamMatchFuzzy(ad, gkarneKeys, 85);
+  if(fuzzyMatch && fuzzyMatch.similarity >= 85){
+    return tk[fuzzyMatch.name];
+  }
+
+  // Fallback: Original normalization method
+  const g=mapTeamNameToGkarne(ad, gkarneKeys);
+  return tk[g];
+}
+
+// Worker'dan gelen lig bloklarini NORMALIZE et (worker'a dokunmadan dayaniklilik):
+//  - bilinen anahtar varyantlarini kanonik anahtara cevir (varsa maclari birlestir, t|h|a ile tekrarsiz)
+//  - grup yoksa anahtar onekinden tuüret (soccer_ -> Soccer, basketball_ -> Basketball ...)
+//  - ad ham anahtarsa okunur hale getir
+const KEY_ALIAS={'soccer_belgium_first_division':'soccer_belgium_first_div','soccer_belgium_first_devision':'soccer_belgium_first_div','soccer_belgium_pro_league':'soccer_belgium_first_div'};
+const KEY_AD={'soccer_belgium_first_div':'Belgium First Div'};
+const ONEK_GRUP=[['soccer_','Soccer'],['basketball_','Basketball'],['americanfootball_','American Football'],['baseball_','Baseball'],['icehockey_','Ice Hockey'],['tennis_','Tennis'],['mma_','Mixed Martial Arts'],['boxing_','Boxing'],['cricket_','Cricket'],['aussierules_','Aussie Rules'],['rugby','Rugby']];
+function normalizeLive(L){
+  try{
+    if(!L||!L.ligler)return;
+    const out={};
+    for(const [ad,ld] of Object.entries(L.ligler)){
+      if(!ld||typeof ld!=='object')continue;
+      let key=ld.key||'', isim=ad;
+      if(KEY_ALIAS[key]){key=KEY_ALIAS[key]; ld.key=key;}
+      if(!ld.grup||ld.grup==='Other'){const g=ONEK_GRUP.find(([pf])=>key.startsWith(pf)); if(g)ld.grup=g[1];}
+      if(KEY_AD[key])isim=KEY_AD[key];
+      else if(isim===key||/^[a-z0-9_]+$/.test(isim)){ // ham anahtar -> okunur
+        isim=key.replace(/^(soccer|basketball|americanfootball|baseball|icehockey|tennis|mma|boxing|cricket|aussierules|rugby[a-z]*)_/,'').replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+      }
+      if(out[isim]){ // ayni lige iki blok geldiyse birlestir
+        const seen=new Set((out[isim].maclar||[]).map(m=>`${m.t}|${m.h}|${m.a}`));
+        (ld.maclar||[]).forEach(m=>{const k=`${m.t}|${m.h}|${m.a}`; if(!seen.has(k)){out[isim].maclar.push(m);seen.add(k);}});
+      }else out[isim]=ld;
+    }
+    L.ligler=out;
+  }catch(e){ console.log('normalizeLive error:', e.message); }
+}
+
+async function boot(){
+  const fl=document.getElementById('feedline');
+  document.getElementById('today').textContent=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long'});
+  try{
+    const r=await fetch(HOST+'/bugun.json',{cache:'no-store'});
+    if(!r.ok) throw 0;
+    LIVE=await r.json();
+    normalizeLive(LIVE);
+    fl.textContent='live · snapshot '+(LIVE.cekim||'').replace('T',' ')+' UTC · updates every 10 min';
+  }catch(e){
+    fl.textContent='live feed unreachable — check your connection and reload';
+    fl.classList.add('err');
+    document.getElementById('listBody').innerHTML='<div class="empty">No live data right now.</div>';
+    return;
+  }
+  try{
+    const r=await fetch(MEMORY+'brier_hafiza_INDEX.json',{cache:'no-store'});
+    if(r.ok) INDEX=await r.json();
+  }catch(e){ INDEX=null; }
+
+  // Load master team mapping at startup
+  await loadTeamMasterMapping();
+
+  renderList();
+  manifestoAc();
+  recordOfTheDay();
+}
+
+function tarihKey(t){
+  return new Date(t).toLocaleDateString('en-CA'); // YYYY-MM-DD, yerel
+}
+function gunListesi(){
+  const s=new Set();
+  Object.entries((LIVE&&LIVE.ligler)||{}).forEach(([ad,ld])=>{
+    if(!ARAMA&&grup!=='ALL'&&(ld.grup||'Other')!==grup)return;
+    if(!ARAMA&&ligSec!==null&&ad!==ligSec)return;
+    (ld.maclar||[]).forEach(m=>s.add(tarihKey(m.t)));
+  });
+  return [...s].sort();
+}
+function gunEtiket(k){
+  const bugun=tarihKey(new Date());
+  const yarin=tarihKey(new Date(Date.now()+864e5));
+  if(k===bugun)return 'Today';
+  if(k===yarin)return 'Tomorrow';
+  return new Date(k+'T12:00').toLocaleDateString('en-GB',{weekday:'short',day:'numeric'});
+}
+function renderSecimler(){
+  const gs=gunListesi(); window._gunler=gs;
+  const akis=tumGun||mercek||splens||bulens||movlens||!!ARAMA;
+  if(!gs.length){gunSec=null;}
+  else if(!akis&&(gunSec===null||!gs.includes(gunSec))){gunSec=gs[0];}
+  const gsel=document.getElementById('gunSel');
+  if(gsel)gsel.innerHTML=gs.map(k=>`<option value="${k}"${k===gunSec?' selected':''}>${gunEtiket(k)}</option>`).join('');
+  const say=(g)=>{let t=0;Object.values((LIVE&&LIVE.ligler)||{}).forEach(ld=>{
+    if(g==='ALL'||(ld.grup||'Other')===g)t+=(ld.maclar||[]).length});return t;};
+  const sp=gruplar();
+  const ssel=document.getElementById('sporSel');
+  if(ssel)ssel.innerHTML=sp.map(g=>
+    `<option value="${esc(g)}"${g===grup?' selected':''}>${g==='ALL'?'All sports':esc(grupGoster(g))} · ${say(g)}</option>`).join('');
+  const bas=document.getElementById('gunBaslik');
+  if(bas)bas.textContent=gunSec?gunEtiket(gunSec).toUpperCase():'TODAY';
+  const td=document.getElementById('today');
+  if(td)td.textContent=gunSec?new Date(gunSec+'T12:00').toLocaleDateString('en-GB',{day:'numeric',month:'long'}):'';
+}
+function gunSecim(v){
+  gunSec=v;
+  if(tumGun||mercek||splens||bulens||movlens){
+    const el=document.getElementById('g-'+v);
+    if(el){el.scrollIntoView({behavior:'smooth',block:'start'});
+      const bas=document.getElementById('gunBaslik');if(bas)bas.textContent=gunEtiket(v).toUpperCase();
+      return;}
+  }
+  renderList();
+}
+function sporSecim(v){grup=v;gunSec=null;renderList();recordOfTheDay();}
+function mercekTgl(){mercek=!mercek;const b=document.getElementById('mercek');if(b)b.classList.toggle('on',mercek);renderList();}
+function movTgl(){movlens=!movlens;const b=document.getElementById('movlens');if(b)b.classList.toggle('on',movlens);renderList();}
+async function bulguTgl(){bulens=!bulens;const b=document.getElementById('bulens');if(b)b.classList.toggle('on',bulens);
+  if(bulens&&!INSIGHT)await insightGetir();renderList();}
+function splitTgl(){splens=!splens;const b=document.getElementById('splens');if(b)b.classList.toggle('on',splens);renderList();}
+function grupGoster(g){
+  // The Odds API "Soccer" der. ABD/Kanada kullanicisi "soccer" der, dunyanin geri kalani "football".
+  // Kullanicinin diline gore goster (urun kullanicinin).
+  if(g==='Soccer'){
+    const dil=(navigator.language||navigator.userLanguage||'en').toLowerCase();
+    const tz=(Intl.DateTimeFormat().resolvedOptions().timeZone||'').toLowerCase();
+    // ABD/Kanada: en-US, en-CA, ya da Amerika saat dilimi -> soccer
+    const abd = dil==='en-us' || dil==='en-ca' || /america\/(new_york|chicago|denver|los_angeles|phoenix|anchorage|toronto|detroit)/.test(tz);
+    return abd ? 'Soccer' : 'Football';
+  }
+  return g;
+}
+function gruplar(){
+  const s=new Set();
+  Object.values(LIVE.ligler||{}).forEach(l=>{
+    if((l.maclar||[]).length) s.add(l.grup||'Other');
+  });
+  return ['ALL',...[...s].sort()];
+}
+function ligleri(){
+  if(grup==='ALL') return [];
+  const s=new Map();
+  Object.entries(LIVE.ligler||{}).forEach(([ad,l])=>{
+    if((l.grup||'Other')===grup&&(l.maclar||[]).length) s.set(ad,l.maclar.length);
+  });
+  return [...s.keys()].sort();
+}
+
+
+
+function aramaGir(v){
+  ARAMA=(v||'').trim().toLowerCase();
+  const t=document.getElementById('aramaTemizle');if(t)t.style.display=ARAMA?'block':'none';
+  renderList();
+}
+function aramaTemizleAll(){
+  ARAMA='';const inp=document.getElementById('aramaInput');if(inp)inp.value='';
+  const t=document.getElementById('aramaTemizle');if(t)t.style.display='none';
+  renderList();
+}
+function aramaUyar(m,ad){
+  if(!ARAMA)return true;
+  const hedef=((m.h||'')+' '+(m.a||'')+' '+(ad||'')).toLowerCase();
+  return hedef.includes(ARAMA);
+}
+function oyunlar(){
+  const akis=tumGun||mercek||splens||bulens||movlens||!!ARAMA;
+  const out=[];
+  Object.entries(LIVE.ligler||{}).forEach(([ad,ld])=>{
+    if(grup!=='ALL'&&(ld.grup||'Other')!==grup)return;
+    if(ligSec!==null&&ad!==ligSec)return;
+    (ld.maclar||[]).forEach(m=>{if(!akis&&gunSec&&tarihKey(m.t)!==gunSec)return;
+      if(mercek){const p=m.p||{};if(Math.max(p.h||0,p.a||0)<0.70)return;}
+      if(splens){try{if(!ayrismaHesap(m,!!ld.sonuc3))return;}catch(e){return;}}
+      if(bulens){try{if(!macBulguGuclu({...m,key:ld.key,sonuc3:!!ld.sonuc3}).length)return;}catch(e){return;}}
+      if(movlens){try{if(!hareketHesap(m))return;}catch(e){return;}}
+      if(!aramaUyar(m,ad))return;
+      out.push({...m,ligAd:ad,key:ld.key,sonuc3:!!ld.sonuc3});});
+  });
+  out.sort((a,b)=>String(a.t).localeCompare(String(b.t)));
+  return out;
+}
+
+function macSatiri(m,i){
+  const tepe=(l)=>l&&l.length?Math.max(...l.map(x=>x.o)).toFixed(2):null;
+  const b=m.best||{};
+  const oh=tepe(b.h), od=m.sonuc3?tepe(b.d):null, oa=tepe(b.a);
+  let oranSat='';
+  if(oh&&oa){
+    oranSat=m.sonuc3&&od
+      ?`<span class="odds"><b>${oh}</b> · ${od} · <b>${oa}</b></span>`
+      :`<span class="odds"><b>${oh}</b> · <b>${oa}</b></span>`;
+  }
+  let ayT='';
+  try{if(ayrismaHesap(m,m.sonuc3))ayT='<span class="splitTag">\u25C7 split</span>';}catch(e){}
+  try{const bg=macBulguGuclu(m);if(bg.length)ayT+=`<span class="splitTag">\u25C6 ${bg[0].fark>0?'+':'\u2212'}${Math.abs(bg[0].fark).toFixed(1)}</span>`;}catch(e){}
+  try{const hr=hareketHesap(m);if(hr)ayT+=`<span class="splitTag">\u25C8 ${hr.farkP>0?'+':'\u2212'}${Math.abs(hr.farkP).toFixed(0)}</span>`;}catch(e){}
+  return `<button class="mrow" onclick="showDetail(${i})">
+      <span class="time">${saat(m.t)}</span>
+      <span class="mid"><span class="comp">${esc(m.ligAd)}</span>
+      <span class="teams">${esc(m.h)} — ${esc(m.a)}${ayT}</span>${oranSat}</span>
+      <span class="arr">›</span></button>`;
+}
+function renderList(){
+  renderSecimler();
+  const g=oyunlar();
+  const box=document.getElementById('listBody');
+  if(!g.length){
+    const yer=(tumGun&&ligSec)?` in ${esc(ligSec)}`:'';
+    const kapat='<br><span style="color:var(--teal)">Tap the chip above to see all games.</span>';
+    box.innerHTML=movlens?`<div class="empty">\u25C8 line moved is on \u2014 no line has moved enough${yer} yet. Openings are captured from now on; movement builds as matches approach kickoff.${kapat}</div>`:bulens?`<div class="empty">\u25C6 the record is on \u2014 the archive has no strong or lean record for any game${yer} right now.${kapat}</div>`
+      :splens?`<div class="empty">\u25C7 books disagree is on \u2014 no book disagreements${yer} over these days. That silence is also a record.${kapat}</div>`
+      :mercek?`<div class="empty">70%+ is on \u2014 no consensus favourite clears 70%${yer} right now.${kapat}</div>`
+      :`<div class="empty">No games${yer} for this day.<br>Try another day or sport.</div>`;
+    return;}
+  if(tumGun||mercek||splens||bulens||movlens){
+    let html=(tumGun&&ligSec!==null)?`<button class="ligsec" onclick="ligKapat()"><span>‹ All games</span><span class="cnt">${esc(ligSec)}</span></button>`:'';
+    const shown=[];let gunK=null;
+    g.forEach(m=>{
+      const tk=tarihKey(m.t);
+      if(tk!==gunK){gunK=tk;html+=`<div class="gunbas" id="g-${tk}">${esc(gunEtiket(tk))}</div>`;}
+      const i=shown.length;shown.push(m);html+=macSatiri(m,i);
+    });
+    box.innerHTML=html;window._shown=shown;
+    // gun sekmesi akisin ilk gunune kurulur
+    if(g.length){
+      gunSec=tarihKey(g[0].t);
+      const gsel=document.getElementById('gunSel');if(gsel)gsel.value=gunSec;
+      const bas=document.getElementById('gunBaslik');if(bas)bas.textContent=gunEtiket(gunSec).toUpperCase();
+      const td=document.getElementById('today');if(td)td.textContent=new Date(gunSec+'T12:00').toLocaleDateString('en-GB',{day:'numeric',month:'long'});
+    }
+    return;
+  }
+  window._acik=window._acik||new Set();
+  const gruplu=new Map();
+  g.forEach(m=>{if(!gruplu.has(m.ligAd))gruplu.set(m.ligAd,[]);gruplu.get(m.ligAd).push(m);});
+  const adlar=[...gruplu.keys()].sort((a,b)=>a.localeCompare(b));
+  if(adlar.length===1)window._acik.add(adlar[0]);
+  window._secAd=adlar;
+  let html='';const shown=[];
+  adlar.forEach((ad,ai)=>{
+    const ms=gruplu.get(ad);
+    const acikMi=window._acik.has(ad);
+    html+=`<button class="ligsec" onclick="toggleLig(${ai})"><span>${esc(ad)}</span>`+
+      `<span class="cnt">${ms.length}<span class="cev">${acikMi?'▾':'▸'}</span></span></button>`;
+    if(!acikMi)return;
+    let gunK=null;
+    ms.forEach(m=>{
+      const tk=tarihKey(m.t);
+      if(tk!==gunK){gunK=tk;html+=`<div class="gunbas">${esc(gunEtiket(tk))}</div>`;}
+      const i=shown.length;shown.push(m);html+=macSatiri(m,i);});
+  });
+  box.innerHTML=html;
+  window._shown=shown;
+}
+function toggleLig(ix){
+  const ad=(window._secAd||[])[ix]; if(ad===undefined)return;
+  window._acik=window._acik||new Set();
+  if(window._acik.has(ad))window._acik.delete(ad); else window._acik.add(ad);
+  renderList();
+}
+
+function showList(){
+  document.getElementById('view-sec').classList.add('hidden');
+  document.getElementById('view-ledger').classList.add('hidden');
+  window._detayMac=null;seritGuncelle();
+  document.getElementById('view-detail').classList.add('hidden');
+  document.getElementById('view-list').classList.remove('hidden');
+  window.scrollTo(0,0);
+}
+
+const LEDGER_AD={afl:'AFL',aleague:'A-League',arjantin:'Primera División (ARG)',
+  avusturya:'Austrian Bundesliga',belcika:'Belgium First Div',brezilya:'Brazil Série A',
+  bundes2:'2. Bundesliga',bundesliga:'Bundesliga',cfl:'CFL',champ:'EFL Championship',
+  danimarka:'Danish Superliga',efl1:'EFL League One',efl2:'EFL League Two',epl:'Premier League',
+  eredivisie:'Eredivisie',euroleague:'EuroLeague',iskocya:'Scottish Premiership',isvec:'Allsvenskan',
+  isvicre:'Swiss Super League',japonya:'J1 League',laliga:'La Liga',libertadores:'Copa Libertadores',
+  ligue1:'Ligue 1',ligue2:'Ligue 2',meksika:'Liga MX',mlb:'MLB',mls:'MLS',nba:'NBA',
+  ncaab:'NCAA Basketball',ncaaf:'NCAA Football',nfl:'NFL',nhl:'NHL',norvec:'Eliteserien',
+  portekiz:'Primeira Liga',segunda:'La Liga 2',seriea:'Serie A',serieb:'Serie B',
+  sudamericana:'Copa Sudamericana',turkiye:'Turkish Super League',ucl:'Champions League',
+  uel:'Europa League',wnba:'WNBA',yunanistan:'Greek Super League'};
+const BOLGE_US=new Set(['draftkings','fanduel','betmgm','caesars','pointsbetus','betrivers','unibet_us','williamhill_us',
+ 'bovada','betonlineag','mybookieag','lowvig','betus','twinspires','barstool','superbook','wynnbet','fanatics','espnbet',
+ 'hardrockbet','ballybet','betparx','fliff','novig','prophetx','tipico_us','betanysports','gtbets','everygame']);
+const BOLGE_UK=new Set(['williamhill','skybet','ladbrokes_uk','ladbrokes','paddypower','coral','betvictor','boylesports','betway',
+ 'unibet_uk','betfair_ex_uk','betfair_sb_uk','virginbet','livescorebet','grosvenor','casumo','10bet','mrgreen','bet365','betfred','sportnation']);
+function kitapBolge(k){k=String(k||'').toLowerCase();if(BOLGE_US.has(k)||/_us$/.test(k))return 'us';if(BOLGE_UK.has(k)||/_uk$/.test(k))return 'uk';return 'eu';}
+function bolge(){try{return localStorage.getItem('brier_bolge')||'all'}catch(e){return 'all'}}
+function bolgeSec(b){try{localStorage.setItem('brier_bolge',b)}catch(e){}bolgeRozetGuncelle();cekmeceCiz();
+  if(window._detayIdx!=null&&!document.getElementById('view-detail').classList.contains('hidden'))showDetail(window._detayIdx);
+  seritGuncelle();}
+function bolgeDondur(){const s=['all','us','uk','eu'];bolgeSec(s[(s.indexOf(bolge())+1)%s.length]);}
+function bolgeRozetGuncelle(){const b=document.getElementById('bolgeRozet');if(b)b.textContent=bolge().toUpperCase();}
+function bolgeFiltre(liste){const b=bolge();if(b==='all')return liste||[];return (liste||[]).filter(x=>kitapBolge(x.k)===b);}
+let STRATEJI=null, GOLK=null;
+const SEC_MAX=8;
+function secimler(){try{return JSON.parse(localStorage.getItem('brier_secimler')||'[]')}catch(e){return []}}
+function secKaydet(l){try{localStorage.setItem('brier_secimler',JSON.stringify(l))}catch(e){}}
+function secAnahtar(mac,ad){return [mac.key,mac.t,mac.h,mac.a,ad].join('|');}
+function secEkle(ev,i){
+  ev.stopPropagation();
+  const s=(window._satirlar||[])[i], mac=window._detayMac;
+  if(!s||!mac)return;
+  const k=secAnahtar(mac,s.ad);
+  let l=secimler();
+  if(l.some(x=>x.k===k&&!x.sonuc)){l=l.filter(x=>!(x.k===k&&!x.sonuc));}
+  else{
+    if(l.filter(x=>!x.sonuc).length>=SEC_MAX)return;
+    l.push({k:k,ad:s.ad,p:s.p,liste:(s.liste||[]).map(x=>({k:x.k,o:x.o})),
+            mac:{key:mac.key,t:mac.t,h:mac.h,a:mac.a,lig:mac.ligAd}});
+  }
+  secKaydet(l);
+  if(window._detayIdx!=null)showDetail(window._detayIdx);
+  seritGuncelle();
+}
+function secSil(k){secKaydet(secimler().filter(x=>x.k!==k));renderSecListesi();seritGuncelle();}
+function secHesap(l,tumDunya){
+  const f=(x)=>tumDunya?(x.liste||[]):bolgeFiltre(x.liste||[]);
+  let bilesik=1, dagilim={}, eksik=false;
+  l.forEach(s=>{
+    // kullanici bir kitap sectiyse onu kullan, yoksa (bolgesel) en iyi
+    let sec=null;
+    if(s.kitap&&!tumDunya){const f2=(s.liste||[]).find(x=>x.k===s.kitap);if(f2)sec=f2;}
+    if(!sec){const sl=sirala(f(s));if(sl.length)sec=sl[0];}
+    if(!sec){eksik=true;return;}
+    bilesik*=sec.o; dagilim[sec.k]=(dagilim[sec.k]||0)+1;
+  });
+  let ortak=null;
+  l.forEach(s=>{const ks=new Set(f(s).map(x=>x.k));ortak=ortak?new Set([...ortak].filter(x=>ks.has(x))):ks;});
+  let tek=null;
+  (ortak?[...ortak]:[]).forEach(k=>{
+    let c=1;l.forEach(s=>{const x=(s.liste||[]).find(y=>y.k===k);c*=x?x.o:1;});
+    if(!tek||c>tek.c)tek={k:k,c:c};
+  });
+  return {bilesik:bilesik,dagilim:dagilim,tek:tek,eksik:eksik};
+}
+function karsitlar(l){
+  // ayni macta birbirini dislayan secimler
+  const grup={};l.forEach(s=>{const mk=[s.mac.key,s.mac.t,s.mac.h,s.mac.a].join('|');(grup[mk]=grup[mk]||[]).push(s.ad);});
+  let n=0;
+  Object.values(grup).forEach(ads=>{
+    if(ads.length<2)return;
+    const ou=ads.filter(a=>/^(Over|Under)\s/.test(a));
+    const ouC={};ou.forEach(a=>{const c=a.split(/\s+/)[1];(ouC[c]=ouC[c]||new Set()).add(a.split(/\s+/)[0]);});
+    if(Object.values(ouC).some(s=>s.size>1))n++;
+    const spr=ads.filter(a=>/\s[+-][\d.]+$/.test(a)); if(spr.length>1)n++;
+    const h2h=ads.filter(a=>!/^(Over|Under)\s/.test(a)&&!/\s[+-][\d.]+$/.test(a)); if(h2h.length>1)n++;
+  });
+  return n;
+}
+function seritGuncelle(){
+  const el=document.getElementById('secSerit');if(!el)return;
+  const l=secimler().filter(x=>!x.sonuc);
+  if(!l.length){el.classList.add('hidden');return;}
+  const h=secHesap(l);
+  el.innerHTML=`<span>${l.length} selection${l.length>1?'s':''} · best combined <span class="sn">${h.bilesik.toFixed(2)}</span></span><span class="sok">open ›</span>`;
+  el.classList.remove('hidden');
+}
+let DUN=null;
+async function dunGetir(){
+  try{const r=await fetch(HOST+'/dun.json',{cache:'no-store'});if(r.ok)DUN=await r.json();}catch(e){}
+}
+function dunBul(mac){
+  if(!DUN||!DUN.gunler)return null;
+  for(const g of Object.values(DUN.gunler)){
+    const e=g.find(x=>x.t===mac.t&&x.h===mac.h&&x.a===mac.a);
+    if(e)return e;
+  }
+  return null;
+}
+function secSonuclandir(s,e){
+  if(!e||e.hs==null||e.as==null)return null;
+  const ad=s.ad, hs=e.hs, as=e.as, mac=s.mac, kap=e.kap||{};
+  let tuttu=null, kapP=null;
+  const m1=ad.match(/^(Over|Under)\s+([\d.]+)$/);
+  if(m1){
+    const c=parseFloat(m1[2]), t=hs+as;
+    tuttu=(t===c)?null:((m1[1]==='Over')?t>c:t<c);
+    if(kap.tot&&kap.tot.cizgi===c&&kap.tot.p)kapP=m1[1]==='Over'?kap.tot.p.o:kap.tot.p.u;
+  }else{
+    const m2=ad.match(/^(.*)\s([+-][\d.]+)$/);
+    if(m2&&(m2[1]===mac.h||m2[1]===mac.a)){
+      const num=parseFloat(m2[2]), ev=(m2[1]===mac.h);
+      const fark=(ev?hs-as:as-hs)+num;
+      tuttu=(fark===0)?null:fark>0;
+      if(kap.spr&&kap.spr.p&&kap.spr.cizgi===(ev?num:-num))kapP=ev?kap.spr.p.h:kap.spr.p.a;
+    }else{
+      const kaz=hs>as?mac.h:(as>hs?mac.a:'Draw');
+      tuttu=(ad===kaz);
+      if(kap.p){kapP=ad===mac.h?kap.p.h:(ad===mac.a?kap.p.a:kap.p.d);}
+    }
+  }
+  return {tuttu:tuttu, kapFair:(kapP?1/kapP:null), skor:e.skor||(hs+'-'+as)};
+}
+function secimleriSonuclandir(){
+  const l=secimler();let degisti=false;
+  l.forEach(s=>{
+    if(s.sonuc)return;
+    const e=dunBul(s.mac);const r=e?secSonuclandir(s,e):null;
+    if(r){s.sonuc=r;degisti=true;}
+  });
+  if(degisti)secKaydet(l.slice(-200));
+}
+function aynaOzet(gecmis){
+  const kar=gecmis.filter(x=>x.sonuc&&x.sonuc.tuttu!==null);
+  if(!kar.length)return '';
+  const kaz=kar.filter(x=>x.sonuc.tuttu).length;
+  // gercekte oynanan fiyat: kitap secildiyse o kitabin fiyati, yoksa (bolgesel) en iyi
+  const oynananFiyat=(x)=>{
+    if(x.kitap&&x.liste){const f=x.liste.find(y=>y.k===x.kitap);if(f)return f.o;}
+    if(x.liste&&x.liste.length)return Math.max(...x.liste.map(y=>y.o));
+    return x.p?1/x.p:null;
+  };
+  const clv=gecmis.filter(x=>x.sonuc&&x.sonuc.kapFair&&oynananFiyat(x));
+  let clvS='';
+  if(clv.length){
+    const yen=clv.filter(x=>oynananFiyat(x)>x.sonuc.kapFair).length;
+    const ort=clv.reduce((a,x)=>a+(oynananFiyat(x)/x.sonuc.kapFair-1),0)/clv.length*100;
+    clvS=` Against the closing line: the price you took beat the close on <b>${yen} of ${clv.length}</b> (avg <b>${ort>=0?'+':''}${ort.toFixed(1)}%</b>).`;
+  }
+  // ---- kitap-kaybi: sectigin kitap vs o macta en iyi fiyat ----
+  const kk=gecmis.filter(x=>x.kitap&&x.liste&&x.liste.length>=2);
+  let kkS='';
+  if(kk.length){
+    let seninTop=1, enIyiTop=1, farkli=0;
+    kk.forEach(x=>{
+      const senin=(x.liste.find(y=>y.k===x.kitap)||{}).o;
+      const enIyi=Math.max(...x.liste.map(y=>y.o));
+      if(!senin||!enIyi)return;
+      seninTop*=senin; enIyiTop*=enIyi;
+      if(enIyi>senin*1.001)farkli++;
+    });
+    const fazla=(enIyiTop/seninTop-1)*100;
+    if(fazla>=0.1){
+      kkS=` On the <b>${kk.length}</b> you set a book, the best available price would have returned <b>+${fazla.toFixed(1)}%</b> more — line-shopping left that on the table on <b>${farkli}</b> of them.`;
+    }
+  }
+  return `<div class="ayna"><div class="ab">YOUR MIRROR · ${gecmis.length} SETTLED</div>
+    <div class="as">Of <b>${kar.length}</b> decided selections, <b>${kaz}</b> came in.${clvS}${kkS}</div>
+    <div class="an">Picked-vs-closing is the honest test: beating the close over many picks means you read the market before it moved. Not money, not advice — a mirror.</div></div>`;
+}
+function secSatir(s,gecmis){
+  const sl=sirala(s.liste||[]);let top=sl[0];
+  if(s.kitap){const f=(s.liste||[]).find(x=>x.k===s.kitap);if(f)top=f;}
+  let durum='';
+  if(s.sonuc){
+    const r=s.sonuc, picked=s.p?(1/s.p).toFixed(2):'—';
+    const cls=r.tuttu===null?'bekle':(r.tuttu?'kaz':'kayip');
+    const etiket=r.tuttu===null?'push':(r.tuttu?'✓ came in':'✗ did not');
+    durum=`<div class="sdurum ${cls}"><b>${etiket}</b> · ${esc(r.skor)} · picked at fair ${picked}${r.kapFair?` → closed ${r.kapFair.toFixed(2)}`:''}</div>`;
+  }else{
+    durum=`<div class="sdurum bekle">pending · picked at fair ${s.p?(1/s.p).toFixed(2):'—'}</div>`;
+  }
+  return `<div class="secrow${gecmis?' gecmis':''}"><span class="smid"><div class="sad">${esc(s.ad)}</div>
+    <div class="smac">${esc(s.mac.h)} — ${esc(s.mac.a)} · ${esc(s.mac.lig||'')} · ${gun(s.mac.t)}${saat(s.mac.t)}</div>${s.kitap?`<div class="skitapsec">your book: ${esc(s.kitap)}</div>`:""}${durum}</span>
+    <span><div class="sfiyat">${top?top.o.toFixed(2):'—'}</div><div class="skitap">${top?esc(top.k):''}</div></span>
+    <button class="sil" onclick="secSil('${s.k.replace(/'/g,"\\'")}')">×</button></div>`;
+}
+async function showSecimler(){
+  await dunGetir();secimleriSonuclandir();seritGuncelle();
+  ['view-list','view-detail','view-ledger'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+  document.getElementById('view-sec').classList.remove('hidden');
+  window.scrollTo(0,0);renderSecListesi();
+}
+function renderSecListesi(){
+  const kutu=document.getElementById('secBody');const tum=secimler();
+  const l=tum.filter(x=>!x.sonuc), gecmis=tum.filter(x=>x.sonuc).slice().reverse();
+  let html='';
+  if(!l.length&&!gecmis.length){kutu.innerHTML='<div class="empty">Nothing selected yet.<br>Tap + next to any price to start a line-shopping list.</div>';return;}
+  if(l.length){
+    const h=secHesap(l), b=bolge();
+    const dag=Object.entries(h.dagilim).sort((a,b)=>b[1]-a[1]).map(([k,n])=>`${n} at <b>${esc(k)}</b>`).join(', ');
+    html+=`<div class="secozet"><div class="buyuk">${h.eksik?'—':h.bilesik.toFixed(2)}</div>
+      <div class="kucuk">${b==='all'?'Best combined price across books':'Best combined price on your <b>'+b.toUpperCase()+'</b> shelf'} — ${h.eksik?'some legs have no price on this shelf':'to get it: '+dag+'.'}`;
+    if(h.tek){const fark=(h.bilesik/h.tek.c-1)*100;
+      html+=`<br>Best single book: <b>${esc(h.tek.k)}</b> at <b>${h.tek.c.toFixed(2)}</b>${fark>=0.05?` — splitting across books is worth <b>${fark.toFixed(1)}%</b> more`:` — no gain from splitting`}.`;}
+    else html+=`<br>No single book prices all of these.`;
+    if(b!=='all'){const d=secHesap(l,true);
+      if(!d.eksik&&d.bilesik>h.bilesik*1.005){const dd=Object.entries(d.dagilim).map(([k,n])=>`${n} at ${esc(k)}`).join(', ');
+        html+=`<br><span style="color:var(--gold)">Beyond your region:</span> <b>${d.bilesik.toFixed(2)}</b>${h.eksik?'':` — <b>+${((d.bilesik/h.bilesik-1)*100).toFixed(1)}%</b> more`} (${dd}).`;}}
+    html+=`</div></div>`;
+    const kars=karsitlar(l);
+    if(kars){html+=`<div class="secuyari kirmizi"><b>Mutually exclusive selections.</b> Two picks from the same market can't both come in (Over and Under, home and away, both sides of a spread). The combined price above has no meaning for those legs.</div>`;}
+    const macSayac={};l.forEach(s=>{const mk=[s.mac.key,s.mac.t,s.mac.h,s.mac.a].join('|');macSayac[mk]=(macSayac[mk]||0)+1;});
+    if(Object.values(macSayac).some(n=>n>1)){
+      html+=`<div class="secuyari"><b>Same-game selections detected.</b> Outcomes from one match are correlated — multiplying their prices does not reflect how books price the combination, and many won't take it as a plain accumulator. The combined figure above is arithmetic only for those legs.</div>`;
+    }
+    l.forEach(s=>{html+=secSatir(s,false);});
+    html+=`<div class="ligkarne">Prices are the best on record at the moment of selection. Each added leg multiplies the book's cut — a three-leg combination carries roughly three times the margin of a single bet. The record, not a recommendation.</div>`;
+  }
+  if(gecmis.length){
+    html+=aynaOzet(gecmis);
+    html+=`<div class="gunbas">SETTLED · ${gecmis.length}</div>`;
+    gecmis.forEach(s=>{html+=secSatir(s,true);});
+  }
+  kutu.innerHTML=html;
+}
+function yildizlar(){try{return new Set(JSON.parse(localStorage.getItem('brier_yildiz')||'[]'))}catch(e){return new Set()}}
+function ligYildiz(ev,slug){ev.stopPropagation();
+  const s=yildizlar();s.has(slug)?s.delete(slug):s.add(slug);
+  try{localStorage.setItem('brier_yildiz',JSON.stringify([...s]))}catch(e){}
+  if(ledSek==='f')renderFindings();else renderLedger();}
+function fmtPara(k){const m=Math.abs(k).toLocaleString('en-US');return (k<0?'−$':'+$')+m;}
+async function showLedger(){
+  menuKapat();
+  document.getElementById('view-list').classList.add('hidden');
+  document.getElementById('view-detail').classList.add('hidden');
+  document.getElementById('view-sec').classList.add('hidden');
+  document.getElementById('view-ledger').classList.remove('hidden');
+  window.scrollTo(0,0);
+  const kutu=document.getElementById('ledgerBody');
+  if(!STRATEJI){
+    kutu.innerHTML='<div class="empty">Opening the ledger…</div>';
+    try{
+      const r=await fetch(MEMORY+'brier_strateji.json?v=a11',{cache:'no-store'});
+      STRATEJI=await r.json();
+    }catch(e){
+      kutu.innerHTML='<div class="empty">The ledger is unreachable right now.<br>The record is still there — try again shortly.</div>';
+      return;
+    }
+  }
+  if(ledSek==='f')renderFindings();else renderLedger();
+}
+function renderLedger(){
+  const kutu=document.getElementById('ledgerBody');
+  window._ledAcik=window._ledAcik||new Set();
+  const yld=yildizlar();
+  const ligler=Object.entries(STRATEJI||{}).map(([slug,yillar])=>{
+    const ys=Object.keys(yillar).sort();
+    const son=ys[ys.length-1];
+    const topBahis=ys.reduce((a,y)=>{const ef=yillar[y].s4||yillar[y].s3;return a+(ef?ef.bahis:0);},0);
+    return {slug,yillar,ys,son,topBahis};
+  }).sort((a,b)=>b.topBahis-a.topBahis);
+  const benim=ligler.filter(L=>yld.has(L.slug)), digerleri=ligler.filter(L=>!yld.has(L.slug));
+  const satir=(L)=>{
+    const _son=L.yillar[L.son];
+    const s3=_son.s4||_son.s3;
+    const kapsam=L.ys.length>1?`${L.ys[0]}\u2013${L.ys[L.ys.length-1]}`:`${L.son} \u00b7 single season`;
+    const acik=window._ledAcik.has(L.slug);
+    let h=`<button class="ledrow" onclick="ledTgl('${L.slug}')">
+      <span class="lyld${yld.has(L.slug)?' on':''}" onclick="ligYildiz(event,'${L.slug}')">${yld.has(L.slug)?'\u2605':'\u2606'}</span>
+      <span class="lad">${esc(LEDGER_AD[L.slug]||L.slug.toUpperCase())}
+        <span class="lyil">${kapsam} \u00b7 ${L.son}: every favourite \u00b7 ${s3.bahis.toLocaleString('en-US')} matches</span></span>
+      <span class="lkar">${fmtPara(s3.kar)}</span><span class="ledok">${acik?"\u25be":"\u25b8"}</span></button>`;
+    if(acik){
+      h+='<div class="leddet"><table><tr><th>year</th><th>strategy</th><th>bets</th><th>hit</th><th>net</th></tr>';
+      L.ys.slice().reverse().forEach(y=>{
+        const S=L.yillar[y];let ilk=true;
+        [['s1','biggest fav of the week'],['s2','top two favs of the week'],['s3','top three favs of the week'],['s4','every favourite']].forEach(([k,ad])=>{
+          if(!S[k])return;
+          h+=`<tr${ilk?' class="yilbasi"':''}><td>${ilk?('<b>'+y+'</b>'):''}</td><td>${ad}</td><td>${S[k].bahis.toLocaleString('en-US')}</td><td>%${S[k].tutma}</td><td>${fmtPara(S[k].kar)}</td></tr>`;
+          ilk=false;
+        });
+      });
+      h+='</table><div class="ledgernot">The first rows are the week\u2019s most selective picks. <b>Every favourite</b> is not a plan to follow \u2014 it\u2019s the whole-league test: what backing every single favourite would have paid, flat stake. The record of the market, not a call to bet.</div></div>';
+    }
+    return h;
+  };
+  let h='<div class="ledipucu">TAP A LEAGUE FOR THE FULL YEAR-BY-YEAR RECORD</div>';
+  if(benim.length){
+    h+='<div class="gunbas">MY LEAGUES \u00b7 tap \u2606 to change</div>';
+    benim.forEach(L=>{h+=satir(L);});
+    h+='<div class="gunbas">ALL LEAGUES</div>';
+  }
+  digerleri.forEach(L=>{h+=satir(L);});
+  h+='<div class="ligkarne">Ranked by sample size. Tap \u2606 to pin a league to the top \u2014 saved on this device only. Single-season rows carry less weight \u2014 one year is a data point, not a pattern.</div>';
+  kutu.innerHTML=h;
+}
+let ledSek='l';
+function ledSekme(s){ledSek=s;
+  const not=document.getElementById('ledgerNot');
+  if(s==='f'){not.innerHTML='What the archive says about each market — favourites, draws, home and away, clubs, books. Every line is a count, not a claim. <span style="color:var(--teal);font-weight:600">Teal</span> = outcomes beat their price, <span style="color:var(--red);font-weight:600">red</span> = fell short — direction, not profit.';renderFindings();}
+  else if(s==='y'){not.textContent='What the market said and what happened — closing favourites, by day. A daily calibration record, not a scoreboard.';renderYesterday();}
+  else{not.textContent='Flat $100 on the consensus favourite, settled at the best closing price. What each season actually paid — not a plan for the next one.';renderLedger();}
+  ['sekL','sekF','sekY'].forEach(id=>{const b=document.getElementById(id);if(b)b.classList.toggle('on',id==='sek'+s.toUpperCase());});
+}
+const TUR_AD={calibration:'calibration',draw:'draws',homeaway:'home / away',club:'club premium',sharpness:'sharpness',book:'books',upset:'upsets'};
+function vurgula(t){return esc(t).replace(/(\d+(?:\.\d+)?%|\d+(?:\.\d+)? points?|over [\d,]+ matches)/g,'<b>$1</b>');}
+let DUN_L=null;
+async function renderYesterday(){
+  const kutu=document.getElementById('ledgerBody');
+  kutu.innerHTML='<div class="empty">Reading yesterday…</div>';
+  if(!DUN_L){try{const r=await fetch(HOST+'/dun.json',{cache:'no-store'});if(r.ok)DUN_L=await r.json();}catch(e){}}
+  const gunler=DUN_L&&DUN_L.gunler?DUN_L.gunler:{};
+  const tarihler=Object.keys(gunler).sort().reverse();
+  if(!tarihler.length){kutu.innerHTML='<div class="empty">No settled days yet.<br>Closing prices and results are still being collected — the first day fills once matches finish.</div>';return;}
+  let html='';
+  tarihler.forEach(tar=>{
+    const maclar=(gunler[tar]||[]).filter(m=>m.kap&&m.kap.p&&m.ima!=null);
+    if(!maclar.length)return;
+    // gun basligi
+    const gk=gunEtiket(tar);
+    html+=`<div class="ygun">${esc(gk).toUpperCase()} · ${maclar.length} MATCHES PRICED</div>`;
+    // ozet: favori tutma
+    const kaz=maclar.filter(m=>m.tuttu).length;
+    const imaOrt=maclar.reduce((a,m)=>a+m.ima,0)/maclar.length;
+    const beklenen=Math.round(maclar.length*imaOrt/100);
+    const fark=((kaz/maclar.length)-(imaOrt/100))*100;
+    html+=`<div class="yozet"><div class="yb">${kaz} / ${maclar.length}</div>
+      <div class="yl">CLOSING FAVOURITES THAT WON</div>
+      <div class="ys">The market's closing favourites averaged <b>${imaOrt.toFixed(0)}%</b> implied and <b>${kaz}</b> came in — expected about <b>${beklenen}</b>. ${Math.abs(fark)<3?'Right on the number.':`Favourites ${fark>0?'beat':'fell short of'} the market by <b>${Math.abs(fark).toFixed(1)} points</b> this day.`}</div></div>`;
+    // kalibrasyon kovalari
+    const kovalar=[['70%+',m=>m.ima>=70],['60-70%',m=>m.ima>=60&&m.ima<70],['50-60%',m=>m.ima>=50&&m.ima<60]];
+    kovalar.forEach(([ad,f])=>{
+      const g=maclar.filter(f);
+      if(g.length<3)return;
+      const w=g.filter(m=>m.tuttu).length;
+      const im=g.reduce((a,m)=>a+m.ima,0)/g.length;
+      const d=(100*w/g.length)-im;
+      html+=`<div class="ykova"><span class="yk">${ad}</span><span>priced <b>${im.toFixed(0)}%</b> · won <b>${Math.round(100*w/g.length)}%</b> (${w}/${g.length})</span><span class="yf ${d>=0?'u':'o'}">${d>=0?'+':'−'}${Math.abs(d).toFixed(0)} pts</span></div>`;
+    });
+    // en buyuk iska: en yuksek ima'li kaybeden favori
+    const iskalar=maclar.filter(m=>!m.tuttu).sort((a,b)=>b.ima-a.ima);
+    if(iskalar.length){
+      const i=iskalar[0];
+      html+=`<div class="yiska">Biggest miss: the market's <b>${i.ima}%</b> favourite <b>${esc(i.fav)}</b> didn't come through — ${esc(i.h)} <b>${esc(i.skor)}</b> ${esc(i.a)}.</div>`;
+    }
+  });
+  html+='<div class="ligkarne"><span style="color:var(--teal);font-weight:600">Teal</span> = favourites beat their price, <span style="color:var(--red);font-weight:600">red</span> = fell short — direction, not profit. Figures round to the nearest whole, so a gap may differ by a point from the shown percentages. Every match whose closing price we captured, grouped by day — a record, not a tip.</div>';
+  kutu.innerHTML=html||'<div class="empty">No settled matches with closing prices yet.</div>';
+}
+let bulguYon='all';
+function bulguYonu(x){
+  if(x.yon)return x.yon;
+  const m=x.metin||'';
+  if(/won more often|outperform|overperform|carried a discount|more often than priced/.test(m))return 'under';
+  if(/won less often|underperform|carried a premium|less often than priced/.test(m))return 'over';
+  return 'none';
+}
+function bulguFiltre(y){bulguYon=y;renderFindings();}
+async function renderFindings(){
+  const kutu=document.getElementById('ledgerBody');
+  kutu.innerHTML='<div class="empty">Reading the archive…</div>';
+  const I=await insightGetir();const h=(I&&I.havuz)||[];
+  if(!h.length){kutu.innerHTML='<div class="empty">No record on file yet.</div>';return;}
+  const yld=yildizlar();
+  const liste=h.filter(x=>bulguYon==='all'||bulguYonu(x)===bulguYon).slice().sort((a,b)=>(yld.has(b.lig)-yld.has(a.lig))||(b.onem-a.onem));
+  let html=`<div class="bulguF">`+[['all','ALL'],['under','MARKET UNDER-PRICED'],['over','MARKET OVER-PRICED']].map(([v,t])=>`<button class="${bulguYon===v?'on':''}" onclick="bulguFiltre('${v}')">${t}</button>`).join('')+`</div>`;
+  if(bulguYon!=='all')html+=`<div class="bulguNot">${bulguYon==='under'?'where outcomes beat their price':'where outcomes fell short of their price'} · past gaps, not future edges — markets adapt · strong z≥3 · lean z≥2 · thin below · figures round to nearest whole</div>`;
+  if(!liste.length){kutu.innerHTML=html+'<div class="empty">Nothing in this direction yet.</div>';return;}let benimBasladi=false,digerBasladi=false;
+  liste.forEach(x=>{
+    const benim=yld.has(x.lig);
+    if(benim&&!benimBasladi){html+='<div class="gunbas">MY LEAGUES</div>';benimBasladi=true;}
+    if(!benim&&benimBasladi&&!digerBasladi){html+='<div class="gunbas">ALL LEAGUES</div>';digerBasladi=true;}
+    const ligAd=x.lig==='all'?'all leagues':(LEDGER_AD[x.lig]||x.lig);
+    if(x.imp!=null&&x.act!=null){
+      const yon=x.fark>0?'under':'over', isaret=x.fark>0?'+':'−';
+      html+=`<div class="bulgu">
+        <div class="bk"><span class="bf ${yon}">${isaret}${Math.abs(x.fark).toFixed(1)}</span><span class="be">${esc(x.etiket||'')} · ${esc(ligAd)}</span><span class="bg ${x.guven}">${x.guven}</span></div>
+        <div class="bs"><span>priced <b>${x.imp}%</b> → happened <b>${x.act}%</b></span><span>fair <b>${x.fair}</b> → realised <b>${x.gercek!=null?x.gercek:'—'}</b></span><span>flat-stake <b>${x.getiri>=0?'+':''}${x.getiri}%</b></span></div>
+        <div class="bm kucuk">${esc(x.metin)}</div>
+        <div class="bt">${TUR_AD[x.tur]||x.tur} · n=${(x.n||0).toLocaleString('en-US')} · z=${x.z}</div></div>`;
+    }else{
+      html+=`<div class="bulgu"><div class="bm">${vurgula(x.metin)}</div><div class="bt">${esc(ligAd)} · ${TUR_AD[x.tur]||x.tur} · n=${(x.n||0).toLocaleString('en-US')}</div></div>`;
+    }
+  });
+  html+='<div class="ligkarne">Findings are recomputed from the score archive each month. Small samples are labelled by their n — read them as leans, not laws.</div>';
+  kutu.innerHTML=html;
+}
+function ledTgl(slug){
+  window._ledAcik=window._ledAcik||new Set();
+  window._ledAcik.has(slug)?window._ledAcik.delete(slug):window._ledAcik.add(slug);
+  renderLedger();
+}
+async function golkarneGetir(){
+  if(GKARNE!==null)return GKARNE;
+  try{
+    const r=await fetch(MEMORY+'brier_golkarne.json?v=a76',{cache:'no-store'});
+    GKARNE=r.ok?await r.json():{};
+  }catch(e){GKARNE={};}
+  return GKARNE;
+}
+// Acilis->kapanis arsivi (odds_history/<lig>.json, dun.json'dan gunluk arsivlenir). Lig basina tembel yukleme + onbellek.
+const ODDS_HIST={};
+async function oddsHistGetir(lig){
+  if(!lig)return null;
+  if(lig in ODDS_HIST)return ODDS_HIST[lig];
+  try{
+    const r=await fetch(MEMORY+'odds_history/'+lig+'.json',{cache:'no-store'});
+    ODDS_HIST[lig]=r.ok?await r.json():null;
+  }catch(e){ODDS_HIST[lig]=null;}
+  return ODDS_HIST[lig];
+}
+async function hafizaGetir(lig){
+  if(!lig)return null;
+  if(HAFIZA[lig]!==undefined)return HAFIZA[lig];
+  try{
+    const r=await fetch(MEMORY+'brier_hafiza_'+lig+'.json?v=a3u',{cache:'no-store'});
+    HAFIZA[lig]=r.ok?await r.json():null;
+  }catch(e){HAFIZA[lig]=null;}
+  return HAFIZA[lig];
+}
+
+function sirala(liste){
+  if(!liste) return liste;
+  // esitlikte: gun-rotasyonlu alfabe - her kitap tepede gununu alir, kimse satin alamaz
+  const kay=gunTohum()%26;
+  const dondur=(s)=>{const c=String(s).toLowerCase();
+    return String.fromCharCode(((c.charCodeAt(0)-97+26-kay)%26)+97)+c.slice(1);};
+  return [...liste].sort((x,y)=> y.o - x.o || dondur(x.k).localeCompare(dondur(y.k)));
+}
+function ustunluk(listeler){
+  // her secim icin: (gosterilen en iyi / ortalama fiyat - 1); secimler arasi ortalama
+  const oranlar=[];
+  listeler.forEach(L=>{
+    const dunya=(L||[]).filter(x=>x&&x.o>1);if(dunya.length<3)return;
+    const gost=sirala(bolgeFiltre(dunya))[0];if(!gost)return;
+    const ort=dunya.reduce((a,x)=>a+x.o,0)/dunya.length;
+    oranlar.push(gost.o/ort-1);
+  });
+  if(!oranlar.length)return null;
+  return {yuzde:oranlar.reduce((a,b)=>a+b,0)/oranlar.length*100,n:oranlar.length};
+}
+function ustCumle(listeler){
+  const u=ustunluk(listeler);
+  if(!u||u.yuzde<0.05)return '';
+  return ` Here, the best price beats the average quoted for this match by <b>${u.yuzde.toFixed(1)}%</b>.`;
+}
+function fiyatSatiri(ad,tag,liste,p){
+  const dunya=sirala(liste);
+  liste=sirala(bolgeFiltre(dunya));
+  const top=(liste&&liste[0])||null, dTop=(dunya&&dunya[0])||null;
+  const uzak=(bolge()!=='all'&&dTop&&top&&dTop.o>top.o*1.01)?`<span class="uzak">world ${dTop.o.toFixed(2)} · ${esc(dTop.k)}</span>`:
+             ((bolge()!=='all'&&dTop&&!top)?`<span class="uzak">no ${bolge().toUpperCase()} price · world ${dTop.o.toFixed(2)} ${esc(dTop.k)}</span>`:'');
+  const pct=p!=null?` · market ${Math.round(p*100)}% · fair ${(1/p).toFixed(2)}`:'';
+  let btn='';
+  if(window._detayMac&&top){
+    const i=(window._satirlar=window._satirlar||[]).push({ad:ad,liste:dunya,p:p})-1;
+    const k=secAnahtar(window._detayMac,ad), l=secimler().filter(x=>!x.sonuc), on=l.some(x=>x.k===k);
+    const dolu=!on&&l.length>=SEC_MAX;
+    btn=`<button class="secbtn${on?' on':''}" ${dolu?'disabled':''} onclick="secEkle(event,${i})" title="${on?'remove from':'add to'} selections">${on?'✓':'+'}</button>`;
+  }
+  return `<div class="orow">
+    <span class="sel">${esc(ad)}<span class="tag">${esc(tag)}${pct}</span></span>
+    <span class="odd">${top?top.o.toFixed(2):'—'}</span>
+    <span class="book">${top?esc(top.k):''}${uzak}</span>${btn}</div>`;
+}
+function digerleri(ad,etiket,liste){
+  const sl=sirala(liste);
+  if(!sl||sl.length<2)return'';
+  return sl.slice(1,5).map(x=>{
+    let btn='';
+    if(window._detayMac){
+      const k=secAnahtar(window._detayMac,ad), l=secimler().filter(s=>!s.sonuc);
+      const secili=l.find(s=>s.k===k), on=secili&&secili.kitap===x.k;
+      const dolu=!secili&&l.length>=SEC_MAX;
+      btn=`<button class="mbtn${on?' on':''}" ${dolu?'disabled':''} onclick="secEkleKitap(event,'${encodeURIComponent(ad)}','${esc(x.k)}',${x.o})" title="add ${esc(x.k)} price to selections">${on?'\u2713':'+'}</button>`;
+    }
+    return `<div class="minirow"><span>${esc(etiket)} · ${esc(x.k)}</span><span class="o">${x.o.toFixed(2)}</span>${btn}</div>`;
+  }).join('');
+}
+function secEkleKitap(ev,adEnc,kitap,oran){
+  ev.stopPropagation();
+  const ad=decodeURIComponent(adEnc), mac=window._detayMac;
+  if(!mac)return;
+  const k=secAnahtar(mac,ad);
+  // o secimin tam listesini _satirlar'dan bul (fair hesabi icin)
+  const sr=(window._satirlar||[]).find(s=>s.ad===ad);
+  let l=secimler();
+  const mevcut=l.find(x=>x.k===k&&!x.sonuc);
+  if(mevcut&&mevcut.kitap===kitap){ l=l.filter(x=>!(x.k===k&&!x.sonuc)); }  // ayni kitaba tekrar bas -> kaldir
+  else if(mevcut){ mevcut.kitap=kitap; }  // baska secime gec
+  else{
+    if(l.filter(x=>!x.sonuc).length>=SEC_MAX)return;
+    l.push({k:k,ad:ad,p:sr?sr.p:null,liste:(sr?sr.liste:[]).map(x=>({k:x.k,o:x.o})),
+            kitap:kitap, mac:{key:mac.key,t:mac.t,h:mac.h,a:mac.a,lig:mac.ligAd}});
+  }
+  secKaydet(l);
+  if(window._detayIdx!=null)showDetail(window._detayIdx);
+  seritGuncelle();
+}
+
+async function showDetail(i){
+  window._satirlar=[];window._detayMac=(window._shown||[])[i]||null;window._detayIdx=i;
+  const m=window._shown[i];
+  if(!m){return;}
+  document.getElementById('view-list').classList.add('hidden');
+  document.getElementById('view-detail').classList.remove('hidden');
+  window.scrollTo(0,0);
+  const lig=ligBul(m.key);
+  const best=m.best||{};
+  const evAd=(m.h||'Home'), depAd=(m.a||'Away');
+  const ilkKelime=(s)=>String(s||'').split(' ')[0]||'';
+  let html=`<div class="dhead"><div class="comp">${esc(m.ligAd)}</div>
+    <div class="teams">${esc(evAd)} — ${esc(depAd)}</div>
+    <div class="when">${gun(m.t)}${saat(m.t)} · ${m.kitap||'?'} books tracked</div></div>
+    <div id="karneSlot"></div>`;
+  const REC=[]; // RECORD kartlari burada toplanir; macin EN USTUNDE sekme sekme basilir
+
+  // --- best prices ---
+  html+=`<div class="card"><div class="head"><span class="t">Best prices</span><span class="k">${m.sonuc3?'match result':'moneyline'}</span></div>`;
+  html+=fiyatSatiri(evAd,'home',best.h,(m.p||{}).h);
+  if(m.sonuc3)html+=fiyatSatiri('Draw','',best.d,(m.p||{}).d);
+  html+=fiyatSatiri(depAd,'away',best.a,(m.p||{}).a);
+  const diger=digerleri(evAd,ilkKelime(evAd),best.h)+(m.sonuc3?digerleri('Draw','Draw',best.d):'')+digerleri(depAd,ilkKelime(depAd),best.a);
+  if(diger)html+=`<details class="more"><summary>Other books</summary>${diger}</details>`;
+  if(m.tot_cizgi!=null&&!(m.tot&&m.tot.over))html+=`<div class="foot">Total line: ${m.tot_cizgi}. Best price per selection, whichever book holds it. "Market %" = de-vigged consensus; "fair" = that as a price; the gap to the best price is the take.${ustCumle([best.h,best.d,best.a])} Ties listed alphabetically, rotating daily.</div>`;
+  else html+=`<div class="foot">Best price per selection, whichever book holds it — no book is best at everything. "Market %" is the de-vigged consensus (sums to 100); "fair" is that consensus as a price — the gap between fair and the best price is the take.${ustCumle([best.h,best.d,best.a])} Ties at the best price are listed alphabetically, and the starting letter shifts one step each day — fairness by rotation, so no book owns the top spot.</div>`;
+  if(!best.h&&!best.a&&!best.d){
+    html=html.replace(/<div class="card"><div class="head"><span class="t">Best prices<\/span>[\s\S]*?<\/div>$/,'');
+    html+=`<div class="card"><div class="memempty">Live prices for this game aren't in the feed yet.<br>Check back closer to kickoff.</div></div>`;
+  }
+  html+=`</div>`;
+
+  // --- totals karti ---
+  if(m.tot&&m.tot.over&&m.tot.under){
+    const tc=m.tot;
+    html+=`<div class="card"><div class="head"><span class="t">Totals</span><span class="k">over/under ${tc.cizgi}</span></div>`;
+    html+=fiyatSatiri('Over '+tc.cizgi,'',tc.over,(tc.p||{}).o);
+    html+=fiyatSatiri('Under '+tc.cizgi,'',tc.under,(tc.p||{}).u);
+    const totDiger=digerleri('Over '+tc.cizgi,'Over',tc.over)+digerleri('Under '+tc.cizgi,'Under',tc.under);
+    if(totDiger)html+=`<details class="more"><summary>Other books</summary>${totDiger}</details>`;
+    let gk='';
+    try{
+      const G=GOLK&&GOLK[ligBul(m.key)];
+      if(G){
+        const nS=G.mac.toLocaleString('en-US');
+        let ligY=null;
+        if(G.hist){
+          let ust=0,top=0;
+          Object.entries(G.hist).forEach(([t,c])=>{top+=c;if(parseFloat(t)>tc.cizgi)ust+=c;});
+          if(top>0)ligY=Math.round(1000*ust/top)/10;
+        }else if(G.bantlar&&G.bantlar[String(tc.cizgi)]!=null){
+          ligY=G.bantlar[String(tc.cizgi)];
+        }
+        if(ligY!=null&&tc.p&&tc.p.o!=null){
+          const piyY=Math.round(tc.p.o*100), fark=piyY-ligY;
+          if(fark>=4){
+            gk=` League-wide, only <b>${ligY}%</b> of the last <b>${nS}</b> games finished over <b>${tc.cizgi}</b> — but books price this one at <b>${piyY}%</b>. The market isn't treating this as an ordinary game.`;
+          }else if(fark<=-4){
+            gk=` League-wide, <b>${ligY}%</b> of the last <b>${nS}</b> games finished over <b>${tc.cizgi}</b> — yet books price this one at just <b>${piyY}%</b>. The market expects a quieter game than this league usually delivers.`;
+          }else{
+            gk=` Books price the over at <b>${piyY}%</b> — right at this league's history: <b>${ligY}%</b> of the last <b>${nS}</b> games finished over <b>${tc.cizgi}</b>.`;
+          }
+        }else if(ligY!=null){
+          gk=` This league, last <b>${nS}</b> games: <b>${ligY}%</b> finished over <b>${tc.cizgi}</b>.`;
+        }else{
+          gk=` This league, last <b>${nS}</b> games: <b>${G.ort}</b> points/game on average.`;
+        }
+      }
+    }catch(e){}
+    html+=`<div class="foot">Only the <b>${tc.kitap} books</b> quoting the consensus line (<b>${tc.cizgi}</b>) are shown — books on other lines are left out, never mixed in.${ustCumle([tc.over,tc.under])}${gk}</div></div>`;
+
+    // --- TAKIM-GOL karti (ev takimi ev ort + dep takimi dep ort + lig + h2h) ---
+    try{
+      const Ht=await hafizaGetir(ligBul(m.key));
+      if(Ht&&Ht.takim_gol&&Ht.lig_gol_ort){
+        const tg=Ht.takim_gol, ligO=Ht.lig_gol_ort;
+        const evT=tg[evAd], depT=tg[depAd];
+        const evO=evT&&evT.ev_ort!=null?evT.ev_ort:null, evN=evT?evT.ev_n:0;
+        const depO=depT&&depT.dep_ort!=null?depT.dep_ort:null, depN=depT?depT.dep_n:0;
+        // birim: spora gore
+        const k=m.key||'';
+        let birim='goals';
+        if(/basketball|nba|ncaab|wnba|euroleague/.test(k))birim='points';
+        else if(/baseball|mlb/.test(k))birim='runs';
+        else if(/football_nfl|americanfootball|ncaaf/.test(k))birim='points';
+        if(evO!=null&&depO!=null){
+          const macOrt=(evO+depO)/2;
+          const fark=macOrt-ligO, yuzFark=ligO>0?(fark/ligO*100):0;
+          let sinif='', baslik='';
+          if(yuzFark>=10){sinif='hot';baslik='Above the league average';}
+          else if(yuzFark<=-10){sinif='cold';baslik='Below the league average';}
+          else{sinif='';baslik='Around the league average';}
+          // h2h ortalama toplam
+          let h2hCumle='';
+          const anah=[String(evAd).toLowerCase(),String(depAd).toLowerCase()].sort().join('|');
+          const gecmis=(Ht.h2h||{})[anah];
+          if(gecmis&&gecmis.length&&gecmis[0].top!=null){
+            const topSum=gecmis.reduce((a,x)=>a+(x.top||0),0);
+            const h2hOrt=(topSum/gecmis.length).toFixed(1);
+            h2hCumle=` Their last <b>${gecmis.length}</b> meeting${gecmis.length>1?'s':''} averaged <b>${h2hOrt}</b>.`;
+          }
+          const insS=recordInsight(evAd,depAd,evO,depO,ligO,'score');
+          REC.push({tab:'SCORING',html:`<div class="tgol"><div class="th">SCORING RECORD · ${birim.toUpperCase()}</div>
+            <div class="tbaslik ${sinif}">${esc(baslik)}</div>
+            <div class="ts"><b>${esc(ilkKelime(evAd))}</b> home <b>${evO}</b> · <b>${esc(ilkKelime(depAd))}</b> away <b>${depO}</b> · league <b>${ligO}</b> · line ${tc.cizgi}</div>${insS}</div>`});
+        }
+      }
+      // --- BASKETBALL BOX (ribaund/ucluk/asist - sadece basketbol, tek kart) ---
+      try{
+        const gkb=await golkarneGetir();
+        const lgb=ligBul(m.key);
+        const gb=gkb&&gkb[lgb]?gkb[lgb]:null;
+        if(gb&&gb.lig_ribaund_ort){
+          // ev takiminin ev ort + dep takiminin dep ort, her metrik icin
+          const satirlar=[];
+          const metrik=[['ribaund','rebounds','takim_ribaund','lig_ribaund_ort'],
+                        ['ucluk','threes','takim_ucluk','lig_ucluk_ort'],
+                        ['asist','assists','takim_asist','lig_asist_ort']];
+          for(const [mt,etiket,tkey,lkey] of metrik){
+            const tk=gb[tkey]||{}, ligM=gb[lkey];
+            if(ligM==null)continue;
+            const et=tkGet(tk,evAd), dt=tkGet(tk,depAd);
+            const ev=et&&et.ev_ort!=null?et.ev_ort:null;
+            const dp=dt&&dt.dep_ort!=null?dt.dep_ort:null;
+            if(ev!=null&&dp!=null){
+              const macM=(ev+dp)/2, fark=macM-ligM, yuz=ligM>0?(fark/ligM*100):0;
+              const renk=yuz>=8?'kartArti':(yuz<=-8?'kartEksi':'');
+              satirlar.push(`<span class="${renk}"><b>${esc(ilkKelime(evAd))}</b> ${ev} · <b>${esc(ilkKelime(depAd))}</b> ${dp}</span> ${etiket} <span style="color:var(--grey)">(league ${ligM})</span>`);
+            }
+          }
+          if(satirlar.length){
+            const rk=gb.takim_ribaund||{};
+            const ins=recordInsight(evAd,depAd,(tkGet(rk,evAd)||{}).ev_ort,(tkGet(rk,depAd)||{}).dep_ort,gb.lig_ribaund_ort,'rebound');
+            REC.push({tab:'BOX',html:`<div class="tgol"><div class="th">BOX SCORE · PER GAME</div>
+              <div class="ts" style="line-height:1.9">${satirlar.join('<br>')}</div>${ins}</div>`});
+          }
+        }
+      }catch(e){}
+      // --- NFL RECORD: yards/first downs/passing (sadece NFL, en buyuk sharp) ---
+      try{
+        const gkn=await golkarneGetir();
+        const lgn=ligBul(m.key);
+        const gn=gkn&&gkn[lgn]?gkn[lgn]:null;
+        if(gn&&gn.lig_yards_ort){
+          const satirlar=[];
+          const metrik=[['yards','total yards','takim_yards','lig_yards_ort'],
+                        ['first_downs','first downs','takim_first_downs','lig_first_downs_ort'],
+                        ['passing_yards','passing yds','takim_passing_yards','lig_passing_yards_ort']];
+          for(const [mt,etiket,tkey,lkey] of metrik){
+            const tk=gn[tkey]||{}, ligM=gn[lkey];
+            if(ligM==null)continue;
+            const et=tkGet(tk,evAd), dt=tkGet(tk,depAd);
+            const ev=et&&et.ev_ort!=null?et.ev_ort:null;
+            const dp=dt&&dt.dep_ort!=null?dt.dep_ort:null;
+            if(ev!=null&&dp!=null){
+              const macM=(ev+dp)/2, fark=macM-ligM, yuz=ligM>0?(fark/ligM*100):0;
+              const renk=yuz>=8?'kartArti':(yuz<=-8?'kartEksi':'');
+              satirlar.push(`<span class="${renk}"><b>${esc(ilkKelime(evAd))}</b> ${ev} · <b>${esc(ilkKelime(depAd))}</b> ${dp}</span> ${etiket} <span style="color:var(--grey)">(league ${ligM})</span>`);
+            }
+          }
+          if(satirlar.length){
+            const yk=gn.takim_yards||{};
+            const ins=recordInsight(evAd,depAd,(tkGet(yk,evAd)||{}).ev_ort,(tkGet(yk,depAd)||{}).dep_ort,gn.lig_yards_ort,'yards');
+            REC.push({tab:'TEAM',html:`<div class="tgol"><div class="th">TEAM RECORD · PER GAME</div>
+              <div class="ts" style="line-height:1.9">${satirlar.join('<br>')}</div>${ins}</div>`});
+          }
+        }
+      }catch(e){}
+      // --- MLB RECORD: hits/HR/runs/ERA (sadece beyzbol) ---
+      try{
+        const gkm=await golkarneGetir();
+        const lgm=ligBul(m.key);
+        const gm=gkm&&gkm[lgm]?gkm[lgm]:null;
+        if(gm&&gm.lig_hits_ort){
+          const satirlar=[];
+          const metrik=[['hits','hits','takim_hits','lig_hits_ort'],
+                        ['hr','home runs','takim_hr','lig_hr_ort'],
+                        ['runs','runs','takim_runs','lig_runs_ort'],
+                        ['era','ERA','takim_era','lig_era_ort']];
+          for(const [mt,etiket,tkey,lkey] of metrik){
+            const tk=gm[tkey]||{}, ligM=gm[lkey];
+            if(ligM==null)continue;
+            const et=tkGet(tk,evAd), dt=tkGet(tk,depAd);
+            const ev=et&&et.ev_ort!=null?et.ev_ort:null;
+            const dp=dt&&dt.dep_ort!=null?dt.dep_ort:null;
+            if(ev!=null&&dp!=null){
+              const macM=(ev+dp)/2, fark=macM-ligM, yuz=ligM>0?(fark/ligM*100):0;
+              // ERA ters: dusuk iyi (yesil dusuk)
+              const renk=mt==='era'?(yuz<=-8?'kartArti':(yuz>=8?'kartEksi':'')):(yuz>=8?'kartArti':(yuz<=-8?'kartEksi':''));
+              satirlar.push(`<span class="${renk}"><b>${esc(ilkKelime(evAd))}</b> ${ev} · <b>${esc(ilkKelime(depAd))}</b> ${dp}</span> ${etiket} <span style="color:var(--grey)">(league ${ligM})</span>`);
+            }
+          }
+          if(satirlar.length){
+            const hk=gm.takim_hits||{};
+            const ins=recordInsight(evAd,depAd,(tkGet(hk,evAd)||{}).ev_ort,(tkGet(hk,depAd)||{}).dep_ort,gm.lig_hits_ort,'hits');
+            REC.push({tab:'TEAM',html:`<div class="tgol"><div class="th">TEAM RECORD · PER GAME</div>
+              <div class="ts" style="line-height:1.9">${satirlar.join('<br>')}</div>${ins}</div>`});
+          }
+        }
+      }catch(e){}
+      // --- NHL RECORD: shots on goal (sadece hokey) ---
+      try{
+        const gkh=await golkarneGetir();
+        const lgh=ligBul(m.key);
+        const gh=gkh&&gkh[lgh]?gkh[lgh]:null;
+        if(gh&&gh.lig_sog_ort){
+          const tk=gh.takim_sog||{}, ligM=gh.lig_sog_ort;
+          const et=tkGet(tk,evAd), dt=tkGet(tk,depAd);
+          const ev=et&&et.ev_ort!=null?et.ev_ort:null;
+          const dp=dt&&dt.dep_ort!=null?dt.dep_ort:null;
+          if(ev!=null&&dp!=null){
+            const macM=(ev+dp)/2, fark=macM-ligM, yuz=ligM>0?(fark/ligM*100):0;
+            const renk=yuz>=8?'kartArti':(yuz<=-8?'kartEksi':'');
+            const ins=recordInsight(evAd,depAd,ev,dp,ligM,'shot');
+            REC.push({tab:'TEAM',html:`<div class="tgol"><div class="th">TEAM RECORD · PER GAME</div>
+              <div class="ts" style="line-height:1.9"><span class="${renk}"><b>${esc(ilkKelime(evAd))}</b> ${ev} · <b>${esc(ilkKelime(depAd))}</b> ${dp}</span> shots on goal <span style="color:var(--grey)">(league ${ligM})</span></div>${ins}</div>`});
+          }
+        }
+      }catch(e){}
+      // --- CORNER RECORD: golkarne'den lig+takim korner (sadece futbol, master mapping ile) ---
+      try{
+        const gk=await golkarneGetir();
+        const lg=ligBul(m.key);
+        const gkl=gk&&gk[lg]?gk[lg]:null;
+        if(gkl&&gkl.lig_korner_ort&&gkl.takim_korner){
+          const tk=gkl.takim_korner, ligK=gkl.lig_korner_ort;
+          const evTk=tkGet(tk,evAd), depTk=tkGet(tk,depAd);
+          const evK=evTk&&evTk.ev_ort!=null?evTk.ev_ort:null;
+          const depK=depTk&&depTk.dep_ort!=null?depTk.dep_ort:null;
+          if(evK!=null&&depK!=null){
+            const macK=(evK+depK)/2;
+            const farkK=macK-ligK, yuzK=ligK>0?(farkK/ligK*100):0;
+            let sinifK, baslikK;
+            if(yuzK>=10){sinifK='hot';baslikK='Above the league average';}
+            else if(yuzK<=-10){sinifK='cold';baslikK='Below the league average';}
+            else{sinifK='';baslikK='Around the league average';}
+            const insK=recordInsight(evAd,depAd,evK,depK,ligK,'corner');
+            REC.push({tab:'CORNERS',html:`<div class="tgol"><div class="th">CORNER RECORD</div>
+              <div class="tbaslik ${sinifK}">${esc(baslikK)}</div>
+              <div class="ts"><b>${esc(ilkKelime(evAd))}</b> home <b>${evK}</b> · <b>${esc(ilkKelime(depAd))}</b> away <b>${depK}</b> · league <b>${ligK}</b> corners</div>${insK}</div>`});
+          }
+        }
+      }catch(e){
+        console.log('CORNER RECORD error:', e.message);
+      }
+      // --- CARD RECORD: golkarne'den lig+takim kart (sari+kirmizi, sadece futbol, master mapping ile) ---
+      try{
+        const gk=await golkarneGetir();
+        const lg=ligBul(m.key);
+        const gkl=gk&&gk[lg]?gk[lg]:null;
+        if(gkl&&gkl.lig_kart_ort&&gkl.takim_kart){
+          const tkk=gkl.takim_kart, ligKart=gkl.lig_kart_ort;
+          const evTk=tkGet(tkk,evAd), depTk=tkGet(tkk,depAd);
+          const evKart=evTk&&evTk.ev_ort!=null?evTk.ev_ort:null;
+          const depKart=depTk&&depTk.dep_ort!=null?depTk.dep_ort:null;
+          if(evKart!=null&&depKart!=null){
+            const macKart=(evKart+depKart)/2;
+            const farkKart=macKart-ligKart, yuzKart=ligKart>0?(farkKart/ligKart*100):0;
+            let sinifKt, baslikKt;
+            if(yuzKart>=10){sinifKt='hot';baslikKt='Above the league average';}
+            else if(yuzKart<=-10){sinifKt='cold';baslikKt='Below the league average';}
+            else{sinifKt='';baslikKt='Around the league average';}
+            const insKt=recordInsight(evAd,depAd,evKart,depKart,ligKart,'card');
+            REC.push({tab:'CARDS',html:`<div class="tgol"><div class="th">CARD RECORD</div>
+              <div class="tbaslik ${sinifKt}">${esc(baslikKt)}</div>
+              <div class="ts"><b>${esc(ilkKelime(evAd))}</b> home <b>${evKart}</b> · <b>${esc(ilkKelime(depAd))}</b> away <b>${depKart}</b> · league <b>${ligKart}</b> cards</div>${insKt}</div>`});
+          }
+        }
+      }catch(e){
+        console.log('CARD RECORD error:', e.message);
+      }
+      // --- PRICE RECORD: arsivdeki son 3 karsilasmada bu takimin ort. fiyatlanmasi vs bugunku canli ---
+      if(Ht&&Ht.h2h&&m.p){
+        const anah2=[String(evAd).toLowerCase(),String(depAd).toLowerCase()].sort().join('|');
+        const gec=(Ht.h2h||{})[anah2];
+        if(gec&&gec.length>=1){
+          // arsivdeki son 3 karsilasmada EV takiminin (evAd) de-vigli olasiligi
+          const son3=gec.slice(0,3);
+          let toplamP=0, sayi=0;
+          son3.forEach(x=>{
+            if(x.ima==null||!x.fav)return;
+            // x.ima o maçin favorisinin %'si; ev takimi favori miydi?
+            const evFavdi=(String(x.fav).toLowerCase()===String(evAd).toLowerCase());
+            const evP=evFavdi?x.ima:(x.h!=null&&x.a!=null?null:(100-x.ima));
+            // 3-yollu maçta ev-favori degilse 100-ima yaklasimi kaba; sadece ev-favori olanlari al (temiz)
+            if(evFavdi){toplamP+=x.ima;sayi++;}
+          });
+          // bugunku ev takiminin de-vigli %'si
+          const bp=m.p, top=(bp.h||0)+(bp.a||0)+(bp.d||0);
+          const bugP=top>0?(bp.h/top):null;
+          const evBugun=bugP!=null?Math.round(bugP*100):null;
+          if(sayi>=1&&evBugun!=null){
+            const gecmisOrt=Math.round(toplamP/sayi);
+            const farkP=evBugun-gecmisOrt;
+            if(Math.abs(farkP)>=5){
+              const yon=farkP<0?'less':'more';
+              // fair oran: bugun 1/bugP (Best prices ile ayni, ara yuvarlama yok); gecmis %'den
+              const gecOran=(100/gecmisOrt).toFixed(2), bugOran=(1/bugP).toFixed(2);
+              const pyon=farkP<0?'kirmizi':'teal';
+              const insP=`<div class="rins">↑ Market has ${yon=='less'?'cooled':'warmed'} on ${esc(ilkKelime(evAd))} <span class="rnum">${farkP>0?'+':''}${farkP} pts vs their last ${sayi}</span></div>`;
+              REC.push({tab:'PRICE',html:`<div class="tgol"><div class="th">PRICE RECORD</div>
+                <div class="ts"><b>${esc(ilkKelime(evAd))}</b> fair was <b>${gecOran}</b> (${gecmisOrt}%), now <span class="${pyon=="teal"?"kartArti":"kartEksi"}"><b>${bugOran}</b> (${evBugun}%)</span> · market <b>${yon=='less'?'cooler':'warmer'}</b> on them · last ${sayi}</div>${insP}</div>`});
+            }
+          }
+        }
+      }
+    }catch(e){}
+  }
+
+  // --- LAST MEETING: ayni iki takimin son karsilasmasi, acilis -> kapanis. TAKIM ADIYLA gosterilir; ev/dep sirasi
+  //     o gunku maca gore okunur (bugunkunden bagimsiz) — anahtar sirali+kucuk-harf, ters fikstur ayrica belirtilir ---
+  try{
+    const lgL=ligBul(m.key);
+    const anahL=[String(evAd).toLowerCase(),String(depAd).toLowerCase()].sort().join('|');
+    const fair=(p)=>(p!=null&&p>0)?(1/p).toFixed(2):null;
+    let son=null, kaynak='';
+    const OH=await oddsHistGetir(lgL);
+    const liste=OH&&OH.maclar&&OH.maclar[anahL];
+    if(liste&&liste.length){ son=liste.slice().sort((x,y)=>String(y.t||'').localeCompare(String(x.t||'')))[0]; kaynak='hist'; }
+    if(!son){ // geri dus: hafiza h2h (sadece kapanis, favori tarafi)
+      const HtL=await hafizaGetir(lgL); const gec=HtL&&HtL.h2h&&HtL.h2h[anahL];
+      if(gec&&gec.length){ son=gec[0]; kaynak='h2h'; }
+    }
+    if(son){
+      const sonEv=son.h||son.ev||null, sonDep=son.a||son.dep||null;
+      const ters=!!(sonEv&&String(sonEv).toLowerCase()!==String(evAd).toLowerCase());
+      let satir='', ins='';
+      if(kaynak==='hist'&&son.kap){
+        // Tam piyasa tahtasi: O GUNKU ev takimi / Draw (3-yollu ise) / o gunku deplasman — her satir acilis -> kapanis
+        const rows=[]; let buyuk=null;
+        const outs=[];
+        if(sonEv)outs.push([slotAd=>`${esc(ilkKelime(sonEv))} <span style="color:var(--grey)">home</span>`, 'h', ilkKelime(sonEv)]);
+        if(son.kap.d!=null||(son.ac&&son.ac.d!=null))outs.push([()=>'Draw','d','the draw']);
+        if(sonDep)outs.push([()=>`${esc(ilkKelime(sonDep))} <span style="color:var(--grey)">away</span>`, 'a', ilkKelime(sonDep)]);
+        outs.forEach(([labelFn,slot,adGoster])=>{
+          const ac=(son.ac&&son.ac[slot]!=null)?son.ac[slot]:null, kp=son.kap[slot];
+          if(kp==null)return;
+          const mv=ac!=null?Math.round((kp-ac)*100):null;
+          if(mv!=null&&(buyuk==null||Math.abs(mv)>Math.abs(buyuk.mv)))buyuk={ad:adGoster,mv};
+          const cls=mv==null?'':(mv>0?'kartArti':(mv<0?'kartEksi':''));
+          rows.push(`<b>${labelFn()}</b> &nbsp;${ac!=null?`<b>${fair(ac)}</b> → `:''}<span class="${cls}"><b>${fair(kp)}</b></span>${mv!=null?` <span style="color:var(--grey)">(${mv>0?'+':''}${mv} pts)</span>`:''}`);
+        });
+        satir=rows.join('<br>');
+        if(buyuk&&buyuk.mv!==0)ins=`<div class="rins">↑ Money moved <span class="rnum">${Math.abs(buyuk.mv)} pts ${buyuk.mv>0?'toward':'away from'} ${esc(buyuk.ad)}</span> before kickoff last time.</div>`;
+        else if(buyuk)ins=`<div class="rins">↑ The line barely moved last time — <span class="rnum">open ≈ close</span>.</div>`;
+        else ins=`<div class="rins">↑ Closing prices only — the opening wasn't captured for that meeting.</div>`;
+      }else{
+        const favAd=son.fav||'?', ima=(son.ima!=null)?Number(son.ima):null;
+        satir=`<b>${esc(ilkKelime(favAd))}</b> closed as favourite at <b>${ima!=null?fair(ima/100):'?'}</b>${ima!=null?` (${Math.round(ima)}%)`:''}`;
+        ins=`<div class="rins">↑ Closing price only for this meeting — <span class="rnum">open→close</span> builds from today's archive onward.</div>`;
+      }
+      let when=''; try{ const d=new Date(son.t); when=isNaN(d)?String(son.t||'').slice(0,10):d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}); }catch(e){ when=String(son.t||'').slice(0,10); }
+      let meta='';
+      if(kaynak==='hist'){
+        const m1=[]; if(son.skor)m1.push(`<b>${esc(son.skor)}</b>`);
+        if(sonEv)m1.push(ters?`reverse fixture — last time at ${esc(ilkKelime(sonEv))}`:`at ${esc(ilkKelime(sonEv))}`);
+        meta=m1.length?`<div class="tf">${m1.join(' · ')}</div>`:'';
+      }else if(sonEv){
+        satir+=` · at ${esc(ilkKelime(sonEv))}${ters?' <span style="color:var(--grey)">(reverse fixture)</span>':''}`;
+      }
+      if(satir)REC.push({tab:'LAST MEETING',html:`<div class="tgol"><div class="th">LAST MEETING${when?' · '+esc(when):''}</div>
+        <div class="ts"${kaynak==='hist'?' style="line-height:1.9"':''}>${satir}</div>${ins}${meta}</div>`});
+    }
+  }catch(e){ console.log('LAST MEETING error:', e.message); }
+
+  // --- RECORD SEKMELERI: toplanan RECORD kartlari macin EN USTUNDE, sekme sekme (basligin hemen altina) ---
+  if(REC.length){
+    const rtabs=REC.map((r,i)=>`<button class="rtab${i===0?' on':''}" data-i="${i}" type="button">${r.tab}</button>`).join('');
+    const rpanes=REC.map((r,i)=>`<div class="rpane${i===0?' on':''}" data-i="${i}">${r.html}</div>`).join('');
+    const recHtml=`<div class="rec"><div class="rtabs">${rtabs}</div><div class="rpanes">${rpanes}</div></div>`;
+    html=html.replace('<div id="karneSlot"></div>','<div id="karneSlot"></div>'+recHtml);
+  }
+
+  // --- spread karti ---
+  if(m.spr&&m.spr.ev&&m.spr.dep){
+    const sp=m.spr, c=sp.cizgi, art=(x)=>(x>0?'+':'')+x;
+    html+=`<div class="card"><div class="head"><span class="t">Spread</span><span class="k">${esc(ilkKelime(evAd))} ${art(c)}</span></div>`;
+    html+=fiyatSatiri(evAd+' '+art(c),'home',sp.ev,(sp.p||{}).h);
+    html+=fiyatSatiri(depAd+' '+art(-c),'away',sp.dep,(sp.p||{}).a);
+    const sprDiger=digerleri(evAd+' '+art(c),esc(ilkKelime(evAd))+' '+art(c),sp.ev)+digerleri(depAd+' '+art(-c),esc(ilkKelime(depAd))+' '+art(-c),sp.dep);
+    if(sprDiger)html+=`<details class="more"><summary>Other books</summary>${sprDiger}</details>`;
+    html+=`<div class="foot">Only the <b>${sp.kitap} books</b> quoting the consensus line (<b>${art(c)}</b>) are shown — books on other lines are left out, never mixed in.${ustCumle([sp.ev,sp.dep])} Same reading: market %, fair, best price.</div></div>`;
+  }
+
+  // --- cizgi hareketi (açılış -> güncel favori olasiligi) ---
+  try{
+    const hr=hareketHesap(m);
+    if(hr){
+      const favAd=hr.favEv?evAd:depAd;
+      const yon=hr.farkP>0?'up':'down';
+      const acFair=(1/hr.acP).toFixed(2), guncelFair=(1/hr.guncelP).toFixed(2);
+      html+=`<div class="hareket"><div class="hh">LINE MOVEMENT · SINCE WE FIRST SAW IT</div>
+        <div class="hd ${yon}">${hr.farkP>0?'+':'−'}${Math.abs(hr.farkP).toFixed(0)} pts</div>
+        <div class="hs">The market has moved <b>toward ${hr.farkP>0?esc(favAd):'the underdog'}</b>: <b>${esc(favAd)}</b> opened at <b>${Math.round(hr.acP*100)}%</b> (fair ${acFair}) and now sits at <b>${Math.round(hr.guncelP*100)}%</b> (fair ${guncelFair}). Money is following the ${hr.farkP>0?'favourite':'longshot'}. The record of where the line is going, not a call on where it lands.</div>`;
+      // uc-sonuc ikincil satiri (tam dagilim varsa)
+      if(hr.acH!=null){
+        const ok=(a,b)=>{const d=Math.round((b-a)*100);return d===0?'\u2192':(d>0?`\u2191${d}`:`\u2193${Math.abs(d)}`);};
+        let par=`${esc(ilkKelime(evAd))} ${ok(hr.acH,hr.gH)}`;
+        if(m.sonuc3&&hr.acD!=null)par+=` · draw ${ok(hr.acD,hr.gD)}`;
+        par+=` · ${esc(ilkKelime(depAd))} ${ok(hr.acA,hr.gA)}`;
+        html+=`<div class="hpar">${par}</div>`;
+      }
+      html+=`</div>`;
+    }
+  }catch(e){}
+
+  // --- ayrisma satiri (ciplak) ---  // --- ayrisma satiri (ciplak) ---
+  try{
+    const ay=ayrismaHesap(m,m.sonuc3);
+    if(ay){
+      const favAd=ay.favEv?evAd:depAd;
+      html+=`<div class="ligkarne">Widest split: <b>${esc(ay.b)}</b> prices ${esc(favAd)} at <b>${Math.round((ay.favP+ay.f)*100)}%</b> — <b>${ay.n} books</b> say <b>${Math.round(ay.favP*100)}%</b>. A record of disagreement, not a signal.</div>`;
+    }
+  }catch(e){}
+
+  // --- turetilen pazarlar (Derived) ---
+  try{
+    const parca=[];
+    // Cifte Sans: h2h olasiliklarindan (sonuc3 liglerde)
+    if(m.sonuc3 && m.p && m.p.d!=null){
+      const hd=m.p.h+m.p.d, da=m.p.d+m.p.a, ha=m.p.h+m.p.a;
+      const hap=(ad,pr)=>`<div class="pill"><span class="pad">${ad}</span><span class="pv"><b>${Math.round(pr*100)}%</b> · fair <b>${(1/pr).toFixed(2)}</b></span></div>`;
+      parca.push(hap(esc(ilkKelime(evAd))+' or draw', hd));
+      parca.push(hap('Draw or '+esc(ilkKelime(depAd)), da));
+      parca.push(hap(esc(ilkKelime(evAd))+' or '+esc(ilkKelime(depAd))+' (no draw)', ha));
+    }
+    // BTTS: gol karnesinden tarihsel oran
+    const G=GOLK&&GOLK[ligBul(m.key)];
+    if(G&&G.btts!=null){
+      parca.push(`<div class="pill"><span class="pad">Both teams scored <span style="color:var(--grey);font-weight:400">— league history</span></span><span class="pv"><b>${G.btts}%</b> of ${G.mac.toLocaleString('en-US')} games</span></div>`);
+    }
+    if(parca.length){
+      html+=`<div class="card"><div class="head"><span class="t">Derived</span><span class="k">no book, just the math</span></div>${parca.join('')}<div class="foot">Double chance comes straight from the match-result consensus — de-vigged, no book attached. Both-teams-scored is this league's historical rate, not a live price. Percent and fair only — bring your own book.</div></div>`;
+    }
+  }catch(e){}
+
+  // --- bu maca uyan arsiv bulgulari ---
+  try{
+    const I=INSIGHT&&INSIGHT.havuz?INSIGHT.havuz:[];
+    const lig=ligBul(m.key), p=m.p||{};
+    if(I.length&&lig&&p.h!=null&&p.a!=null){
+      const favEv=p.h>=p.a, favP=favEv?p.h:p.a, favAd=favEv?evAd:depAd;
+      const kova=favP<0.6?'50-60%':(favP<0.7?'60-70%':(favP<0.8?'70-80%':'80%+'));
+      const uyan=macBulgular(m).slice(0,4);
+      if(uyan.length){
+        let a=`<div class="arsiv"><div class="ah">WHAT THE ARCHIVE SAYS ABOUT THIS SPOT</div>`;
+        uyan.forEach(x=>{
+          const yon=x.fark>0?'under':'over';
+          a+=`<div class="ar"><span class="af ${yon}">${x.fark>0?'+':'−'}${Math.abs(x.fark).toFixed(1)}</span><span class="ae">${esc(x.etiket||'')} · ${x.guven}<small>priced ${x.imp}% → happened ${x.act}% · n=${(x.n||0).toLocaleString('en-US')}</small></span></div>`;
+        });
+        a+=`<div class="foot">Every archived finding for this league that fits this matchup — for and against, at any confidence. <span style="color:var(--teal);font-weight:600">Teal</span>: outcomes beat their price; <span style="color:var(--red);font-weight:600">red</span>: fell short. Direction, not profit — past gaps, not future edges.</div></div>`;
+        html+=a;
+      }
+    }
+  }catch(e){}
+
+  // placeholders; filled after memory fetch
+  html+=`<div id="bettingSlot"></div><div id="xraySlot"></div><div id="memSlot"><div class="card"><div class="memempty">Opening the archive…</div></div></div>`;
+  document.getElementById('detailBody').innerHTML=html;
+
+  const H=await hafizaGetir(lig);
+
+  // --- Bahis kartları (OddsAPI + maç istatistikleri) ---
+  try {
+    const bettingContainer = document.getElementById('bettingSlot');
+    const component = new BettingLinesComponent(bettingContainer, bettingManager);
+
+    // OddsAPI için spor ve liği belirle
+    let sport = 'soccer';
+    let leagueForOdds = null;
+
+    const key = m.key || '';
+    const oddsMapping = {
+      'soccer_epl': ['soccer', 'EPL'],
+      'soccer_spain_la_liga': ['soccer', 'LaLiga'],
+      'soccer_italy_serie_a': ['soccer', 'SerieA'],
+      'soccer_germany_bundesliga': ['soccer', 'Bundesliga'],
+      'soccer_france_ligue_one': ['soccer', 'Ligue1'],
+      'soccer_netherlands_eredivisie': ['soccer', 'Eredivisie'],
+      'soccer_portugal_primeira_liga': ['soccer', 'PrimeiraLiga'],
+      'soccer_belgium_first_div': ['soccer', 'BelgianPro'],
+      'soccer_turkey_super_league': ['soccer', 'TurkishSuperLig'],
+      'soccer_argentina_primera_division': ['soccer', 'Argentina'],
+      'soccer_brazil_campeonato': ['soccer', 'BrazilSerieA'],
+      'soccer_brazil_serie_b': ['soccer', 'BrazilSerieB'],
+      'soccer_mexico_ligamx': ['soccer', 'MexicanLiga'],
+      'soccer_australia_aleague': ['soccer', 'ALeague'],
+      'soccer_japan_j_league': ['soccer', 'JLeague'],
+      'soccer_korea_kleague1': ['soccer', 'KLeague1'],
+      'soccer_usa_mls': ['soccer', 'MLS'],
+      'basketball_nba': ['basketball', 'NBA'],
+      'americanfootball_nfl': ['american_football', 'NFL'],
+      'americanfootball_ncaaf': ['american_football', 'NCAAF'],
+      'americanfootball_cfl': ['american_football', 'CFL'],
+      'baseball_mlb': ['baseball', 'MLB'],
+      'icehockey_nhl': ['ice_hockey', 'NHL']
+    };
+
+    const mapping = oddsMapping[key];
+    if (mapping) {
+      [sport, leagueForOdds] = mapping;
+    }
+
+    if (sport && leagueForOdds && m.id) {
+      await component.render(sport, leagueForOdds, m.id, {home: m.h, away: m.a}, lig);
+    } else {
+      console.warn('[Betting] Insufficient data for odds:', {key, sport, leagueForOdds, matchId: m.id});
+    }
+  } catch(e) {
+    console.warn('[Betting] Error loading odds:', e);
+  }
+
+
+  // --- league x-ray ---
+  let x='';
+  if(H&&H.rontgen&&H.rontgen.length){
+    const maxM=H.rontgen[H.rontgen.length-1].medyan_marj;
+    x+=`<div class="card"><div class="head"><span class="t">League X-ray</span><span class="k">median take · ${esc(m.ligAd)}</span></div>`;
+    H.rontgen.forEach((r,idx)=>{
+      const cls=idx===0?'leanest':(idx===H.rontgen.length-1?'widest':'');
+      const w=Math.max(8,Math.round(100*r.medyan_marj/Math.max(maxM,0.1)));
+      x+=`<div class="xrow ${cls}"><span class="bk">${esc(r.kitap)}</span>
+        <div class="bar"><i style="width:${w}%"></i></div>
+        <span class="pct">${r.medyan_marj.toFixed(1)}%</span></div>`;
+    });
+    const adil=H.rontgen[0], genis=H.rontgen[H.rontgen.length-1];
+    x+=`<div class="xread">Historically the leanest price in this league is <b>${esc(adil.kitap)}</b> (median take ${adil.medyan_marj.toFixed(1)}%); the widest is <b>${esc(genis.kitap)}</b> (${genis.medyan_marj.toFixed(1)}%). The take is <b>the book's cut</b> of every pot — the lower it runs, <b>the more goes back to bettors</b>. A record of what books charge — not a signal to bet.</div></div>`;
+  }
+  // --- MARGIN READ: bu macin marji (worker) vs lig ortalamasi ---
+  try{
+    const gk=await golkarneGetir();
+    const lg=ligBul(m.key);
+    const ligMarj=gk&&gk[lg]?gk[lg].lig_marj_ort:null;
+    // m.marj = worker'in verdigi konsensus kitap marji (%)
+    if(ligMarj!=null && ligMarj>=2 && m.marj!=null && m.marj>0){
+      const fark=m.marj-ligMarj;
+      if(Math.abs(fark)>=1.5){
+        const yon=fark>0?'wider':'tighter';
+        const anlam=fark>0?'books are less certain here':'books are confident here';
+        const myon=fark>0?'kirmizi':'teal';
+        x+=`<div class="card"><div class="head"><span class="t">MARGIN READ</span><span class="k">vs league</span></div>
+          <div class="xread"><span class="${myon=="teal"?"kartArti":"kartEksi"}"><b>${Math.abs(fark).toFixed(1)} pts ${yon}</b></span> than league norm (${ligMarj.toFixed(1)}%) · books ${fark>0?'less sure':'confident'} here</div></div>`;
+      }
+    }
+  }catch(e){}
+
+  // --- HOLD SKEW: vergi hangi tarafta yogun (ham implied - de-vig) ---
+  try{
+    const p=m.p||{}, hm=m.ham||{};
+    if(hm.h!=null && hm.a!=null && p.h!=null && p.a!=null){
+      // her sonuca binen vergi (oransal): (ham - devig) / devig
+      const vh=p.h>0?(hm.h-p.h)/p.h:0;
+      const va=p.a>0?(hm.a-p.a)/p.a:0;
+      const vd=(hm.d!=null&&p.d>0)?(hm.d-p.d)/p.d:null;
+      // favori/underdog belirle
+      const favEv=p.h>=p.a;
+      const favV=favEv?vh:va, dogV=favEv?va:vh;
+      const favAd=favEv?evAd:depAd, dogAd=favEv?depAd:evAd;
+      // anlamli fark: favori vs underdog vergi orani
+      const oran=dogV>0?favV/dogV:(favV>0?99:1);
+      if(Math.abs(favV-dogV)>=0.015){  // en az 1.5 puan oransal fark
+        let nerede, temiz;
+        if(favV>dogV){nerede=favAd; temiz=dogAd;}
+        else{nerede=dogAd; temiz=favAd;}
+        x+=`<div class="card"><div class="head"><span class="t">HOLD SKEW</span><span class="k">where the vig sits</span></div>
+          <div class="xread">Vig sits mostly on <b>${esc(ilkKelime(nerede))}</b> · <b>${esc(ilkKelime(temiz))}</b> price closer to fair · books tax the crowded side</div></div>`;
+      }
+    }
+  }catch(e){}
+    document.getElementById('xraySlot').innerHTML=x;
+
+  // --- market memory ---
+  let mem='';
+  const kal=H&&H.kalibrasyon?`In this league the market favourite averaged ${H.kalibrasyon.favori_ima_ort}% implied and won ${H.kalibrasyon.favori_tutma}% of the time (${H.mac.toLocaleString()} matches). Reliable prices — not a profit promise.`:'';
+  if(H&&!H.kalibrasyon){
+    mem=`<div class="card"><div class="head"><span class="t">Market memory</span><span class="k">prices only</span></div>
+      <div class="memempty">We track prices in this league, but not results yet — so no memory cards.<br>We'd rather show nothing than something we can't stand behind.</div></div>`;
+  }else if(H&&H.h2h){
+    const kartlar=H.h2h[anahtar(m.h,m.a)];
+    mem+=`<div class="card"><div class="head"><span class="t">Market memory</span><span class="k">last meetings</span></div>`;
+    if(kartlar&&kartlar.length){
+      kartlar.slice(0,5).forEach(k=>{
+        const fH=k.fav===k.h, fA=k.fav===k.a;
+        const et=` <span class="imapct">${k.ima}%</span>`;
+        mem+=`<div class="memrow"><span class="dt">${esc(String(k.t).slice(0,7))}</span>
+          <span class="fav"><span class="tm${fH?' f':''}">${esc(k.h)}${fH?et:''}</span><b class="sc">${esc(k.skor)}</b><span class="tm${fA?' f':''}">${esc(k.a)}${fA?et:''}</span>${(!fH&&!fA)?`<span class=\"pc\">market: ${esc(k.fav)} ${k.ima}%</span>`:''}</span>
+          <span class="hit ${k.tuttu?'y':'n'}">${k.tuttu?'✓':'✗'}</span></div>`;
+      });
+      mem+=`<div class="foot">What the market said, and what happened. <b style='color:var(--teal)'>Coloured team</b> = market favourite, its closing implied % beside it; ✓ it won, ✗ it didn't. ${kartlar.length<5?'':'5 matches is a small sample; a lean, not a law. '}${kal}</div>`;
+    }else{
+      mem+=`<div class="memempty">These two haven't met in our archive yet.<br>The record starts the day they do.</div>`;
+      if(kal)mem+=`<div class="foot">${kal}</div>`;
+    }
+    mem+=`</div>`;
+  }else{
+    mem=`<div class="card"><div class="memempty">Live prices and market analysis are here — the historical record for this league is still building — live prices only.<br>We only show memory where we truly have it.</div></div>`;
+  }
+  document.getElementById('memSlot').innerHTML=mem;
+
+  // --- lig karnesi (tepede tek satir) ---
+  try{
+    const I=await insightGetir();
+    const hv=(I&&I.havuz)||[];
+    const sh=hv.find(h=>h.lig===lig&&h.tur==='sharpness');
+    const dr=hv.find(h=>h.lig===lig&&h.tur==='draw');
+    let karne=sh?sh.metin:'';
+    if(karne&&dr){
+      const mm=dr.metin.match(/(\d+)% of matches ended in a draw/);
+      if(mm) karne+=` Draws: ${mm[1]}%.`;
+    }
+    const slot=document.getElementById('karneSlot');
+    if(slot&&karne) slot.innerHTML=`<div class="ligkarne">${vurgula(metinDuzelt(esc(karne)))}</div>`;
+  }catch(e){}
+}
+
+boot();
+// PWA service worker
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  });
+}seritGuncelle();bolgeRozetGuncelle();
+</script>
+
+<!-- ===== Betting Data Integration from OddsAPI ===== -->
+<script src="./js/betting_data_integration.js"></script>
+
+<script>
+// Initialize betting data manager for live odds display
+const bettingManager = new BettingDataManager('./betting_data');
+
+// Inject betting odds CSS styles
+const bettingStyle = document.createElement('style');
+bettingStyle.textContent = BettingStyles;
+document.head.appendChild(bettingStyle);
+
+console.log('[Brier] Betting odds integration loaded');
+</script>
+</body>
+</html>
