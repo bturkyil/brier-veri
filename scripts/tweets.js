@@ -18,20 +18,21 @@ const len=(s)=>s.replace(/https?:\/\/\S+/g,'x'.repeat(TW_URL)).length;
 async function runLig(lig,ymd,feed){
   const html=fs.readFileSync(path.join(ROOT,'terminal','index.html'),'utf8');
   const js=html.split('<script>')[1].split('</script>')[0];
-  const els={}; const el=(id)=>els[id]||(els[id]={innerHTML:'',textContent:'',value:'',selectedIndex:0,offsetTop:0,addEventListener(){},querySelectorAll(){return [];},dataset:{}});
+  const els={}; const el=(id)=>els[id]||(els[id]={innerHTML:'',textContent:'',value:'',selectedIndex:0,offsetTop:0,disabled:false,onclick:null,classList:{add(){},remove(){},toggle(){}},addEventListener(){},querySelectorAll(){return [];},querySelector(){return null;},dataset:{}});
   const ctx={console:{log(){},error(){},warn(){}},URLSearchParams,URL,Date,Math,JSON,Promise,Object,Array,String,Number,Set,Intl,parseFloat,isNaN,setTimeout,
-    location:{search:`?lig=${lig}`,href:`${SITE}?lig=${lig}`},history:{replaceState(){}},navigator:{clipboard:{writeText(){}}},window:{scrollTo(){}},
-    document:{getElementById:el,querySelectorAll(){return [];},title:''},
+    location:{search:`?lig=${lig}`,href:`${SITE}?lig=${lig}`},history:{replaceState(){}},navigator:{clipboard:{writeText(){}}},window:{scrollTo(){},innerWidth:1200},
+    document:{getElementById:el,querySelectorAll(){return [];},querySelector(){return null;},title:''},
     fetch:async(u)=>{ if(u.startsWith(HOST))return {ok:true,json:async()=>feed};
       const p=u.startsWith('../')?path.join(ROOT,u.slice(3)):path.join(ROOT,'terminal',u);
       if(!fs.existsSync(p))return {ok:false,json:async()=>null};
       return {ok:true,json:async()=>JSON.parse(fs.readFileSync(p,'utf8'))}; } };
   vm.createContext(ctx); vm.runInContext(js+'\n;globalThis.__tonight=()=>TONIGHT;',ctx);   // let ile tanimli listeye erisim
-  await new Promise(r=>setTimeout(r,800));   // boot + loadTonight + rozetler
+  for(let i=0;i<40;i++){ await new Promise(r=>setTimeout(r,250)); const T=ctx.__tonight(); if(T&&T.length&&T.every(m=>m.badges&&m.badges.length>=0)&&i>3)break; }   // boot + loadTonight + rozetler
+  const T0=ctx.__tonight()||[]; console.error(`[${lig}] feed games: ${T0.length} · days: ${[...new Set(T0.map(m=>m.day))].join(',')} · target ${ymd} · list html: ${(els.list.innerHTML||'').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').slice(0,120)}`);
   const out=[];
   for(const m of (ctx.__tonight()||[])){
     if(m.day!==ymd)continue;
-    try{ await ctx.openRecord(m.h,m.a,m.t,m.p,m); }catch(e){ continue; }
+    try{ await ctx.openRecord(m.h,m.a,m.t,m.p,m); }catch(e){ console.error('  openRecord failed:',m.h,'-',m.a,e.message); continue; }
     const det=els.detail.innerHTML;
     const says=(det.match(/<div class="tgol says"[\s\S]*?<div class="tf">/)||[''])[0];
     const lines=[...says.matchAll(/<div>([\s\S]*?)<\/div>/g)].map(x=>strip(x[1])).filter(Boolean);
@@ -60,6 +61,7 @@ function compose(g){
   const ymd=process.argv[2]||new Date().toLocaleDateString('en-CA',{timeZone:'America/New_York'});
   let feed=null;
   try{ const r=await fetch(HOST+'/bugun.json'); feed=await r.json(); }catch(e){ console.error('feed unreachable:',e.message); process.exit(0); }
+  console.error('feed keys:',Object.values(feed.ligler||{}).map(x=>`${x.key}:${(x.maclar||[]).length}`).join(' '));
   const all=[];
   for(const lig of LIGS){ try{ all.push(...await runLig(lig,ymd,feed)); }catch(e){ console.error(lig,e.message); } }
   const leans=all.filter(g=>g.badges.some(b=>/record leans/.test(b)));
