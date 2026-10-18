@@ -10,7 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --paper:#EEF2F1; --card:#FFFFFF; --ink:#16211F; --ink2:#3A4745; --grey:#6B7876; --rule:#D9E0DE; --rule-dark:#B9C4C1;
+    --paper:#EEF2F1; --card:#FFFFFF; --ink:#16211F; --dark:#16211F; --ink2:#3A4745; --grey:#6B7876; --rule:#D9E0DE; --rule-dark:#B9C4C1;
     --rec:#0E7C6B; --rec-soft:#DCEFEA; --mkt:#9A6A12; --mkt-soft:#F3E8CF; --red:#A33A2E;
     --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace; --sans:'Archivo',system-ui,sans-serif;
   }
@@ -21,7 +21,7 @@
   a{color:inherit}
   b{font-weight:600}
   .mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
-  .top{background:var(--ink);color:#fff}
+  .top{background:var(--dark);color:#fff}
   .top .in{max-width:1120px;margin:0 auto;padding:0 20px;display:flex;align-items:center;gap:18px;height:56px}
   .top .brand{font-weight:800;letter-spacing:1.6px;font-size:17px;text-decoration:none;color:#fff}
   .top nav{display:flex;gap:4px;margin-left:auto}
@@ -35,7 +35,7 @@
   .cta{display:flex;gap:10px;flex-wrap:wrap}
   .btn{font-family:var(--sans);font-size:14px;font-weight:600;padding:12px 18px;border:1px solid var(--ink);background:var(--ink);color:var(--paper);border-radius:3px;text-decoration:none;display:inline-block}
   .btn.ghost{background:transparent;color:var(--ink)}
-  .says{background:var(--ink);color:#fff;border-radius:4px;padding:22px 24px;box-shadow:0 20px 50px -30px rgba(0,0,0,.5)}
+  .says{background:var(--dark);color:#fff;border-radius:4px;padding:22px 24px;box-shadow:0 20px 50px -30px rgba(0,0,0,.5)}
   .says .h{font-size:14px;font-weight:700;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
   .says .h span{font-family:var(--mono);font-weight:400;font-size:12px;opacity:.6}
   .says .l{padding:10px 0;border-top:1px solid rgba(255,255,255,.14);font-size:15.5px;line-height:1.6}
