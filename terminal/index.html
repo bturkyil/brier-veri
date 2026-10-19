@@ -160,11 +160,11 @@
 <script>
 const HOST='https://worker-production-a1ba.up.railway.app';
 const LIGS={
-  nba:  {ad:'NBA',  spor:'basketball',feed:/^basketball_nba/,      note:'Five NBA seasons of box scores (ESPN), every player every night. "Sat" = on the roster with no minutes — injury, rest or coach\'s decision, not separated.'},
-  wnba: {ad:'WNBA', spor:'basketball',feed:/^basketball_wnba/,     note:'Six WNBA seasons of box scores (ESPN), 2021–2026, every player every night. "Sat" = on the roster with no minutes.'},
-  nfl:  {ad:'NFL',  spor:'football',  feed:/^americanfootball_nfl/, note:'Six NFL seasons of box scores (ESPN), 2021–2026, every game including playoffs. Rest counts calendar days between kickoffs.'},
-  ncaaf:{ad:'NCAAF',spor:'football',  feed:/^americanfootball_ncaaf/,note:'Six FBS seasons of box scores (ESPN), 2021–2026. Profiles use the top and bottom third of FBS that season; FCS opponents appear in the record but carry no profile.'},
-  mlb:  {ad:'MLB',  spor:'baseball',  feed:/^baseball_mlb/,        note:'Six MLB seasons of box scores (ESPN), 2021–2026, every game including the postseason. Lineup and pitching lines are from the box, not projections.'}
+  nba:  {ad:'NBA',  spor:'basketball',feed:/^basketball_nba/,      note:'Five NBA seasons of box scores (public archive), every player every night. "Sat" = on the roster with no minutes — injury, rest or coach\'s decision, not separated.'},
+  wnba: {ad:'WNBA', spor:'basketball',feed:/^basketball_wnba/,     note:'Six WNBA seasons of box scores (public archive), 2021–2026, every player every night. "Sat" = on the roster with no minutes.'},
+  nfl:  {ad:'NFL',  spor:'football',  feed:/^americanfootball_nfl/, note:'Six NFL seasons of box scores (public archive), 2021–2026, every game including playoffs. Rest counts calendar days between kickoffs.'},
+  ncaaf:{ad:'NCAAF',spor:'football',  feed:/^americanfootball_ncaaf/,note:'Six FBS seasons of box scores (public archive), 2021–2026. Profiles use the top and bottom third of FBS that season; FCS opponents appear in the record but carry no profile.'},
+  mlb:  {ad:'MLB',  spor:'baseball',  feed:/^baseball_mlb/,        note:'Six MLB seasons of box scores (public archive), 2021–2026, every game including the postseason. Lineup and pitching lines are from the box, not projections.'}
 };
 const Q=new URLSearchParams(location.search);
 let LIG=LIGS[Q.get('lig')]?Q.get('lig'):'nba';
@@ -185,7 +185,7 @@ const dbar=(pct)=>{const w=Math.min(30,Math.abs(pct||0));return `<span class="db
 const ci=(p,n)=>n>0?Math.round(1.96*Math.sqrt(p*(100-p)/n)*10)/10:null;   // %95 guven araligi, yuzde puan
 const wl=(gs)=>`<span class="wl">${gs.map(g=>g.won?'<span class="w">W</span>':'<span class="l">L</span>').join('')}</span>`;
 const sd=(d)=>{const v=Math.round(d*10)/10;return (v>0?'+':'')+v.toFixed(1);};
-// ESPN ham degerleri: "4-8" -> 4 ; "12/19" -> 12 ; "+4" -> 4 ; "--" -> null
+// arsiv ham degerleri: "4-8" -> 4 ; "12/19" -> 12 ; "+4" -> 4 ; "--" -> null
 function num(s){ if(s==null)return null; if(typeof s==='number')return s; s=String(s).trim(); if(s===''||s==='--'||s==='-')return null;
   if(/^[+-]?\d+(\.\d+)?$/.test(s))return parseFloat(s); const m=s.match(/^(\d+(\.\d+)?)/); return m?parseFloat(m[1]):null; }
 function num2(s){ const m=String(s==null?'':s).match(/^\d+(\.\d+)?[-\/](\d+(\.\d+)?)/); return m?parseFloat(m[2]):null; }
@@ -204,7 +204,7 @@ const SZ_OF=(ymd)=>{const y=+ymd.slice(0,4), m=+ymd.slice(5,7);
   if(SPOR()==='football')return String(m>=8?y:y-1); return String(y);};
 const MIN_N=15;
 
-// ---- takim esleme: The Odds API adi -> ESPN takimi (tam ad -> alias -> lakap(son kelime)) ----
+// ---- takim esleme: The Odds API adi -> arsiv takimi (tam ad -> alias -> lakap(son kelime)) ----
 const ALIAS={'la clippers':'los angeles clippers','los angeles clippers':'la clippers','oakland athletics':'athletics','cleveland indians':'cleveland guardians','washington football team':'washington commanders'};
 function findTeam(name){
   if(!name||!TEAMS.length)return null;
@@ -606,7 +606,7 @@ function cardATS(h,a,ymd,market){
   const verdict=SPOR()==='baseball'?'on the run line — the price, not the cover rate, decides whether that was value':(b&&b.best.p>=58?'the market has underrated them in this role':(b&&b.best.p<=42?'the market has overrated them in this role':'the market has them about right'));
   const ins=b?`↑ ${esc(short(b.t))} covers <span class="rnum">${b.best.p}%</span> of the time ${lab[b.best.k]} (n=${b.best.n}) — ${verdict}.`:`↑ Not enough lined games for either side yet.`;
   const role=hFav==null?'market role unknown for tonight — both roles shown':`tonight's market: ${esc(short(hFav?h:a))} favourite`;
-  return `<div class="tgol"><div class="th">Against the spread</div><div class="ts">${H.html}<br>${A.html}</div><div class="rins">${ins}</div><div class="tf">${role} · ${SPOR()==='baseball'?'run line ±1.5':'closing spread'} where ESPN kept it (roughly the last three seasons) · push excluded</div></div>`;
+  return `<div class="tgol"><div class="th">Against the spread</div><div class="ts">${H.html}<br>${A.html}</div><div class="rins">${ins}</div><div class="tf">${role} · ${SPOR()==='baseball'?'run line ±1.5':'closing spread'} where the archive kept it (roughly the last three seasons) · push excluded</div></div>`;
 }
 function cardRecordSays(h,a,cards){
   const pri=['Games like this','Market record','Conditions x-ray','Against the spread','Game script','Rest','Back-to-back','Form','Leaders','Lineup','Availability','Home and away','Matchup x-ray','Line flow','Last meeting'];
@@ -651,7 +651,7 @@ function cardMarket(h,a,ymd){
   const H=side(h), A=side(a); const b=[H.best,A.best].filter(Boolean).sort((x,y)=>Math.abs(y.bias)-Math.abs(x.bias))[0];
   const ins=b&&Math.abs(b.bias)>=2?`↑ The market has priced <span class="rnum">${esc(short(b.t))} ${Math.abs(b.bias).toFixed(1)} points ${b.bias>0?'too high':'too low'}</span> ${lab[b.k]} (n=${b.n}) — ${b.bias>0?'they have won less often than their price implied':'they have won more often than their price implied'}.`:`↑ The market has read both sides within <span class="rnum">2 points</span> of the record — no pricing lean here.`;
   return `<div class="tgol" style="grid-column:1/-1"><div class="th">Market record<span class="n">how well the price has read each side</span></div><div class="ts">${H.html}<br>${A.html}</div><div class="rins">${ins}</div>
-    <div class="tf">Bias = average of (market probability − result) in percentage points; positive means overpriced. Brier = mean squared error of the closing price${L?`; league ${L.b.toFixed(3)} over ${L.n.toLocaleString('en-US')} games (0.25 = a coin flip)`:''}. Moneylines where ESPN kept them, roughly the last three seasons.</div></div>`;
+    <div class="tf">Bias = average of (market probability − result) in percentage points; positive means overpriced. Brier = mean squared error of the closing price${L?`; league ${L.b.toFixed(3)} over ${L.n.toLocaleString('en-US')} games (0.25 = a coin flip)`:''}. Moneylines where the archive kept them, roughly the last three seasons.</div></div>`;
 }
 
 // ---- T9: ODDS FLOW — fiyatin kapanisa kadar akisi (odds_flow/<lig>.json, The Odds API tarihsel anlik goruntuler) ----
