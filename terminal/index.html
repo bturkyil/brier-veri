@@ -709,7 +709,8 @@ function flowTeam(team,ymd){   // piyasa bu takima dogru >=2 puan kaydiginda / a
   return r;
 }
 const f4=(x)=>x==null?'–':x.toFixed(4);
-function cardFlow(h,a,ymd,market,m){
+const mb=(b,x)=>x<b[1];
+function cardFlow(h,a,ymd,market,m,lv){
   const cfg=FLOWCFG[LIG]; if(!FL||!FL.length||!cfg)return ''; const S=flowSum(); if(!S.n||S.n<100)return '';
   const sharper=S.diff>0&&S.dci!=null&&S.diff>S.dci, worse=S.diff<0&&S.dci!=null&&-S.diff>S.dci;
   const verdict=sharper?`the close is sharper — the price learned something after ${cfg.first==='open'?'the open':'the 24-hour mark'}`:(worse?'the close is worse than the earlier price':'no clear difference between them');
@@ -721,11 +722,13 @@ function cardFlow(h,a,ymd,market,m){
       return `${lab}: won <b>${win.toFixed(1)}%</b> <span style="color:var(--grey)">±${c}</span> vs <span class="${cls}">${imp.toFixed(1)}%</span> implied <span style="color:var(--grey)">(n=${n})</span>`; };
     const parts=[one('to','market moved toward them'),one('aw','moved against them')].filter(Boolean);
     return `<b>${esc(short(t))}</b> · ${parts.length?parts.join('<br>&nbsp;&nbsp;&nbsp;'):`<span style="color:var(--grey)">fewer than ${MIN_N} games with a 2-point move</span>`}`; };
-  let ins=''; const lm=m?lineMove(m):null;
-  if(lm){ const ab=Math.abs(lm.d), i=FB.findIndex(b=>ab>=b[0]&&ab<b[1]), b=S.B[i];
-    if(b&&b[0]>=30){ const win=100*b[1]/b[0], imp=100*b[2]/b[0], c=ci(win,b[0]);       const toward=lm.d>0?(lm.favEv?m.h:m.a):(lm.favEv?m.a:m.h); const tf=findTeam(toward);
+  let ins=''; const lm=m?lineMove(m):null; let mv=null;
+  const lvm=liveMove(lv); if(lvm&&Math.abs(lvm.d)>=1.5)mv={ab:Math.abs(lvm.d),toHome:lvm.d>0,since:'since '+etStamp(lvm.since)};
+  if(!mv&&lm)mv={ab:Math.abs(lm.d),toHome:(lm.d>0)===lm.favEv,since:cfg.since};
+  if(mv){ const i=FB.findIndex(b=>mv.ab>=b[0]&&mb(b,mv.ab)), b=S.B[i];
+    if(b&&b[0]>=30){ const win=100*b[1]/b[0], imp=100*b[2]/b[0], c=ci(win,b[0]); const tw=mv.toHome?h:a;
       const v=Math.abs(imp-win)<=c?'the closing price had absorbed the move':(win>imp?'they won more often than the close implied':'they won less often than the close implied');
-      ins=`↑ The price has moved <span class="rnum">${ab.toFixed(0)} pts toward ${esc(short(tf||{ad:String(toward).split(' ').pop()}))}</span> ${esc(cfg.since)}. In ${b[0].toLocaleString('en-US')} past games with a move that size the side won <span class="rnum">${win.toFixed(0)}%</span> against ${imp.toFixed(0)}% implied by the close — ${v}.`; } }
+      ins=`↑ The price has moved <span class="rnum">${mv.ab.toFixed(0)} pts toward ${esc(short(tw))}</span> ${esc(mv.since)}. In ${b[0].toLocaleString('en-US')} past games with a move that size the side won <span class="rnum">${win.toFixed(0)}%</span> against ${imp.toFixed(0)}% implied by the close — ${v}.`; } }
   if(!ins)ins=sharper?`↑ Across <span class="rnum">${S.n.toLocaleString('en-US')}</span> games the closing price beat ${esc(cfg.lab)} on Brier (${f4(S.bf)} → ${f4(S.bc)}) — late money has carried information; this page doesn't turn that into a pick.`:`↑ Across <span class="rnum">${S.n.toLocaleString('en-US')}</span> games the closing price and ${esc(cfg.lab)} scored about the same (${f4(S.bf)} vs ${f4(S.bc)}).`;
   return `<div class="tgol" style="grid-column:1/-1"><div class="th">Line flow<span class="n">how the price moved to the close</span></div><div class="ts">${head}</div>
     <div class="ts" style="margin-top:10px"><span style="color:var(--grey)">when the market moved toward one side — did that side win more than the close implied?</span><br>${rows.join('<br>')}</div>
@@ -762,6 +765,44 @@ function flowPath(g,homeAd,awayAd){   // gecmis bir mac icin: -24s -> -6s -> -1s
   return `<div class="ts" style="margin-top:10px"><span style="color:var(--grey)">home-side price path (vig-removed)</span><br><span class="mono">${pts.join(' → ')}</span>${sps&&LIG!=='mlb'?`<br><span style="color:var(--grey)">spread</span> <span class="mono">${sps}</span>`:''}${tts?` <span style="color:var(--grey)">· total</span> <span class="mono">${tts}</span>`:''}</div>`;
 }
 
+// ---- T10: CANLI FIYAT YOLU (odds_flow/live/<lig>.json, saatlik GitHub Action) ----
+let LV=null;
+async function liveList(){ if(LV!==null)return LV; try{ const r=await fetch('../odds_flow/live/'+LIG+'.json',{cache:'no-store'}); LV=r.ok?await r.json():false; }catch(e){LV=false;} return LV; }
+const etStamp=(ts)=>{ try{ return new Date(ts).toLocaleString('en-US',{timeZone:'America/New_York',weekday:'short',hour:'numeric',minute:'2-digit'})+' ET'; }catch(e){return String(ts);} };
+function liveFor(hName,aName,whenIso){
+  if(!LV||!LV.maclar)return null; const t0=whenIso?new Date(whenIso).getTime():Date.now(); let best=null,bd=1e18;
+  for(const r of Object.values(LV.maclar)){ if(nickOf(r.h)!==nickOf(hName)||nickOf(r.a)!==nickOf(aName))continue;
+    const tt=new Date(r.t).getTime(); const d=Math.abs(tt-t0); if(d<bd){bd=d;best=r;} }
+  return best&&bd<(whenIso?12*3600e3:7*86400e3)?best:null;
+}
+async function liveMerge(){   // worker'in vermedigi yaklasan maclari (gelecek gunler) tahtaya ekle
+  const L=await liveList(); if(!L||!L.maclar)return; const now=Date.now();
+  for(const r of Object.values(L.maclar)){
+    const tt=new Date(r.t).getTime(); if(tt<now-3*3600e3||!r.path||!r.path.length)continue;
+    if(TONIGHT.some(m=>nickOf(m.h)===nickOf(r.h)&&nickOf(m.a)===nickOf(r.a)&&Math.abs(new Date(m.t).getTime()-tt)<12*3600e3))continue;
+    const pts=r.path.filter(x=>x[1]!=null), last=pts[pts.length-1], first=pts[0];
+    TONIGHT.push({h:r.h,a:r.a,t:r.t,key:'live_'+LIG,day:usDate(r.t),live:true,p:last?{h:last[1],a:1-last[1]}:null,ac:first?{h:first[1],a:1-first[1]}:null});
+  }
+}
+function liveMove(lv){   // gecerli iki nokta varsa: ilk goruldugunden bu yana ev tarafina dogru puan degisimi
+  if(!lv||!lv.path)return null; const pts=lv.path.filter(x=>x[1]!=null); if(pts.length<2)return null;
+  const d=(pts[pts.length-1][1]-pts[0][1])*100; return {d,since:pts[0][0]};
+}
+function cardLivePath(h,a,lv){
+  if(!lv||!lv.path||!lv.path.length)return ''; const P=lv.path, n=P.length, first=P[0], last=P[n-1];
+  let idx=P.map((_,i)=>i);
+  if(n>8){ const jumps=P.map((x,i)=>(i&&x[1]!=null&&P[i-1][1]!=null)?{i,d:Math.abs(x[1]-P[i-1][1])}:{i,d:-1}).sort((x,y)=>y.d-x.d).slice(0,6).map(x=>x.i); idx=[...new Set([0,n-1,...jumps])].sort((x,y)=>x-y); }
+  const sg=(v)=>v==null?'–':(v>0?'+':'')+v;
+  const rows=idx.map(i=>{ const x=P[i]; return `<span class="mono" style="color:var(--grey)">${esc(etStamp(x[0]))}</span> &nbsp;<b>${x[1]!=null?Math.round(x[1]*100)+'%':'–'}</b> ${esc(short(h))}${LIG!=='mlb'?` · spread <span class="mono">${sg(x[2])}</span>`:''} · total <span class="mono">${x[3]!=null?x[3]:'–'}</span>`; }).join('<br>');
+  const mv=liveMove(lv); let ins;
+  if(mv&&Math.abs(mv.d)>=1){ const tw=mv.d>0?h:a; const ps=lv.path.filter(x=>x[1]!=null), f=ps[0], l=ps[ps.length-1];
+    const dS=(LIG!=='mlb'&&first[2]!=null&&last[2]!=null&&first[2]!==last[2])?` · spread ${sg(first[2])} → ${sg(last[2])}`:'', dT=(first[3]!=null&&last[3]!=null&&first[3]!==last[3])?` · total ${first[3]} → ${last[3]}`:'';
+    ins=`↑ Since ${esc(etStamp(f[0]))} the price has moved <span class="rnum">${Math.abs(mv.d).toFixed(1)} pts toward ${esc(short(tw))}</span> (${Math.round(f[1]*100)}% → ${Math.round(l[1]*100)}% ${esc(short(h))})${dS}${dT}.`;
+  }else{ ins=n>1?`↑ The price has barely moved since ${esc(etStamp(first[0]))} — ${last[1]!=null?Math.round(last[1]*100)+'% '+esc(short(h)):'moneyline not yet posted by enough books'}.`:`↑ First price seen ${esc(etStamp(first[0]))}${first[1]!=null?` — ${Math.round(first[1]*100)}% ${esc(short(h))}`:''}. The path fills in hourly from here.`; }
+  return `<div class="tgol" style="grid-column:1/-1"><div class="th">Line flow · price path so far<span class="n">${n} snapshot${n>1?'s':''}</span></div><div class="ts">${rows}</div><div class="rins">${ins}</div>
+    <div class="tf">Hourly snapshots of the median US-book price (vig-removed home probability${LIG!=='mlb'?', home spread':''} and total), kept from the first time the game appeared on the board. The snapshot rule skips unchanged hours. A record of the price, not a signal.</div></div>`;
+}
+
 // ---- rozetler: maç satırı için hızlı sinyaller (takım dosyası gerekmez) ----
 function lineMove(m){ if(!m.ac||!m.p||m.ac.h==null||m.p.h==null)return null; const favEv=m.p.h>=m.p.a; const cur=favEv?m.p.h:m.p.a, ac=favEv?m.ac.h:m.ac.a; if(ac==null)return null; const d=(cur-ac)*100; return Math.abs(d)<1.5?null:{favEv,d}; }
 function booksDisagree(m){ const p=m.p||{}, best=m.best||{}; if(p.h==null||p.a==null)return null; const favEv=p.h>=p.a, favP=favEv?p.h:p.a; const kt={};
@@ -795,7 +836,7 @@ async function openRecord(hName,aName,whenIso,market,m){
   if(h===a){det.innerHTML=`<div class="empty err">Pick two different teams.</div>`;return;}
   det.innerHTML=`<div class="empty">Opening the record…</div>`;
   const ymd=whenIso?usDate(whenIso):new Date().toLocaleDateString('en-CA',{timeZone:'America/New_York'});
-  const [hf,af,oh]=await Promise.all([teamFile(h),teamFile(a),oddsHist(),gamesList()]); await flowList();
+  const [hf,af,oh]=await Promise.all([teamFile(h),teamFile(a),oddsHist(),gamesList()]); await flowList(); await liveList(); const lv=liveFor(hName,aName,whenIso);
   if(!hf||!af){det.innerHTML=`<div class="empty err">Team file missing.</div>`;return;}
   const hR=restBefore(hf.games,ymd,oh,h.ad), aR=restBefore(af.games,ymd,oh,a.ad);
   const lm=lastMeeting(hf.games,a.ad,ymd);
@@ -808,7 +849,7 @@ async function openRecord(hName,aName,whenIso,market,m){
   }else{
     cards=[cardFormBB(h,a,hf,af,ymd),cardHomeAway(h,a),cardBatsBB(h,a,hf,af,ymd),cardConditions(h,a,hf,af,ymd),cardXray(h,a,hf,af,[],[]),cardLastMeeting(h,a,lm,oh,hf,af)];
   }
-  if(GL&&GL.length){ const T=twins(h,a,ymd,hR,aR); cards.splice(0,0,cardTwins(h,a,T),cardMarket(h,a,ymd)); cards.splice(5,0,cardScript(h,a,ymd),cardATS(h,a,ymd,market)); cards.push(cardFlow(h,a,ymd,market,m),cardFlowLines(h,a,ymd)); }
+  if(GL&&GL.length){ const T=twins(h,a,ymd,hR,aR); cards.splice(0,0,cardTwins(h,a,T),cardMarket(h,a,ymd)); cards.splice(5,0,cardScript(h,a,ymd),cardATS(h,a,ymd,market)); cards.push(cardLivePath(h,a,lv),cardFlow(h,a,ymd,market,m,lv),cardFlowLines(h,a,ymd)); }
   cards=cards.filter(Boolean);
   const says=cardRecordSays(h,a,cards);
   const pick=(...names)=>cards.filter(c=>names.some(nm=>c.includes(`<div class="th">${nm}`)));
@@ -855,13 +896,14 @@ function renderBoard(){
   box.querySelectorAll('.row').forEach(b=>b.addEventListener('click',()=>{box.querySelectorAll('.row').forEach(x=>x.classList.remove('on'));b.classList.add('on');const m=TONIGHT[+b.dataset.i];openRecord(m.h,m.a,m.t,m.p,m);}));
 }
 async function loadTonight(){
-  const box=document.getElementById('list');
+  const box=document.getElementById('list'); let b={ligler:{}}, wfail=false;
+  try{ const r=await fetch(HOST+'/bugun.json',{cache:'no-store'}); b=await r.json(); }catch(e){ wfail=true; }
   try{
-    const r=await fetch(HOST+'/bugun.json',{cache:'no-store'}); const b=await r.json();
     const blocks=Object.values(b.ligler||{}).filter(x=>LIGS[LIG].feed.test(x.key||''));
     TONIGHT=blocks.flatMap(x=>(x.maclar||[]).map(m=>({...m,key:x.key,day:usDate(m.t)})));
+    try{ await liveMerge(); }catch(e){}
     TONIGHT.sort((x,y)=>String(x.t).localeCompare(String(y.t))); TONIGHT.forEach((m,i)=>{m.i=i;m.badges=[];});
-    if(!TONIGHT.length){box.innerHTML=`<div class="empty">No ${esc(LIGS[LIG].ad)} games in the feed right now — open any two teams below.</div>`;document.getElementById('dayLab').textContent='No games';return;}
+    if(!TONIGHT.length){box.innerHTML=wfail?`<div class="empty">The slate feed is unreachable — open any two teams below.</div>`:`<div class="empty">No ${esc(LIGS[LIG].ad)} games in the feed right now — open any two teams below.</div>`;document.getElementById('dayLab').textContent='No games';return;}
     renderBoard();
     await Promise.all([gamesList(),oddsHist()]);
     TONIGHT.forEach(m=>{ try{m.badges=badgesFor(m);}catch(e){m.badges=[];} }); renderBoard();
@@ -892,7 +934,7 @@ function renderLigbar(){
 }
 async function boot(){
   renderLigbar();
-  document.getElementById('note').textContent=LIGS[LIG].note+' Odds history builds daily from the archive; Line flow comes from archived price snapshots (NFL, NBA, MLB). Direction, not advice. Build T9.';
+  document.getElementById('note').textContent=LIGS[LIG].note+' Odds history builds daily from the archive; Line flow comes from archived price snapshots (NFL, NBA, MLB). Direction, not advice. Build T10.';
   document.title=`Brier Terminal — ${LIGS[LIG].ad}`;
   try{
     const r=await fetch(DATA+'index.json',{cache:'no-store'}); IDX=await r.json(); normalizeIdx(IDX);
