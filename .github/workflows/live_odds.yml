@@ -1,0 +1,33 @@
+name: Live odds path
+on:
+  schedule:
+    - cron: '7 * * * *'      # her saat başı +7 dk
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: live-odds
+  cancel-in-progress: false
+jobs:
+  snap:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install requests
+      - name: Snapshot
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDSAPI_KEY }}
+        run: python scripts/live_odds.py
+      - name: Commit
+        run: |
+          git config user.name "brier-bot"
+          git config user.email "bot@brierrecord.com"
+          git add odds_flow/live
+          if ! git diff --cached --quiet; then
+            git commit -m "live odds $(date -u +%Y-%m-%dT%H:%MZ)"
+            git pull --rebase
+            git push
+          fi
