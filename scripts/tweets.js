@@ -8,7 +8,8 @@ const HOST='https://worker-production-a1ba.up.railway.app';
 const SITE='https://brierrecord.com/terminal/';
 const LIGS=['nba','wnba','nfl','ncaaf','mlb'];
 const TAG={nba:'#NBA',wnba:'#WNBA',nfl:'#NFL',ncaaf:'#CFB',mlb:'#MLB'};
-const TW_URL=23;  // Twitter her linki 23 karakter sayar
+const TW_URL=23;
+const FACTS={};   // lig -> {n,bf,bc,lab,sharper}  // Twitter her linki 23 karakter sayar
 
 const strip=(s)=>String(s).replace(/<[^>]+>/g,'').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/\s+/g,' ').trim();
 const hashtag=(name)=>'#'+String(name).replace(/[^A-Za-z0-9 ]/g,'').split(' ').slice(-2).map(w=>w[0].toUpperCase()+w.slice(1)).join('').replace(/^(.{0,3})$/,'$1');
@@ -39,8 +40,13 @@ async function runLig(lig,ymd,feed){
     const h=ctx.findTeam(m.h), a=ctx.findTeam(m.a); if(!h||!a||!lines.length)continue;
     const link=`${SITE}?lig=${lig}&h=${encodeURIComponent(h.ad)}&a=${encodeURIComponent(a.ad)}`;
     const badges=(m.badges||[]).map(b=>strip(b.txt));
+    // Line flow: (a) bugunun hareketine ozel cumle, (b) lig duzeyinde Brier gercegi
+    let flow=null; const ft=strip(det.split('<div class="tgol"').filter(c=>/<div class="th">Line flow<span/.test(c)).join(' '));
+    const fm=ft.match(/The price has moved (\d+) pts toward ([A-Za-z.' ]+?) (since [A-Za-z0-9: ]+ ET|in the last 24 hours|since the open)\. In ([\d,]+) past games with a move that size the side won (\d+)% against (\d+)% implied by the close/);
+    if(fm)flow={d:fm[1],team:fm[2].trim(),when:fm[3],n:fm[4],w:fm[5],i:fm[6]};
+    if(!FACTS[lig]){ const bm=ft.match(/Close vs (.+?) ([\d,]+) games\s*Brier (\d\.\d+) → (\d\.\d+)/); if(bm)FACTS[lig]={lab:bm[1],n:bm[2],bf:bm[3],bc:bm[4],sharper:/the close is sharper/.test(ft)}; }
     const when=new Date(m.t).toLocaleTimeString('en-US',{timeZone:'America/New_York',hour:'numeric',minute:'2-digit'})+' ET';
-    out.push({lig,h:h.ad,a:a.ad,hn:nick(h.ad),an:nick(a.ad),when,lines,badges,link,market:m.p&&m.p.h!=null?Math.round(m.p.h*100):null});
+    out.push({lig,h:h.ad,a:a.ad,hn:nick(h.ad),an:nick(a.ad),when,lines,badges,link,flow,market:m.p&&m.p.h!=null?Math.round(m.p.h*100):null});
   }
   return out;
 }
@@ -55,6 +61,12 @@ function compose(g){
   for(let i=0;i<g.lines.length;i++)for(let j=i+1;j<g.lines.length;j++){ const t=`${head}\n${g.lines[i]}\n${g.lines[j]}\n\n${foot}`; if(len(t)<=280)opts.push(t); }
   // 3) kisaltilmis: ilk cumle ' — ' oncesi
   if(!opts.length){ const l=g.lines[0].split(' — ')[0]; opts.push(`${head}\n${l}.\n\n${foot}`); }
+  if(g.flow){   // bugunun fiyat hareketi + gecmis kayit: ayri bir secenek olarak garanti et
+    const f=g.flow; const when=f.when.replace(/^since the open$/,'since the open').replace(/^in the last 24 hours$/,'in 24 hours');
+    let t=`${head}\nPrice moved ${f.d} pts toward ${f.team} ${when}. Past ${f.n} games with a move that size: won ${f.w}%, close implied ${f.i}%.\n\n${foot}`;
+    if(len(t)>280)t=`${g.hn} v ${g.an}: price moved ${f.d} pts toward ${f.team}. Past ${f.n} similar moves: won ${f.w}%, close implied ${f.i}%.\n\n${foot}`;
+    if(len(t)<=280){ const o=opts.slice(0,2); o.push(t); return o; }
+  }
   return opts.slice(0,3);
 }
 (async()=>{
@@ -67,6 +79,9 @@ function compose(g){
   const leans=all.filter(g=>g.badges.some(b=>/record leans/.test(b)));
   let md=`# Brier — ${ymd}\n\n${all.length} games on the slate. ${leans.length} where the record leans against the market.\n\nEach block is a ready tweet; pick one per game, or none. Every number comes from the match page behind the link.\n\n`;
   if(leans.length){ md+=`## Record vs market\n\n`; for(const g of leans)md+=`- ${g.hn} v ${g.an} (${TAG[g.lig]}): ${g.badges.filter(b=>/record leans/.test(b)).join(', ')} — ${g.link}\n`; md+='\n'; }
+  const facts=Object.entries(FACTS); if(facts.length){ md+=`## League facts (evergreen)\n\n`;
+    for(const [lig,f] of facts){ const t=`${lig.toUpperCase()}: across ${f.n} games the closing price scored ${f.bc} Brier vs ${f.bf} for ${f.lab}. ${f.sharper?'The late money carried information.':'No clear difference between them.'}\n\nNot a tip — the record: ${SITE}?lig=${lig}\n${TAG[lig]}`;
+      md+=`**${TAG[lig]}** (${len(t)} chars)\n\n\`\`\`\n${t}\n\`\`\`\n\n`; } }
   for(const lig of LIGS){ const G=all.filter(g=>g.lig===lig); if(!G.length)continue; md+=`## ${TAG[lig].slice(1)}\n\n`;
     for(const g of G){ md+=`### ${g.h} — ${g.a} · ${g.when}${g.market!=null?` · market ${g.market}/${100-g.market}`:''}${g.badges.length?` · ${g.badges.join(' · ')}`:''}\n\n`;
       compose(g).forEach((t,i)=>{ md+=`**Option ${i+1}** (${len(t)} chars)\n\n\`\`\`\n${t}\n\`\`\`\n\n`; }); } }
