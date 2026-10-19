@@ -509,6 +509,7 @@ function cardLastMeeting(h,a,g,oh,hf,af){
       if(rows.length)odds=`<div class="ts" style="margin-top:10px"><span style="color:var(--grey)">market, open → close</span><br>${rows.join('<br>')}</div>`;
     }
   }
+  odds+=flowPath(g,homeThen.ad,awayThen.ad);
   const satN=SPOR()==='basketball'?dnpOf(hG||{}).length+dnpOf(aG||{}).length:0;
   const ins=`↑ <span class="rnum">${esc(short(winner))} by ${margin}</span>${satN?` · ${satN} rostered player${satN>1?'s':''} didn't play`:''} — ${niceDate(g.t)}.`;
   return `<div class="tgol" style="grid-column:1/-1"><div class="th">Last meeting<span class="n">${esc(niceDate(g.t))}</span></div>
@@ -608,7 +609,7 @@ function cardATS(h,a,ymd,market){
   return `<div class="tgol"><div class="th">Against the spread</div><div class="ts">${H.html}<br>${A.html}</div><div class="rins">${ins}</div><div class="tf">${role} · ${SPOR()==='baseball'?'run line ±1.5':'closing spread'} where ESPN kept it (roughly the last three seasons) · push excluded</div></div>`;
 }
 function cardRecordSays(h,a,cards){
-  const pri=['Games like this','Market record','Conditions x-ray','Against the spread','Game script','Rest','Back-to-back','Form','Leaders','Lineup','Availability','Home and away','Matchup x-ray','Last meeting'];
+  const pri=['Games like this','Market record','Conditions x-ray','Against the spread','Game script','Rest','Back-to-back','Form','Leaders','Lineup','Availability','Home and away','Matchup x-ray','Line flow','Last meeting'];
   const lines=[];
   for(const p of pri){ const c=cards.find(x=>x.includes(`<div class="th">${p}`)); if(!c)continue; const m=c.match(/<div class="rins">([\s\S]*?)<\/div>/); if(!m)continue;
     const txt=m[1].replace(/^↑\s*/,''); if(/Not enough|can't be read|not shown/i.test(txt))continue; lines.push(txt); if(lines.length===4)break; }
@@ -653,6 +654,114 @@ function cardMarket(h,a,ymd){
     <div class="tf">Bias = average of (market probability − result) in percentage points; positive means overpriced. Brier = mean squared error of the closing price${L?`; league ${L.b.toFixed(3)} over ${L.n.toLocaleString('en-US')} games (0.25 = a coin flip)`:''}. Moneylines where ESPN kept them, roughly the last three seasons.</div></div>`;
 }
 
+// ---- T9: ODDS FLOW — fiyatin kapanisa kadar akisi (odds_flow/<lig>.json, The Odds API tarihsel anlik goruntuler) ----
+// NFL: acilis (~6 gun once) -> kapanis. NBA/MLB: -24s -> kapanis (bu ligler en fazla ~1 gun once cizgi acar).
+const FLOWCFG={
+  nfl:{first:'open',lab:'the opening line',since:'since the open',sp:true,spT:1,tot:1},
+  nba:{first:'h24',lab:'the price 24 hours out',since:'in the last 24 hours',sp:true,spT:1,tot:1},
+  mlb:{first:'h24',lab:'the price 24 hours out',since:'in the last 24 hours',sp:false,spT:1,tot:0.5}
+};
+const FLOWMIN_BOOKS=3;
+let FL=null, FSUM=null, FLINES=null;
+const nickOf=(n)=>{ const w=String(n||'').toLowerCase().replace(/[^a-z0-9 ]/g,'').split(/\s+/).filter(Boolean); if(!w.length)return '';
+  return (w[w.length-1]==='sox'&&w.length>1)?w[w.length-2]+'sox':w[w.length-1]; };
+async function flowList(){
+  if(FL!==null)return FL; const cfg=FLOWCFG[LIG]; if(!cfg){FL=false;return FL;}
+  try{
+    await gamesList(); if(!GL||!GL.length){FL=false;return FL;}
+    const r=await fetch('../odds_flow/'+LIG+'.json',{cache:'no-store'}); if(!r.ok){FL=false;return FL;}
+    const j=await r.json(); const by={};
+    for(const f of (j.maclar||[])){ const k=nickOf(f.h)+'|'+nickOf(f.a); (by[k]=by[k]||[]).push(f); }
+    const used=new Set(), out=[];
+    const px=(x)=>x&&x[0]!=null&&(x[3]||0)>=FLOWMIN_BOOKS?x[0]:null;
+    for(const g of GL){
+      if(g.hs==null||g.as==null)continue; const fl=by[nickOf(g.h)+'|'+nickOf(g.a)]; if(!fl)continue;
+      let best=null,bd=9;
+      for(const f of fl){ if(used.has(f))continue; const d=Math.abs(daysBetween(usDate(f.t),g.t)); if(d<=1&&(d<bd||(d===bd&&f.t<best.t))){best=f;bd=d;} }
+      if(!best)continue; used.add(best);
+      const f0=best.s[cfg.first], c=best.s.close;
+      out.push({t:g.t,h:g.h,a:g.a,hs:g.hs,as:g.as,y:g.hs===g.as?null:(g.hs>g.as?1:0),
+        pf:px(f0),pc:px(c),sf:f0&&f0[1]!=null?f0[1]:null,sc:c&&c[1]!=null?c[1]:null,tf:f0&&f0[2]!=null?f0[2]:null,tc:c&&c[2]!=null?c[2]:null,s:best.s});
+    }
+    FL=out.length?out:false;
+  }catch(e){FL=false;}
+  return FL;
+}
+const FB=[[0,1,'under 1'],[1,2,'1–2'],[2,4,'2–4'],[4,7,'4–7'],[7,999,'7 or more']];
+function flowSum(){
+  if(FSUM)return FSUM; let n=0,sf=0,sc=0,d1=0,d2=0; const B=FB.map(()=>[0,0,0]);
+  for(const e of FL){
+    if(e.pf==null||e.pc==null||e.y==null)continue;
+    const ef=(e.pf-e.y)*(e.pf-e.y), ec=(e.pc-e.y)*(e.pc-e.y); n++; sf+=ef; sc+=ec; const d=ef-ec; d1+=d; d2+=d*d;
+    const mv=(e.pc-e.pf)*100, ab=Math.abs(mv), home=mv>0, p=home?e.pc:1-e.pc, w=home?e.y:1-e.y;
+    const i=FB.findIndex(b=>ab>=b[0]&&ab<b[1]); if(i>=0){B[i][0]++;B[i][1]+=w;B[i][2]+=p;}
+  }
+  const mean=n?d1/n:0, sdv=n>1?Math.sqrt(Math.max(0,(d2-n*mean*mean)/(n-1))):0;
+  FSUM={n,bf:n?sf/n:null,bc:n?sc/n:null,diff:mean,dci:n>1?1.96*sdv/Math.sqrt(n):null,B}; return FSUM;
+}
+function flowTeam(team,ymd){   // piyasa bu takima dogru >=2 puan kaydiginda / aksi yone kaydiginda: kazanma vs kapanisin ima ettigi
+  const r={to:[0,0,0],aw:[0,0,0]};
+  for(const e of FL){
+    if(e.t>=ymd||e.pf==null||e.pc==null||e.y==null)continue; const home=e.h===team; if(!home&&e.a!==team)continue;
+    const d=(e.pc-e.pf)*100*(home?1:-1); if(Math.abs(d)<2)continue;
+    const p=home?e.pc:1-e.pc, w=home?e.y:1-e.y, k=d>0?'to':'aw'; r[k][0]++; r[k][1]+=w; r[k][2]+=p;
+  }
+  return r;
+}
+const f4=(x)=>x==null?'–':x.toFixed(4);
+function cardFlow(h,a,ymd,market,m){
+  const cfg=FLOWCFG[LIG]; if(!FL||!FL.length||!cfg)return ''; const S=flowSum(); if(!S.n||S.n<100)return '';
+  const sharper=S.diff>0&&S.dci!=null&&S.diff>S.dci, worse=S.diff<0&&S.dci!=null&&-S.diff>S.dci;
+  const verdict=sharper?`the close is sharper — the price learned something after ${cfg.first==='open'?'the open':'the 24-hour mark'}`:(worse?'the close is worse than the earlier price':'no clear difference between them');
+  const head=`<b>Close vs ${esc(cfg.lab)}</b> <span style="color:var(--grey)">${S.n.toLocaleString('en-US')} games</span><br>Brier <span class="mono">${f4(S.bf)}</span> → <span class="mono">${f4(S.bc)}</span> <span style="color:var(--grey)">(${S.diff>=0?'−':'+'}${Math.abs(S.diff).toFixed(4)} ±${f4(S.dci)}) — ${verdict}</span>`;
+  const rows=[]; S.B.forEach((b,i)=>{ if(b[0]<MIN_N*2)return; const win=100*b[1]/b[0], imp=100*b[2]/b[0], gap=imp-win, c=ci(win,b[0]);
+    const cls=Math.abs(gap)>c?(gap>0?'kartEksi':'kartArti'):'';
+    rows.push(`<span class="mono" style="color:var(--grey)">${FB[i][2]} pts</span> moved toward a side · won <b>${win.toFixed(1)}%</b> <span style="color:var(--grey)">±${c}</span> vs <span class="${cls}">${imp.toFixed(1)}%</span> implied <span style="color:var(--grey)">(n=${b[0].toLocaleString('en-US')})</span>`); });
+  const teamLine=(t)=>{ const r=flowTeam(t.ad,ymd); const one=(k,lab)=>{ const [n,w,p]=r[k]; if(n<MIN_N)return null; const win=100*w/n, imp=100*p/n, gap=imp-win, c=ci(win,n), cls=Math.abs(gap)>c?(gap>0?'kartEksi':'kartArti'):'';
+      return `${lab}: won <b>${win.toFixed(1)}%</b> <span style="color:var(--grey)">±${c}</span> vs <span class="${cls}">${imp.toFixed(1)}%</span> implied <span style="color:var(--grey)">(n=${n})</span>`; };
+    const parts=[one('to','market moved toward them'),one('aw','moved against them')].filter(Boolean);
+    return `<b>${esc(short(t))}</b> · ${parts.length?parts.join('<br>&nbsp;&nbsp;&nbsp;'):`<span style="color:var(--grey)">fewer than ${MIN_N} games with a 2-point move</span>`}`; };
+  let ins=''; const lm=m?lineMove(m):null;
+  if(lm){ const ab=Math.abs(lm.d), i=FB.findIndex(b=>ab>=b[0]&&ab<b[1]), b=S.B[i];
+    if(b&&b[0]>=30){ const win=100*b[1]/b[0], imp=100*b[2]/b[0], c=ci(win,b[0]);       const toward=lm.d>0?(lm.favEv?m.h:m.a):(lm.favEv?m.a:m.h); const tf=findTeam(toward);
+      const v=Math.abs(imp-win)<=c?'the closing price had absorbed the move':(win>imp?'they won more often than the close implied':'they won less often than the close implied');
+      ins=`↑ The price has moved <span class="rnum">${ab.toFixed(0)} pts toward ${esc(short(tf||{ad:String(toward).split(' ').pop()}))}</span> ${esc(cfg.since)}. In ${b[0].toLocaleString('en-US')} past games with a move that size the side won <span class="rnum">${win.toFixed(0)}%</span> against ${imp.toFixed(0)}% implied by the close — ${v}.`; } }
+  if(!ins)ins=sharper?`↑ Across <span class="rnum">${S.n.toLocaleString('en-US')}</span> games the closing price beat ${esc(cfg.lab)} on Brier (${f4(S.bf)} → ${f4(S.bc)}) — late money has carried information; this page doesn't turn that into a pick.`:`↑ Across <span class="rnum">${S.n.toLocaleString('en-US')}</span> games the closing price and ${esc(cfg.lab)} scored about the same (${f4(S.bf)} vs ${f4(S.bc)}).`;
+  return `<div class="tgol" style="grid-column:1/-1"><div class="th">Line flow<span class="n">how the price moved to the close</span></div><div class="ts">${head}</div>
+    <div class="ts" style="margin-top:10px"><span style="color:var(--grey)">when the market moved toward one side — did that side win more than the close implied?</span><br>${rows.join('<br>')}</div>
+    <div class="ts" style="margin-top:10px">${teamLine(h)}<br>${teamLine(a)}</div><div class="rins">${ins}</div>
+    <div class="tf">Probabilities are vig-removed moneyline medians across US books (≥${FLOWMIN_BOOKS} books). Move = change from ${esc(cfg.lab)} to the closing snapshot, in percentage points. Implied = the closing price's probability for that side; red = the side won less than implied, green = more, beyond the 95% interval. Odds API snapshots, ${LIG==='nfl'?'2023':(LIG==='nba'?'2023-24':'2024')} onward. A record of the price, not a signal.</div></div>`;
+}
+function flowLines(){
+  if(FLINES)return FLINES; const cfg=FLOWCFG[LIG]; const r={cv:{small:[0,0],big:[0,0]},ov:{up:[0,0],down:[0,0]}};
+  for(const e of FL){
+    if(cfg.sp&&e.sf!=null&&e.sc!=null){ const d=e.sc-e.sf; if(Math.abs(d)>=cfg.spT){ const x=(e.hs-e.as)+e.sc; if(x!==0){ const won=(d<0)?(x>0):(x<0); const k=Math.abs(d)>=2*cfg.spT?'big':'small'; r.cv[k][0]++; r.cv[k][1]+=won?1:0; } } }
+    if(e.tf!=null&&e.tc!=null){ const d=e.tc-e.tf; if(Math.abs(d)>=cfg.tot){ const tot=e.hs+e.as; if(tot!==e.tc){ const k=d>0?'up':'down'; r.ov[k][0]++; r.ov[k][1]+=tot>e.tc?1:0; } } }
+  }
+  FLINES=r; return r;
+}
+function cardFlowLines(h,a,ymd){
+  const cfg=FLOWCFG[LIG]; if(!FL||!FL.length||!cfg)return ''; const R=flowLines();
+  const row=(lab,[n,w],what)=>{ if(n<MIN_N*2)return null; const p=100*w/n, c=ci(p,n), off=Math.abs(p-50)>c; return {txt:`${lab}: ${what} <b>${p.toFixed(1)}%</b> <span style="color:var(--grey)">±${c} (n=${n.toLocaleString('en-US')})</span>`,p,c,off,n}; };
+  const T=cfg.tot, S1=cfg.spT, since=cfg.since;
+  const tu=row(`total rose ${T}+`,R.ov.up,'went over the closing total'), td=row(`total fell ${T}+`,R.ov.down,'went over the closing total');
+  const cs=cfg.sp?row(`spread moved ${S1}–${2*S1} pts toward a side`,R.cv.small,'that side covered the closing spread'):null, cb=cfg.sp?row(`spread moved ${2*S1}+ pts toward a side`,R.cv.big,'that side covered'):null;
+  const rows=[cs,cb,tu,td].filter(Boolean); if(!rows.length)return '';
+  const anyOff=rows.some(x=>x.off);
+  const ins=(tu&&td)?`↑ After the total rose ${T}+ the game went over the closing number <span class="rnum">${tu.p.toFixed(0)}%</span> of the time; after it fell, <span class="rnum">${td.p.toFixed(0)}%</span> — ${tu.off||td.off?'a drift the close had not fully absorbed':'near 50%, so the close had already absorbed the move'}.`:`↑ ${rows[0].txt}.`;
+  return `<div class="tgol" style="grid-column:1/-1"><div class="th">Line flow · spread and total<span class="n">did the close absorb the move?</span></div><div class="ts">${rows.map(x=>x.txt).join('<br>')}</div><div class="rins">${ins}</div>
+    <div class="tf">Moves measured from ${esc(cfg.lab)} to the closing snapshot (median across US books); results against the <i>closing</i> number, pushes excluded. ${cfg.sp?'':'Baseball spreads are a fixed run line, so only totals are shown. '}${anyOff?'At least one row sits outside the 95% interval around 50%; that is a description of the past, not a rule.':'Every row sits inside the 95% interval around 50%.'}</div></div>`;
+}
+function flowPath(g,homeAd,awayAd){   // gecmis bir mac icin: -24s -> -6s -> -1s -> kapanis, ev tarafi
+  if(!FL||!FL.length)return ''; const e=FL.find(x=>x.t===g.t&&x.h===homeAd&&x.a===awayAd); if(!e)return '';
+  const tags=[['open','open'],['h24','−24h'],['h6','−6h'],['h1','−1h'],['close','close']]; const pts=[], sp=[], tt=[];
+  for(const [k,lab] of tags){ const v=e.s[k]; if(!v)continue; if(v[0]!=null&&(v[3]||0)>=FLOWMIN_BOOKS)pts.push(`${lab} ${Math.round(v[0]*100)}%`); if(v[1]!=null)sp.push(v[1]); if(v[2]!=null)tt.push(v[2]); }
+  if(pts.length<2)return '';
+  const rng=(x)=>x.length>=2&&x[0]!==x[x.length-1]?`${x[0]} → ${x[x.length-1]}`:(x.length?String(x[x.length-1]):null);
+  const sps=rng(sp), tts=rng(tt);
+  return `<div class="ts" style="margin-top:10px"><span style="color:var(--grey)">home-side price path (vig-removed)</span><br><span class="mono">${pts.join(' → ')}</span>${sps&&LIG!=='mlb'?`<br><span style="color:var(--grey)">spread</span> <span class="mono">${sps}</span>`:''}${tts?` <span style="color:var(--grey)">· total</span> <span class="mono">${tts}</span>`:''}</div>`;
+}
+
 // ---- rozetler: maç satırı için hızlı sinyaller (takım dosyası gerekmez) ----
 function lineMove(m){ if(!m.ac||!m.p||m.ac.h==null||m.p.h==null)return null; const favEv=m.p.h>=m.p.a; const cur=favEv?m.p.h:m.p.a, ac=favEv?m.ac.h:m.ac.a; if(ac==null)return null; const d=(cur-ac)*100; return Math.abs(d)<1.5?null:{favEv,d}; }
 function booksDisagree(m){ const p=m.p||{}, best=m.best||{}; if(p.h==null||p.a==null)return null; const favEv=p.h>=p.a, favP=favEv?p.h:p.a; const kt={};
@@ -686,7 +795,7 @@ async function openRecord(hName,aName,whenIso,market,m){
   if(h===a){det.innerHTML=`<div class="empty err">Pick two different teams.</div>`;return;}
   det.innerHTML=`<div class="empty">Opening the record…</div>`;
   const ymd=whenIso?usDate(whenIso):new Date().toLocaleDateString('en-CA',{timeZone:'America/New_York'});
-  const [hf,af,oh]=await Promise.all([teamFile(h),teamFile(a),oddsHist(),gamesList()]);
+  const [hf,af,oh]=await Promise.all([teamFile(h),teamFile(a),oddsHist(),gamesList()]); await flowList();
   if(!hf||!af){det.innerHTML=`<div class="empty err">Team file missing.</div>`;return;}
   const hR=restBefore(hf.games,ymd,oh,h.ad), aR=restBefore(af.games,ymd,oh,a.ad);
   const lm=lastMeeting(hf.games,a.ad,ymd);
@@ -699,12 +808,12 @@ async function openRecord(hName,aName,whenIso,market,m){
   }else{
     cards=[cardFormBB(h,a,hf,af,ymd),cardHomeAway(h,a),cardBatsBB(h,a,hf,af,ymd),cardConditions(h,a,hf,af,ymd),cardXray(h,a,hf,af,[],[]),cardLastMeeting(h,a,lm,oh,hf,af)];
   }
-  if(GL&&GL.length){ const T=twins(h,a,ymd,hR,aR); cards.splice(0,0,cardTwins(h,a,T),cardMarket(h,a,ymd)); cards.splice(5,0,cardScript(h,a,ymd),cardATS(h,a,ymd,market)); }
+  if(GL&&GL.length){ const T=twins(h,a,ymd,hR,aR); cards.splice(0,0,cardTwins(h,a,T),cardMarket(h,a,ymd)); cards.splice(5,0,cardScript(h,a,ymd),cardATS(h,a,ymd,market)); cards.push(cardFlow(h,a,ymd,market,m),cardFlowLines(h,a,ymd)); }
   cards=cards.filter(Boolean);
   const says=cardRecordSays(h,a,cards);
   const pick=(...names)=>cards.filter(c=>names.some(nm=>c.includes(`<div class="th">${nm}`)));
   const TABS=[['overview','Overview',pick('Games like this','Market record')],['conditions','Conditions',pick('Conditions x-ray','Matchup x-ray')],
-              ['form','Form',pick('Rest','Back-to-back','Form','Leaders','Lineup','Availability','Home and away','Game script','Against the spread')],['last','Last meeting',pick('Last meeting')]].filter(t=>t[2].length);
+              ['form','Form',pick('Rest','Back-to-back','Form','Leaders','Lineup','Availability','Home and away','Game script','Against the spread')],['flow','Line flow',pick('Line flow')],['last','Last meeting',pick('Last meeting')]].filter(t=>t[2].length);
   const tab0=TABS.some(t=>t[0]===Q.get('tab'))?Q.get('tab'):TABS[0][0];
   const when=whenIso?new Date(whenIso).toLocaleString('en-US',{timeZone:'America/New_York',weekday:'short',day:'numeric',month:'short',hour:'numeric',minute:'2-digit'})+' ET':'any date';
   const link=deepLink(h,a);
@@ -783,7 +892,7 @@ function renderLigbar(){
 }
 async function boot(){
   renderLigbar();
-  document.getElementById('note').textContent=LIGS[LIG].note+' Odds history builds daily from the archive. Direction, not advice. Build T8.';
+  document.getElementById('note').textContent=LIGS[LIG].note+' Odds history builds daily from the archive; Line flow comes from archived price snapshots (NFL, NBA, MLB). Direction, not advice. Build T9.';
   document.title=`Brier Terminal — ${LIGS[LIG].ad}`;
   try{
     const r=await fetch(DATA+'index.json',{cache:'no-store'}); IDX=await r.json(); normalizeIdx(IDX);
