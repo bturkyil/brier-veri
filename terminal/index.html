@@ -160,11 +160,11 @@
 <script>
 const HOST='https://worker-production-a1ba.up.railway.app';
 const LIGS={
-  nba:  {ad:'NBA',  spor:'basketball',feed:/^basketball_nba/,      note:'Five NBA seasons of box scores (public archive), every player every night. "Sat" = on the roster with no minutes — injury, rest or coach\'s decision, not separated.'},
-  wnba: {ad:'WNBA', spor:'basketball',feed:/^basketball_wnba/,     note:'Six WNBA seasons of box scores (public archive), 2021–2026, every player every night. "Sat" = on the roster with no minutes.'},
-  nfl:  {ad:'NFL',  spor:'football',  feed:/^americanfootball_nfl/, note:'Six NFL seasons of box scores (public archive), 2021–2026, every game including playoffs. Rest counts calendar days between kickoffs.'},
-  ncaaf:{ad:'NCAAF',spor:'football',  feed:/^americanfootball_ncaaf/,note:'Six FBS seasons of box scores (public archive), 2021–2026. Profiles use the top and bottom third of FBS that season; FCS opponents appear in the record but carry no profile.'},
-  mlb:  {ad:'MLB',  spor:'baseball',  feed:/^baseball_mlb/,        note:'Six MLB seasons of box scores (public archive), 2021–2026, every game including the postseason. Lineup and pitching lines are from the box, not projections.'}
+  nba:  {ad:'NBA',  spor:'basketball',feed:/^basketball_nba/,      note:'Five NBA seasons of results, rest and availability. "Sat" = on the roster with no minutes — injury, rest or coach\'s decision, not separated.'},
+  wnba: {ad:'WNBA', spor:'basketball',feed:/^basketball_wnba/,     note:'Six WNBA seasons of results, 2021–2026. "Sat" = on the roster with no minutes.'},
+  nfl:  {ad:'NFL',  spor:'football',  feed:/^americanfootball_nfl/, note:'Six NFL seasons of results, 2021–2026, every game including playoffs. Rest counts calendar days between kickoffs.'},
+  ncaaf:{ad:'NCAAF',spor:'football',  feed:/^americanfootball_ncaaf/,note:'Six FBS seasons of results, 2021–2026. Profiles use the top and bottom third of FBS that season; FCS opponents appear in the record but carry no profile.'},
+  mlb:  {ad:'MLB',  spor:'baseball',  feed:/^baseball_mlb/,        note:'Six MLB seasons of results, 2021–2026, every game including the postseason. Lineup and staff lines are rolling summaries, not projections.'}
 };
 const Q=new URLSearchParams(location.search);
 let LIG=LIGS[Q.get('lig')]?Q.get('lig'):'nba';
@@ -383,7 +383,7 @@ function cardBatsBB(h,a,hf,af,ymd){
   const H=blk(h,hf), A=blk(a,af);
   const hot=[...H.B.map(p=>({...p,t:h})),...A.B.map(p=>({...p,t:a}))].map(p=>({...p,d:p.avg10-p.avgS})).sort((x,y)=>Math.abs(y.d)-Math.abs(x.d))[0];
   const ins=hot?`↑ <span class="rnum">${esc(hot.ad)}</span> hitting ${a3(hot.avg10)} over the last 10 against a ${a3(hot.avgS)} season mark — the widest swing in either lineup.`:'';
-  return `<div class="tgol"><div class="th">Lineup and arms<span class="n">last 10</span></div><div class="ts">${H.html}<br>${A.html}</div><div class="rins">${ins}</div><div class="tf">regulars = 15+ at-bats in the last 10 · staff lines are team totals from the box</div></div>`;
+  return `<div class="tgol"><div class="th">Lineup and arms<span class="n">last 10</span></div><div class="ts">${H.html}<br>${A.html}</div><div class="rins">${ins}</div><div class="tf">regulars = 15+ at-bats in the last 10 · staff lines are team totals</div></div>`;
 }
 
 // ---- MATCHUP X-RAY: takim vs rakip (+ basketbolda oyuncu vs rakip). KURAL: n < MIN_N -> gosterme, not yaz ----
@@ -951,7 +951,7 @@ function renderLigbar(){
 }
 async function boot(){
   renderLigbar();
-  document.getElementById('note').textContent=LIGS[LIG].note+' Odds history builds daily from the archive; Line flow comes from archived price snapshots (NFL, NBA, MLB). Direction, not advice. Build T11.';
+  document.getElementById('note').textContent=LIGS[LIG].note+' Odds history builds daily from the archive; Line flow comes from archived price snapshots (NFL, NBA, MLB). Direction, not advice. Independent analysis, not affiliated with any league, team or data provider; provided as is, for information only. Build T11.';
   document.title=`Brier Terminal — ${LIGS[LIG].ad}`;
   try{
     const r=await fetch(DATA+'index.json',{cache:'no-store'}); IDX=await r.json(); normalizeIdx(IDX);
