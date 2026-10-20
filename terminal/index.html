@@ -229,7 +229,7 @@ async function teamFile(t){
 async function oddsHist(){ if(OH!==null)return OH; try{const r=await fetch(ODDS_HIST,{cache:'no-store'});OH=r.ok?await r.json():false;}catch(e){OH=false;} return OH; }
 
 // ---- veri erisimi: NBA (eski sema: box.p / opp_box) ve yeni sema (box.<grup> / m / om) ayni arayuzden ----
-function gStats(g){ if(NEW())return g.m||{}; let pts=0,reb=0,ast=0,tpm=0,pf=0,to=0,hasT=false,hasF=false;
+function gStats(g){ if(NEW()||g.m)return g.m||{}; let pts=0,reb=0,ast=0,tpm=0,pf=0,to=0,hasT=false,hasF=false;
   for(const p of (g.box&&g.box.p)||[]){pts+=p[3]||0;reb+=p[4]||0;ast+=p[5]||0;
     if(p.length>7&&p[7]!=null){tpm+=p[7];hasT=true;} if(p.length>12&&p[12]!=null){pf+=p[12];hasF=true;} if(p.length>11&&p[11]!=null)to+=p[11];}
   return {pts,reb,ast,tpm:hasT?tpm:null,pf:hasF?pf:null,to:hasF?to:null}; }
@@ -252,7 +252,8 @@ function enrich(t,f){
   t.away=[A.length,A.filter(g=>g.won).length,Math.round(10*(avg(A.map(g=>g.pts))||0))/10];
   const B=gs.filter(g=>g.b2b); t.b2b=[B.length,B.filter(g=>g.won).length];
   t.last=gs.length?gs[gs.length-1].t:null;
-  if(SPOR()==='basketball'){ // yildizlar: son iki sezon, >=15 mac, ppg
+  if(SPOR()==='basketball'&&f.stars){ t.stars=f.stars; }
+  else if(SPOR()==='basketball'){ // yildizlar: son iki sezon, >=15 mac, ppg
     const szs=[...new Set(gs.map(g=>g.sz))].sort().slice(-2); const P={};
     gs.filter(g=>szs.includes(g.sz)).forEach(g=>{bRows(g).forEach(r=>{if(r.min==null||r.min<=0)return;const o=P[r.ad]||(P[r.ad]={gp:0,pts:0});o.gp++;o.pts+=r.pts||0;});});
     t.stars=Object.entries(P).filter(([_,o])=>o.gp>=15).map(([ad,o])=>({ad,gp:o.gp,ppg:Math.round(10*o.pts/o.gp)/10})).sort((x,y)=>y.ppg-x.ppg).slice(0,8);
@@ -274,7 +275,9 @@ function restBefore(games,ymd,oh,teamAd){
   if(!lastT)return null; return {rest:daysBetween(lastT,ymd)-1,lastT,src};
 }
 function lastMeeting(games,oppAd,beforeYmd){ let m=null; for(const g of games){ if(g.opp===oppAd&&(!beforeYmd||g.t<beforeYmd))m=g; } return m; }
-function starsLast10(games,stars,beforeYmd){
+function starsLast10(games,stars,beforeYmd,f){
+  if(f&&f.sum&&f.sum.avail&&!hasRaw(f)){ if(!sumOK(f,beforeYmd))return [];
+    return stars.map(s=>{const a=f.sum.avail[s.ad]; return a?{ad:s.ad,ppg:s.ppg,sat:a.sat,n:a.n,seen:a.seen}:null;}).filter(x=>x&&x.seen>0); }
   const recent=games.filter(g=>!beforeYmd||g.t<beforeYmd).slice(-10);
   return stars.map(s=>{
     const seen=recent.filter(g=>bRows(g).some(p=>p.ad===s.ad)||dnpOf(g).includes(s.ad)).length;
@@ -282,6 +285,9 @@ function starsLast10(games,stars,beforeYmd){
   }).filter(s=>s.seen>0);
 }
 const before=(games,ymd)=>games.filter(g=>!ymd||g.t<ymd);
+// T11: ham oyuncu satirlari yayinda yok; toplu ozetler (f.sum) kullanilir. Ozet yalnizca son mactan SONRAKI tarihler icin gecerli.
+const sumOK=(f,ymd)=>!!(f&&f.sum&&(!ymd||ymd>f.sum.asof));
+const hasRaw=(f)=>!!(f&&f.games&&f.games.some(g=>g.box));
 
 // ---- ortak kartlar ----
 function cardHomeAway(h,a){
@@ -338,14 +344,15 @@ function fbLeaders(games,n){  // son n mac: lider pasor / kosucu / alici (toplam
   return {n:G.length,qb:acc('passing'),rb:acc('rushing'),wr:acc('receiving')};
 }
 function cardLeadersFB(h,a,hf,af,ymd){
-  const H=fbLeaders(before(hf.games,ymd),5), A=fbLeaders(before(af.games,ymd),5);
+  const lead=(f)=>(f.sum&&f.sum.leaders&&!hasRaw(f))?(sumOK(f,ymd)?f.sum.leaders:{n:0}):fbLeaders(before(f.games,ymd),5);
+  const H=lead(hf), A=lead(af);
   const blk=(t,L)=>{ if(!L.n)return `<span style="color:var(--grey)">${esc(short(t))} — no games in the record</span>`;
     const q=L.qb?`<b>${esc(L.qb.ad)}</b> <span class="mono" style="color:var(--grey)">${f1(L.qb.yds/L.qb.gp)} pass yds/g · ${L.qb.td} td · ${L.qb.int} int · ${L.qb.att?Math.round(100*L.qb.cmp/L.qb.att):0}%</span>`:'';
     const r=L.rb?`<b>${esc(L.rb.ad)}</b> <span class="mono" style="color:var(--grey)">${f1(L.rb.yds/L.rb.gp)} rush yds/g · ${L.rb.td} td</span>`:'';
     const w=L.wr?`<b>${esc(L.wr.ad)}</b> <span class="mono" style="color:var(--grey)">${f1(L.wr.yds/L.wr.gp)} rec yds/g · ${L.wr.rec} rec</span>`:'';
     return `<span style="color:var(--grey)">${esc(short(t))} · last ${L.n}</span><br>${[q,r,w].filter(Boolean).join('<br>')}`; };
-  const hp=H.qb?H.qb.yds/H.qb.gp:0, ap=A.qb?A.qb.yds/A.qb.gp:0; const lead=hp>=ap?[h,H]:[a,A];
-  const ins=lead[1].qb?`↑ <span class="rnum">${esc(lead[1].qb.ad)}</span> at ${f1(lead[1].qb.yds/lead[1].qb.gp)} passing yards a game over the last ${lead[1].n} — ${esc(poss(short(lead[0])))} offence runs through the arm${lead[1].qb.int>=3?`, with ${lead[1].qb.int} picks in that span`:''}.`:'';
+  const hp=H.qb?H.qb.yds/H.qb.gp:0, ap=A.qb?A.qb.yds/A.qb.gp:0; const ld=hp>=ap?[h,H]:[a,A];
+  const ins=ld[1].qb?`↑ <span class="rnum">${esc(ld[1].qb.ad)}</span> at ${f1(ld[1].qb.yds/ld[1].qb.gp)} passing yards a game over the last ${ld[1].n} — ${esc(poss(short(ld[0])))} offence runs through the arm${ld[1].qb.int>=3?`, with ${ld[1].qb.int} picks in that span`:''}.`:'';
   return `<div class="tgol"><div class="th">Leaders<span class="n">last 5</span></div><div class="ts">${blk(h,H)}<br>${blk(a,A)}</div><div class="rins">${ins}</div><div class="tf">leading passer / rusher / receiver by total yards in the span</div></div>`;
 }
 
@@ -369,7 +376,7 @@ function bbArms(games){ const L=games.slice(-10), sz=L.length?L[L.length-1].sz:n
   const er=(G)=>avg(G.map(g=>(g.m||{}).p_er)), k=(G)=>avg(G.map(g=>(g.m||{}).p_k)); return {er10:er(L),erS:er(S),k10:k(L),kS:k(S)}; }
 function cardBatsBB(h,a,hf,af,ymd){
   const a3=(x)=>x.toFixed(3).replace(/^0/,'');
-  const blk=(t,f)=>{const G=before(f.games,ymd); const B=bbBats(G), R=bbArms(G);
+  const blk=(t,f)=>{const G=before(f.games,ymd); const B=(f.sum&&f.sum.bats&&!hasRaw(f))?(sumOK(f,ymd)?f.sum.bats:[]):bbBats(G), R=bbArms(G);
     const rows=B.map(p=>`<b>${esc(p.ad)}</b> <span class="mono" style="color:var(--grey)">${a3(p.avg10)} last 10 · ${a3(p.avgS)} season · ${p.hrS} hr</span>`).join('<br>');
     const arms=`<span style="color:var(--grey)">staff</span> <span class="mono">${f1(R.er10)} er/g <span style="color:var(--grey)">(season ${f1(R.erS)})</span> · ${f1(R.k10)} k/g <span style="color:var(--grey)">(${f1(R.kS)})</span></span>`;
     return {html:`<span style="color:var(--grey)">${esc(short(t))}</span><br>${rows||'<span style="color:var(--grey)">no regular bats in the last 10</span>'}<br>${arms}`,B,R};};
@@ -386,7 +393,9 @@ function matchupSplit(games,oppAd){
     if(v.length<MIN_N||!a.length)return null; const mv=avg(v),ma=avg(a); return {k,label,vs:mv,norm:ma,d:mv-ma,pct:ma?(mv-ma)/ma*100:0};}).filter(Boolean);
   return {n:vs.length,seasons:[...new Set(vs.map(g=>g.sz))].sort(),rows};
 }
-function playerSplits(games,oppAd,stars){
+function playerSplits(games,oppAd,stars,f){
+  if(f&&f.sum&&f.sum.psplit&&!hasRaw(f)){ return (stars||[]).map(s=>{ const e=((f.sum.psplit[s.ad])||{})[oppAd];
+      if(!e||!e.pts)return {ad:s.ad,n:e?e.n:0,shown:false}; return {ad:s.ad,n:e.n,shown:true,pts:e.pts,reb:e.reb,...(e.tpm?{tpm:e.tpm}:{})}; }); }
   return (stars||[]).map(s=>{
     const row=g=>bRows(g).find(p=>p.ad===s.ad&&p.min>0);
     const vs=games.filter(g=>g.opp===oppAd).map(row).filter(Boolean), all=games.map(row).filter(Boolean);
@@ -405,7 +414,7 @@ function cardXray(h,a,hf,af,hS,aS){
   const side=(t,o,m)=>`<div><div class="th sub">${esc(short(t))} vs ${esc(short(o))}</div><div class="ts">${m.rows.map(fmt).join('<br>')}</div></div>`;
   let players='',hid='';
   if(SPOR()==='basketball'){
-    const hp=playerSplits(hf.games,a.ad,hS), ap=playerSplits(af.games,h.ad,aS);
+    const hp=playerSplits(hf.games,a.ad,hS,hf), ap=playerSplits(af.games,h.ad,aS,af);
     const shownP=[...hp,...ap].filter(p=>p.shown), hidP=[...hp,...ap].filter(p=>!p.shown);
     const prow=p=>`<b>${esc(p.ad)}</b> · pts ${p.pts[0].toFixed(1)} <span style="color:var(--grey)">(norm ${p.pts[1].toFixed(1)})</span> · reb ${p.reb[0].toFixed(1)} <span style="color:var(--grey)">(${p.reb[1].toFixed(1)})</span>${p.tpm?` · 3pm ${p.tpm[0].toFixed(1)} <span style="color:var(--grey)">(${p.tpm[1].toFixed(1)})</span>`:''} <span class="mono" style="color:var(--grey)">n=${p.n}</span>`;
     players=shownP.length?`<div class="ts" style="margin-top:10px"><span style="color:var(--grey)">current players vs this opponent</span><br>${shownP.map(prow).join('<br>')}</div>`:'';
@@ -484,15 +493,23 @@ function boxBaseball(g){
   const P=gRows(g,'pitching').slice(0,4).map(r=>`<tr class="${r.st?'st':''}"><td>${esc(r.ad)}</td><td>${esc(r.v.IP||'')}</td><td>${esc(r.v.H||'')}</td><td>${esc(r.v.ER||'')}</td><td>${esc(r.v.K||'')}</td><td>${esc(r.v.BB||'')}</td></tr>`).join('');
   return `<table class="box"><tr><th>batter</th><th>ab</th><th>r</th><th>h</th><th>rbi</th><th>hr</th></tr>${B}</table><table class="box"><tr><th>pitcher</th><th>ip</th><th>h</th><th>er</th><th>k</th><th>bb</th></tr>${P}</table>`;
 }
+function teamLine(g,o){ const m=g||{}, n=o||{};
+  if(SPOR()==='basketball')return [['pts',m.pts,n.pts],['reb',m.reb,n.reb],['ast',m.ast,n.ast],['3pm',m.tpm,n.tpm],['to',m.to,n.to]];
+  if(SPOR()==='football')return [['pass yds',m.pass_yds,n.pass_yds],['rush yds',m.rush_yds,n.rush_yds],['turnovers',m.to,n.to],['sacks',m.sacks,n.sacks]];
+  return [['hits',m.h,n.h],['hr',m.hr,n.hr],['bb',m.bb,n.bb],['k',m.k,n.k]]; }
 function cardLastMeeting(h,a,g,oh,hf,af){
   if(!g)return `<div class="tgol"><div class="th">Last meeting</div><div class="empty">These two haven't met in the record.</div></div>`;
   const homeThen=g.home?h:a, awayThen=g.home?a:h;
   const hs=g.home?g.pts:g.opp_pts, as=g.home?g.opp_pts:g.pts;
   const winner=hs>as?homeThen:awayThen, margin=Math.abs(hs-as);
-  const og=oppBoxGame(g,af);                       // g: ev takimi (h) dosyasindan; rakip kutusu a dosyasindan
+  const lite=!g.box;
+  const og=lite?null:oppBoxGame(g,af);
   const hG=g.home?g:og, aG=g.home?og:g;
   const boxer=SPOR()==='basketball'?boxBasket:(SPOR()==='football'?boxFootball:boxBaseball);
   const side=(t,G)=>`<div><div class="th sub">${esc(short(t))}</div>${G?boxer(G):'<div class="empty">box not in the record</div>'}</div>`;
+  const liteTbl=()=>{ const rows=teamLine(g.m,g.om); const [hm,am]=g.home?[0,1]:[1,0];
+    const cell=(r,i)=>r[1+i]==null?'—':(typeof r[1+i]==='number'?+r[1+i].toFixed(1):r[1+i]);
+    return `<table class="box"><tr><th></th><th>${esc(short(homeThen))}</th><th>${esc(short(awayThen))}</th></tr>${rows.map(r=>`<tr><td>${r[0]}</td><td>${cell(r,hm)}</td><td>${cell(r,am)}</td></tr>`).join('')}</table>`; };
   let odds='';
   if(oh&&oh.maclar){
     const key=[h.ad.toLowerCase(),a.ad.toLowerCase()].sort().join('|');
@@ -510,11 +527,11 @@ function cardLastMeeting(h,a,g,oh,hf,af){
     }
   }
   odds+=flowPath(g,homeThen.ad,awayThen.ad);
-  const satN=SPOR()==='basketball'?dnpOf(hG||{}).length+dnpOf(aG||{}).length:0;
+  const satN=SPOR()==='basketball'&&!lite?dnpOf(hG||{}).length+dnpOf(aG||{}).length:0;
   const ins=`↑ <span class="rnum">${esc(short(winner))} by ${margin}</span>${satN?` · ${satN} rostered player${satN>1?'s':''} didn't play`:''} — ${niceDate(g.t)}.`;
   return `<div class="tgol" style="grid-column:1/-1"><div class="th">Last meeting<span class="n">${esc(niceDate(g.t))}</span></div>
     <div class="tbaslik">${esc(short(homeThen))} <span class="mono">${hs}</span> — <span class="mono">${as}</span> ${esc(short(awayThen))} <span style="color:var(--grey);font-weight:400;font-size:12px">· at ${esc(short(homeThen))}${!g.home?' · reverse fixture':''}</span></div>
-    <div class="grid" style="margin-top:8px">${side(homeThen,hG)}${side(awayThen,aG)}</div>${odds}<div class="rins">${ins}</div></div>`;
+    <div class="grid" style="margin-top:8px">${lite?`<div style="grid-column:1/-1">${liteTbl()}</div>`:side(homeThen,hG)+side(awayThen,aG)}</div>${odds}<div class="rins">${ins}</div></div>`;
 }
 
 // ---- LIG CAPINDA MAC LISTESI (games.json): ikizler, oyun senaryosu, ATS ----
@@ -842,7 +859,7 @@ async function openRecord(hName,aName,whenIso,market,m){
   const lm=lastMeeting(hf.games,a.ad,ymd);
   let cards=[];
   if(SPOR()==='basketball'){
-    const hS=starsLast10(hf.games,h.stars||[],ymd), aS=starsLast10(af.games,a.stars||[],ymd);
+    const hS=starsLast10(hf.games,h.stars||[],ymd,hf), aS=starsLast10(af.games,a.stars||[],ymd,af);
     cards=[cardB2B(h,a,hR,aR),cardHomeAway(h,a),cardAvail(h,a,hS,aS),cardConditions(h,a,hf,af,ymd),cardXray(h,a,hf,af,hS,aS),cardLastMeeting(h,a,lm,oh,hf,af)];
   }else if(SPOR()==='football'){
     cards=[cardRestFB(h,a,hR,aR,hf,af),cardHomeAway(h,a),cardLeadersFB(h,a,hf,af,ymd),cardConditions(h,a,hf,af,ymd),cardXray(h,a,hf,af,[],[]),cardLastMeeting(h,a,lm,oh,hf,af)];
@@ -934,7 +951,7 @@ function renderLigbar(){
 }
 async function boot(){
   renderLigbar();
-  document.getElementById('note').textContent=LIGS[LIG].note+' Odds history builds daily from the archive; Line flow comes from archived price snapshots (NFL, NBA, MLB). Direction, not advice. Build T10.';
+  document.getElementById('note').textContent=LIGS[LIG].note+' Odds history builds daily from the archive; Line flow comes from archived price snapshots (NFL, NBA, MLB). Direction, not advice. Build T11.';
   document.title=`Brier Terminal — ${LIGS[LIG].ad}`;
   try{
     const r=await fetch(DATA+'index.json',{cache:'no-store'}); IDX=await r.json(); normalizeIdx(IDX);
