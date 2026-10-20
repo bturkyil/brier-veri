@@ -371,6 +371,7 @@
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
       <div class="by">brier · by BT · build A87 (PWA)</div>
+      <div class="by" style="margin-top:6px;opacity:.8">Independent analysis, not affiliated with any league, team, sportsbook or data provider. Figures are Brier’s own calculations, as is, for information only. Not betting advice.</div>
     </footer>
   </div>
 
@@ -397,6 +398,7 @@
     <footer>
       <div class="creed">No picks. No tips. Just the record.</div>
       <div class="by">brier · by BT · build A87 (PWA)</div>
+      <div class="by" style="margin-top:6px;opacity:.8">Independent analysis, not affiliated with any league, team, sportsbook or data provider. Figures are Brier’s own calculations, as is, for information only. Not betting advice.</div>
     </footer>
   </div>
 </div>
@@ -1775,7 +1777,7 @@ async function showDetail(i){
           if(satirlar.length){
             const rk=gb.takim_ribaund||{};
             const ins=recordInsight(evAd,depAd,(tkGet(rk,evAd)||{}).ev_ort,(tkGet(rk,depAd)||{}).dep_ort,gb.lig_ribaund_ort,'rebound');
-            REC.push({tab:'BOX',html:`<div class="tgol"><div class="th">BOX SCORE · PER GAME</div>
+            REC.push({tab:'BOX',html:`<div class="tgol"><div class="th">TEAM TOTALS · PER GAME</div>
               <div class="ts" style="line-height:1.9">${satirlar.join('<br>')}</div>${ins}</div>`});
           }
         }
