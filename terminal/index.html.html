@@ -1,0 +1,971 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Brier Terminal</title>
+<meta name="description" content="The record of a matchup — rest, availability, home/away, conditions, last meeting. NBA · WNBA · NFL · NCAAF · MLB. Not a tip.">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EEF2F1; --card:#FFFFFF; --ink:#16211F; --dark:#16211F; --ink2:#3A4745; --grey:#6B7876; --rule:#D9E0DE; --rule-dark:#B9C4C1;
+    --rec:#0E7C6B; --rec-soft:#DCEFEA; --mkt:#9A6A12; --mkt-soft:#F3E8CF; --red:#A33A2E; --red-soft:#F3DDD9;
+    --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace; --sans:'Archivo',system-ui,sans-serif;
+  }
+  @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){ --paper:#121917; --card:#1A2321; --ink:#EDF2F0; --ink2:#C7D1CE; --grey:#8E9C99; --rule:#273431; --rule-dark:#3A4845; --rec:#4FC2A8; --rec-soft:#173A33; --mkt:#D9A74A; --mkt-soft:#3A2F14; --red:#E08A7C; --red-soft:#3F2320; } }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.5}
+  b{font-weight:600}
+  .mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+  /* ust cubuk */
+  .top{background:var(--dark);color:#fff}
+  .top .in{max-width:1120px;margin:0 auto;padding:0 16px;display:flex;align-items:center;gap:18px;height:52px}
+  .top .brand{font-weight:800;letter-spacing:1.6px;font-size:16px;text-decoration:none;color:#fff}
+  .top .brand span{font-weight:400;letter-spacing:.2px;opacity:.7;margin-left:8px;font-size:13px}
+  .top nav{display:flex;gap:2px;margin-left:6px;overflow-x:auto;scrollbar-width:none}
+  .top nav button{font-family:var(--sans);font-size:12.5px;font-weight:600;padding:7px 11px;border:0;background:transparent;color:#fff;opacity:.6;border-radius:3px;cursor:pointer;white-space:nowrap}
+  .top nav button.on{opacity:1;background:rgba(255,255,255,.14)} .top nav button:hover{opacity:1}
+  .top .motto{margin-left:auto;font-size:12px;opacity:.6;white-space:nowrap}
+  .wrap{max-width:1360px;margin:0 auto;padding:0 16px 56px}
+  .layout{display:grid;grid-template-columns:380px minmax(0,1fr);gap:18px;align-items:start;padding-top:14px}
+  .left{position:sticky;top:0;max-height:100vh;overflow:auto;padding-right:2px;scrollbar-width:thin}
+  .right{min-width:0}
+  .daynav{display:flex;align-items:center;gap:4px;margin:4px 0 8px}
+  .daynav button{font-family:var(--sans);font-size:14px;font-weight:600;padding:8px 12px;border:1px solid var(--rule-dark);background:var(--card);color:var(--ink);border-radius:3px;cursor:pointer}
+  .daynav .lab{flex:1;text-align:center} .daynav .lab small{display:block;font-weight:400;font-size:11.5px;color:var(--grey)}
+  .daynav button:disabled{opacity:.35;cursor:default}
+  .top nav .sp{position:relative} .top nav .sp>button{font-family:var(--sans);font-size:12.5px;font-weight:600;padding:7px 11px;border:0;background:transparent;color:#fff;opacity:.6;border-radius:3px;cursor:pointer;white-space:nowrap}
+  .top nav .sp.on>button{opacity:1;background:rgba(255,255,255,.14)} .top nav .sp:hover>button,.top nav .sp:focus-within>button{opacity:1}
+  .top nav .sp .dd{display:none;position:absolute;left:0;top:100%;background:var(--card);border:1px solid var(--rule-dark);border-radius:3px;min-width:160px;padding:6px;z-index:20;box-shadow:0 12px 30px -14px rgba(0,0,0,.5)}
+  .top nav .sp:hover .dd,.top nav .sp:focus-within .dd{display:block}
+  .top nav .dd a,.top nav .dd button{display:block;width:100%;text-align:left;font-family:var(--sans);font-size:13px;font-weight:600;padding:8px 10px;border:0;background:transparent;color:var(--ink);border-radius:3px;cursor:pointer;text-decoration:none}
+  .top nav .dd a:hover,.top nav .dd button:hover{background:var(--paper)} .top nav .dd .cur{color:var(--rec)}
+  .tabs{display:flex;gap:2px;margin:14px 0 10px;border-bottom:1px solid var(--rule-dark);overflow-x:auto;scrollbar-width:none}
+  .tabs button{font-family:var(--sans);font-size:13.5px;font-weight:600;padding:10px 14px;border:0;border-bottom:2px solid transparent;background:transparent;color:var(--grey);cursor:pointer;white-space:nowrap;margin-bottom:-1px}
+  .tabs button.on{color:var(--ink);border-bottom-color:var(--ink)}
+  .pane{display:none} .pane.on{display:block}
+  .empty.tall{padding:80px 20px;font-size:14px}
+  .back{display:none;font-family:var(--sans);font-size:13px;font-weight:600;padding:8px 0;border:0;background:transparent;color:var(--rec);cursor:pointer}
+  /* gun seridi + cipler */
+  .days{display:flex;gap:4px;margin:18px 0 10px;overflow-x:auto;scrollbar-width:none}
+  .days button{font-family:var(--sans);font-size:13px;font-weight:600;padding:8px 12px;border:1px solid var(--rule-dark);background:var(--card);color:var(--ink);border-radius:3px;cursor:pointer;white-space:nowrap}
+  .days button.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+  .days button small{font-weight:400;color:inherit;opacity:.7;margin-left:6px}
+  .chips{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 10px}
+  .chip{font-family:var(--sans);font-size:12px;font-weight:600;padding:5px 10px;border:1px solid var(--rule-dark);background:var(--card);color:var(--ink2);border-radius:999px;cursor:pointer}
+  .chip.on{background:var(--rec-soft);border-color:var(--rec);color:var(--rec)} .chip .n{opacity:.6;margin-left:4px;font-weight:400}
+  /* skorboard */
+  .board{background:var(--card);border:1px solid var(--rule-dark);border-radius:4px;overflow:hidden}
+  .row{display:grid;grid-template-columns:44px 1fr auto;grid-template-areas:"t h b" "t a b" "t m m";row-gap:2px;gap:8px;align-items:center;padding:9px 10px;border-top:1px solid var(--rule);cursor:pointer;text-align:left;background:transparent;color:inherit;font:inherit;width:100%}
+  .row:first-child{border-top:0} .row:hover{background:var(--paper)} .row.on{box-shadow:inset 3px 0 0 var(--rec)}
+  .row .time{font-family:var(--mono);font-size:11.5px;color:var(--grey);grid-area:t}
+  .row .tm{grid-area:h} .row .tm.r{grid-area:a} .row .mk{grid-area:m;max-width:220px} .row .badges{grid-area:b;max-width:110px;align-self:start}
+  .row .tm{font-weight:600;font-size:13.5px;line-height:1.25} .row .tm.r{text-align:left}
+  .row .mk{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:12px}
+  .row .badges{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;max-width:220px}
+  .bd{font-size:10.5px;font-weight:600;padding:2px 7px;border-radius:999px;background:var(--paper);color:var(--ink2);border:1px solid var(--rule);white-space:nowrap}
+  .bd.mkt{background:var(--mkt-soft);color:var(--mkt);border-color:transparent} .bd.rec{background:var(--rec-soft);color:var(--rec);border-color:transparent} .bd.warn{background:var(--red-soft);color:var(--red);border-color:transparent}
+  .pbar{flex:1;height:8px;background:var(--rule);border-radius:4px;overflow:hidden;position:relative} .pbar i{display:block;height:100%;background:var(--mkt)}
+  .pick{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:14px 0 0}
+  .pick label{font-size:12.5px;color:var(--grey);margin-right:4px}
+  select{font-family:var(--sans);font-size:13px;padding:8px 10px;border:1px solid var(--rule-dark);border-radius:3px;background:var(--card);color:var(--ink);max-width:44vw}
+  .btn{font-family:var(--sans);font-size:13px;font-weight:600;padding:9px 14px;border:1px solid var(--ink);background:var(--ink);color:var(--paper);border-radius:3px;cursor:pointer}
+  .btn.ghost{background:transparent;color:var(--ink)}
+  /* mac basligi */
+  .mhead{margin:28px 0 14px;padding:18px 20px;background:var(--card);border:1px solid var(--rule-dark);border-radius:4px}
+  .mhead .teams{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:center}
+  .mhead .tn{font-size:24px;font-weight:800;letter-spacing:-.2px;line-height:1.15} .mhead .tn.r{text-align:right}
+  .mhead .tn small{display:block;font-size:12px;font-weight:400;color:var(--grey);letter-spacing:0;margin-top:2px}
+  .mhead .vs{font-family:var(--mono);font-size:12px;color:var(--grey);text-align:center}
+  .mhead .mline{display:flex;align-items:center;gap:10px;margin-top:12px;font-family:var(--mono);font-size:12.5px}
+  .mhead .meta{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px;font-size:12.5px;color:var(--grey)}
+  .mhead .meta .share{margin-left:auto}
+  /* kartlar */
+  .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .tgol{background:var(--card);border:1px solid var(--rule-dark);padding:14px 16px 12px;border-radius:4px;min-width:0}
+  .tgol .th{font-size:13.5px;font-weight:700;color:var(--ink);letter-spacing:0}
+  .tgol .th .n{font-family:var(--mono);font-weight:400;font-size:11.5px;color:var(--grey);margin-left:8px}
+  .tgol .tbaslik{font-size:16px;font-weight:600;margin-top:8px}
+  .tgol .ts{font-size:13.5px;line-height:1.7;margin-top:8px;color:var(--ink)}
+  .tgol .tf{font-size:11px;color:var(--grey);margin-top:10px;padding-top:8px;border-top:1px solid var(--rule);line-height:1.5}
+  .rins{margin-top:10px;padding:8px 10px;background:var(--paper);border-left:3px solid var(--rec);font-size:13px;line-height:1.55;color:var(--ink2);border-radius:0 3px 3px 0}
+  .rnum{font-family:var(--mono);color:var(--ink);font-weight:600;margin-left:2px}
+  .kartArti{color:var(--rec);font-weight:600} .kartEksi{color:var(--red);font-weight:600}
+  .grid .grid{margin-top:4px} .grid .grid>div{min-width:0}
+  .grid .th.sub{font-size:12px;color:var(--grey);font-weight:600}
+  table.box{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:6px}
+  table.box th{font-size:11px;color:var(--grey);text-align:right;font-weight:600;padding:4px 4px;border-bottom:1px solid var(--rule)}
+  table.box th:first-child,table.box td:first-child{text-align:left}
+  table.box td{padding:4px;text-align:right;font-family:var(--mono);border-bottom:1px solid var(--rule);font-variant-numeric:tabular-nums}
+  table.box td:first-child{font-family:var(--sans)} table.box tr.st td:first-child{font-weight:600}
+  .dnp{font-size:12px;color:var(--grey);margin-top:6px} .dnp b{color:var(--ink)}
+  /* barlar */
+  .bar{display:inline-block;vertical-align:middle;width:110px;height:7px;background:var(--rule);border-radius:4px;overflow:hidden;margin:0 6px;position:relative}
+  .bar i{display:block;height:100%;background:var(--rec)} .bar.mkt i{background:var(--mkt)}
+  .bar.mid::after{content:'';position:absolute;left:50%;top:-2px;width:1px;height:11px;background:var(--ink)}
+  .stack{display:flex;height:10px;border-radius:4px;overflow:hidden;margin:6px 0 4px}
+  .stack i{display:block;height:100%} .stack i.lo{background:var(--rec)} .stack i.md{background:var(--rule-dark)} .stack i.hi{background:var(--mkt)}
+  .split{display:flex;height:10px;border-radius:4px;overflow:hidden;margin:6px 0 2px} .split i{display:block;height:100%} .split i.h{background:var(--rec)} .split i.a{background:var(--rule-dark)}
+  .dbar{display:inline-block;vertical-align:middle;width:60px;height:6px;background:var(--rule);position:relative;margin:0 4px;border-radius:3px}
+  .dbar i{position:absolute;top:0;height:100%;background:var(--rec)} .dbar i.neg{background:var(--red)}
+  .dbar::after{content:'';position:absolute;left:50%;top:-2px;width:1px;height:10px;background:var(--ink2)}
+  .wl{font-family:var(--mono);font-size:11px;letter-spacing:1px} .wl .w{color:var(--rec)} .wl .l{color:var(--red)}
+  /* the record says */
+  .tgol.says{background:var(--dark);color:#fff;border-color:var(--dark);padding:18px 20px}
+  .tgol.says .th{color:#fff;font-size:15px} .tgol.says .ts{color:#fff;font-size:15px;line-height:1.75}
+  .tgol.says .ts div{padding:6px 0;border-top:1px solid rgba(255,255,255,.12)} .tgol.says .ts div:first-child{border-top:0}
+  .tgol.says .tf{color:rgba(255,255,255,.6);border-color:rgba(255,255,255,.15)}
+  .tgol.says .rnum{color:#fff;background:rgba(255,255,255,.14);padding:0 6px;border-radius:3px}
+  .tgol.says .kartArti{color:#7fd1bf} .tgol.says .kartEksi{color:#f0a090}
+  .empty{padding:20px;color:var(--grey);text-align:center;font-size:13px}
+  .note{font-size:12px;color:var(--grey);line-height:1.6;margin-top:18px;max-width:72ch}
+  .err{color:var(--red)}
+  .sec{font-size:12.5px;font-weight:600;color:var(--grey);margin:20px 0 8px}
+  :focus-visible{outline:2px solid var(--rec);outline-offset:2px}
+  @media (max-width:900px){
+    .layout{grid-template-columns:1fr;gap:0} .left{position:static;max-height:none}
+    .layout.open .left{display:none} .layout:not(.open) .right{display:none} .back{display:inline-block}
+  }
+  @media (max-width:720px){
+    .grid{grid-template-columns:1fr}
+    .mhead .tn{font-size:18px} .top .motto{display:none}
+  }
+  @media (prefers-reduced-motion:reduce){ *{scroll-behavior:auto!important;transition:none!important} }
+</style>
+</head>
+<body>
+<div class="top"><div class="in">
+  <a class="brand" href="../">BRIER<span>Terminal</span></a>
+  <nav id="ligbar" aria-label="Sport and league"></nav>
+  <div class="motto">the record, not the tip</div>
+</div></div>
+<div class="wrap layout" id="layout">
+  <aside class="left">
+    <div class="daynav"><button type="button" id="dayPrev" aria-label="Previous day">‹</button><button type="button" id="dayLab" class="lab"></button><button type="button" id="dayNext" aria-label="Next day">›</button></div>
+    <div class="chips" id="chips"></div>
+    <div id="list" class="board"><div class="empty">Loading the slate…</div></div>
+    <div class="pick">
+      <label for="selH">Or open any two teams</label>
+      <select id="selH"></select><span class="mono" style="color:var(--grey)">vs</span><select id="selA"></select>
+      <button class="btn" id="goBtn" type="button">Open the record</button>
+    </div>
+    <div class="note" id="note"></div>
+  </aside>
+  <main class="right" id="right">
+    <div id="detail"><div class="empty tall">Pick a game on the left, or open any two teams. The record opens here.</div></div>
+  </main>
+</div>
+
+<script>
+const HOST='https://worker-production-a1ba.up.railway.app';
+const LIGS={
+  nba:  {ad:'NBA',  spor:'basketball',feed:/^basketball_nba/,      note:'Five NBA seasons of results, rest and availability. "Sat" = on the roster with no minutes — injury, rest or coach\'s decision, not separated.'},
+  wnba: {ad:'WNBA', spor:'basketball',feed:/^basketball_wnba/,     note:'Six WNBA seasons of results, 2021–2026. "Sat" = on the roster with no minutes.'},
+  nfl:  {ad:'NFL',  spor:'football',  feed:/^americanfootball_nfl/, note:'Six NFL seasons of results, 2021–2026, every game including playoffs. Rest counts calendar days between kickoffs.'},
+  ncaaf:{ad:'NCAAF',spor:'football',  feed:/^americanfootball_ncaaf/,note:'Six FBS seasons of results, 2021–2026. Profiles use the top and bottom third of FBS that season; FCS opponents appear in the record but carry no profile.'},
+  mlb:  {ad:'MLB',  spor:'baseball',  feed:/^baseball_mlb/,        note:'Six MLB seasons of results, 2021–2026, every game including the postseason. Lineup and staff lines are rolling summaries, not projections.'}
+};
+const Q=new URLSearchParams(location.search);
+let LIG=LIGS[Q.get('lig')]?Q.get('lig'):'nba';
+let DATA=LIG+'/', ODDS_HIST='../odds_history/'+LIG+'.json';
+let IDX=null, LEAGUE=null, TEAMS=[], TCACHE={}, OH=null, TONIGHT=[];
+const SPOR=()=>LIGS[LIG].spor, NEW=()=>!!(IDX&&IDX.spor);
+
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+const pct=(w,n)=>n>0?Math.round(1000*w/n)/10:null;
+const fair=(p)=>(p!=null&&p>0)?(1/p).toFixed(2):null;
+const usDate=(iso)=>{try{return new Date(iso).toLocaleDateString('en-CA',{timeZone:'America/New_York'});}catch(e){return String(iso||'').slice(0,10);}};
+const niceDate=(ymd)=>{try{const d=new Date(ymd+'T12:00:00Z');return d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});}catch(e){return ymd;}};
+const daysBetween=(a,b)=>Math.round((new Date(b+'T12:00:00Z')-new Date(a+'T12:00:00Z'))/86400000);
+const avg=(arr)=>arr.length?arr.reduce((a,b)=>a+b,0)/arr.length:null;
+const f1=(x)=>x==null?'—':(Math.round(x*10)/10).toFixed(1);
+const bar=(p,cls='')=>`<span class="bar ${cls}"><i style="width:${Math.max(0,Math.min(100,p||0))}%"></i></span>`;
+const dbar=(pct)=>{const w=Math.min(30,Math.abs(pct||0));return `<span class="dbar"><i class="${pct<0?'neg':''}" style="${pct<0?'right':'left'}:50%;width:${w}%"></i></span>`;};
+const ci=(p,n)=>n>0?Math.round(1.96*Math.sqrt(p*(100-p)/n)*10)/10:null;   // %95 guven araligi, yuzde puan
+const wl=(gs)=>`<span class="wl">${gs.map(g=>g.won?'<span class="w">W</span>':'<span class="l">L</span>').join('')}</span>`;
+const sd=(d)=>{const v=Math.round(d*10)/10;return (v>0?'+':'')+v.toFixed(1);};
+// arsiv ham degerleri: "4-8" -> 4 ; "12/19" -> 12 ; "+4" -> 4 ; "--" -> null
+function num(s){ if(s==null)return null; if(typeof s==='number')return s; s=String(s).trim(); if(s===''||s==='--'||s==='-')return null;
+  if(/^[+-]?\d+(\.\d+)?$/.test(s))return parseFloat(s); const m=s.match(/^(\d+(\.\d+)?)/); return m?parseFloat(m[1]):null; }
+function num2(s){ const m=String(s==null?'':s).match(/^\d+(\.\d+)?[-\/](\d+(\.\d+)?)/); return m?parseFloat(m[2]):null; }
+
+// ---- spor konfigurasyonu ----
+const CFG={
+  basketball:{unit:'pts',unitLong:'pts/game',xray:[['pts','points'],['reb','rebounds'],['tpm','threes'],['ast','assists']],
+              cond:[['pts','points'],['reb','rebounds'],['ast','assists'],['tpm','threes'],['pf','fouls']],ptsLead:2},
+  football:  {unit:'pts',unitLong:'pts/game',xray:[['pts','points'],['pass_yds','pass yds'],['rush_yds','rush yds'],['to','turnovers']],
+              cond:[['pts','points'],['pass_yds','pass yds'],['rush_yds','rush yds'],['to','turnovers'],['sacks','sacks']],ptsLead:2},
+  baseball:  {unit:'runs',unitLong:'runs/game',xray:[['pts','runs'],['h','hits'],['hr','homers'],['k','strikeouts']],
+              cond:[['pts','runs'],['h','hits'],['hr','homers'],['k','strikeouts'],['bb','walks']],ptsLead:0.4}
+};
+const SZ_OF=(ymd)=>{const y=+ymd.slice(0,4), m=+ymd.slice(5,7);
+  if(LIG==='nba')return m>=9?`${y}-${String(y+1).slice(2)}`:`${y-1}-${String(y).slice(2)}`;
+  if(SPOR()==='football')return String(m>=8?y:y-1); return String(y);};
+const MIN_N=15;
+
+// ---- takim esleme: The Odds API adi -> arsiv takimi (tam ad -> alias -> lakap(son kelime)) ----
+const ALIAS={'la clippers':'los angeles clippers','los angeles clippers':'la clippers','oakland athletics':'athletics','cleveland indians':'cleveland guardians','washington football team':'washington commanders'};
+function findTeam(name){
+  if(!name||!TEAMS.length)return null;
+  const n=String(name).toLowerCase().trim();
+  let t=TEAMS.find(x=>x.ad.toLowerCase()===n); if(t)return t;
+  if(ALIAS[n]){t=TEAMS.find(x=>x.ad.toLowerCase()===ALIAS[n]); if(t)return t;}
+  const nick=n.split(' ').pop();
+  const c=TEAMS.filter(x=>x.ad.toLowerCase().split(' ').pop()===nick);
+  if(c.length===1)return c[0];
+  if(c.length>1){const c2=c.filter(x=>n.includes(x.ad.toLowerCase().split(' ')[0]));if(c2.length===1)return c2[0];}
+  const c3=TEAMS.filter(x=>n.includes(x.ad.toLowerCase())||x.ad.toLowerCase().includes(n)); if(c3.length===1)return c3[0];
+  return null;
+}
+const KISA={'boston red sox':'Red Sox','chicago white sox':'White Sox','toronto blue jays':'Blue Jays','portland trail blazers':'Trail Blazers'};
+const short=(t)=>t.kisa||t.ad;
+const poss=(s)=>/s$/i.test(s)?s+"'":s+"'s";
+async function teamFile(t){
+  if(TCACHE[t.slug])return TCACHE[t.slug];
+  const r=await fetch(DATA+'teams/'+t.slug+'.json',{cache:'no-store'});
+  const f=r.ok?await r.json():null; if(f)enrich(t,f); TCACHE[t.slug]=f; return f;
+}
+async function oddsHist(){ if(OH!==null)return OH; try{const r=await fetch(ODDS_HIST,{cache:'no-store'});OH=r.ok?await r.json():false;}catch(e){OH=false;} return OH; }
+
+// ---- veri erisimi: NBA (eski sema: box.p / opp_box) ve yeni sema (box.<grup> / m / om) ayni arayuzden ----
+function gStats(g){ if(NEW()||g.m)return g.m||{}; let pts=0,reb=0,ast=0,tpm=0,pf=0,to=0,hasT=false,hasF=false;
+  for(const p of (g.box&&g.box.p)||[]){pts+=p[3]||0;reb+=p[4]||0;ast+=p[5]||0;
+    if(p.length>7&&p[7]!=null){tpm+=p[7];hasT=true;} if(p.length>12&&p[12]!=null){pf+=p[12];hasF=true;} if(p.length>11&&p[11]!=null)to+=p[11];}
+  return {pts,reb,ast,tpm:hasT?tpm:null,pf:hasF?pf:null,to:hasF?to:null}; }
+function bRows(g){  // basketbol oyuncu satirlari, normalize
+  if(!NEW())return ((g.box&&g.box.p)||[]).map(p=>({ad:p[0],st:p[1],min:p[2],pts:p[3],reb:p[4],ast:p[5],pm:p[6],tpm:p[7],pf:p[12],to:p[11]}));
+  const L=(IDX.labels&&IDX.labels.stats)||[]; const I=k=>L.indexOf(k)+2;
+  return ((g.box&&g.box.stats)||[]).map(r=>({ad:r[0],st:r[1],min:num(r[I('MIN')]),pts:num(r[I('PTS')]),reb:num(r[I('REB')]),ast:num(r[I('AST')]),pm:num(r[I('+/-')]),tpm:num(r[I('3PT')]),pf:num(r[I('PF')]),to:num(r[I('TO')])}));
+}
+function gRows(g,grp){ // futbol/beyzbol grup satirlari -> {ad,st,v:{label:raw}}
+  const L=(IDX.labels&&IDX.labels[grp])||[]; return ((g.box&&g.box[grp])||[]).map(r=>{const v={}; L.forEach((k,i)=>v[k]=r[i+2]); return {ad:r[0],st:r[1],v};});
+}
+const dnpOf=(g)=>(g.box&&g.box.dnp)||[];
+function oppBoxGame(g,oppFile){ if(!NEW())return g.opp_box?{box:g.opp_box}:null; return (oppFile&&oppFile.games||[]).find(x=>x.t===g.t)||null; }
+
+// yeni semada takim ozeti dosyadan hesaplanir (NBA index'te hazir gelir)
+function enrich(t,f){
+  if(t.home)return; const gs=f.games||[];
+  const H=gs.filter(g=>g.home), A=gs.filter(g=>!g.home);
+  t.home=[H.length,H.filter(g=>g.won).length,Math.round(10*(avg(H.map(g=>g.pts))||0))/10];
+  t.away=[A.length,A.filter(g=>g.won).length,Math.round(10*(avg(A.map(g=>g.pts))||0))/10];
+  const B=gs.filter(g=>g.b2b); t.b2b=[B.length,B.filter(g=>g.won).length];
+  t.last=gs.length?gs[gs.length-1].t:null;
+  if(SPOR()==='basketball'&&f.stars){ t.stars=f.stars; }
+  else if(SPOR()==='basketball'){ // yildizlar: son iki sezon, >=15 mac, ppg
+    const szs=[...new Set(gs.map(g=>g.sz))].sort().slice(-2); const P={};
+    gs.filter(g=>szs.includes(g.sz)).forEach(g=>{bRows(g).forEach(r=>{if(r.min==null||r.min<=0)return;const o=P[r.ad]||(P[r.ad]={gp:0,pts:0});o.gp++;o.pts+=r.pts||0;});});
+    t.stars=Object.entries(P).filter(([_,o])=>o.gp>=15).map(([ad,o])=>({ad,gp:o.gp,ppg:Math.round(10*o.pts/o.gp)/10})).sort((x,y)=>y.ppg-x.ppg).slice(0,8);
+  }
+}
+
+// ---- saf hesaplar ----
+function liveDatesFor(teamAd,oh){
+  const out=[]; if(!oh||!oh.maclar)return out;
+  const n=String(teamAd).toLowerCase();
+  for(const [k,list] of Object.entries(oh.maclar)){ if(!k.split('|').includes(n))continue;
+    for(const r of list){ if(r.t)out.push(usDate(r.t)); } }
+  return out;
+}
+function restBefore(games,ymd,oh,teamAd){
+  let last=null; for(const g of games){ if(g.t<ymd)last=g; else break; }
+  let lastT=last?last.t:null, src='archive';
+  for(const d of liveDatesFor(teamAd,oh)){ if(d<ymd&&(!lastT||d>lastT)){lastT=d;src='daily';} }
+  if(!lastT)return null; return {rest:daysBetween(lastT,ymd)-1,lastT,src};
+}
+function lastMeeting(games,oppAd,beforeYmd){ let m=null; for(const g of games){ if(g.opp===oppAd&&(!beforeYmd||g.t<beforeYmd))m=g; } return m; }
+function starsLast10(games,stars,beforeYmd,f){
+  if(f&&f.sum&&f.sum.avail&&!hasRaw(f)){ if(!sumOK(f,beforeYmd))return [];
+    return stars.map(s=>{const a=f.sum.avail[s.ad]; return a?{ad:s.ad,ppg:s.ppg,sat:a.sat,n:a.n,seen:a.seen}:null;}).filter(x=>x&&x.seen>0); }
+  const recent=games.filter(g=>!beforeYmd||g.t<beforeYmd).slice(-10);
+  return stars.map(s=>{
+    const seen=recent.filter(g=>bRows(g).some(p=>p.ad===s.ad)||dnpOf(g).includes(s.ad)).length;
+    return {ad:s.ad,ppg:s.ppg,sat:recent.filter(g=>dnpOf(g).includes(s.ad)).length,n:recent.length,seen};
+  }).filter(s=>s.seen>0);
+}
+const before=(games,ymd)=>games.filter(g=>!ymd||g.t<ymd);
+// T11: ham oyuncu satirlari yayinda yok; toplu ozetler (f.sum) kullanilir. Ozet yalnizca son mactan SONRAKI tarihler icin gecerli.
+const sumOK=(f,ymd)=>!!(f&&f.sum&&(!ymd||ymd>f.sum.asof));
+const hasRaw=(f)=>!!(f&&f.games&&f.games.some(g=>g.box));
+
+// ---- ortak kartlar ----
+function cardHomeAway(h,a){
+  const C=CFG[SPOR()]; const hp=pct(h.home[1],h.home[0]), ap=pct(a.away[1],a.away[0]);
+  const ins=`↑ ${esc(short(h))} wins <span class="rnum">${hp}%</span> at home · ${esc(short(a))} wins <span class="rnum">${ap}%</span> on the road · league home side ${LEAGUE.home_win_pct}%.`;
+  return `<div class="tgol"><div class="th">Home and away</div>
+    <div class="ts"><b>${esc(short(h))}</b> at home ${bar(hp)}<b>${hp}%</b> <span style="color:var(--grey)">${h.home[1]}-${h.home[0]-h.home[1]}, ${h.home[2]} ${C.unitLong}</span><br><b>${esc(short(a))}</b> on the road ${bar(ap)}<b>${ap}%</b> <span style="color:var(--grey)">${a.away[1]}-${a.away[0]-a.away[1]}, ${a.away[2]} ${C.unitLong}</span></div>
+    <div class="rins">${ins}</div><div class="tf">all games in the record</div></div>`;
+}
+function cardB2B(h,a,hR,aR){
+  const lb=LEAGUE.b2b||{gp:0,w:0}, lr=LEAGUE.rest||{gp:0,w:0}; const lbp=pct(lb.w,lb.gp), lrp=pct(lr.w,lr.gp);
+  const line=(t,r)=>{ if(!r)return `<b>${esc(short(t))}</b> — no earlier game in the record`;
+    const own=pct(t.b2b[1],t.b2b[0]);
+    const tag=r.rest===0?`<span class="kartEksi">played last night</span> (0 days rest)`:(r.rest>=20?`no game in the record for <b>${r.rest}</b> days <span style="color:var(--grey)">(daily archive fills in as the season runs)</span>`:`<b>${r.rest}</b> day${r.rest===1?'':'s'} rest`);
+    return `<b>${esc(short(t))}</b> · ${tag} · their back-to-back record <b>${t.b2b[1]}-${t.b2b[0]-t.b2b[1]}</b>${own!=null?` (${own}%)`:''}`; };
+  const onB2B=[hR&&hR.rest===0?h:null,aR&&aR.rest===0?a:null].filter(Boolean);
+  let ins;
+  if(onB2B.length===2)ins=`↑ Both on the second night — <span class="rnum">no rest edge</span> either way.`;
+  else if(onB2B.length===1)ins=`↑ ${esc(short(onB2B[0]))} on the second night — such teams win <span class="rnum">${lbp}% vs ${lrp}%</span> rested, across ${lb.gp.toLocaleString('en-US')} games.`;
+  else if((hR&&hR.rest>=20)||(aR&&aR.rest>=20))ins=`↑ Rest can't be read yet — <span class="rnum">recent games missing</span> from the record; this fills in daily once the season is underway.`;
+  else ins=`↑ Both rested — <span class="rnum">no back-to-back factor</span> tonight.`;
+  return `<div class="tgol"><div class="th">Back-to-back</div><div class="ts">${line(h,hR)}<br>${line(a,aR)}</div>
+    <div class="rins">${ins}</div><div class="tf">league: second night ${lbp}% · rested ${lrp}% · all seasons</div></div>`;
+}
+function cardAvail(h,a,hS,aS){
+  const row=(t,S)=>S.length?S.slice(0,4).map(s=>`<b>${esc(s.ad)}</b> <span class="mono" style="color:var(--grey)">${s.ppg} ppg</span> · sat <b class="${s.sat>=3?'kartEksi':''}">${s.sat}</b> of ${s.n}`).join('<br>'):'<span style="color:var(--grey)">no regulars seen in the last 10</span>';
+  const all=[...hS.map(s=>({...s,team:h})),...aS.map(s=>({...s,team:a}))].sort((x,y)=>y.sat-x.sat);
+  const top=all[0];
+  const ins=top&&top.sat>0?`↑ <span class="rnum">${esc(top.ad)}</span> sat ${top.sat} of the last ${top.n} — availability is a record of its own.`:`↑ Full strength lately — <span class="rnum">stars missed 0</span> of the last 10.`;
+  return `<div class="tgol"><div class="th">Availability<span class="n">last 10</span></div>
+    <div class="ts"><span style="color:var(--grey)">${esc(short(h))}</span><br>${row(h,hS)}<br><span style="color:var(--grey)">${esc(short(a))}</span><br>${row(a,aS)}</div>
+    <div class="rins">${ins}</div><div class="tf">top scorers by ppg · "sat" = on roster, no minutes</div></div>`;
+}
+
+// ---- futbol kartlari ----
+function cardRestFB(h,a,hR,aR,hf,af){
+  const longRest=(f)=>{const L=f.games.filter(g=>g.rest!=null&&g.rest>=10); return [L.length,L.filter(g=>g.won).length];};
+  const line=(t,r,f)=>{ if(!r)return `<b>${esc(short(t))}</b> — no earlier game in the record`;
+    const lr=longRest(f); const tag=r.rest>=12?`<span class="kartArti">off a bye</span> (${r.rest} days)`:(r.rest<=4?`<span class="kartEksi">short week</span> (${r.rest} days)`:`<b>${r.rest}</b> days since last game`);
+    return `<b>${esc(short(t))}</b> · ${tag} · after 10+ days rest <b>${lr[1]}-${lr[0]-lr[1]}</b>${lr[0]?` (${pct(lr[1],lr[0])}%)`:''}`; };
+  const bye=[hR&&hR.rest>=12?h:null,aR&&aR.rest>=12?a:null].filter(Boolean), shortW=[hR&&hR.rest<=4?h:null,aR&&aR.rest<=4?a:null].filter(Boolean);
+  let ins;
+  if(bye.length===1&&!shortW.length)ins=`↑ ${esc(short(bye[0]))} off the bye against a side on a normal week — <span class="rnum">rest edge ${esc(short(bye[0]))}</span>.`;
+  else if(shortW.length===1&&!bye.length)ins=`↑ ${esc(short(shortW[0]))} on a short week — <span class="rnum">rest edge ${esc(short(shortW[0]===h?a:h))}</span>.`;
+  else if(bye.length===2)ins=`↑ Both off a bye — <span class="rnum">no rest edge</span>.`;
+  else if((hR&&hR.rest>=30)||(aR&&aR.rest>=30))ins=`↑ Rest can't be read yet — <span class="rnum">recent games missing</span>; fills in daily.`;
+  else ins=`↑ Normal week for both — <span class="rnum">no rest factor</span>.`;
+  return `<div class="tgol"><div class="th">Rest</div><div class="ts">${line(h,hR,hf)}<br>${line(a,aR,af)}</div><div class="rins">${ins}</div><div class="tf">bye = 12+ days · short week = 4 or fewer</div></div>`;
+}
+function fbLeaders(games,n){  // son n mac: lider pasor / kosucu / alici (toplam yarda)
+  const G=games.slice(-n); const acc=(grp,key)=>{const P={};G.forEach(g=>gRows(g,grp).forEach(r=>{const o=P[r.ad]||(P[r.ad]={ad:r.ad,gp:0,yds:0,td:0,int:0,rec:0,att:0,cmp:0,car:0});o.gp++;o.yds+=num(r.v.YDS)||0;o.td+=num(r.v.TD)||0;
+      if(grp==='passing'){o.int+=num(r.v.INT)||0;o.cmp+=num(r.v['C/ATT'])||0;o.att+=num2(r.v['C/ATT'])||0;} if(grp==='receiving')o.rec+=num(r.v.REC)||0; if(grp==='rushing')o.car+=num(r.v.CAR)||0;}));
+    return Object.values(P).sort((x,y)=>y.yds-x.yds)[0]||null;};
+  return {n:G.length,qb:acc('passing'),rb:acc('rushing'),wr:acc('receiving')};
+}
+function cardLeadersFB(h,a,hf,af,ymd){
+  const lead=(f)=>(f.sum&&f.sum.leaders&&!hasRaw(f))?(sumOK(f,ymd)?f.sum.leaders:{n:0}):fbLeaders(before(f.games,ymd),5);
+  const H=lead(hf), A=lead(af);
+  const blk=(t,L)=>{ if(!L.n)return `<span style="color:var(--grey)">${esc(short(t))} — no games in the record</span>`;
+    const q=L.qb?`<b>${esc(L.qb.ad)}</b> <span class="mono" style="color:var(--grey)">${f1(L.qb.yds/L.qb.gp)} pass yds/g · ${L.qb.td} td · ${L.qb.int} int · ${L.qb.att?Math.round(100*L.qb.cmp/L.qb.att):0}%</span>`:'';
+    const r=L.rb?`<b>${esc(L.rb.ad)}</b> <span class="mono" style="color:var(--grey)">${f1(L.rb.yds/L.rb.gp)} rush yds/g · ${L.rb.td} td</span>`:'';
+    const w=L.wr?`<b>${esc(L.wr.ad)}</b> <span class="mono" style="color:var(--grey)">${f1(L.wr.yds/L.wr.gp)} rec yds/g · ${L.wr.rec} rec</span>`:'';
+    return `<span style="color:var(--grey)">${esc(short(t))} · last ${L.n}</span><br>${[q,r,w].filter(Boolean).join('<br>')}`; };
+  const hp=H.qb?H.qb.yds/H.qb.gp:0, ap=A.qb?A.qb.yds/A.qb.gp:0; const ld=hp>=ap?[h,H]:[a,A];
+  const ins=ld[1].qb?`↑ <span class="rnum">${esc(ld[1].qb.ad)}</span> at ${f1(ld[1].qb.yds/ld[1].qb.gp)} passing yards a game over the last ${ld[1].n} — ${esc(poss(short(ld[0])))} offence runs through the arm${ld[1].qb.int>=3?`, with ${ld[1].qb.int} picks in that span`:''}.`:'';
+  return `<div class="tgol"><div class="th">Leaders<span class="n">last 5</span></div><div class="ts">${blk(h,H)}<br>${blk(a,A)}</div><div class="rins">${ins}</div><div class="tf">leading passer / rusher / receiver by total yards in the span</div></div>`;
+}
+
+// ---- beyzbol kartlari ----
+function cardFormBB(h,a,hf,af,ymd){
+  const form=(f)=>{const G=before(f.games,ymd); const L=G.slice(-10); const sz=L.length?L[L.length-1].sz:null; const S=G.filter(g=>g.sz===sz);
+    return {n:L.length,L,w:L.filter(g=>g.won).length,rf:avg(L.map(g=>g.pts)),ra:avg(L.map(g=>g.opp_pts)),srf:avg(S.map(g=>g.pts)),sra:avg(S.map(g=>g.opp_pts)),sz};};
+  const H=form(hf), A=form(af);
+  const line=(t,F)=>F.n?`<b>${esc(short(t))}</b> ${wl(F.L)} <b>${F.w}-${F.n-F.w}</b>, scoring <b>${f1(F.rf)}</b> <span style="color:var(--grey)">(season ${f1(F.srf)})</span> · allowing <b>${f1(F.ra)}</b> <span style="color:var(--grey)">(season ${f1(F.sra)})</span>`:`<b>${esc(short(t))}</b> — no games in the record`;
+  const cand=[{t:h,d:H.rf-H.srf,k:'scoring'},{t:a,d:A.rf-A.srf,k:'scoring'},{t:h,d:-(H.ra-H.sra),k:'allowing'},{t:a,d:-(A.ra-A.sra),k:'allowing'}].filter(x=>!isNaN(x.d)).sort((x,y)=>Math.abs(y.d)-Math.abs(x.d))[0];
+  const ins=cand&&Math.abs(cand.d)>=0.5?`↑ ${esc(short(cand.t))} ${cand.k} <span class="rnum">${Math.abs(cand.d).toFixed(1)} ${(cand.k==='scoring'?cand.d>0:cand.d<0)?'more':'fewer'} runs</span> a game than their season rate over the last 10${cand.k==='allowing'&&cand.d>0?' — the arms are the story':''}.`:`↑ Both near their season rates — <span class="rnum">no form swing</span> in the last 10.`;
+  return `<div class="tgol"><div class="th">Form<span class="n">last 10</span></div><div class="ts">${line(h,H)}<br>${line(a,A)}</div><div class="rins">${ins}</div><div class="tf">season = ${esc(H.sz||'')} games before this date</div></div>`;
+}
+function bbBats(games){  // son 10 mac: duzenli vurucular (en cok AB), son10 AVG vs sezon AVG, sezon HR
+  const L=games.slice(-10), sz=L.length?L[L.length-1].sz:null, S=games.filter(g=>g.sz===sz); const P={};
+  const add=(g,key)=>gRows(g,'batting').forEach(r=>{const o=P[r.ad]||(P[r.ad]={ad:r.ad,ab10:0,h10:0,abS:0,hS:0,hrS:0,kS:0,gp10:0});o[key==='L'?'ab10':'abS']+=num(r.v.AB)||0;o[key==='L'?'h10':'hS']+=num(r.v.H)||0;if(key==='S'){o.hrS+=num(r.v.HR)||0;o.kS+=num(r.v.K)||0;}else o.gp10++;});
+  L.forEach(g=>add(g,'L')); S.forEach(g=>add(g,'S'));
+  return Object.values(P).filter(p=>p.ab10>=15).sort((x,y)=>y.ab10-x.ab10).slice(0,5).map(p=>({...p,avg10:p.ab10?p.h10/p.ab10:0,avgS:p.abS?p.hS/p.abS:0}));
+}
+function bbArms(games){ const L=games.slice(-10), sz=L.length?L[L.length-1].sz:null, S=games.filter(g=>g.sz===sz);
+  const er=(G)=>avg(G.map(g=>(g.m||{}).p_er)), k=(G)=>avg(G.map(g=>(g.m||{}).p_k)); return {er10:er(L),erS:er(S),k10:k(L),kS:k(S)}; }
+function cardBatsBB(h,a,hf,af,ymd){
+  const a3=(x)=>x.toFixed(3).replace(/^0/,'');
+  const blk=(t,f)=>{const G=before(f.games,ymd); const B=(f.sum&&f.sum.bats&&!hasRaw(f))?(sumOK(f,ymd)?f.sum.bats:[]):bbBats(G), R=bbArms(G);
+    const rows=B.map(p=>`<b>${esc(p.ad)}</b> <span class="mono" style="color:var(--grey)">${a3(p.avg10)} last 10 · ${a3(p.avgS)} season · ${p.hrS} hr</span>`).join('<br>');
+    const arms=`<span style="color:var(--grey)">staff</span> <span class="mono">${f1(R.er10)} er/g <span style="color:var(--grey)">(season ${f1(R.erS)})</span> · ${f1(R.k10)} k/g <span style="color:var(--grey)">(${f1(R.kS)})</span></span>`;
+    return {html:`<span style="color:var(--grey)">${esc(short(t))}</span><br>${rows||'<span style="color:var(--grey)">no regular bats in the last 10</span>'}<br>${arms}`,B,R};};
+  const H=blk(h,hf), A=blk(a,af);
+  const hot=[...H.B.map(p=>({...p,t:h})),...A.B.map(p=>({...p,t:a}))].map(p=>({...p,d:p.avg10-p.avgS})).sort((x,y)=>Math.abs(y.d)-Math.abs(x.d))[0];
+  const ins=hot?`↑ <span class="rnum">${esc(hot.ad)}</span> hitting ${a3(hot.avg10)} over the last 10 against a ${a3(hot.avgS)} season mark — the widest swing in either lineup.`:'';
+  return `<div class="tgol"><div class="th">Lineup and arms<span class="n">last 10</span></div><div class="ts">${H.html}<br>${A.html}</div><div class="rins">${ins}</div><div class="tf">regulars = 15+ at-bats in the last 10 · staff lines are team totals</div></div>`;
+}
+
+// ---- MATCHUP X-RAY: takim vs rakip (+ basketbolda oyuncu vs rakip). KURAL: n < MIN_N -> gosterme, not yaz ----
+function matchupSplit(games,oppAd){
+  const vs=games.filter(g=>g.opp===oppAd); const vsS=vs.map(gStats), allS=games.map(gStats);
+  const rows=CFG[SPOR()].xray.map(([k,label])=>{const v=vsS.map(x=>x[k]).filter(x=>x!=null), a=allS.map(x=>x[k]).filter(x=>x!=null);
+    if(v.length<MIN_N||!a.length)return null; const mv=avg(v),ma=avg(a); return {k,label,vs:mv,norm:ma,d:mv-ma,pct:ma?(mv-ma)/ma*100:0};}).filter(Boolean);
+  return {n:vs.length,seasons:[...new Set(vs.map(g=>g.sz))].sort(),rows};
+}
+function playerSplits(games,oppAd,stars,f){
+  if(f&&f.sum&&f.sum.psplit&&!hasRaw(f)){ return (stars||[]).map(s=>{ const e=((f.sum.psplit[s.ad])||{})[oppAd];
+      if(!e||!e.pts)return {ad:s.ad,n:e?e.n:0,shown:false}; return {ad:s.ad,n:e.n,shown:true,pts:e.pts,reb:e.reb,...(e.tpm?{tpm:e.tpm}:{})}; }); }
+  return (stars||[]).map(s=>{
+    const row=g=>bRows(g).find(p=>p.ad===s.ad&&p.min>0);
+    const vs=games.filter(g=>g.opp===oppAd).map(row).filter(Boolean), all=games.map(row).filter(Boolean);
+    if(vs.length<MIN_N||!all.length)return {ad:s.ad,n:vs.length,shown:false};
+    const m=(rows,k)=>{const v=rows.map(r=>r[k]).filter(x=>x!=null);return v.length?avg(v):null;};
+    const out={ad:s.ad,n:vs.length,shown:true,pts:[m(vs,'pts'),m(all,'pts')],reb:[m(vs,'reb'),m(all,'reb')]};
+    const t=m(vs,'tpm'), tn=m(all,'tpm'); if(t!=null&&tn!=null)out.tpm=[t,tn];
+    return out;
+  });
+}
+function cardXray(h,a,hf,af,hS,aS){
+  const hm=matchupSplit(hf.games,a.ad), am=matchupSplit(af.games,h.ad); const n=hm.n;
+  if(n<MIN_N)return `<div class="tgol" style="grid-column:1/-1"><div class="th">Matchup x-ray</div>
+    <div class="ts" style="color:var(--grey)">Not shown. These two sides have met <b>${n}</b> time${n===1?'':'s'} in the record — fewer than the <b>${MIN_N}</b> needed for a mathematically meaningful split. The numbers exist; they just wouldn't mean anything yet.</div></div>`;
+  const fmt=(r)=>`<b>${r.label}</b> ${r.vs.toFixed(1)} <span style="color:var(--grey)">vs their norm ${r.norm.toFixed(1)}</span> <span class="${r.d>0.05?'kartArti':(r.d<-0.05?'kartEksi':'')}">${sd(r.d)} (${r.pct>0?'+':''}${r.pct.toFixed(0)}%)</span>`;
+  const side=(t,o,m)=>`<div><div class="th sub">${esc(short(t))} vs ${esc(short(o))}</div><div class="ts">${m.rows.map(fmt).join('<br>')}</div></div>`;
+  let players='',hid='';
+  if(SPOR()==='basketball'){
+    const hp=playerSplits(hf.games,a.ad,hS,hf), ap=playerSplits(af.games,h.ad,aS,af);
+    const shownP=[...hp,...ap].filter(p=>p.shown), hidP=[...hp,...ap].filter(p=>!p.shown);
+    const prow=p=>`<b>${esc(p.ad)}</b> · pts ${p.pts[0].toFixed(1)} <span style="color:var(--grey)">(norm ${p.pts[1].toFixed(1)})</span> · reb ${p.reb[0].toFixed(1)} <span style="color:var(--grey)">(${p.reb[1].toFixed(1)})</span>${p.tpm?` · 3pm ${p.tpm[0].toFixed(1)} <span style="color:var(--grey)">(${p.tpm[1].toFixed(1)})</span>`:''} <span class="mono" style="color:var(--grey)">n=${p.n}</span>`;
+    players=shownP.length?`<div class="ts" style="margin-top:10px"><span style="color:var(--grey)">current players vs this opponent</span><br>${shownP.map(prow).join('<br>')}</div>`:'';
+    hid=hidP.length?`<div class="tf">${hidP.length} current player${hidP.length>1?'s':''} not shown — fewer than ${MIN_N} games against this opponent.</div>`:'';
+  }
+  const allRows=[...hm.rows.map(r=>({...r,t:h,o:a})),...am.rows.map(r=>({...r,t:a,o:h}))].sort((x,y)=>Math.abs(y.pct)-Math.abs(x.pct)); const b=allRows[0];
+  const ins=b?`↑ ${esc(short(b.t))} put up <span class="rnum">${Math.abs(b.d).toFixed(1)} ${b.d<0?'fewer':'more'} ${b.label}</span> against ${esc(short(b.o))} than their norm — the widest gap in this matchup (n=${n}).`:'';
+  return `<div class="tgol" style="grid-column:1/-1"><div class="th">Matchup x-ray<span class="n">${n} meetings, ${esc(hm.seasons[0])}–${esc(hm.seasons[hm.seasons.length-1])}</span></div>
+    <div class="grid" style="margin-top:8px">${side(h,a,hm)}${side(a,h,am)}</div>${players}<div class="rins">${ins}</div>${hid}
+    <div class="tf">splits shown only at ${MIN_N}+ games · norm = that side's average across every game in the record</div></div>`;
+}
+
+// ---- CONDITIONS X-RAY: rakibi ISMIYLE degil PROFILIYLE tanimla (lig icinde ust/alt ucluk), o profile karsi sicil ----
+function oppProfile(teamAd,ymd){
+  const P=(IDX&&IDX.profiles&&IDX.profiles[teamAd])||null; if(!P)return null;
+  const cur=SZ_OF(ymd); const szs=Object.keys(P).sort(); const minGp=IDX.min_gp||MIN_N;
+  let use=cur, early=false;
+  if(!P[cur]||(P[cur].gp||0)<minGp){ const prev=szs.filter(z=>z<cur).pop(); if(!prev)return null; use=prev; early=true; }
+  return {season:use,early,curGp:P[cur]?P[cur].gp:0,prof:P[use]};
+}
+function condSplits(games,metric,tier){
+  const PR=(IDX&&IDX.profiles)||{};
+  const vs=games.filter(g=>{const p=PR[g.opp]&&PR[g.opp][g.sz]; return p&&p.tiers&&p.tiers[metric]===tier;});
+  if(vs.length<MIN_N)return {n:vs.length,rows:[]};
+  const vsS=vs.map(gStats), allS=games.map(gStats);
+  const rows=CFG[SPOR()].cond.map(([k,label])=>{const v=vsS.map(x=>x[k]).filter(x=>x!=null), a=allS.map(x=>x[k]).filter(x=>x!=null);
+    if(v.length<MIN_N||!a.length)return null; const mv=avg(v),ma=avg(a); return {k,label,vs:mv,norm:ma,d:mv-ma,pct:ma?(mv-ma)/ma*100:0};}).filter(Boolean);
+  return {n:vs.length,rows};
+}
+function cardConditions(h,a,hf,af,ymd){
+  const L=(IDX&&IDX.tier_labels)||{}; const C=CFG[SPOR()];
+  const label=(m,t)=>(L[m]||[m,m])[t==='high'?0:1];
+  const sideBlock=(X,O,Xf)=>{
+    const op=oppProfile(O.ad,ymd);
+    if(!op)return {html:`<div><div class="th sub">${esc(short(X))} vs teams like ${esc(short(O))}</div><div class="ts" style="color:var(--grey)">No profile for ${esc(short(O))} in the record.</div></div>`,best:null,bestPts:null};
+    const conds=Object.entries(op.prof.tiers||{}).filter(([m,t])=>t==='high'||t==='low');
+    const warn=`<div class="ts" style="color:var(--grey);margin-top:4px">${esc(short(O))} profile${op.early?` (${op.season} — only ${op.curGp} games this season, so last full season shown)`:` (${op.season})`}: ${conds.length?conds.map(([m,t])=>`<b>${esc(label(m,t))}</b>`).join(' · '):'average on every measure'}.${oppQuality(X,O,Xf,ymd)}</div>`;
+    const lines=[]; let best=null, bestPts=null, hidden=0;
+    conds.forEach(([m,t])=>{
+      const r=condSplits(Xf.games,m,t);
+      if(!r.rows.length){hidden++;return;}
+      const cells=r.rows.map(x=>`${x.label}${dbar(x.pct)}<span class="${Math.abs(x.pct)>=5?(x.d>0?'kartArti':'kartEksi'):''}">${sd(x.d)}</span>`).join(' &nbsp; ');
+      lines.push(`<b>vs ${esc(label(m,t))}</b> <span class="mono" style="color:var(--grey)">n=${r.n}</span><br><span style="padding-left:10px">${cells}</span>`);
+      r.rows.forEach(x=>{ if(best==null||Math.abs(x.pct)>Math.abs(best.pct))best={...x,cond:label(m,t),n:r.n,X};
+        if(x.k==='pts'&&(bestPts==null||Math.abs(x.d)>Math.abs(bestPts.d)))bestPts={...x,cond:label(m,t),n:r.n,X}; });
+    });
+    const body=lines.length?`<div class="ts" style="line-height:1.8">${lines.join('<br>')}</div>`:`<div class="ts" style="color:var(--grey)">Not shown — ${esc(short(X))} hasn't met ${MIN_N}+ opponents with ${esc(poss(short(O)))} profile in the record.</div>`;
+    const hid=hidden?`<div class="tf">${hidden} condition${hidden>1?'s':''} not shown — fewer than ${MIN_N} games.</div>`:'';
+    return {html:`<div><div class="th sub">${esc(short(X))} vs teams like ${esc(short(O))}</div>${warn}${body}${hid}</div>`,best,bestPts};
+  };
+  const A=sideBlock(h,a,hf), B=sideBlock(a,h,af);
+  const cands=[A.best,B.best,A.bestPts,B.bestPts].filter(Boolean);
+  const ptsLead=cands.filter(x=>x.k==='pts'&&Math.abs(x.d)>=C.ptsLead).sort((x,y)=>Math.abs(y.d)-Math.abs(x.d))[0];
+  const b=ptsLead||cands.sort((x,y)=>Math.abs(y.pct)-Math.abs(x.pct))[0];
+  const ins=b?`↑ ${esc(short(b.X))} put up <span class="rnum">${Math.abs(b.d).toFixed(1)} ${b.d<0?'fewer':'more'} ${b.label}</span> against ${esc(b.cond)} teams than their norm (n=${b.n}) — the strongest conditional lean tonight.`:'';
+  return `<div class="tgol" style="grid-column:1/-1"><div class="th">Conditions x-ray<span class="n">what the opponent is like, and the record against teams like that</span></div>
+    <div class="grid" style="margin-top:8px">${A.html}${B.html}</div>${ins?`<div class="rins">${ins}</div>`:''}
+    <div class="tf">profile = top/bottom third of the league that season · deltas vs that side's own average · shown only at ${MIN_N}+ games · colour at ±5%</div></div>`;
+}
+
+// ---- LAST MEETING (spora gore kutu) ----
+function boxBasket(g){
+  const rows=bRows(g).slice(0,8).map(p=>`<tr class="${p.st?'st':''}"><td>${esc(p.ad)}</td><td>${p.min??''}</td><td>${p.pts??''}</td><td>${p.reb??''}</td><td>${p.ast??''}</td><td>${p.pm==null?'':(p.pm>0?'+'+p.pm:p.pm)}</td></tr>`).join('');
+  const sat=dnpOf(g);
+  return `<table class="box"><tr><th>player</th><th>min</th><th>pts</th><th>reb</th><th>ast</th><th>+/-</th></tr>${rows}</table>${sat.length?`<div class="dnp">sat: <b>${esc(sat.join(', '))}</b></div>`:''}`;
+}
+function boxFootball(g){
+  const P=gRows(g,'passing').slice(0,2).map(r=>`<tr><td>${esc(r.ad)} <span style="color:var(--grey)">pass</span></td><td>${esc(r.v['C/ATT']||'')}</td><td>${esc(r.v.YDS||'')}</td><td>${esc(r.v.TD||'')}</td><td>${esc(r.v.INT||'')}</td></tr>`);
+  const R=gRows(g,'rushing').sort((x,y)=>(num(y.v.YDS)||0)-(num(x.v.YDS)||0)).slice(0,2).map(r=>`<tr><td>${esc(r.ad)} <span style="color:var(--grey)">rush</span></td><td>${esc(r.v.CAR||'')}</td><td>${esc(r.v.YDS||'')}</td><td>${esc(r.v.TD||'')}</td><td></td></tr>`);
+  const W=gRows(g,'receiving').sort((x,y)=>(num(y.v.YDS)||0)-(num(x.v.YDS)||0)).slice(0,2).map(r=>`<tr><td>${esc(r.ad)} <span style="color:var(--grey)">rec</span></td><td>${esc(r.v.REC||'')}</td><td>${esc(r.v.YDS||'')}</td><td>${esc(r.v.TD||'')}</td><td></td></tr>`);
+  const m=g.m||{};
+  return `<table class="box"><tr><th>player</th><th>att</th><th>yds</th><th>td</th><th>int</th></tr>${[...P,...R,...W].join('')}</table><div class="dnp">team: <b>${m.pass_yds??'—'}</b> pass · <b>${m.rush_yds??'—'}</b> rush · <b>${m.to??'—'}</b> turnovers</div>`;
+}
+function boxBaseball(g){
+  const B=gRows(g,'batting').slice(0,6).map(r=>`<tr class="${r.st?'st':''}"><td>${esc(r.ad)}</td><td>${esc(r.v.AB||'')}</td><td>${esc(r.v.R||'')}</td><td>${esc(r.v.H||'')}</td><td>${esc(r.v.RBI||'')}</td><td>${esc(r.v.HR||'')}</td></tr>`).join('');
+  const P=gRows(g,'pitching').slice(0,4).map(r=>`<tr class="${r.st?'st':''}"><td>${esc(r.ad)}</td><td>${esc(r.v.IP||'')}</td><td>${esc(r.v.H||'')}</td><td>${esc(r.v.ER||'')}</td><td>${esc(r.v.K||'')}</td><td>${esc(r.v.BB||'')}</td></tr>`).join('');
+  return `<table class="box"><tr><th>batter</th><th>ab</th><th>r</th><th>h</th><th>rbi</th><th>hr</th></tr>${B}</table><table class="box"><tr><th>pitcher</th><th>ip</th><th>h</th><th>er</th><th>k</th><th>bb</th></tr>${P}</table>`;
+}
+function teamLine(g,o){ const m=g||{}, n=o||{};
+  if(SPOR()==='basketball')return [['pts',m.pts,n.pts],['reb',m.reb,n.reb],['ast',m.ast,n.ast],['3pm',m.tpm,n.tpm],['to',m.to,n.to]];
+  if(SPOR()==='football')return [['pass yds',m.pass_yds,n.pass_yds],['rush yds',m.rush_yds,n.rush_yds],['turnovers',m.to,n.to],['sacks',m.sacks,n.sacks]];
+  return [['hits',m.h,n.h],['hr',m.hr,n.hr],['bb',m.bb,n.bb],['k',m.k,n.k]]; }
+function cardLastMeeting(h,a,g,oh,hf,af){
+  if(!g)return `<div class="tgol"><div class="th">Last meeting</div><div class="empty">These two haven't met in the record.</div></div>`;
+  const homeThen=g.home?h:a, awayThen=g.home?a:h;
+  const hs=g.home?g.pts:g.opp_pts, as=g.home?g.opp_pts:g.pts;
+  const winner=hs>as?homeThen:awayThen, margin=Math.abs(hs-as);
+  const lite=!g.box;
+  const og=lite?null:oppBoxGame(g,af);
+  const hG=g.home?g:og, aG=g.home?og:g;
+  const boxer=SPOR()==='basketball'?boxBasket:(SPOR()==='football'?boxFootball:boxBaseball);
+  const side=(t,G)=>`<div><div class="th sub">${esc(short(t))}</div>${G?boxer(G):'<div class="empty">box not in the record</div>'}</div>`;
+  const liteTbl=()=>{ const rows=teamLine(g.m,g.om); const [hm,am]=g.home?[0,1]:[1,0];
+    const cell=(r,i)=>r[1+i]==null?'—':(typeof r[1+i]==='number'?+r[1+i].toFixed(1):r[1+i]);
+    return `<table class="box"><tr><th></th><th>${esc(short(homeThen))}</th><th>${esc(short(awayThen))}</th></tr>${rows.map(r=>`<tr><td>${r[0]}</td><td>${cell(r,hm)}</td><td>${cell(r,am)}</td></tr>`).join('')}</table>`; };
+  let odds='';
+  if(oh&&oh.maclar){
+    const key=[h.ad.toLowerCase(),a.ad.toLowerCase()].sort().join('|');
+    const list=oh.maclar[key]||[];
+    const rec=list.find(x=>usDate(x.t)===g.t)||null;
+    if(rec&&rec.kap){
+      const rows=[];
+      [[rec.h,'h','home'],[rec.a,'a','away']].forEach(([ad,slot,lab])=>{
+        const ac=rec.ac&&rec.ac[slot]!=null?rec.ac[slot]:null, kp=rec.kap[slot]; if(kp==null)return;
+        const mv=ac!=null?Math.round((kp-ac)*100):null; const cls=mv==null?'':(mv>0?'kartArti':(mv<0?'kartEksi':''));
+        rows.push(`<b>${esc(String(ad).split(' ').pop())}</b> <span style="color:var(--grey)">${lab}</span> &nbsp;${ac!=null?`<b>${fair(ac)}</b> → `:''}<span class="${cls}"><b>${fair(kp)}</b></span>${mv!=null?` <span style="color:var(--grey)">(${mv>0?'+':''}${mv} pts)</span>`:''}`);
+      });
+      if(rec.kap_tot&&rec.kap_tot.cizgi!=null)rows.push(`<b>total</b> <span style="color:var(--grey)">closed</span> &nbsp;<b>${rec.kap_tot.cizgi}</b>${rec.kap_spr&&rec.kap_spr.cizgi!=null?` · <b>spread</b> <b>${rec.kap_spr.cizgi}</b>`:''}`);
+      if(rows.length)odds=`<div class="ts" style="margin-top:10px"><span style="color:var(--grey)">market, open → close</span><br>${rows.join('<br>')}</div>`;
+    }
+  }
+  odds+=flowPath(g,homeThen.ad,awayThen.ad);
+  const satN=SPOR()==='basketball'&&!lite?dnpOf(hG||{}).length+dnpOf(aG||{}).length:0;
+  const ins=`↑ <span class="rnum">${esc(short(winner))} by ${margin}</span>${satN?` · ${satN} rostered player${satN>1?'s':''} didn't play`:''} — ${niceDate(g.t)}.`;
+  return `<div class="tgol" style="grid-column:1/-1"><div class="th">Last meeting<span class="n">${esc(niceDate(g.t))}</span></div>
+    <div class="tbaslik">${esc(short(homeThen))} <span class="mono">${hs}</span> — <span class="mono">${as}</span> ${esc(short(awayThen))} <span style="color:var(--grey);font-weight:400;font-size:12px">· at ${esc(short(homeThen))}${!g.home?' · reverse fixture':''}</span></div>
+    <div class="grid" style="margin-top:8px">${lite?`<div style="grid-column:1/-1">${liteTbl()}</div>`:side(homeThen,hG)+side(awayThen,aG)}</div>${odds}<div class="rins">${ins}</div></div>`;
+}
+
+// ---- LIG CAPINDA MAC LISTESI (games.json): ikizler, oyun senaryosu, ATS ----
+let GL=null, ZS=null, TOTQ=null, PAV={};
+async function gamesList(){ if(GL!==null)return GL;
+  try{const r=await fetch(DATA+'games.json',{cache:'no-store'}); const j=r.ok?await r.json():null;
+    GL=j?j.games.map(r=>({t:r[0],h:r[1],a:r[2],hs:r[3],as:r[4],sz:r[5],rh:r[6],ra:r[7],hh:r[8],ah:r[9],spd:r[10],ou:r[11],hml:r[12]??null,aml:r[13]??null})):false;}catch(e){GL=false;}
+  return GL; }
+const METS=()=>NEW()?(IDX.metrics||[]):['pts','pa','reb','ast','tpm','pf','to'];
+const avgOf=(p)=>p?(NEW()?p.avg:p):null;
+function profAvg(team,sz){ const k=team+'|'+sz; if(k in PAV)return PAV[k];
+  const p=IDX.profiles&&IDX.profiles[team]&&IDX.profiles[team][sz]; const src=avgOf(p); let o=null;
+  if(src&&(p.gp||0)>=(IDX.min_gp||MIN_N)){ o={}; for(const m of METS()){ if(src[m]==null){o=null;break;} o[m]=src[m]; } }
+  PAV[k]=o; return o; }
+function zstats(){ if(ZS)return ZS; ZS={}; const minGp=IDX.min_gp||MIN_N;
+  for(const S of Object.values(IDX.profiles||{}))for(const [sz,p] of Object.entries(S)){ if((p.gp||0)<minGp)continue; const src=avgOf(p); const z=ZS[sz]||(ZS[sz]={});
+    for(const m of METS()){ if(src[m]==null)continue; const a=z[m]||(z[m]={n:0,s:0,s2:0}); a.n++; a.s+=src[m]; a.s2+=src[m]*src[m]; } }
+  for(const z of Object.values(ZS))for(const a of Object.values(z)){ a.mean=a.s/a.n; a.sd=Math.sqrt(Math.max(0,a.s2/a.n-a.mean*a.mean))||1; }
+  return ZS; }
+function zvec(prof,sz){ const z=zstats()[sz]; if(!z||!prof)return null; return METS().map(m=>z[m]?(prof[m]-z[m].mean)/z[m].sd:0); }
+function restB(r){ if(r==null)return 1; if(SPOR()==='football')return r<=4?0:(r<=9?1:2); return r<=0?0:(r===1?1:(r<=3?2:3)); }
+function feat(hp,ap,sz,rh,ra){ const zh=zvec(hp,sz), za=zvec(ap,sz); if(!zh||!za)return null; return [...zh,...za,restB(rh)*0.6,restB(ra)*0.6]; }
+function totQ(){ if(TOTQ)return TOTQ; TOTQ={}; const by={}; for(const g of GL){ (by[g.sz]||(by[g.sz]=[])).push(g.hs+g.as); }
+  for(const [sz,v] of Object.entries(by)){ v.sort((x,y)=>x-y); TOTQ[sz]=[v[Math.floor(v.length/3)],v[Math.floor(2*v.length/3)]]; } return TOTQ; }
+const CLOSE={basketball:5,football:7,baseball:1};
+const DNA_LAB={basketball:['defensive battle','middle band','shootout'],football:['low-scoring','middle band','shootout'],baseball:["pitchers' duel",'middle band','slugfest']};
+const DNA_PH={'defensive battle':'a defensive battle','middle band':'in the middle band','shootout':'a shootout','low-scoring':'low-scoring',"pitchers' duel":"a pitchers' duel",'slugfest':'a slugfest'};
+function twins(h,a,ymd,hR,aR){
+  if(!GL||!GL.length)return null;
+  const hp=oppProfile(h.ad,ymd), ap=oppProfile(a.ad,ymd); if(!hp||!ap)return null;
+  const hz=zvec(avgOf(hp.prof),hp.season), az=zvec(avgOf(ap.prof),ap.season); if(!hz||!az)return null;
+  const f0=[...hz,...az,restB(hR?hR.rest:null)*0.6,restB(aR?aR.rest:null)*0.6];
+  const scored=[];
+  for(const g of GL){ if(g.t>=ymd)continue; const f=feat(profAvg(g.h,g.sz),profAvg(g.a,g.sz),g.sz,g.rh,g.ra); if(!f)continue;
+    let d=0; for(let i=0;i<f.length;i++){const e=f[i]-f0[i]; d+=e*e;} scored.push({g,d:Math.sqrt(d)}); }
+  if(scored.length<MIN_N)return {n:scored.length,shown:false};
+  scored.sort((x,y)=>x.d-y.d); const dMed=scored[Math.floor(scored.length/2)].d; const K=Math.min(40,scored.length); const top=scored.slice(0,K);
+  const sim=(d)=>Math.min(99,Math.max(0,Math.round(100*(1-(d/dMed)*(d/dMed)))));   // 100 = ayni profil, 0 = lig medyani kadar uzak
+  const Q=totQ(); let hw=0,hs=0,as=0,close=0,dna=[0,0,0],ov=0,nOu=0,hc=0,nSp=0;
+  for(const {g} of top){ if(g.hs>g.as)hw++; hs+=g.hs; as+=g.as; if(Math.abs(g.hs-g.as)<=CLOSE[SPOR()])close++;
+    const q=Q[g.sz]||[0,0]; const t=g.hs+g.as; dna[t<q[0]?0:(t>=q[1]?2:1)]++;
+    if(g.ou!=null){nOu++; if(t>g.ou)ov++;} if(g.spd!=null){const c=g.hs-g.as+g.spd; if(c!==0){nSp++; if(c>0)hc++;}} }
+  return {n:K,shown:true,list:top.slice(0,3).map(x=>({...x.g,sim:sim(x.d)})),homeW:pct(hw,K),avgH:hs/K,avgA:as/K,avgTot:(hs+as)/K,closePct:pct(close,K),
+    dna:dna.map(x=>Math.round(100*x/K)),overPct:nOu>=MIN_N?pct(ov,nOu):null,nOu,homeCover:nSp>=MIN_N?pct(hc,nSp):null,nSp,avgSim:Math.round(top.reduce((s,x)=>s+sim(x.d),0)/K),early:hp.early||ap.early,pool:scored.length};
+}
+function cardTwins(h,a,T){
+  const C=CFG[SPOR()];
+  if(!T||!T.shown)return `<div class="tgol" style="grid-column:1/-1"><div class="th">Games like this</div><div class="ts" style="color:var(--grey)">${T?`Not shown — only ${T.n} comparable games in the record, fewer than ${MIN_N}.`:'Not shown — no profile for one of these sides yet.'}</div></div>`;
+  const row=(g)=>`<b>${esc(g.h.split(' ').pop())}</b> ${g.hs}–${g.as} <b>${esc(g.a.split(' ').pop())}</b> <span style="color:var(--grey)">· ${niceDate(g.t)}</span> <span class="mono" style="color:var(--grey)">${g.sim}%</span>`;
+  const dnaL=DNA_LAB[SPOR()]; const top=T.dna.indexOf(Math.max(...T.dna));
+  const dnaTxt=T.dna.map((v,i)=>`<b class="${i===top?'':''}">${v}%</b> ${dnaL[i]}`).join(' · ');
+  const extra=[T.overPct!=null?`over the total <b>${T.overPct}%</b> <span style="color:var(--grey)">(n=${T.nOu})</span>`:null, T.homeCover!=null?`home side covered <b>${T.homeCover}%</b> <span style="color:var(--grey)">(n=${T.nSp})</span>`:null].filter(Boolean).join(' · ');
+  const ins=SPOR()==='baseball'?`↑ In the <span class="rnum">${T.n} closest spots</span> the game was ${DNA_PH[dnaL[top]]} ${T.dna[top]}% of the time, average total ${f1(T.avgTot)} — the home-win rate here is no better than the league rate in backtests; in baseball the starter decides.`:`↑ In the <span class="rnum">${T.n} closest spots</span> the home side won ${T.homeW}% (±${ci(T.homeW,T.n)}) and the game was ${DNA_PH[dnaL[top]]} ${T.dna[top]}% of the time — average score ${f1(T.avgH)}–${f1(T.avgA)}.`;
+  return `<div class="tgol" style="grid-column:1/-1"><div class="th">Games like this<span class="n">${T.n} closest spots of ${T.pool.toLocaleString('en-US')}</span></div>
+    <div class="grid" style="margin-top:8px">
+      <div><div class="th sub">What usually happens</div><div class="ts">home wins <b>${T.homeW}%</b> <span style="color:var(--grey)">(±${ci(T.homeW,T.n)})</span>, away wins <b>${(100-T.homeW).toFixed(1)}%</b><div class="split"><i class="h" style="width:${T.homeW}%"></i><i class="a" style="width:${100-T.homeW}%"></i></div>average score <b>${f1(T.avgH)}</b> – <b>${f1(T.avgA)}</b> · total <b>${f1(T.avgTot)}</b><br>decided by ${CLOSE[SPOR()]} or fewer: <b>${T.closePct}%</b>${extra?`<br>${extra}`:''}</div></div>
+      <div><div class="th sub">Matchup DNA</div><div class="ts"><div class="stack"><i class="lo" style="width:${T.dna[0]}%"></i><i class="md" style="width:${T.dna[1]}%"></i><i class="hi" style="width:${T.dna[2]}%"></i></div>${dnaTxt}</div><div class="th sub" style="margin-top:10px">Closest three</div><div class="ts">${T.list.map(row).join('<br>')}</div></div>
+    </div><div class="rins">${ins}</div>
+    <div class="tf">similarity = both sides' season profiles (${METS().join(', ')}) + rest, against every game in the record${T.early?' · one side on last season\'s profile (too few games yet)':''} · similarity 100 = identical profiles, 0 = as far apart as a typical pair · average here ${T.avgSim}% · not a prediction, a neighbourhood</div></div>`;
+}
+function scriptRec(team,ymd){ let tw=0,tn=0,lw=0,ln=0;
+  for(const g of GL){ if(g.t>=ymd||g.hh==null||g.ah==null)continue; const home=g.h===team; if(!home&&g.a!==team)continue;
+    const my=home?g.hh:g.ah, op=home?g.ah:g.hh, won=home?g.hs>g.as:g.as>g.hs; if(my<op){tn++;if(won)tw++;} else if(my>op){ln++;if(won)lw++;} }
+  return {tw,tn,lw,ln}; }
+function leagueScript(){ let w=0,n=0; for(const g of GL){ if(g.hh==null||g.ah==null||g.hh===g.ah)continue; n++; const trailHome=g.hh<g.ah; if(trailHome?g.hs>g.as:g.as>g.hs)w++; } return pct(w,n); }
+function cardScript(h,a,ymd){
+  const half=SPOR()==='baseball'?'after five innings':'at the half'; const L=leagueScript();
+  const line=(t)=>{const r=scriptRec(t.ad,ymd); if(r.tn<MIN_N)return {html:`<b>${esc(short(t))}</b> — fewer than ${MIN_N} games trailing ${half} in the record`,p:null,r};
+    const p=pct(r.tw,r.tn); return {html:`<b>${esc(short(t))}</b> trailing ${half} ${bar(p)}<b>${p}%</b> <span style="color:var(--grey)">${r.tw}-${r.tn-r.tw}</span>, leading ${bar(pct(r.lw,r.ln))}<b>${pct(r.lw,r.ln)}%</b> <span style="color:var(--grey)">${r.lw}-${r.ln-r.lw}</span>`,p,r,t};};
+  const H=line(h), A=line(a); const c=[H,A].filter(x=>x.p!=null).sort((x,y)=>Math.abs(y.p-L)-Math.abs(x.p-L))[0];
+  const ins=c?`↑ ${esc(short(c.t))} comes back when trailing ${half} <span class="rnum">${c.p}% of the time</span> against a league rate of ${L}% — ${c.p>L+5?'they stay in games':(c.p<L-5?'an early deficit tends to stick':'about par')}.`:`↑ Not enough halftime data for either side yet.`;
+  return `<div class="tgol"><div class="th">Game script</div><div class="ts">${H.html}<br>${A.html}</div><div class="rins">${ins}</div><div class="tf">league: side trailing ${half} wins ${L}% · all seasons in the record</div></div>`;
+}
+function atsRec(team,ymd){ const r={fav:[0,0],dog:[0,0],homeFav:[0,0],homeDog:[0,0],awayFav:[0,0],awayDog:[0,0]};
+  for(const g of GL){ if(g.t>=ymd||g.spd==null)continue; const home=g.h===team; if(!home&&g.a!==team)continue;
+    const my=home?g.spd:-g.spd, margin=home?g.hs-g.as:g.as-g.hs, c=margin+my; if(c===0||my===0)continue;
+    const role=my<0?'fav':'dog'; const keys=[role,(home?'home':'away')+role[0].toUpperCase()+role.slice(1)];
+    for(const k of keys){ r[k][0]++; if(c>0)r[k][1]++; } }
+  return r; }
+function cardATS(h,a,ymd,market){
+  const lab={fav:'as favourite',dog:'as underdog',homeFav:'home favourite',homeDog:'home underdog',awayFav:'away favourite',awayDog:'away underdog'};
+  const hFav=market&&market.h!=null&&market.a!=null?market.h>=market.a:null;
+  const side=(t,isHome,fav)=>{const r=atsRec(t.ad,ymd); const keys=fav==null?['fav','dog']:[(isHome?'home':'away')+(fav?'Fav':'Dog'),fav?'fav':'dog'];
+    const rows=keys.map(k=>r[k][0]>=MIN_N?{k,n:r[k][0],w:r[k][1],p:pct(r[k][1],r[k][0])}:null).filter(Boolean);
+    const html=rows.length?rows.map(x=>`${lab[x.k]} ${bar(x.p,'mid')}<b>${x.p}%</b> <span style="color:var(--grey)">${x.w}-${x.n-x.w}, ±${ci(x.p,x.n)}</span>`).join('<br>'):`<span style="color:var(--grey)">fewer than ${MIN_N} lined games in this role</span>`;
+    return {html:`<b>${esc(short(t))}</b> · ${html}`,best:rows.sort((x,y)=>Math.abs(y.p-50)-Math.abs(x.p-50))[0],t};};
+  const H=side(h,true,hFav), A=side(a,false,hFav==null?null:!hFav);
+  const b=[H,A].filter(x=>x.best).sort((x,y)=>Math.abs(y.best.p-50)-Math.abs(x.best.p-50))[0];
+  const verdict=SPOR()==='baseball'?'on the run line — the price, not the cover rate, decides whether that was value':(b&&b.best.p>=58?'the market has underrated them in this role':(b&&b.best.p<=42?'the market has overrated them in this role':'the market has them about right'));
+  const ins=b?`↑ ${esc(short(b.t))} covers <span class="rnum">${b.best.p}%</span> of the time ${lab[b.best.k]} (n=${b.best.n}) — ${verdict}.`:`↑ Not enough lined games for either side yet.`;
+  const role=hFav==null?'market role unknown for tonight — both roles shown':`tonight's market: ${esc(short(hFav?h:a))} favourite`;
+  return `<div class="tgol"><div class="th">Against the spread</div><div class="ts">${H.html}<br>${A.html}</div><div class="rins">${ins}</div><div class="tf">${role} · ${SPOR()==='baseball'?'run line ±1.5':'closing spread'} where the archive kept it (roughly the last three seasons) · push excluded</div></div>`;
+}
+function cardRecordSays(h,a,cards){
+  const pri=['Games like this','Market record','Conditions x-ray','Against the spread','Game script','Rest','Back-to-back','Form','Leaders','Lineup','Availability','Home and away','Matchup x-ray','Line flow','Last meeting'];
+  const lines=[];
+  for(const p of pri){ const c=cards.find(x=>x.includes(`<div class="th">${p}`)); if(!c)continue; const m=c.match(/<div class="rins">([\s\S]*?)<\/div>/); if(!m)continue;
+    const txt=m[1].replace(/^↑\s*/,''); if(/Not enough|can't be read|not shown/i.test(txt))continue; lines.push(txt); if(lines.length===4)break; }
+  if(!lines.length)return '';
+  return `<div class="tgol says" style="grid-column:1/-1"><div class="th">The record says</div><div class="ts" style="font-size:14.5px;line-height:1.85">${lines.map(l=>`<div>${l}</div>`).join('')}</div><div class="tf">Four lines, each one a number from a card below. Not a prediction.</div></div>`;
+}
+// rakip kalitesi: O, X'in bu sezon karsilastigi rakipler icinde kacinci (hucum = pts, savunma = pa)
+function oppQuality(X,O,Xf,ymd){
+  const sz=SZ_OF(ymd); const opps=[...new Set(Xf.games.filter(g=>g.sz===sz&&g.t<ymd).map(g=>g.opp))]; if(opps.length<3)return '';
+  const P=(t)=>{const p=IDX.profiles&&IDX.profiles[t]&&IDX.profiles[t][sz]; return avgOf(p);};
+  const po=P(O.ad); if(!po)return '';
+  const rank=(m,desc)=>{const vals=opps.map(P).filter(Boolean).map(p=>p[m]).filter(x=>x!=null); if(vals.length<3)return null; const n=vals.filter(v=>desc?v>po[m]:v<po[m]).length; return {r:n+1,n:vals.length+1};};
+  const ro=rank('pts',true), rd=rank('pa',true); const out=[];
+  if(ro&&ro.r===1)out.push(`the strongest offence ${esc(short(X))} has faced this season`); else if(ro&&ro.r===ro.n)out.push(`the weakest offence ${esc(short(X))} has faced this season`);
+  if(rd&&rd.r===1)out.push(`the leakiest defence ${esc(short(X))} has faced this season`); else if(rd&&rd.r===rd.n)out.push(`the stingiest defence ${esc(short(X))} has faced this season`);
+  return out.length?` <b style="color:var(--ink)">${out.join('; ')}</b> (of ${ro?ro.n:rd.n}).`:'';
+}
+
+// ---- MARKET RECORD: piyasanin karnesi (Brier + yanlilik), moneyline'dan vig arindirilmis ----
+function devig(hml,aml){ if(hml==null||aml==null)return null; const dec=(m)=>m>0?1+m/100:1+100/(-m); const ih=1/dec(hml), ia=1/dec(aml); const t=ih+ia; if(t<0.9||t>1.2)return null; return ih/t; }
+function mktRec(team,ymd){ const r={all:[0,0,0],home:[0,0,0],away:[0,0,0],fav:[0,0,0],dog:[0,0,0],short:[0,0,0]};   // [n, sum (p-y)^2, sum (p-y)]
+  for(const g of GL){ if(g.t>=ymd||g.hml==null)continue; const home=g.h===team; if(!home&&g.a!==team)continue;
+    const ph=devig(g.hml,g.aml); if(ph==null)continue; const p=home?ph:1-ph, y=home?(g.hs>g.as?1:0):(g.as>g.hs?1:0); const e=p-y;
+    const keys=['all',home?'home':'away',p>=0.5?'fav':'dog']; const rest=home?g.rh:g.ra; if(rest!=null&&rest<=(SPOR()==='football'?4:0))keys.push('short');
+    for(const k of keys){r[k][0]++;r[k][1]+=e*e;r[k][2]+=e;} }
+  return r; }
+function leagueBrier(){ let n=0,s=0; for(const g of GL){ if(g.hml==null)continue; const p=devig(g.hml,g.aml); if(p==null)continue; const y=g.hs>g.as?1:0; n++; s+=(p-y)*(p-y);} return n?{n,b:s/n}:null; }
+function cardMarket(h,a,ymd){
+  if(!GL||!GL.length||!GL.some(g=>g.hml!=null))return '';
+  const L=leagueBrier(); const lab={all:'all games',home:'at home',away:'on the road',fav:'as favourite',dog:'as underdog',short:SPOR()==='football'?'on a short week':'on the second night'};
+  const side=(t)=>{const r=mktRec(t.ad,ymd); const rows=Object.entries(r).filter(([k,v])=>v[0]>=MIN_N).map(([k,v])=>({k,n:v[0],brier:v[1]/v[0],bias:100*v[2]/v[0]}));
+    const all=rows.find(x=>x.k==='all'); if(!all)return {html:`<b>${esc(short(t))}</b> <span style="color:var(--grey)">fewer than ${MIN_N} priced games</span>`,best:null,t};
+    const slices=rows.filter(x=>x.k!=='all').sort((x,y)=>Math.abs(y.bias)-Math.abs(x.bias));
+    const biasTxt=(b)=>`<span class="${b>=3?'kartEksi':(b<=-3?'kartArti':'')}">${b>0?'+':''}${b.toFixed(1)}</span>`;
+    const html=`<b>${esc(short(t))}</b> ${dbar(-all.bias*2)}market priced them ${biasTxt(all.bias)} pts ${all.bias>=0?'too high':'too low'} <span style="color:var(--grey)">over ${all.n} games, Brier ${all.brier.toFixed(3)}</span>`+
+      (slices.length?`<br><span style="color:var(--grey);font-size:12.5px">${slices.slice(0,3).map(x=>`${lab[x.k]} ${biasTxt(x.bias)} <span class="mono">(n=${x.n})</span>`).join(' &nbsp; ')}</span>`:'');
+    const best=[all,...slices].sort((x,y)=>Math.abs(y.bias)-Math.abs(x.bias))[0];
+    return {html,best:{...best,t},t};};
+  const H=side(h), A=side(a); const b=[H.best,A.best].filter(Boolean).sort((x,y)=>Math.abs(y.bias)-Math.abs(x.bias))[0];
+  const ins=b&&Math.abs(b.bias)>=2?`↑ The market has priced <span class="rnum">${esc(short(b.t))} ${Math.abs(b.bias).toFixed(1)} points ${b.bias>0?'too high':'too low'}</span> ${lab[b.k]} (n=${b.n}) — ${b.bias>0?'they have won less often than their price implied':'they have won more often than their price implied'}.`:`↑ The market has read both sides within <span class="rnum">2 points</span> of the record — no pricing lean here.`;
+  return `<div class="tgol" style="grid-column:1/-1"><div class="th">Market record<span class="n">how well the price has read each side</span></div><div class="ts">${H.html}<br>${A.html}</div><div class="rins">${ins}</div>
+    <div class="tf">Bias = average of (market probability − result) in percentage points; positive means overpriced. Brier = mean squared error of the closing price${L?`; league ${L.b.toFixed(3)} over ${L.n.toLocaleString('en-US')} games (0.25 = a coin flip)`:''}. Moneylines where the archive kept them, roughly the last three seasons.</div></div>`;
+}
+
+// ---- T9: ODDS FLOW — fiyatin kapanisa kadar akisi (odds_flow/<lig>.json, The Odds API tarihsel anlik goruntuler) ----
+// NFL: acilis (~6 gun once) -> kapanis. NBA/MLB: -24s -> kapanis (bu ligler en fazla ~1 gun once cizgi acar).
+const FLOWCFG={
+  nfl:{first:'open',lab:'the opening line',since:'since the open',sp:true,spT:1,tot:1},
+  nba:{first:'h24',lab:'the price 24 hours out',since:'in the last 24 hours',sp:true,spT:1,tot:1},
+  mlb:{first:'h24',lab:'the price 24 hours out',since:'in the last 24 hours',sp:false,spT:1,tot:0.5}
+};
+const FLOWMIN_BOOKS=3;
+let FL=null, FSUM=null, FLINES=null;
+const nickOf=(n)=>{ const w=String(n||'').toLowerCase().replace(/[^a-z0-9 ]/g,'').split(/\s+/).filter(Boolean); if(!w.length)return '';
+  return (w[w.length-1]==='sox'&&w.length>1)?w[w.length-2]+'sox':w[w.length-1]; };
+async function flowList(){
+  if(FL!==null)return FL; const cfg=FLOWCFG[LIG]; if(!cfg){FL=false;return FL;}
+  try{
+    await gamesList(); if(!GL||!GL.length){FL=false;return FL;}
+    const r=await fetch('../odds_flow/'+LIG+'.json',{cache:'no-store'}); if(!r.ok){FL=false;return FL;}
+    const j=await r.json(); const by={};
+    for(const f of (j.maclar||[])){ const k=nickOf(f.h)+'|'+nickOf(f.a); (by[k]=by[k]||[]).push(f); }
+    const used=new Set(), out=[];
+    const px=(x)=>x&&x[0]!=null&&(x[3]||0)>=FLOWMIN_BOOKS?x[0]:null;
+    for(const g of GL){
+      if(g.hs==null||g.as==null)continue; const fl=by[nickOf(g.h)+'|'+nickOf(g.a)]; if(!fl)continue;
+      let best=null,bd=9;
+      for(const f of fl){ if(used.has(f))continue; const d=Math.abs(daysBetween(usDate(f.t),g.t)); if(d<=1&&(d<bd||(d===bd&&f.t<best.t))){best=f;bd=d;} }
+      if(!best)continue; used.add(best);
+      const f0=best.s[cfg.first], c=best.s.close;
+      out.push({t:g.t,h:g.h,a:g.a,hs:g.hs,as:g.as,y:g.hs===g.as?null:(g.hs>g.as?1:0),
+        pf:px(f0),pc:px(c),sf:f0&&f0[1]!=null?f0[1]:null,sc:c&&c[1]!=null?c[1]:null,tf:f0&&f0[2]!=null?f0[2]:null,tc:c&&c[2]!=null?c[2]:null,s:best.s});
+    }
+    FL=out.length?out:false;
+  }catch(e){FL=false;}
+  return FL;
+}
+const FB=[[0,1,'under 1'],[1,2,'1–2'],[2,4,'2–4'],[4,7,'4–7'],[7,999,'7 or more']];
+function flowSum(){
+  if(FSUM)return FSUM; let n=0,sf=0,sc=0,d1=0,d2=0; const B=FB.map(()=>[0,0,0]);
+  for(const e of FL){
+    if(e.pf==null||e.pc==null||e.y==null)continue;
+    const ef=(e.pf-e.y)*(e.pf-e.y), ec=(e.pc-e.y)*(e.pc-e.y); n++; sf+=ef; sc+=ec; const d=ef-ec; d1+=d; d2+=d*d;
+    const mv=(e.pc-e.pf)*100, ab=Math.abs(mv), home=mv>0, p=home?e.pc:1-e.pc, w=home?e.y:1-e.y;
+    const i=FB.findIndex(b=>ab>=b[0]&&ab<b[1]); if(i>=0){B[i][0]++;B[i][1]+=w;B[i][2]+=p;}
+  }
+  const mean=n?d1/n:0, sdv=n>1?Math.sqrt(Math.max(0,(d2-n*mean*mean)/(n-1))):0;
+  FSUM={n,bf:n?sf/n:null,bc:n?sc/n:null,diff:mean,dci:n>1?1.96*sdv/Math.sqrt(n):null,B}; return FSUM;
+}
+function flowTeam(team,ymd){   // piyasa bu takima dogru >=2 puan kaydiginda / aksi yone kaydiginda: kazanma vs kapanisin ima ettigi
+  const r={to:[0,0,0],aw:[0,0,0]};
+  for(const e of FL){
+    if(e.t>=ymd||e.pf==null||e.pc==null||e.y==null)continue; const home=e.h===team; if(!home&&e.a!==team)continue;
+    const d=(e.pc-e.pf)*100*(home?1:-1); if(Math.abs(d)<2)continue;
+    const p=home?e.pc:1-e.pc, w=home?e.y:1-e.y, k=d>0?'to':'aw'; r[k][0]++; r[k][1]+=w; r[k][2]+=p;
+  }
+  return r;
+}
+const f4=(x)=>x==null?'–':x.toFixed(4);
+const mb=(b,x)=>x<b[1];
+function cardFlow(h,a,ymd,market,m,lv){
+  const cfg=FLOWCFG[LIG]; if(!FL||!FL.length||!cfg)return ''; const S=flowSum(); if(!S.n||S.n<100)return '';
+  const sharper=S.diff>0&&S.dci!=null&&S.diff>S.dci, worse=S.diff<0&&S.dci!=null&&-S.diff>S.dci;
+  const verdict=sharper?`the close is sharper — the price learned something after ${cfg.first==='open'?'the open':'the 24-hour mark'}`:(worse?'the close is worse than the earlier price':'no clear difference between them');
+  const head=`<b>Close vs ${esc(cfg.lab)}</b> <span style="color:var(--grey)">${S.n.toLocaleString('en-US')} games</span><br>Brier <span class="mono">${f4(S.bf)}</span> → <span class="mono">${f4(S.bc)}</span> <span style="color:var(--grey)">(${S.diff>=0?'−':'+'}${Math.abs(S.diff).toFixed(4)} ±${f4(S.dci)}) — ${verdict}</span>`;
+  const rows=[]; S.B.forEach((b,i)=>{ if(b[0]<MIN_N*2)return; const win=100*b[1]/b[0], imp=100*b[2]/b[0], gap=imp-win, c=ci(win,b[0]);
+    const cls=Math.abs(gap)>c?(gap>0?'kartEksi':'kartArti'):'';
+    rows.push(`<span class="mono" style="color:var(--grey)">${FB[i][2]} pts</span> moved toward a side · won <b>${win.toFixed(1)}%</b> <span style="color:var(--grey)">±${c}</span> vs <span class="${cls}">${imp.toFixed(1)}%</span> implied <span style="color:var(--grey)">(n=${b[0].toLocaleString('en-US')})</span>`); });
+  const teamLine=(t)=>{ const r=flowTeam(t.ad,ymd); const one=(k,lab)=>{ const [n,w,p]=r[k]; if(n<MIN_N)return null; const win=100*w/n, imp=100*p/n, gap=imp-win, c=ci(win,n), cls=Math.abs(gap)>c?(gap>0?'kartEksi':'kartArti'):'';
+      return `${lab}: won <b>${win.toFixed(1)}%</b> <span style="color:var(--grey)">±${c}</span> vs <span class="${cls}">${imp.toFixed(1)}%</span> implied <span style="color:var(--grey)">(n=${n})</span>`; };
+    const parts=[one('to','market moved toward them'),one('aw','moved against them')].filter(Boolean);
+    return `<b>${esc(short(t))}</b> · ${parts.length?parts.join('<br>&nbsp;&nbsp;&nbsp;'):`<span style="color:var(--grey)">fewer than ${MIN_N} games with a 2-point move</span>`}`; };
+  let ins=''; const lm=m?lineMove(m):null; let mv=null;
+  const lvm=liveMove(lv); if(lvm&&Math.abs(lvm.d)>=1.5)mv={ab:Math.abs(lvm.d),toHome:lvm.d>0,since:'since '+etStamp(lvm.since)};
+  if(!mv&&lm)mv={ab:Math.abs(lm.d),toHome:(lm.d>0)===lm.favEv,since:cfg.since};
+  if(mv){ const i=FB.findIndex(b=>mv.ab>=b[0]&&mb(b,mv.ab)), b=S.B[i];
+    if(b&&b[0]>=30){ const win=100*b[1]/b[0], imp=100*b[2]/b[0], c=ci(win,b[0]); const tw=mv.toHome?h:a;
+      const v=Math.abs(imp-win)<=c?'the closing price had absorbed the move':(win>imp?'they won more often than the close implied':'they won less often than the close implied');
+      ins=`↑ The price has moved <span class="rnum">${mv.ab.toFixed(0)} pts toward ${esc(short(tw))}</span> ${esc(mv.since)}. In ${b[0].toLocaleString('en-US')} past games with a move that size the side won <span class="rnum">${win.toFixed(0)}%</span> against ${imp.toFixed(0)}% implied by the close — ${v}.`; } }
+  if(!ins)ins=sharper?`↑ Across <span class="rnum">${S.n.toLocaleString('en-US')}</span> games the closing price beat ${esc(cfg.lab)} on Brier (${f4(S.bf)} → ${f4(S.bc)}) — late money has carried information; this page doesn't turn that into a pick.`:`↑ Across <span class="rnum">${S.n.toLocaleString('en-US')}</span> games the closing price and ${esc(cfg.lab)} scored about the same (${f4(S.bf)} vs ${f4(S.bc)}).`;
+  return `<div class="tgol" style="grid-column:1/-1"><div class="th">Line flow<span class="n">how the price moved to the close</span></div><div class="ts">${head}</div>
+    <div class="ts" style="margin-top:10px"><span style="color:var(--grey)">when the market moved toward one side — did that side win more than the close implied?</span><br>${rows.join('<br>')}</div>
+    <div class="ts" style="margin-top:10px">${teamLine(h)}<br>${teamLine(a)}</div><div class="rins">${ins}</div>
+    <div class="tf">Probabilities are vig-removed moneyline medians across US books (≥${FLOWMIN_BOOKS} books). Move = change from ${esc(cfg.lab)} to the closing snapshot, in percentage points. Implied = the closing price's probability for that side; red = the side won less than implied, green = more, beyond the 95% interval. Odds API snapshots, ${LIG==='nfl'?'2023':(LIG==='nba'?'2023-24':'2024')} onward. A record of the price, not a signal.</div></div>`;
+}
+function flowLines(){
+  if(FLINES)return FLINES; const cfg=FLOWCFG[LIG]; const r={cv:{small:[0,0],big:[0,0]},ov:{up:[0,0],down:[0,0]}};
+  for(const e of FL){
+    if(cfg.sp&&e.sf!=null&&e.sc!=null){ const d=e.sc-e.sf; if(Math.abs(d)>=cfg.spT){ const x=(e.hs-e.as)+e.sc; if(x!==0){ const won=(d<0)?(x>0):(x<0); const k=Math.abs(d)>=2*cfg.spT?'big':'small'; r.cv[k][0]++; r.cv[k][1]+=won?1:0; } } }
+    if(e.tf!=null&&e.tc!=null){ const d=e.tc-e.tf; if(Math.abs(d)>=cfg.tot){ const tot=e.hs+e.as; if(tot!==e.tc){ const k=d>0?'up':'down'; r.ov[k][0]++; r.ov[k][1]+=tot>e.tc?1:0; } } }
+  }
+  FLINES=r; return r;
+}
+function cardFlowLines(h,a,ymd){
+  const cfg=FLOWCFG[LIG]; if(!FL||!FL.length||!cfg)return ''; const R=flowLines();
+  const row=(lab,[n,w],what)=>{ if(n<MIN_N*2)return null; const p=100*w/n, c=ci(p,n), off=Math.abs(p-50)>c; return {txt:`${lab}: ${what} <b>${p.toFixed(1)}%</b> <span style="color:var(--grey)">±${c} (n=${n.toLocaleString('en-US')})</span>`,p,c,off,n}; };
+  const T=cfg.tot, S1=cfg.spT, since=cfg.since;
+  const tu=row(`total rose ${T}+`,R.ov.up,'went over the closing total'), td=row(`total fell ${T}+`,R.ov.down,'went over the closing total');
+  const cs=cfg.sp?row(`spread moved ${S1}–${2*S1} pts toward a side`,R.cv.small,'that side covered the closing spread'):null, cb=cfg.sp?row(`spread moved ${2*S1}+ pts toward a side`,R.cv.big,'that side covered'):null;
+  const rows=[cs,cb,tu,td].filter(Boolean); if(!rows.length)return '';
+  const anyOff=rows.some(x=>x.off);
+  const ins=(tu&&td)?`↑ After the total rose ${T}+ the game went over the closing number <span class="rnum">${tu.p.toFixed(0)}%</span> of the time; after it fell, <span class="rnum">${td.p.toFixed(0)}%</span> — ${tu.off||td.off?'a drift the close had not fully absorbed':'near 50%, so the close had already absorbed the move'}.`:`↑ ${rows[0].txt}.`;
+  return `<div class="tgol" style="grid-column:1/-1"><div class="th">Line flow · spread and total<span class="n">did the close absorb the move?</span></div><div class="ts">${rows.map(x=>x.txt).join('<br>')}</div><div class="rins">${ins}</div>
+    <div class="tf">Moves measured from ${esc(cfg.lab)} to the closing snapshot (median across US books); results against the <i>closing</i> number, pushes excluded. ${cfg.sp?'':'Baseball spreads are a fixed run line, so only totals are shown. '}${anyOff?'At least one row sits outside the 95% interval around 50%; that is a description of the past, not a rule.':'Every row sits inside the 95% interval around 50%.'}</div></div>`;
+}
+function flowPath(g,homeAd,awayAd){   // gecmis bir mac icin: -24s -> -6s -> -1s -> kapanis, ev tarafi
+  if(!FL||!FL.length)return ''; const e=FL.find(x=>x.t===g.t&&x.h===homeAd&&x.a===awayAd); if(!e)return '';
+  const tags=[['open','open'],['h24','−24h'],['h6','−6h'],['h1','−1h'],['close','close']]; const pts=[], sp=[], tt=[];
+  for(const [k,lab] of tags){ const v=e.s[k]; if(!v)continue; if(v[0]!=null&&(v[3]||0)>=FLOWMIN_BOOKS)pts.push(`${lab} ${Math.round(v[0]*100)}%`); if(v[1]!=null)sp.push(v[1]); if(v[2]!=null)tt.push(v[2]); }
+  if(pts.length<2)return '';
+  const rng=(x)=>x.length>=2&&x[0]!==x[x.length-1]?`${x[0]} → ${x[x.length-1]}`:(x.length?String(x[x.length-1]):null);
+  const sps=rng(sp), tts=rng(tt);
+  return `<div class="ts" style="margin-top:10px"><span style="color:var(--grey)">home-side price path (vig-removed)</span><br><span class="mono">${pts.join(' → ')}</span>${sps&&LIG!=='mlb'?`<br><span style="color:var(--grey)">spread</span> <span class="mono">${sps}</span>`:''}${tts?` <span style="color:var(--grey)">· total</span> <span class="mono">${tts}</span>`:''}</div>`;
+}
+
+// ---- T10: CANLI FIYAT YOLU (odds_flow/live/<lig>.json, saatlik GitHub Action) ----
+let LV=null;
+async function liveList(){ if(LV!==null)return LV; try{ const r=await fetch('../odds_flow/live/'+LIG+'.json',{cache:'no-store'}); LV=r.ok?await r.json():false; }catch(e){LV=false;} return LV; }
+const etStamp=(ts)=>{ try{ return new Date(ts).toLocaleString('en-US',{timeZone:'America/New_York',weekday:'short',hour:'numeric',minute:'2-digit'})+' ET'; }catch(e){return String(ts);} };
+function liveFor(hName,aName,whenIso){
+  if(!LV||!LV.maclar)return null; const t0=whenIso?new Date(whenIso).getTime():Date.now(); let best=null,bd=1e18;
+  for(const r of Object.values(LV.maclar)){ if(nickOf(r.h)!==nickOf(hName)||nickOf(r.a)!==nickOf(aName))continue;
+    const tt=new Date(r.t).getTime(); const d=Math.abs(tt-t0); if(d<bd){bd=d;best=r;} }
+  return best&&bd<(whenIso?12*3600e3:7*86400e3)?best:null;
+}
+async function liveMerge(){   // worker'in vermedigi yaklasan maclari (gelecek gunler) tahtaya ekle
+  const L=await liveList(); if(!L||!L.maclar)return; const now=Date.now();
+  for(const r of Object.values(L.maclar)){
+    const tt=new Date(r.t).getTime(); if(tt<now-3*3600e3||!r.path||!r.path.length)continue;
+    if(TONIGHT.some(m=>nickOf(m.h)===nickOf(r.h)&&nickOf(m.a)===nickOf(r.a)&&Math.abs(new Date(m.t).getTime()-tt)<12*3600e3))continue;
+    const pts=r.path.filter(x=>x[1]!=null), last=pts[pts.length-1], first=pts[0];
+    TONIGHT.push({h:r.h,a:r.a,t:r.t,key:'live_'+LIG,day:usDate(r.t),live:true,p:last?{h:last[1],a:1-last[1]}:null,ac:first?{h:first[1],a:1-first[1]}:null});
+  }
+}
+function liveMove(lv){   // gecerli iki nokta varsa: ilk goruldugunden bu yana ev tarafina dogru puan degisimi
+  if(!lv||!lv.path)return null; const pts=lv.path.filter(x=>x[1]!=null); if(pts.length<2)return null;
+  const d=(pts[pts.length-1][1]-pts[0][1])*100; return {d,since:pts[0][0]};
+}
+function cardLivePath(h,a,lv){
+  if(!lv||!lv.path||!lv.path.length)return ''; const P=lv.path, n=P.length, first=P[0], last=P[n-1];
+  let idx=P.map((_,i)=>i);
+  if(n>8){ const jumps=P.map((x,i)=>(i&&x[1]!=null&&P[i-1][1]!=null)?{i,d:Math.abs(x[1]-P[i-1][1])}:{i,d:-1}).sort((x,y)=>y.d-x.d).slice(0,6).map(x=>x.i); idx=[...new Set([0,n-1,...jumps])].sort((x,y)=>x-y); }
+  const sg=(v)=>v==null?'–':(v>0?'+':'')+v;
+  const rows=idx.map(i=>{ const x=P[i]; return `<span class="mono" style="color:var(--grey)">${esc(etStamp(x[0]))}</span> &nbsp;<b>${x[1]!=null?Math.round(x[1]*100)+'%':'–'}</b> ${esc(short(h))}${LIG!=='mlb'?` · spread <span class="mono">${sg(x[2])}</span>`:''} · total <span class="mono">${x[3]!=null?x[3]:'–'}</span>`; }).join('<br>');
+  const mv=liveMove(lv); let ins;
+  if(mv&&Math.abs(mv.d)>=1){ const tw=mv.d>0?h:a; const ps=lv.path.filter(x=>x[1]!=null), f=ps[0], l=ps[ps.length-1];
+    const dS=(LIG!=='mlb'&&first[2]!=null&&last[2]!=null&&first[2]!==last[2])?` · spread ${sg(first[2])} → ${sg(last[2])}`:'', dT=(first[3]!=null&&last[3]!=null&&first[3]!==last[3])?` · total ${first[3]} → ${last[3]}`:'';
+    ins=`↑ Since ${esc(etStamp(f[0]))} the price has moved <span class="rnum">${Math.abs(mv.d).toFixed(1)} pts toward ${esc(short(tw))}</span> (${Math.round(f[1]*100)}% → ${Math.round(l[1]*100)}% ${esc(short(h))})${dS}${dT}.`;
+  }else{ ins=n>1?`↑ The price has barely moved since ${esc(etStamp(first[0]))} — ${last[1]!=null?Math.round(last[1]*100)+'% '+esc(short(h)):'moneyline not yet posted by enough books'}.`:`↑ First price seen ${esc(etStamp(first[0]))}${first[1]!=null?` — ${Math.round(first[1]*100)}% ${esc(short(h))}`:''}. The path fills in hourly from here.`; }
+  return `<div class="tgol" style="grid-column:1/-1"><div class="th">Line flow · price path so far<span class="n">${n} snapshot${n>1?'s':''}</span></div><div class="ts">${rows}</div><div class="rins">${ins}</div>
+    <div class="tf">Hourly snapshots of the median US-book price (vig-removed home probability${LIG!=='mlb'?', home spread':''} and total), kept from the first time the game appeared on the board. The snapshot rule skips unchanged hours. A record of the price, not a signal.</div></div>`;
+}
+
+// ---- rozetler: maç satırı için hızlı sinyaller (takım dosyası gerekmez) ----
+function lineMove(m){ if(!m.ac||!m.p||m.ac.h==null||m.p.h==null)return null; const favEv=m.p.h>=m.p.a; const cur=favEv?m.p.h:m.p.a, ac=favEv?m.ac.h:m.ac.a; if(ac==null)return null; const d=(cur-ac)*100; return Math.abs(d)<1.5?null:{favEv,d}; }
+function booksDisagree(m){ const p=m.p||{}, best=m.best||{}; if(p.h==null||p.a==null)return null; const favEv=p.h>=p.a, favP=favEv?p.h:p.a; const kt={};
+  (best.h||[]).forEach(x=>{(kt[x.k]=kt[x.k]||{}).h=x.o;}); (best.a||[]).forEach(x=>{(kt[x.k]=kt[x.k]||{}).a=x.o;});
+  let enB=null,enF=0,n=0; Object.entries(kt).forEach(([k,o])=>{ if(!o.h||!o.a)return; const ih=1/o.h, ia=1/o.a, t=ih+ia; if(t<0.97||t>1.15)return; const pb=(favEv?ih:ia)/t; n++; const f=pb-favP; if(Math.abs(f)>Math.abs(enF)){enF=f;enB=k;} });
+  return (enB&&n>=4&&Math.abs(enF)>=0.04)?{b:enB,f:enF*100,n}:null; }
+function restQuick(teamAd,ymd){ let last=null; if(GL)for(const g of GL){ if(g.t>=ymd)continue; if(g.h===teamAd||g.a===teamAd){ if(!last||g.t>last)last=g.t; } }
+  for(const d of liveDatesFor(teamAd,OH)){ if(d<ymd&&(!last||d>last))last=d; } return last?daysBetween(last,ymd)-1:null; }
+function badgesFor(m){
+  const out=[]; const h=findTeam(m.h), a=findTeam(m.a); const ymd=usDate(m.t);
+  const bd=booksDisagree(m); if(bd)out.push({k:'disagree',cls:'mkt',txt:`books disagree ${bd.f>0?'+':''}${bd.f.toFixed(0)}`});
+  const lm=lineMove(m); if(lm)out.push({k:'moved',cls:'mkt',txt:`line moved ${lm.d>0?'+':''}${lm.d.toFixed(0)} ${esc(short(findTeam(lm.favEv?m.h:m.a)||{ad:(lm.favEv?m.h:m.a).split(' ').pop()}))}`});
+  if(h&&a){
+    const rh=restQuick(h.ad,ymd), ra=restQuick(a.ad,ymd); const fb=SPOR()==='football';
+    const sh=rh!=null&&(fb?rh<=4:rh===0), sa=ra!=null&&(fb?ra<=4:ra===0), bh=fb&&rh!=null&&rh>=12, ba=fb&&ra!=null&&ra>=12;
+    if(sh!==sa)out.push({k:'rest',cls:'rec',txt:`rest edge ${esc(short(sh?a:h))}`}); else if(bh!==ba)out.push({k:'rest',cls:'rec',txt:`off a bye ${esc(short(bh?h:a))}`});
+    if(GL&&GL.length&&m.p&&m.p.h!=null&&SPOR()!=='baseball'){ try{ const T=twins(h,a,ymd,{rest:rh},{rest:ra}); if(T&&T.shown){ const favEv=m.p.h>=m.p.a; const recHome=T.homeW>=55, recAway=T.homeW<=45; if((favEv&&recAway)||(!favEv&&recHome))out.push({k:'lean',cls:'warn',txt:`record leans ${esc(short(favEv?a:h))}`}); } }catch(e){} }
+    const op=oppProfile(h.ad,ymd), oa=oppProfile(a.ad,ymd); if((op&&op.early)||(oa&&oa.early))out.push({k:'thin',cls:'',txt:'thin season'});
+  }
+  return out;
+}
+const CHIP_LAB={disagree:'Books disagree',moved:'Line moved',rest:'Rest edge',lean:'Record vs market',thin:'Thin season'};
+let DAY=null, CHIP=null;
+
+// ---- akis ----
+function deepLink(h,a){ const u=new URL(location.href); u.searchParams.set('lig',LIG); u.searchParams.set('h',h.ad); u.searchParams.set('a',a.ad); return u.toString(); }
+async function openRecord(hName,aName,whenIso,market,m){
+  const det=document.getElementById('detail');
+  const h=findTeam(hName), a=findTeam(aName);
+  if(!h||!a){det.innerHTML=`<div class="empty err">Couldn't match ${!h?esc(hName):esc(aName)} to the record.</div>`;return;}
+  if(h===a){det.innerHTML=`<div class="empty err">Pick two different teams.</div>`;return;}
+  det.innerHTML=`<div class="empty">Opening the record…</div>`;
+  const ymd=whenIso?usDate(whenIso):new Date().toLocaleDateString('en-CA',{timeZone:'America/New_York'});
+  const [hf,af,oh]=await Promise.all([teamFile(h),teamFile(a),oddsHist(),gamesList()]); await flowList(); await liveList(); const lv=liveFor(hName,aName,whenIso);
+  if(!hf||!af){det.innerHTML=`<div class="empty err">Team file missing.</div>`;return;}
+  const hR=restBefore(hf.games,ymd,oh,h.ad), aR=restBefore(af.games,ymd,oh,a.ad);
+  const lm=lastMeeting(hf.games,a.ad,ymd);
+  let cards=[];
+  if(SPOR()==='basketball'){
+    const hS=starsLast10(hf.games,h.stars||[],ymd,hf), aS=starsLast10(af.games,a.stars||[],ymd,af);
+    cards=[cardB2B(h,a,hR,aR),cardHomeAway(h,a),cardAvail(h,a,hS,aS),cardConditions(h,a,hf,af,ymd),cardXray(h,a,hf,af,hS,aS),cardLastMeeting(h,a,lm,oh,hf,af)];
+  }else if(SPOR()==='football'){
+    cards=[cardRestFB(h,a,hR,aR,hf,af),cardHomeAway(h,a),cardLeadersFB(h,a,hf,af,ymd),cardConditions(h,a,hf,af,ymd),cardXray(h,a,hf,af,[],[]),cardLastMeeting(h,a,lm,oh,hf,af)];
+  }else{
+    cards=[cardFormBB(h,a,hf,af,ymd),cardHomeAway(h,a),cardBatsBB(h,a,hf,af,ymd),cardConditions(h,a,hf,af,ymd),cardXray(h,a,hf,af,[],[]),cardLastMeeting(h,a,lm,oh,hf,af)];
+  }
+  if(GL&&GL.length){ const T=twins(h,a,ymd,hR,aR); cards.splice(0,0,cardTwins(h,a,T),cardMarket(h,a,ymd)); cards.splice(5,0,cardScript(h,a,ymd),cardATS(h,a,ymd,market)); cards.push(cardLivePath(h,a,lv),cardFlow(h,a,ymd,market,m,lv),cardFlowLines(h,a,ymd)); }
+  cards=cards.filter(Boolean);
+  const says=cardRecordSays(h,a,cards);
+  const pick=(...names)=>cards.filter(c=>names.some(nm=>c.includes(`<div class="th">${nm}`)));
+  const TABS=[['overview','Overview',pick('Games like this','Market record')],['conditions','Conditions',pick('Conditions x-ray','Matchup x-ray')],
+              ['form','Form',pick('Rest','Back-to-back','Form','Leaders','Lineup','Availability','Home and away','Game script','Against the spread')],['flow','Line flow',pick('Line flow')],['last','Last meeting',pick('Last meeting')]].filter(t=>t[2].length);
+  const tab0=TABS.some(t=>t[0]===Q.get('tab'))?Q.get('tab'):TABS[0][0];
+  const when=whenIso?new Date(whenIso).toLocaleString('en-US',{timeZone:'America/New_York',weekday:'short',day:'numeric',month:'short',hour:'numeric',minute:'2-digit'})+' ET':'any date';
+  const link=deepLink(h,a);
+  const ph=market&&market.h!=null?Math.round(market.h*100):null, pa=market&&market.a!=null?Math.round(market.a*100):null;
+  const mline=ph!=null?`<div class="mline"><b>${ph}%</b><div class="pbar"><i style="width:${ph}%"></i></div><b>${pa}%</b><span style="color:var(--grey)">market, consensus</span></div>`:'';
+  const badges=m?badgesFor(m).map(b=>`<span class="bd ${b.cls}">${b.txt}</span>`).join(' '):'';
+  det.innerHTML=`<button class="back" type="button" id="backBtn">‹ All games</button><div class="mhead"><div class="teams"><div class="tn">${esc(h.ad)}<small>home</small></div><div class="vs">vs</div><div class="tn r">${esc(a.ad)}<small>away</small></div></div>${mline}
+    <div class="meta"><span>${esc(LIGS[LIG].ad)}</span><span>${esc(when)}</span><span>record as of ${esc(ymd)}</span>${badges?`<span>${badges}</span>`:''}<button class="btn ghost share" type="button" id="shareBtn" data-link="${esc(link)}">Copy link</button></div></div>
+    ${says?`<div class="grid">${says}</div>`:''}
+    <div class="tabs" role="tablist">${TABS.map(t=>`<button type="button" role="tab" data-tab="${t[0]}" class="${t[0]===tab0?'on':''}">${t[1]}</button>`).join('')}</div>
+    ${TABS.map(t=>`<div class="pane ${t[0]===tab0?'on':''}" data-pane="${t[0]}"><div class="grid">${t[2].join('')}</div></div>`).join('')}`;
+  det.querySelectorAll('.tabs button').forEach(b=>b.addEventListener('click',()=>{det.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('on',x===b));det.querySelectorAll('.pane').forEach(p=>p.classList.toggle('on',p.dataset.pane===b.dataset.tab));try{const u=new URL(location.href);u.searchParams.set('tab',b.dataset.tab);history.replaceState(null,'',u.toString());}catch(e){}}));
+  document.getElementById('layout').classList.add('open');
+  const bk=document.getElementById('backBtn'); if(bk)bk.addEventListener('click',()=>{document.getElementById('layout').classList.remove('open');window.scrollTo({top:0});});
+  try{const u=new URL(link);u.searchParams.set('tab',tab0);history.replaceState(null,'',u.toString());}catch(e){}
+  const sb=document.getElementById('shareBtn'); if(sb)sb.addEventListener('click',()=>{try{navigator.clipboard.writeText(sb.dataset.link);sb.textContent='Copied';setTimeout(()=>sb.textContent='Copy link',1500);}catch(e){}});
+  if(window.innerWidth<=900)window.scrollTo({top:0});
+}
+const dayLabel=(ymd)=>{ const today=new Date().toLocaleDateString('en-CA',{timeZone:'America/New_York'}); const d=daysBetween(today,ymd);
+  const txt=new Date(ymd+'T12:00:00Z').toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'}); return d===0?`Today<small>${txt}</small>`:(d===1?`Tomorrow<small>${txt}</small>`:txt); };
+function renderBoard(){
+  const box=document.getElementById('list'), chipsEl=document.getElementById('chips');
+  const days=[...new Set(TONIGHT.map(m=>m.day))].sort(); if(!days.includes(DAY))DAY=days[0];
+  const i=days.indexOf(DAY);
+  document.getElementById('dayLab').innerHTML=dayLabel(DAY);
+  const prev=document.getElementById('dayPrev'), next=document.getElementById('dayNext'); prev.disabled=i<=0; next.disabled=i>=days.length-1;
+  prev.onclick=()=>{if(i>0){DAY=days[i-1];renderBoard();}}; next.onclick=()=>{if(i<days.length-1){DAY=days[i+1];renderBoard();}};
+  document.getElementById('dayLab').onclick=()=>{const t=new Date().toLocaleDateString('en-CA',{timeZone:'America/New_York'}); if(days.includes(t)){DAY=t;renderBoard();}};
+  const dayGames=TONIGHT.filter(m=>m.day===DAY);
+  const counts={}; dayGames.forEach(m=>m.badges.forEach(b=>{counts[b.k]=(counts[b.k]||0)+1;}));
+  chipsEl.innerHTML=Object.entries(CHIP_LAB).filter(([k])=>counts[k]).map(([k,l])=>`<button type="button" class="chip ${CHIP===k?'on':''}" data-k="${k}">${l}<span class="n">${counts[k]}</span></button>`).join('');
+  chipsEl.querySelectorAll('.chip').forEach(b=>b.addEventListener('click',()=>{CHIP=CHIP===b.dataset.k?null:b.dataset.k;renderBoard();}));
+  const rows=dayGames.filter(m=>!CHIP||m.badges.some(b=>b.k===CHIP));
+  if(!rows.length){box.innerHTML=`<div class="empty">${CHIP?`No games with "${CHIP_LAB[CHIP]}" on this day. That silence is also a record.`:'No games on this day.'}</div>`;return;}
+  box.innerHTML=rows.map(m=>{const ph=m.p&&m.p.h!=null?Math.round(m.p.h*100):null, pa=m.p&&m.p.a!=null?Math.round(m.p.a*100):null;
+    const mk=ph!=null?`<div class="mk"><span>${ph}</span><div class="pbar"><i style="width:${ph}%"></i></div><span>${pa}</span></div>`:'<div class="mk"></div>';
+    const bd=m.badges.map(b=>`<span class="bd ${b.cls}">${b.txt}</span>`).join('');
+    return `<button class="row" type="button" data-i="${m.i}"><span class="time">${new Date(m.t).toLocaleTimeString('en-US',{timeZone:'America/New_York',hour:'numeric',minute:'2-digit'}).replace(' ','')}${m.key.includes('preseason')?'<br>pre':''}</span><span class="tm">${esc(m.h)}</span>${mk}<span class="tm r">${esc(m.a)}</span><span class="badges">${bd}</span></button>`;}).join('');
+  box.querySelectorAll('.row').forEach(b=>b.addEventListener('click',()=>{box.querySelectorAll('.row').forEach(x=>x.classList.remove('on'));b.classList.add('on');const m=TONIGHT[+b.dataset.i];openRecord(m.h,m.a,m.t,m.p,m);}));
+}
+async function loadTonight(){
+  const box=document.getElementById('list'); let b={ligler:{}}, wfail=false;
+  try{ const r=await fetch(HOST+'/bugun.json',{cache:'no-store'}); b=await r.json(); }catch(e){ wfail=true; }
+  try{
+    const blocks=Object.values(b.ligler||{}).filter(x=>LIGS[LIG].feed.test(x.key||''));
+    TONIGHT=blocks.flatMap(x=>(x.maclar||[]).map(m=>({...m,key:x.key,day:usDate(m.t)})));
+    try{ await liveMerge(); }catch(e){}
+    TONIGHT.sort((x,y)=>String(x.t).localeCompare(String(y.t))); TONIGHT.forEach((m,i)=>{m.i=i;m.badges=[];});
+    if(!TONIGHT.length){box.innerHTML=wfail?`<div class="empty">The slate feed is unreachable — open any two teams below.</div>`:`<div class="empty">No ${esc(LIGS[LIG].ad)} games in the feed right now — open any two teams below.</div>`;document.getElementById('dayLab').textContent='No games';return;}
+    renderBoard();
+    await Promise.all([gamesList(),oddsHist()]);
+    TONIGHT.forEach(m=>{ try{m.badges=badgesFor(m);}catch(e){m.badges=[];} }); renderBoard();
+    if(window.innerWidth>900&&!Q.get('h')){ const first=TONIGHT.find(m=>m.day===DAY); if(first){const r=document.querySelector('.row'); if(r)r.classList.add('on'); openRecord(first.h,first.a,first.t,first.p,first);} }   // masaustunde ilk mac acik gelsin
+  }catch(e){box.innerHTML=`<div class="empty">The slate feed is unreachable — open any two teams below.</div>`;}
+}
+// yeni sema index'i NBA semasina normalize et: tier etiketi -> high/low/mid ; esik yoksa mid
+function normalizeIdx(I){
+  if(!I.spor)return;
+  const TL=I.tier_labels||{};
+  for(const t of Object.values(I.profiles||{}))for(const [sz,p] of Object.entries(t)){
+    const thr=(I.tier_thr||{})[sz]||{}; const out={};
+    for(const [m,v] of Object.entries(p.tiers||{})){ const q=thr[m]; const L=TL[m]||[];
+      out[m]=(!q||q[0]===q[1])?'mid':(v===L[0]?'high':(v===L[1]?'low':'mid')); }
+    p.tiers=out;
+  }
+  const junk=/all-star|^afc$|^nfc$|^team |^brazil$|^national$|^american$/i;
+  I.teams=(I.teams||[]).filter(t=>!junk.test(t.ad)).map(t=>({...t,kisa:LIG==='ncaaf'?t.ad:(KISA[t.ad.toLowerCase()]||t.ad.split(' ').pop())}));
+}
+const SPORTS=[['Basketball',['nba','wnba']],['Football',['nfl','ncaaf']],['Baseball',['mlb']],['Soccer',null]];
+function renderLigbar(){
+  document.getElementById('ligbar').innerHTML=SPORTS.map(([ad,ligs])=>{
+    const on=ligs&&ligs.includes(LIG);
+    const dd=ligs?ligs.map(k=>`<button type="button" data-lig="${k}" class="${k===LIG?'cur':''}">${LIGS[k].ad}</button>`).join(''):`<a href="../app/">35 leagues — open the app</a>`;
+    return `<div class="sp ${on?'on':''}"><button type="button">${ad}${on?' · '+LIGS[LIG].ad:''}</button><div class="dd">${dd}</div></div>`;}).join('');
+  document.querySelectorAll('#ligbar .dd button').forEach(b=>b.addEventListener('click',()=>{const u=new URL(location.href);u.search='';u.searchParams.set('lig',b.dataset.lig);location.href=u.toString();}));
+  document.querySelectorAll('#ligbar .sp>button').forEach(b=>b.addEventListener('click',()=>{const first=b.parentElement.querySelector('.dd button'); if(first&&!b.parentElement.classList.contains('on'))first.click();}));
+}
+async function boot(){
+  renderLigbar();
+  document.getElementById('note').textContent=LIGS[LIG].note+' Odds history builds daily from the archive; Line flow comes from archived price snapshots (NFL, NBA, MLB). Direction, not advice. Independent analysis, not affiliated with any league, team or data provider; provided as is, for information only. Build T11.';
+  document.title=`Brier Terminal — ${LIGS[LIG].ad}`;
+  try{
+    const r=await fetch(DATA+'index.json',{cache:'no-store'}); IDX=await r.json(); normalizeIdx(IDX);
+    TEAMS=IDX.teams||[]; LEAGUE=IDX.league||{};
+    const sel=TEAMS.filter(t=>(t.gp||0)>=10).slice().sort((x,y)=>x.ad.localeCompare(y.ad));
+    const opts=sel.map(t=>`<option value="${esc(t.ad)}">${esc(t.ad)}</option>`).join('');
+    document.getElementById('selH').innerHTML=opts; document.getElementById('selA').innerHTML=opts;
+    document.getElementById('selA').selectedIndex=Math.min(1,sel.length-1);
+    document.getElementById('goBtn').addEventListener('click',()=>openRecord(document.getElementById('selH').value,document.getElementById('selA').value,null));
+    loadTonight();
+    if(Q.get('h')&&Q.get('a')){ openRecord(Q.get('h'),Q.get('a'),null); }
+  }catch(e){document.getElementById('list').innerHTML=`<div class="empty err">Record index not found (${esc(DATA)}index.json). Upload terminal/${esc(LIG)} first.</div>`;}
+}
+boot();
+</script>
+</body>
+</html>
